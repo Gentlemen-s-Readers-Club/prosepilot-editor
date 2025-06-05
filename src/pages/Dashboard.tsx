@@ -214,43 +214,8 @@ export function Dashboard() {
 
       if (!result.is_valid) {
         throw new Error(result.issues?.[0]?.message || 'Failed to generate book');
-      }
-
-      if (!result.book) {
+      } else if (!result.book) {
         throw new Error('No book data received');
-      }
-
-      // Create the book in Supabase
-      const { data: book, error: bookError } = await supabase
-        .from('books')
-        .insert({
-          title: result.book.title,
-          author_name: result.book.author_name,
-          synopsis: result.book.synopsis,
-          status: result.book.status,
-          language_id: result.book.language_id,
-          user_id: user.id,
-          narrator_id: result.book.narrator_id,
-          tone_id: result.book.tone_id,
-          literature_style_id: result.book.literature_style_id
-        })
-        .select()
-        .single();
-
-      if (bookError) throw bookError;
-
-      // Add categories
-      if (categories.length > 0) {
-        const categoryLinks = categories.map(category => ({
-          book_id: book.id,
-          category_id: category.id
-        }));
-
-        const { error: categoriesError } = await supabase
-          .from('book_categories')
-          .insert(categoryLinks);
-
-        if (categoriesError) throw categoriesError;
       }
 
       // Refresh books list
