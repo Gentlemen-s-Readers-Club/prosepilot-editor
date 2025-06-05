@@ -112,56 +112,70 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
     setIsSubmitting(true);
     setIssues(null);
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('No user found');
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
 
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) throw new Error('No session found');
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No session found');
 
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('id, full_name')
-      .eq('id', user.id)
-      .single();
-    
-    // Call the API to generate the book
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`
-      },
-      body: JSON.stringify({
-        prompt,
-        language: selectedLanguage.language,
-        categories: selectedCategories.map(c => c.category),
-        narrator: selectedNarrator?.narrator,
-        tone: selectedTone?.tone,
-        literatureStyle: selectedStyle?.style,
-        author_name: profileData?.full_name || 'Anonymous'
-      })
-    });
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('id, full_name')
+        .eq('id', user.id)
+        .single();
+      
+      // Call the API to generate the book
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          prompt,
+          language: selectedLanguage.language,
+          categories: selectedCategories.map(c => c.category),
+          narrator: selectedNarrator?.narrator,
+          tone: selectedTone?.tone,
+          literatureStyle: selectedStyle?.style,
+          author_name: profileData?.full_name || 'Anonymous'
+        })
+      });
 
-    const result = await response.json();
+      if (!response.ok) {
+        throw new Error('Failed to create book. Please try again.');
+      }
 
-    if (!result.is_valid) {
-      setIssues(result.issues || null);
+      const result = await response.json();
+
+      if (!result.is_valid) {
+        setIssues(result.issues || null);
+        setIsSubmitting(false);
+        return result;
+      } else if (!result.book) {
+        throw new Error('No book data received');
+      }
+      
+      onSubmit(result.book);
+      setPrompt('');
+      setSelectedCategories([]);
+      setSelectedLanguage(null);
+      setSelectedNarrator(null);
+      setSelectedStyle(null);
+      setSelectedTone(null);
+      setShowAdvanced(false);
+      onClose();
+    } catch (error) {
+      console.error('Error creating book:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create book. Please try again.",
+      });
+    } finally {
       setIsSubmitting(false);
-      return result;
-    } else if (!result.book) {
-      setIsSubmitting(false);
-      throw new Error('No book data received');
     }
-    
-    onSubmit(result.book);
-    setPrompt('');
-    setSelectedCategories([]);
-    setSelectedLanguage(null);
-    setSelectedNarrator(null);
-    setSelectedStyle(null);
-    setSelectedTone(null);
-    setShowAdvanced(false);
-    onClose();
   };
 
   const mapToOptions = (items: { id: string; name: string }[], type: string) => 
