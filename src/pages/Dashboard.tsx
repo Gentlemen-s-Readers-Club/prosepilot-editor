@@ -58,7 +58,7 @@ interface Profile {
 }
 
 interface ValidationIssue {
-  type: string;
+  type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration';
   message: string;
 }
 
