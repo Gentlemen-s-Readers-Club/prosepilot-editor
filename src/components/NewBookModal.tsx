@@ -1,11 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, ChevronDown, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import Select from 'react-select';
 import { useToast } from '../hooks/use-toast';
-import { useAppSelector } from '../hooks';
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Language {
+  id: string;
+  name: string;
+  code: string;
+}
+
+interface Narrator {
+  id: string;
+  name: string;
+}
+
+interface LiteratureStyle {
+  id: string;
+  name: string;
+}
+
+interface Tone {
+  id: string;
+  name: string;
+}
 
 interface ValidationIssue {
   type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration';
@@ -25,16 +50,61 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [issues, setIssues] = useState<ValidationIssue[] | null>(null);
   
-  // Get data from Redux store
-  const { categories, languages, narrators, literatureStyles, tones } = useAppSelector(state => state.data);
-  const { profile } = useAppSelector(state => state.auth);
+  // Data states
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [narrators, setNarrators] = useState<Narrator[]>([]);
+  const [literatureStyles, setLiteratureStyles] = useState<LiteratureStyle[]>([]);
+  const [tones, setTones] = useState<Tone[]>([]);
 
   // Selection states
-  const [selectedCategories, setSelectedCategories] = useState<Array<{ value: string; label: string; category: any }>>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<{ value: string; label: string; language: any } | null>(null);
-  const [selectedNarrator, setSelectedNarrator] = useState<{ value: string; label: string; narrator: any } | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<{ value: string; label: string; style: any } | null>(null);
-  const [selectedTone, setSelectedTone] = useState<{ value: string; label: string; tone: any } | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<Array<{ value: string; label: string; category: Category }>>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<{ value: string; label: string; language: Language } | null>(null);
+  const [selectedNarrator, setSelectedNarrator] = useState<{ value: string; label: string; narrator: Narrator } | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<{ value: string; label: string; style: LiteratureStyle } | null>(null);
+  const [selectedTone, setSelectedTone] = useState<{ value: string; label: string; tone: Tone } | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [
+          categoriesResponse,
+          languagesResponse,
+          narratorsResponse,
+          stylesResponse,
+          tonesResponse
+        ] = await Promise.all([
+          supabase.from('categories').select('*').order('name'),
+          supabase.from('languages').select('*').order('name'),
+          supabase.from('narrators').select('*').order('name'),
+          supabase.from('literature_styles').select('*').order('name'),
+          supabase.from('tones').select('*').order('name')
+        ]);
+
+        if (categoriesResponse.error) throw categoriesResponse.error;
+        if (languagesResponse.error) throw languagesResponse.error;
+        if (narratorsResponse.error) throw narratorsResponse.error;
+        if (stylesResponse.error) throw stylesResponse.error;
+        if (tonesResponse.error) throw tonesResponse.error;
+
+        setCategories(categoriesResponse.data);
+        setLanguages(languagesResponse.data);
+        setNarrators(narratorsResponse.data);
+        setLiteratureStyles(stylesResponse.data);
+        setTones(tonesResponse.data);
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load form options",
+        });
+      }
+    }
+
+    if (isOpen) {
+      fetchData();
+    }
+  }, [isOpen, toast]);
 
   const handleSubmit = async () => {
     if (!selectedLanguage) return;
@@ -42,9 +112,18 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
     setIsSubmitting(true);
     setIssues(null);
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('No user found');
+
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('No session found');
 
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('id, full_name')
+      .eq('id', user.id)
+      .single();
+    
     // Call the API to generate the book
     const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
       method: 'POST',
@@ -59,7 +138,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
         narrator: selectedNarrator?.narrator,
         tone: selectedTone?.tone,
         literatureStyle: selectedStyle?.style,
-        author_name: profile?.full_name || 'Anonymous'
+        author_name: profileData?.full_name || 'Anonymous'
       })
     });
 
@@ -150,7 +229,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
                 id="categories"
                 isMulti
                 value={selectedCategories}
-                onChange={(newValue) => setSelectedCategories(newValue as Array<{ value: string; label: string; category: any }>)}
+                onChange={(newValue) => setSelectedCategories(newValue as Array<{ value: string; label: string; category: Category }>)}
                 options={mapToOptions(categories, 'category')}
                 className="react-select-container"
                 classNamePrefix="react-select"
@@ -172,7 +251,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
               <Select
                 id="language"
                 value={selectedLanguage}
-                onChange={(newValue) => setSelectedLanguage(newValue as { value: string; label: string; language: any })}
+                onChange={(newValue) => setSelectedLanguage(newValue as { value: string; label: string; language: Language })}
                 options={mapToOptions(languages, 'language')}
                 className="react-select-container"
                 classNamePrefix="react-select"
@@ -210,7 +289,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
                     <Select
                       id="narrator"
                       value={selectedNarrator}
-                      onChange={(newValue) => setSelectedNarrator(newValue as { value: string; label: string; narrator: any })}
+                      onChange={(newValue) => setSelectedNarrator(newValue as { value: string; label: string; narrator: Narrator })}
                       options={mapToOptions(narrators, 'narrator')}
                       className="react-select-container"
                       classNamePrefix="react-select"
@@ -232,7 +311,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
                     <Select
                       id="style"
                       value={selectedStyle}
-                      onChange={(newValue) => setSelectedStyle(newValue as { value: string; label: string; style: any })}
+                      onChange={(newValue) => setSelectedStyle(newValue as { value: string; label: string; style: LiteratureStyle })}
                       options={mapToOptions(literatureStyles, 'style')}
                       className="react-select-container"
                       classNamePrefix="react-select"
@@ -254,7 +333,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
                     <Select
                       id="tone"
                       value={selectedTone}
-                      onChange={(newValue) => setSelectedTone(newValue as { value: string; label: string; tone: any })}
+                      onChange={(newValue) => setSelectedTone(newValue as { value: string; label: string; tone: Tone })}
                       options={mapToOptions(tones, 'tone')}
                       className="react-select-container"
                       classNamePrefix="react-select"
