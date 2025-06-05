@@ -32,26 +32,15 @@ interface Tone {
   name: string;
 }
 
-interface Issue {
-  type: string;
-  message: string;
+interface ValidationIssue {
+  type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration';
+  description: string;
 }
 
 interface NewBookModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { 
-    prompt: string; 
-    categories: Category[]; 
-    language: Language;
-    narrator?: Narrator;
-    literatureStyle?: LiteratureStyle;
-    tone?: Tone;
-  }) => Promise<{
-    is_valid: boolean;
-    issues?: Issue[];
-    book?: any;
-  }>;
+  onSubmit: (book: any) => void;
 }
 
 export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
@@ -59,7 +48,7 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
   const [prompt, setPrompt] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [issues, setIssues] = useState<Issue[] | null>(null);
+  const [issues, setIssues] = useState<ValidationIssue[] | null>(null);
   
   // Data states
   const [categories, setCategories] = useState<Category[]>([]);
@@ -123,31 +112,56 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
     setIsSubmitting(true);
     setIssues(null);
 
-    
-      const response = await onSubmit({
-        prompt,
-        categories: selectedCategories.map(c => c.category),
-        language: selectedLanguage.language,
-        narrator: selectedNarrator?.narrator,
-        literatureStyle: selectedStyle?.style,
-        tone: selectedTone?.tone,
-      });
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('No user found');
 
-      if (!response.is_valid) {
-        setIssues(response.issues || null);
-      } else {
-        // Reset form and close modal on success
-        setPrompt('');
-        setSelectedCategories([]);
-        setSelectedLanguage(null);
-        setSelectedNarrator(null);
-        setSelectedStyle(null);
-        setSelectedTone(null);
-        setShowAdvanced(false);
-        onClose();
-      }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('No session found');
+
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('id, full_name')
+      .eq('id', user.id)
+      .single();
     
+    // Call the API to generate the book
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({
+        prompt,
+        language: selectedLanguage.language,
+        categories: selectedCategories.map(c => c.category),
+        narrator: selectedNarrator?.narrator,
+        tone: selectedTone?.tone,
+        literatureStyle: selectedStyle?.style,
+        author_name: profileData?.full_name || 'Anonymous'
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.is_valid) {
+      setIssues(result.issues || null);
       setIsSubmitting(false);
+      return result;
+    } else if (!result.book) {
+      setIsSubmitting(false);
+      throw new Error('No book data received');
+    }
+    
+    onSubmit(result.book);
+    setPrompt('');
+    setSelectedCategories([]);
+    setSelectedLanguage(null);
+    setSelectedNarrator(null);
+    setSelectedStyle(null);
+    setSelectedTone(null);
+    setShowAdvanced(false);
+    onClose();
   };
 
   const mapToOptions = (items: { id: string; name: string }[], type: string) => 
@@ -177,18 +191,18 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
           <div className="space-y-6">
             {issues && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex">
-                  <div className="shrink-0">
+                <div className="flex flex-col gap-1">
+                  <div className="flex">
                     <AlertCircle className="h-5 w-5 text-red-400" />
+                    <h3 className="text-sm font-medium text-red-800 ml-3">
+                      Content Policy Violation
+                    </h3>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
-                      Generation Error
-                    </h3>
                     <div className="mt-2 text-sm text-red-700">
-                      <ul className="list-disc pl-5 space-y-1">
+                      <ul className="list-disc pl-5 space-y-2">
                         {issues.map((issue, index) => (
-                          <li key={index}>{issue.message}</li>
+                          <li key={index}>{issue.description}</li>
                         ))}
                       </ul>
                     </div>
