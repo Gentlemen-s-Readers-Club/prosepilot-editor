@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Search, ChevronDown } from 'lucide-react';
+import { Plus, Search, ChevronDown, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Navigation } from '../components/Navigation';
 import { BookList } from '../components/BookList';
@@ -8,6 +8,14 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { useToast } from '../hooks/use-toast';
 import { type Status } from '../components/ui/status-badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../components/ui/dialog';
 
 interface Book {
   id: string;
@@ -49,6 +57,11 @@ interface Profile {
   full_name: string;
 }
 
+interface ValidationIssue {
+  type: string;
+  message: string;
+}
+
 const BOOK_STATES: Status[] = ['writing', 'draft', 'reviewing', 'published', 'archived', 'error'];
 const BOOKS_PER_PAGE = 30;
 
@@ -65,6 +78,7 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [validationIssues, setValidationIssues] = useState<ValidationIssue[] | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -213,9 +227,45 @@ export function Dashboard() {
       const result = await response.json();
 
       if (!result.is_valid) {
-        throw new Error(result.issues?.[0]?.message || 'Failed to generate book');
-      } else if (!result.book) {
+        setValidationIssues(result.issues || null);
+        return result;
+      }
+
+      if (!result.book) {
         throw new Error('No book data received');
+      }
+
+      // Create the book in Supabase
+      const { data: book, error: bookError } = await supabase
+        .from('books')
+        .insert({
+          title: result.book.title,
+          author_name: result.book.author_name,
+          synopsis: result.book.synopsis,
+          status: result.book.status,
+          language_id: result.book.language_id,
+          user_id: user.id,
+          narrator_id: result.book.narrator_id,
+          tone_id: result.book.tone_id,
+          literature_style_id: result.book.literature_style_id
+        })
+        .select()
+        .single();
+
+      if (bookError) throw bookError;
+
+      // Add categories
+      if (categories.length > 0) {
+        const categoryLinks = categories.map(category => ({
+          book_id: book.id,
+          category_id: category.id
+        }));
+
+        const { error: categoriesError } = await supabase
+          .from('book_categories')
+          .insert(categoryLinks);
+
+        if (categoriesError) throw categoriesError;
       }
 
       // Refresh books list
@@ -395,9 +445,47 @@ export function Dashboard() {
           
           <NewBookModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={() => {
+              setIsModalOpen(false);
+              setValidationIssues(null);
+            }}
             onSubmit={handleNewBook}
           />
+
+          <Dialog 
+            open={!!validationIssues} 
+            onOpenChange={() => setValidationIssues(null)}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Validation Issues</DialogTitle>
+                <DialogDescription>
+                  The following issues need to be addressed:
+                </DialogDescription>
+              </DialogHeader>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex">
+                  <div className="shrink-0">
+                    <AlertCircle className="h-5 w-5 text-red-400" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="mt-2 text-sm text-red-700">
+                      <ul className="list-disc pl-5 space-y-1">
+                        {validationIssues?.map((issue, index) => (
+                          <li key={index}>{issue.message}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={() => setValidationIssues(null)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
     </div>
   );
