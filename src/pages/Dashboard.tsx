@@ -37,31 +37,6 @@ interface Language {
   code: string;
 }
 
-interface Narrator {
-  id: string;
-  name: string;
-}
-
-interface LiteratureStyle {
-  id: string;
-  name: string;
-}
-
-interface Tone {
-  id: string;
-  name: string;
-}
-
-interface Profile {
-  id: string;
-  full_name: string;
-}
-
-interface ValidationIssue {
-  type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration';
-  message: string;
-}
-
 const BOOK_STATES: Status[] = ['writing', 'draft', 'reviewing', 'published', 'archived', 'error'];
 const BOOKS_PER_PAGE = 30;
 
@@ -77,26 +52,10 @@ export function Dashboard() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [validationIssues, setValidationIssues] = useState<ValidationIssue[] | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Get user profile
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('id, full_name')
-            .eq('id', user.id)
-            .single();
-          
-          if (profileData) {
-            setProfile(profileData);
-          }
-        }
-
         // Fetch categories and languages
         const [categoriesResponse, languagesResponse] = await Promise.all([
           supabase.from('categories').select('*').order('name'),
@@ -180,61 +139,8 @@ export function Dashboard() {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus]);
 
-  const handleNewBook = async ({ 
-    prompt, 
-    categories, 
-    language,
-    narrator,
-    literatureStyle,
-    tone 
-  }: { 
-    prompt: string; 
-    categories: Category[]; 
-    language: Language;
-    narrator?: Narrator;
-    literatureStyle?: LiteratureStyle;
-    tone?: Tone;
-  }) => {
+  const handleNewBook = async (book: Book) => {
     try {
-      if (!profile) {
-        throw new Error('User profile not found');
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No session found');
-
-      // Call the API to generate the book
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          prompt,
-          language,
-          categories,
-          narrator,
-          tone,
-          literature_style: literatureStyle,
-          author_name: profile.full_name
-        })
-      });
-
-      const result = await response.json();
-
-      if (!result.is_valid) {
-        setValidationIssues(result.issues || null);
-        return result;
-      }
-
-      if (!result.book) {
-        throw new Error('No book data received');
-      }
-
       // Refresh books list
       const { data: updatedBook, error: fetchError } = await supabase
         .from('books')
@@ -270,8 +176,6 @@ export function Dashboard() {
         title: "Success",
         description: "Book created successfully",
       });
-
-      return result;
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -414,45 +318,9 @@ export function Dashboard() {
             isOpen={isModalOpen}
             onClose={() => {
               setIsModalOpen(false);
-              setValidationIssues(null);
             }}
             onSubmit={handleNewBook}
           />
-
-          <Dialog 
-            open={!!validationIssues} 
-            onOpenChange={() => setValidationIssues(null)}
-          >
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Validation Issues</DialogTitle>
-                <DialogDescription>
-                  The following issues need to be addressed:
-                </DialogDescription>
-              </DialogHeader>
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex">
-                  <div className="shrink-0">
-                    <AlertCircle className="h-5 w-5 text-red-400" />
-                  </div>
-                  <div className="ml-3">
-                    <div className="mt-2 text-sm text-red-700">
-                      <ul className="list-disc pl-5 space-y-1">
-                        {validationIssues?.map((issue, index) => (
-                          <li key={index}>{issue.message}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button onClick={() => setValidationIssues(null)}>
-                  Close
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
         </div>
     </div>
   );
