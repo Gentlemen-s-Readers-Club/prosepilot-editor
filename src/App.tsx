@@ -25,48 +25,36 @@ function App() {
 
   return (
     <Router>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route
-            path="/app"
-            element={
-              session ? (
-                <Dashboard />
-              ) : (
-                <Navigate to="/app/login" />
-              )
-            }
-          />
-          <Route
-            path="/app/book/:id"
-            element={session ? <BookDetails /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/chapter/:id"
-            element={session ? <ChapterEditor /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/profile"
-            element={session ? <EditProfile /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/subscription"
-            element={session ? <Subscription /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/login"
-            element={session ? <Navigate to="/app" /> : <Login />}
-          />
-          <Route
-            path="/app/signup"
-            element={session ? <Navigate to="/app" /> : <Signup />}
-          />
-          <Route
-            path="/app/forgot-password"
-            element={session ? <Navigate to="/app" /> : <ForgotPassword />}
-          />
-        </Routes>
-        <Toaster />
+      <Routes>
+        {/* Public routes that don't require auth check */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/app/login" element={session ? <Navigate to="/app" /> : <Login />} />
+        <Route path="/app/signup" element={session ? <Navigate to="/app" /> : <Signup />} />
+        <Route path="/app/forgot-password" element={session ? <Navigate to="/app" /> : <ForgotPassword />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/app"
+          element={session ? <Dashboard /> : <Navigate to="/app/login" />}
+        />
+        <Route
+          path="/app/book/:id"
+          element={session ? <BookDetails /> : <Navigate to="/app/login" />}
+        />
+        <Route
+          path="/app/chapter/:id"
+          element={session ? <ChapterEditor /> : <Navigate to="/app/login" />}
+        />
+        <Route
+          path="/app/profile"
+          element={session ? <EditProfile /> : <Navigate to="/app/login" />}
+        />
+        <Route
+          path="/app/subscription"
+          element={session ? <Subscription /> : <Navigate to="/app/login" />}
+        />
+      </Routes>
+      <Toaster />
     </Router>
   );
 }
