@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Plus, Search, ChevronDown } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Navigation } from '../components/Navigation';
@@ -182,40 +182,6 @@ export function Dashboard() {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus]);
 
-  const handleNewBook = async (book: Book) => {
-    try {
-      // Refresh books list
-      const { data: updatedBook, error: fetchError } = await supabase
-        .from('books')
-        .select(`
-          id,
-          title,
-          cover_url,
-          status,
-          languages (name),
-          book_categories (
-            categories (name)
-          )
-        `)
-        .eq('id', book.id)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      toast({
-        title: "Success",
-        description: "Book created successfully",
-      });
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to create book",
-      });
-      throw error;
-    }
-  };
-
   if (loading) {
     return (
       <>
@@ -349,7 +315,6 @@ export function Dashboard() {
             onClose={() => {
               setIsModalOpen(false);
             }}
-            onSubmit={handleNewBook}
           />
         </div>
     </div>
