@@ -197,7 +197,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="prompt" className="text-accent">Story Idea or Outline</Label>
+                <Label htmlFor="prompt" className="text-primary">Story Idea or Outline</Label>
                 <textarea
                   id="prompt"
                   value={prompt}
@@ -209,7 +209,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="categories" className="text-accent">Categories</Label>
+                <Label htmlFor="categories" className="text-primary">Categories</Label>
                 <CustomSelect
                   id="categories"
                   isMulti
@@ -222,7 +222,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="language" className="text-accent">Language</Label>
+                <Label htmlFor="language" className="text-primary">Language</Label>
                 <CustomSelect
                   id="language"
                   value={selectedLanguage}
@@ -250,7 +250,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 {showAdvanced && (
                   <div className="mt-4 space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="narrator" className="text-accent">Narrator Perspective</Label>
+                      <Label htmlFor="narrator" className="text-primary">Narrator Perspective</Label>
                       <CustomSelect
                         id="narrator"
                         value={selectedNarrator}
@@ -262,7 +262,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="style" className="text-accent">Literature Style</Label>
+                      <Label htmlFor="style" className="text-primary">Literature Style</Label>
                       <CustomSelect
                         id="style"
                         value={selectedStyle}
@@ -274,7 +274,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="tone" className="text-accent">Writing Tone</Label>
+                      <Label htmlFor="tone" className="text-primary">Writing Tone</Label>
                       <CustomSelect
                         id="tone"
                         value={selectedTone}
