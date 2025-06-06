@@ -34,7 +34,7 @@ export function Checkbox({ id, checked, onChange, disabled = false, className }:
         )}
       >
         {checked && (
-          <Check className="w-3 h-3 text-white" strokeWidth={3} />
+          <Check className="w-3 h-3 text-white\" strokeWidth={3} />
         )}
       </label>
     </div>

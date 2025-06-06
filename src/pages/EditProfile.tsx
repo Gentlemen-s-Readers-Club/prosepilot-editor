@@ -305,7 +305,7 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="avatar" className="block text-sm font-medium text-gray-700">
+              <Label htmlFor="avatar\" className="block text-sm font-medium text-gray-700">
                 Profile Picture
               </Label>
               <div className="mt-2 flex items-center space-x-4">
