@@ -304,7 +304,7 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="avatar\" className="block text-sm font-medium text-gray-700">
+              <Label htmlFor="avatar" className="block text-sm font-medium text-gray-700">
                 Profile Picture
               </Label>
               <div className="mt-2 flex items-center space-x-4">
@@ -422,7 +422,7 @@ export function EditProfile() {
                     ...newsletterPreferences, 
                     newsletter_product: e.target.checked 
                   })}
-                  className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
+                  className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-accent focus:ring-2 checked:bg-accent checked:border-accent relative top-1"
                 />
               </div>
               <div className="ml-3">
@@ -441,7 +441,7 @@ export function EditProfile() {
                     ...newsletterPreferences, 
                     newsletter_writing: e.target.checked 
                   })}
-                  className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
+                  className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-accent focus:ring-2 checked:bg-accent checked:border-accent relative top-1"
                 />
               </div>
               <div className="ml-3">
@@ -460,7 +460,7 @@ export function EditProfile() {
                     ...newsletterPreferences, 
                     newsletter_marketing: e.target.checked 
                   })}
-                  className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
+                  className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-accent focus:ring-2 checked:bg-accent checked:border-accent relative top-1"
                 />
               </div>
               <div className="ml-3">
