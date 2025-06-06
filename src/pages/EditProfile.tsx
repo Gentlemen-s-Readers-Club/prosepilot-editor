@@ -5,6 +5,7 @@ import { Navigation } from '../components/Navigation';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { Checkbox } from '../components/ui/checkbox';
 import { useToast } from '../hooks/use-toast';
 import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2 } from 'lucide-react';
 import {
@@ -304,7 +305,7 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="avatar\" className="block text-sm font-medium text-gray-700">
+              <Label htmlFor="avatar" className="block text-sm font-medium text-gray-700">
                 Profile Picture
               </Label>
               <div className="mt-2 flex items-center space-x-4">
@@ -412,58 +413,49 @@ export function EditProfile() {
       case 'newsletters':
         return (
           <div className="space-y-4">
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  id="newsletter_product"
-                  type="checkbox"
-                  checked={newsletterPreferences.newsletter_product}
-                  onChange={(e) => setNewsletterPreferences({ 
-                    ...newsletterPreferences, 
-                    newsletter_product: e.target.checked 
-                  })}
-                  className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-accent focus:ring-2 checked:bg-accent checked:border-accent relative top-1"
-                />
-              </div>
-              <div className="ml-3">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="newsletter_product"
+                checked={newsletterPreferences.newsletter_product}
+                onChange={(checked) => setNewsletterPreferences({ 
+                  ...newsletterPreferences, 
+                  newsletter_product: checked 
+                })}
+                className="mt-1"
+              />
+              <div>
                 <Label htmlFor="newsletter_product" className="font-medium text-gray-700">Product Updates</Label>
                 <p className="text-gray-500 text-sm">Be the first to know about new AI capabilities, tools, and improvements in the platform.</p>
               </div>
             </div>
 
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  id="newsletter_writing"
-                  type="checkbox"
-                  checked={newsletterPreferences.newsletter_writing}
-                  onChange={(e) => setNewsletterPreferences({ 
-                    ...newsletterPreferences, 
-                    newsletter_writing: e.target.checked 
-                  })}
-                  className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-accent focus:ring-2 checked:bg-accent checked:border-accent relative top-1"
-                />
-              </div>
-              <div className="ml-3">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="newsletter_writing"
+                checked={newsletterPreferences.newsletter_writing}
+                onChange={(checked) => setNewsletterPreferences({ 
+                  ...newsletterPreferences, 
+                  newsletter_writing: checked 
+                })}
+                className="mt-1"
+              />
+              <div>
                 <Label htmlFor="newsletter_writing" className="font-medium text-gray-700">Writing Tips & Resources</Label>
                 <p className="text-gray-500 text-sm">Get weekly inspiration, creative prompts, and storytelling advice to keep your writing flowing.</p>
               </div>
             </div>
 
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  id="newsletter_marketing"
-                  type="checkbox"
-                  checked={newsletterPreferences.newsletter_marketing}
-                  onChange={(e) => setNewsletterPreferences({ 
-                    ...newsletterPreferences, 
-                    newsletter_marketing: e.target.checked 
-                  })}
-                  className="h-4 w-4 text-white bg-white border-gray-300 rounded focus:ring-accent focus:ring-2 checked:bg-accent checked:border-accent relative top-1"
-                />
-              </div>
-              <div className="ml-3">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="newsletter_marketing"
+                checked={newsletterPreferences.newsletter_marketing}
+                onChange={(checked) => setNewsletterPreferences({ 
+                  ...newsletterPreferences, 
+                  newsletter_marketing: checked 
+                })}
+                className="mt-1"
+              />
+              <div>
                 <Label htmlFor="newsletter_marketing" className="font-medium text-gray-700">Publishing & Marketing Advice</Label>
                 <p className="text-gray-500 text-sm">Learn how to publish, promote, and sell your book—plus tips on reaching your audience.</p>
               </div>
