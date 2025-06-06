@@ -40,10 +40,9 @@ interface ValidationIssue {
 interface NewBookModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (book: any) => void;
 }
 
-export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
+export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const { toast } = useToast();
   const [prompt, setPrompt] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -103,6 +102,14 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
 
     if (isOpen) {
       fetchData();
+    } else {
+      setPrompt('');
+      setSelectedCategories([]);
+      setSelectedLanguage(null);
+      setSelectedNarrator(null);
+      setSelectedStyle(null);
+      setSelectedTone(null);
+      setShowAdvanced(false);
     }
   }, [isOpen, toast]);
 
@@ -156,16 +163,13 @@ export function NewBookModal({ isOpen, onClose, onSubmit }: NewBookModalProps) {
       } else if (!result.book) {
         throw new Error('No book data received');
       }
-      
-      onSubmit(result.book);
-      setPrompt('');
-      setSelectedCategories([]);
-      setSelectedLanguage(null);
-      setSelectedNarrator(null);
-      setSelectedStyle(null);
-      setSelectedTone(null);
-      setShowAdvanced(false);
+
       onClose();
+
+      toast({
+        title: "Success",
+        description: "Book created successfully",
+      });
     } catch (error) {
       console.error('Error creating book:', error);
       toast({
