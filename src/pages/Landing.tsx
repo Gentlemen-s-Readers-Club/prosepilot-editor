@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  BookOpen, 
   Sparkles, 
   PenTool, 
   Brain,
@@ -20,7 +19,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-[#31606D]" />
+              <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
               <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
             </div>
             <div className="flex items-center space-x-4">
@@ -176,7 +175,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-[#31606D]" />
+              <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
               <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
             </div>
             <p className="text-gray-500 text-sm">© 2025 ProsePilot. All rights reserved.</p>
