@@ -7,9 +7,9 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { FileUpload } from '../components/ui/file-upload';
 import { ChapterList } from '../components/ChapterList';
-import { StatusBadge, type Status } from '../components/ui/status-badge';
+import { StatusBadge } from '../components/ui/status-badge';
 import { useToast } from '../hooks/use-toast';
-import { ArrowLeft, Trash2, Archive, BookDown, Download, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Trash2, Archive, Download, AlertCircle } from 'lucide-react';
 import Select from 'react-select';
 import {
   Dialog,
@@ -19,16 +19,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog';
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Language {
-  id: string;
-  name: string;
-}
+import { Status } from '../store/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { fetchCategories } from '../store/slices/categoriesSlice';
+import { fetchLanguages } from '../store/slices/languagesSlice';
 
 interface BookFormData {
   title: string;
@@ -42,12 +37,16 @@ interface BookFormData {
 }
 
 export function BookDetails() {
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
+  const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
+
+
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [languages, setLanguages] = useState<Language[]>([]);
   const [loading, setLoading] = useState(true);
   const [formErrors, setFormErrors] = useState({
     title: false,
@@ -72,37 +71,29 @@ export function BookDetails() {
       try {
         setLoading(true);
 
-        // Fetch categories and languages
-        const [categoriesResponse, languagesResponse] = await Promise.all([
-          supabase.from('categories').select('*').order('name'),
-          supabase.from('languages').select('*').order('name')
-        ]);
-
-        if (categoriesResponse.error) throw categoriesResponse.error;
-        if (languagesResponse.error) throw languagesResponse.error;
-
-        setCategories(categoriesResponse.data);
-        setLanguages(languagesResponse.data);
-
-        // Fetch book data
-        const { data: book, error: bookError } = await supabase
-          .from('books')
-          .select(`
-            *,
-            languages (
-              id,
-              name
-            ),
-            book_categories (
-              categories (
+        const [bookData] = await Promise.all([
+          supabase
+            .from('books')
+            .select(`
+              *,
+              languages (
                 id,
                 name
+              ),
+              book_categories (
+                categories (
+                  id,
+                  name
+                )
               )
-            )
-          `)
-          .eq('id', id)
-          .single();
+            `)
+            .eq('id', id)
+            .single(),
+          categoriesStatus === 'idle' ? dispatch(fetchCategories()).unwrap() : Promise.resolve(),
+          languagesStatus === 'idle' ? dispatch(fetchLanguages()).unwrap() : Promise.resolve()
+        ]);
 
+        const { data: book, error: bookError } = bookData;
         if (bookError) throw bookError;
 
         // Transform book data for form
@@ -122,7 +113,8 @@ export function BookDetails() {
             label: bc.categories.name
           }))
         });
-      } catch (error: any) {
+      } catch (err) {
+        console.error('Error loading book details:', err);
         toast({
           variant: "destructive",
           title: "Error",
@@ -135,7 +127,7 @@ export function BookDetails() {
     }
 
     fetchData();
-  }, [id, navigate, toast]);
+  }, [id, navigate, toast, categoriesStatus, languagesStatus, dispatch]);
 
   const handleFileSelect = async (file: File) => {
     try {

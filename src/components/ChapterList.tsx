@@ -59,30 +59,31 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
   );
 
   useEffect(() => {
-    fetchChapters();
-  }, [bookId]);
+    const fetchData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('chapters')
+          .select('*')
+          .eq('book_id', bookId)
+          .order('order');
+  
+        if (error) throw error;
+  
+        setChapters(data);
+      } catch (err) {
+        console.error('Error fetching chapters:', err);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load chapters",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  async function fetchChapters() {
-    try {
-      const { data, error } = await supabase
-        .from('chapters')
-        .select('*')
-        .eq('book_id', bookId)
-        .order('order');
-
-      if (error) throw error;
-
-      setChapters(data);
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load chapters",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
+    fetchData();
+  }, [bookId, toast]);
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;

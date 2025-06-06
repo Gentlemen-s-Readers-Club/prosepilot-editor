@@ -35,7 +35,7 @@ export function ChapterToolbar({
     if (versions.length > 0 && !selectedVersion) {
       setSelectedVersion(versions[0]);
     }
-  }, [versions]);
+  }, [selectedVersion, versions]);
 
   const handleTitleSave = () => {
     onTitleChange(editedTitle);

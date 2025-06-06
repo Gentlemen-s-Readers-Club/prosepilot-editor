@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { LogOut, User, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../hooks/useAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearProfile } from '../store/slices/profileSlice';
+import type { RootState, AppDispatch } from '../store';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,37 +14,14 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-interface Profile {
-  id: string;
-  full_name: string;
-  avatar_url: string | null;
-}
-
 export function Navigation() {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const { session } = useAuth();
-
-  useEffect(() => {
-    async function getProfile() {
-      if (session?.user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (data) {
-          setProfile(data);
-        }
-      }
-    }
-
-    getProfile();
-  }, [session]);
+  const dispatch = useDispatch<AppDispatch>();
+  const profile = useSelector((state: RootState) => state.profile.profile);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    dispatch(clearProfile());
     navigate('/app/login');
   };
 

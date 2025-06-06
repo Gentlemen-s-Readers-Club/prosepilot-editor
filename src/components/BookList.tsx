@@ -1,17 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, BookOpen, Loader2 } from 'lucide-react';
-import { StatusBadge, type Status } from './ui/status-badge';
+import { StatusBadge } from './ui/status-badge';
+import { Book } from '../store/types';
 import { Button } from './ui/button';
-
-interface Book {
-  id: string;
-  title: string;
-  coverUrl: string | null;
-  state: Status;
-  category: string;
-  language: string;
-}
 
 interface BookListProps {
   books: Book[];
@@ -72,22 +64,22 @@ export function BookList({ books, currentPage, totalPages, onPageChange }: BookL
         {books.map((book) => (
           <div
             key={book.id}
-            onClick={() => book.state !== 'writing' && navigate(`/app/book/${book.id}`)}
-            className={`group ${book.state !== 'writing' ? 'cursor-pointer' : 'cursor-default'}`}
+            onClick={() => book.status !== 'writing' && navigate(`/app/book/${book.id}`)}
+            className={`group ${book.status !== 'writing' ? 'cursor-pointer' : 'cursor-default'}`}
           >
-            <div className="relative aspect-[10/16] rounded-sm overflow-hidden">
+            <div className="relative aspect-[10/16] rounded-sm overflow-hidden bg-gray-100">
               <div className="absolute top-2 left-2 z-10">
-                <StatusBadge status={book.state} />
+                <StatusBadge status={book.status} />
               </div>
-              {book.coverUrl ? (
+              {book.cover_url ? (
                 <img
-                  src={book.coverUrl}
+                  src={book.cover_url}
                   alt={book.title}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               ) : (
                 <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center p-4 transition-colors group-hover:bg-gray-200">
-                  {book.state === 'writing' ? (
+                  {book.status === 'writing' ? (
                     <Loader2 className="w-12 h-12 text-gray-400 animate-spin" />
                   ) : (
                     <BookOpen className="w-12 h-12 text-gray-400 mb-4" />
@@ -98,8 +90,8 @@ export function BookList({ books, currentPage, totalPages, onPageChange }: BookL
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <h3 className="text-lg font-semibold text-white mb-1">{book.title}</h3>
                 <div className="space-y-1">
-                  <p className="text-sm text-white/90">{book.category}</p>
-                  <p className="text-sm text-white/80">{book.language}</p>
+                  <p className="text-sm text-white/90">{book.book_categories.map(bc => bc.name).join(', ')}</p>
+                  <p className="text-sm text-white/80">{book.languages.name}</p>
                 </div>
               </div>
             </div>

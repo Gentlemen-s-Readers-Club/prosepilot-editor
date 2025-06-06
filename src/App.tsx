@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
@@ -11,9 +11,17 @@ import { Subscription } from './pages/Subscription';
 import { Landing } from './pages/Landing';
 import { Toaster } from './components/Toaster';
 import { useAuth } from './hooks/useAuth';
+import { AppDispatch } from './store';
+import { useDispatch } from 'react-redux';
+import { fetchProfile } from './store/slices/profileSlice';
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
   const { session, loading } = useAuth();
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
 
   if (loading) {
     return (

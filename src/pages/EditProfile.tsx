@@ -6,7 +6,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useToast } from '../hooks/use-toast';
-import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle } from 'lucide-react';
+import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -15,21 +15,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { updateProfile } from '../store/slices/profileSlice';
 
 export function EditProfile() {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const { profile, status } = useSelector((state: RootState) => state.profile);
+
   const [loading, setLoading] = useState(false);
+  const [isFileLoading, setIsFileLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [activeSection, setActiveSection] = useState('profile');
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [profile, setProfile] = useState({
-    full_name: '',
-    avatar_url: '',
-    email: '',
+
+  const [profileData, setProfileData] = useState({
+    full_name: profile?.full_name || '',
+    avatar_url: profile?.avatar_url || '',
     newsletter_product: true,
     newsletter_features: true,
     newsletter_writing: true,
@@ -37,8 +45,14 @@ export function EditProfile() {
   const [connectedProviders, setConnectedProviders] = useState<string[]>([]);
 
   useEffect(() => {
-    getProfile();
-  }, []);
+    setProfileData({
+      full_name: profile?.full_name || '',
+      avatar_url: profile?.avatar_url || '',
+      newsletter_product: profile?.newsletter_product || true,
+      newsletter_features: profile?.newsletter_features || true,
+      newsletter_writing: profile?.newsletter_writing || true,
+    });
+  }, [profile]);  
 
   useEffect(() => {
     setPasswordStrength(calculatePasswordStrength(newPassword));
@@ -78,85 +92,32 @@ export function EditProfile() {
     }
   };
 
-  async function getProfile() {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user) {
-        navigate('/login');
-        return;
-      }
-
-      // Get profile data
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
-
-      if (error) throw error;
-      
-      // Get user's email and identities
-      const { data: { user } } = await supabase.auth.getUser();
-      const identities = user?.identities || [];
-      const providers = identities.map(identity => identity.provider);
-
-      setConnectedProviders(providers);
-      setProfile({
-        ...data,
-        email: session.user.email || '',
-      });
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Error loading profile",
-      });
-    }
-  }
-
-  async function updateProfile() {
+  async function handleProfileSave() {
     try {
       setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user) {
-        navigate('/login');
-        return;
-      }
-
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          full_name: profile.full_name,
-          avatar_url: profile.avatar_url,
-          newsletter_product: profile.newsletter_product,
-          newsletter_features: profile.newsletter_features,
-          newsletter_writing: profile.newsletter_writing,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', session.user.id);
-
-      if (error) throw error;
-
+      await dispatch(updateProfile({
+        full_name: profileData.full_name,
+        avatar_url: profileData.avatar_url
+      }));
       toast({
         title: "Success",
         description: "Profile updated successfully",
       });
-    } catch (error: any) {
+    } catch (err) {
+      console.error('Error updating profile:', err);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Error updating profile",
       });
-    } finally {
+    } finally { 
       setLoading(false);
     }
   }
 
   async function handleAvatarUpload(event: React.ChangeEvent<HTMLInputElement>) {
     try {
-      setLoading(true);
+      setIsFileLoading(true);
       const file = event.target.files?.[0];
       if (!file) return;
 
@@ -164,9 +125,9 @@ export function EditProfile() {
       if (!session?.user) return;
 
       const fileExt = file.name.split('.').pop();
-      const filePath = `${session.user.id}/avatar.${fileExt}`;
+      const filePath = `${session.user.id}/${Date.now()}.${fileExt}`;
 
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
@@ -175,8 +136,9 @@ export function EditProfile() {
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
-
-      setProfile({ ...profile, avatar_url: publicUrl });
+        
+      console.log(publicUrl);
+      setProfileData({ ...profileData, avatar_url: publicUrl });
       
       toast({
         title: "Success",
@@ -189,7 +151,7 @@ export function EditProfile() {
         description: "Error uploading avatar",
       });
     } finally {
-      setLoading(false);
+      setIsFileLoading(false);
     }
   }
 
@@ -266,7 +228,7 @@ export function EditProfile() {
   }
 
   async function handleDeleteAccount() {
-    if (deleteConfirmation !== profile.email) {
+    if (deleteConfirmation !== profile?.email) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -321,9 +283,9 @@ export function EditProfile() {
               </Label>
               <div className="mt-2 flex items-center space-x-4">
                 <div className="h-20 w-20 rounded-full overflow-hidden bg-gray-100">
-                  {profile.avatar_url ? (
+                  {profileData.avatar_url ? (
                     <img
-                      src={profile.avatar_url}
+                      src={profileData.avatar_url}
                       alt="Profile"
                       className="h-full w-full object-cover"
                     />
@@ -334,8 +296,15 @@ export function EditProfile() {
                   )}
                 </div>
                 <label className="cursor-pointer">
-                  <span className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Change
+                  <span className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isFileLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    {isFileLoading ? (
+                      <div className="flex items-center">
+                        <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-700" />
+                        Uploading...
+                      </div>
+                    ) : (
+                      'Change'
+                    )}
                   </span>
                   <input
                     type="file"
@@ -354,7 +323,7 @@ export function EditProfile() {
               <Input
                 id="email"
                 type="email"
-                value={profile.email}
+                value={profile?.email}
                 disabled
                 className="mt-1 bg-gray-50"
               />
@@ -365,15 +334,15 @@ export function EditProfile() {
               <Input
                 id="fullName"
                 type="text"
-                value={profile.full_name}
-                onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
+                value={profileData.full_name}
+                onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
                 className="mt-1"
                 disabled={loading}
               />
             </div>
 
             <Button
-              onClick={updateProfile}
+              onClick={handleProfileSave}
               className="w-full"
               disabled={loading}
             >
@@ -423,7 +392,7 @@ export function EditProfile() {
                   id="newsletter_product"
                   type="checkbox"
                   checked={profile.newsletter_product}
-                  onChange={(e) => setProfile({ ...profile, newsletter_product: e.target.checked })}
+                  onChange={(e) => setProfileData({ ...profile, newsletter_product: e.target.checked })}
                   className="h-4 w-4 text-[#31606D] border-gray-300 rounded"
                 />
               </div>
@@ -439,7 +408,7 @@ export function EditProfile() {
                   id="newsletter_features"
                   type="checkbox"
                   checked={profile.newsletter_features}
-                  onChange={(e) => setProfile({ ...profile, newsletter_features: e.target.checked })}
+                  onChange={(e) => setProfileData({ ...profile, newsletter_features: e.target.checked })}
                   className="h-4 w-4 text-[#31606D] border-gray-300 rounded"
                 />
               </div>
@@ -455,7 +424,7 @@ export function EditProfile() {
                   id="newsletter_writing"
                   type="checkbox"
                   checked={profile.newsletter_writing}
-                  onChange={(e) => setProfile({ ...profile, newsletter_writing: e.target.checked })}
+                  onChange={(e) => setProfileData({ ...profile, newsletter_writing: e.target.checked })}
                   className="h-4 w-4 text-[#31606D] border-gray-300 rounded"
                 />
               </div>
@@ -466,7 +435,7 @@ export function EditProfile() {
             </div>
 
             <Button
-              onClick={updateProfile}
+              onClick={handleProfileSave}
               className="w-full mt-6"
               disabled={loading}
             >
@@ -638,14 +607,14 @@ export function EditProfile() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="deleteConfirmation">
-                Type your email <span className="font-medium">{profile.email}</span> to confirm
+                Type your email <span className="font-medium">{profile?.email}</span> to confirm
               </Label>
               <Input
                 id="deleteConfirmation"
                 type="email"
                 value={deleteConfirmation}
                 onChange={(e) => setDeleteConfirmation(e.target.value)}
-                placeholder={profile.email}
+                placeholder={profile?.email}
               />
             </div>
           </div>
@@ -662,7 +631,7 @@ export function EditProfile() {
             <Button
               variant="destructive"
               onClick={handleDeleteAccount}
-              disabled={deleteConfirmation !== profile.email || loading}
+              disabled={deleteConfirmation !== profile?.email || loading}
             >
               Delete Account
             </Button>

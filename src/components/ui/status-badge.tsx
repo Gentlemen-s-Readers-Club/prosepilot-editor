@@ -1,6 +1,6 @@
 import { cn } from "../../lib/utils";
+import { Status } from "../../store/types";
 
-export type Status = 'draft' | 'writing' | 'reviewing' | 'published' | 'archived' | 'error';
 
 const STATUS_COLORS = {
   draft: 'bg-yellow-100 text-yellow-800 border-yellow-200',

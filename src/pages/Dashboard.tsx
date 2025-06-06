@@ -1,95 +1,53 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Plus, Search, ChevronDown } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigation } from '../components/Navigation';
 import { BookList } from '../components/BookList';
 import { NewBookModal } from '../components/NewBookModal';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import { useToast } from '../hooks/use-toast';
-import { type Status } from '../components/ui/status-badge';
+import { toast } from '../hooks/use-toast';
+import { fetchBooks } from '../store/slices/booksSlice';
+import { fetchCategories } from '../store/slices/categoriesSlice';
+import { fetchLanguages } from '../store/slices/languagesSlice';
+import { supabase } from '../lib/supabase';
+import { AppDispatch, RootState } from '../store';
+import type { Book, Category, Language } from '../store/types';
+import { BOOK_STATES } from '../lib/consts';
 
-interface Book {
-  id: string;
-  title: string;
-  coverUrl: string | null;
-  state: Status;
-  category: string;
-  language: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Language {
-  id: string;
-  name: string;
-  code: string;
-}
-
-const BOOK_STATES: Status[] = ['writing', 'draft', 'reviewing', 'published', 'archived', 'error'];
 const BOOKS_PER_PAGE = 30;
 
 export function Dashboard() {
-  const { toast } = useToast();
+  const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedLanguage, setSelectedLanguage] = useState('All Languages');
   const [selectedStatus, setSelectedStatus] = useState('All Statuses');
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { items: books, status: booksStatus } = useSelector((state: RootState) => state.books);
+  const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
+  const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
+
   useEffect(() => {
-    async function fetchData() {
+    const loadData = async () => {
       try {
-        // Fetch categories and languages
-        const [categoriesResponse, languagesResponse] = await Promise.all([
-          supabase.from('categories').select('*').order('name'),
-          supabase.from('languages').select('*').order('name')
-        ]);
+        const promises = [];
+        if (booksStatus === 'idle') {
+          promises.push(dispatch(fetchBooks()).unwrap());
+        }
+        if (categoriesStatus === 'idle') {
+          promises.push(dispatch(fetchCategories()).unwrap());
+        }
+        if (languagesStatus === 'idle') {
+          promises.push(dispatch(fetchLanguages()).unwrap());
+        }
 
-        if (categoriesResponse.error) throw categoriesResponse.error;
-        if (languagesResponse.error) throw languagesResponse.error;
-
-        setCategories(categoriesResponse.data);
-        setLanguages(languagesResponse.data);
-
-        // Fetch user's books with related data
-        const { data: booksData, error: booksError } = await supabase
-          .from('books')
-          .select(`
-            id,
-            title,
-            cover_url,
-            status,
-            languages (name),
-            book_categories (
-              categories (name)
-            )
-          `)
-          .order('updated_at', { ascending: false });
-
-        if (booksError) throw booksError;
-
-        const formattedBooks = booksData.map(book => ({
-          id: book.id,
-          title: book.title,
-          coverUrl: book.cover_url,
-          state: book.status as Status,
-          category: book.book_categories
-            .map((bc: any) => bc.categories.name)
-            .join(', '),
-          language: book.languages.name
-        }));
-
-        setBooks(formattedBooks);
-      } catch (error: any) {
+        await Promise.all(promises);
+      } catch(error) {
+        console.error('Error loading data:', error);
         toast({
           variant: "destructive",
           title: "Error",
@@ -98,10 +56,9 @@ export function Dashboard() {
       } finally {
         setLoading(false);
       }
-    }
-
-    fetchData();
-  }, [toast]);
+    };
+    loadData();
+  }, [dispatch, booksStatus, categoriesStatus, languagesStatus]);
 
   useEffect(() => {
     // Subscribe to real-time changes
@@ -114,37 +71,8 @@ export function Dashboard() {
           schema: 'public',
           table: 'books'
         },
-        async (payload) => {
-          console.log('Change received!', payload);
-
-          // Fetch the updated book data with related information
-          const { data: updatedBooks, error } = await supabase
-            .from('books')
-            .select(`
-              id,
-              title,
-              cover_url,
-              status,
-              languages (name),
-              book_categories (
-                categories (name)
-              )
-            `)
-            .order('updated_at', { ascending: false });
-
-          if (!error && updatedBooks) {
-            const formattedBooks = updatedBooks.map(book => ({
-              id: book.id,
-              title: book.title,
-              coverUrl: book.cover_url,
-              state: book.status as Status,
-              category: book.book_categories
-                .map((bc: any) => bc.categories.name)
-                .join(', '),
-              language: book.languages.name
-            }));
-            setBooks(formattedBooks);
-          }
+        () => {
+          dispatch(fetchBooks());
         }
       )
       .subscribe();
@@ -152,17 +80,17 @@ export function Dashboard() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [dispatch]);
 
   const filteredBooks = useMemo(() => {
-    return books.filter(book => {
+    return books.filter((book: Book) => {
       const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'All Categories' || book.category.includes(selectedCategory);
-      const matchesLanguage = selectedLanguage === 'All Languages' || book.language === selectedLanguage;
-      const matchesStatus = selectedStatus === 'All Statuses' || book.state === selectedStatus.toLowerCase();
+      const matchesCategory = selectedCategory === 'All Categories' || book.book_categories.some(bc => bc.name === selectedCategory);
+      const matchesLanguage = selectedLanguage === 'All Languages' || book.languages.name === selectedLanguage;
+      const matchesStatus = selectedStatus === 'All Statuses' || book.status === selectedStatus.toLowerCase();
       
       // Only show archived books if explicitly selected
-      if (book.state === 'archived' && selectedStatus !== 'archived') {
+      if (book.status === 'archived' && selectedStatus !== 'archived') {
         return false;
       }
       
@@ -182,28 +110,31 @@ export function Dashboard() {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus]);
 
-  if (loading) {
+  if (loading || booksStatus === 'loading') {
     return (
-      <>
+      <div className="bg-background pt-16 min-h-screen">
         <Navigation />
         <div className="h-full">
           <div className="max-w-[1600px] mx-auto px-6 py-8">
             <div className="animate-pulse">
               <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {[1, 2, 3, 4].map((n) => (
-                  <div key={n} className="aspect-[2/3] bg-gray-200 rounded-lg"></div>
-                ))}
+              <div className="flex gap-8">
+                <div className="w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 flex-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <div key={n} className="aspect-[2/3] bg-gray-200 rounded-lg"></div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="bg-background pt-16">
+    <div className="bg-background pt-16 min-h-screen">
       <Navigation />
         <div className="max-w-[1600px] mx-auto px-6 py-8">
           <div className="flex justify-between items-center mb-6">
@@ -233,7 +164,7 @@ export function Dashboard() {
                         className="flex h-9 w-full rounded-md border-0 bg-white/10 px-3 py-1 text-sm text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/20 appearance-none cursor-pointer pr-8"
                       >
                         <option className="text-gray-900">All Categories</option>
-                        {categories.map(category => (
+                        {categories.map((category: Category) => (
                           <option key={category.id} className="text-gray-900">{category.name}</option>
                         ))}
                       </select>
@@ -250,7 +181,7 @@ export function Dashboard() {
                         className="flex h-9 w-full rounded-md border-0 bg-white/10 px-3 py-1 text-sm text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/20 appearance-none cursor-pointer pr-8"
                       >
                         <option className="text-gray-900">All Languages</option>
-                        {languages.map(language => (
+                        {languages.map((language: Language) => (
                           <option key={language.id} className="text-gray-900">{language.name}</option>
                         ))}
                       </select>
