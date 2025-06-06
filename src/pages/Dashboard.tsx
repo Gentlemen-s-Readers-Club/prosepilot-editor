@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Plus, Search, ChevronDown, AlertCircle } from 'lucide-react';
+import { Plus, Search, ChevronDown } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Navigation } from '../components/Navigation';
 import { BookList } from '../components/BookList';
@@ -8,14 +8,6 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { useToast } from '../hooks/use-toast';
 import { type Status } from '../components/ui/status-badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '../components/ui/dialog';
 
 interface Book {
   id: string;
