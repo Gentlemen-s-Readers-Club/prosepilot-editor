@@ -32,15 +32,15 @@ export function Navigation() {
           <div className="flex items-center">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/app')}>
               <img src="/logo.png" alt="ProsePilot Logo" className="h-12 w-12" />
-              <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
+              <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
             </div>
           </div>
           <div className="flex items-center">
             {profile && (
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center space-x-3 hover:bg-gray-50 rounded-full p-1 -mr-1 transition-colors">
+                <DropdownMenuTrigger className="flex items-center space-x-3 hover:bg-gray-50 rounded-full p-1 -mr-1 transition-colors focus:border-primary focus:ring-1 focus:ring-primary" >
                   {profile.avatar_url ? (
-                    <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                       <img
                         src={profile.avatar_url}
                         alt={profile.full_name}
@@ -48,27 +48,27 @@ export function Navigation() {
                       />
                     </div>
                   ) : (
-                    <div className="h-8 w-8 rounded-full bg-[#31606D]/10 flex items-center justify-center">
-                      <User className="h-5 w-5 text-[#31606D]" />
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-5 w-5 text-primary" />
                     </div>
                   )}
-                  <span className="text-sm font-medium text-gray-700">{profile.full_name}</span>
+                  <span className="text-sm font-medium text-secondary">{profile.full_name}</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-primary">My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/profile')}>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Edit Profile</span>
+                    <User className="mr-2 h-4 w-4 text-accent" />
+                    <span className="text-secondary">Edit Profile</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/subscription')}>
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    <span>Manage Subscription</span>
+                    <CreditCard className="mr-2 h-4 w-4 text-accent" />
+                    <span className="text-secondary">Manage Subscription</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <LogOut className="mr-2 h-4 w-4 text-accent" />
+                    <span className="text-secondary">Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

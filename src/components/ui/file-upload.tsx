@@ -27,7 +27,7 @@ export function FileUpload({ onFileSelect, className, ...props }: FileUploadProp
       {...getRootProps()}
       className={cn(
         "aspect-[10/16] border-2 border-dashed rounded-lg cursor-pointer transition-colors",
-        isDragActive ? "border-[#2D626D] bg-[#2D626D]/5" : "border-gray-300 hover:border-[#2D626D]",
+        isDragActive ? "border-primary bg-primary/5" : "border-gray-300 hover:border-primary",
         className
       )}
       {...props}

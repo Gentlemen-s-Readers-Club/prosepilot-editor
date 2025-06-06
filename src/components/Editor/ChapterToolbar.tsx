@@ -85,7 +85,7 @@ export function ChapterToolbar({
               {!isPublished && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="p-1 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
+                  className="p-1 text-accent hover:text-primary rounded-md hover:bg-gray-100"
                   title="Edit title"
                 >
                   <Pencil size={16} />
@@ -121,7 +121,7 @@ export function ChapterToolbar({
                     onClick={() => setSelectedVersion(version)}
                     className={`w-full text-left p-3 rounded-lg transition-colors ${
                       selectedVersion?.id === version.id
-                        ? 'bg-[#2D626D] text-white'
+                        ? 'bg-accent text-white'
                         : 'hover:bg-gray-100'
                     }`}
                   >
@@ -130,7 +130,7 @@ export function ChapterToolbar({
                         Version {versions.length - index}
                       </div>
                       {version.isCurrent && (
-                        <span className="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                        <span className="px-2 py-0.5 text-xs font-medium bg-primary text-white rounded-full">
                           Current
                         </span>
                       )}
@@ -174,7 +174,7 @@ export function ChapterToolbar({
                       </Button>
                     )}
                   </div>
-                  <div className="prose prose-sm max-w-none border rounded-lg p-6 bg-gray-50">
+                  <div className="prose prose-sm max-w-none border rounded-lg p-6 bg-gray-50 text-secondary">
                     <div dangerouslySetInnerHTML={{ __html: selectedVersion.content }} />
                   </div>
                 </div>

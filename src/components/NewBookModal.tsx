@@ -3,7 +3,7 @@ import { X, ChevronDown, AlertCircle, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
-import Select from 'react-select';
+import { CustomSelect, SelectOption, mapToSelectOptions } from './ui/select';
 import { useToast } from '../hooks/use-toast';
 import { AppDispatch, RootState } from '../store';
 import type { Category, Language, Tone, Narrator, LiteratureStyle } from '../store/types';
@@ -40,11 +40,11 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const { profile } = useSelector((state: RootState) => state.profile);
 
   // Selection states
-  const [selectedCategories, setSelectedCategories] = useState<Array<{ value: string; label: string; category: Category }>>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<{ value: string; label: string; language: Language } | null>(null);
-  const [selectedNarrator, setSelectedNarrator] = useState<{ value: string; label: string; narrator: Narrator } | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<{ value: string; label: string; style: LiteratureStyle } | null>(null);
-  const [selectedTone, setSelectedTone] = useState<{ value: string; label: string; tone: Tone } | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<SelectOption[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<SelectOption | null>(null);
+  const [selectedNarrator, setSelectedNarrator] = useState<SelectOption | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<SelectOption | null>(null);
+  const [selectedTone, setSelectedTone] = useState<SelectOption | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -109,11 +109,11 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
         },
         body: JSON.stringify({
           prompt,
-          language: selectedLanguage.language,
-          categories: selectedCategories.map(c => c.category),
-          narrator: selectedNarrator?.narrator,
-          tone: selectedTone?.tone,
-          literatureStyle: selectedStyle?.style,
+          language: selectedLanguage.language as Language,
+          categories: selectedCategories.map(c => c.category as Category),
+          narrator: selectedNarrator?.narrator as Narrator | undefined,
+          tone: selectedTone?.tone as Tone | undefined,
+          literatureStyle: selectedStyle?.style as LiteratureStyle | undefined,
           author_name: profile?.full_name || 'Anonymous'
         })
       });
@@ -150,21 +150,13 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
     }
   };
 
-  const mapToOptions = (items: { id: string; name: string }[], type: string) => 
-    items.map(item => ({
-      value: item.id,
-      label: item.name,
-      [type]: item
-    }));
-
-  
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-md mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold text-[#31606D]">Start a New Book</h2>
+          <h2 className="text-xl font-semibold text-primary">Start a New Book</h2>
           <button 
             onClick={onClose} 
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -205,59 +197,39 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="prompt">Story Idea or Outline</Label>
+                <Label htmlFor="prompt" className="text-accent">Story Idea or Outline</Label>
                 <textarea
                   id="prompt"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="Enter your story idea or outline..."
-                  className="w-full h-32 p-3 border rounded-md focus:ring-2 focus:ring-[#2D626D] focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400"
+                  className="w-full h-32 p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400 border-border"
                   disabled={isSubmitting}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="categories">Categories</Label>
-                <Select
+                <Label htmlFor="categories" className="text-accent">Categories</Label>
+                <CustomSelect
                   id="categories"
                   isMulti
                   value={selectedCategories}
-                  onChange={(newValue) => setSelectedCategories(newValue as Array<{ value: string; label: string; category: Category }>)}
-                  options={mapToOptions(categories, 'category')}
-                  className="react-select-container"
-                  classNamePrefix="react-select"
+                  onChange={(newValue) => setSelectedCategories(newValue as SelectOption[])}
+                  options={mapToSelectOptions(categories, 'category')}
                   placeholder="Select categories..."
                   isDisabled={isSubmitting}
-                  theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                      ...theme.colors,
-                      primary: '#2D626D',
-                      primary25: '#EBFAFD',
-                    },
-                  })}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="language">Language</Label>
-                <Select
+                <Label htmlFor="language" className="text-accent">Language</Label>
+                <CustomSelect
                   id="language"
                   value={selectedLanguage}
-                  onChange={(newValue) => setSelectedLanguage(newValue as { value: string; label: string; language: Language })}
-                  options={mapToOptions(languages, 'language')}
-                  className="react-select-container"
-                  classNamePrefix="react-select"
+                  onChange={(newValue) => setSelectedLanguage(newValue as SelectOption)}
+                  options={mapToSelectOptions(languages, 'language')}
                   placeholder="Select language..."
                   isDisabled={isSubmitting}
-                  theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                      ...theme.colors,
-                      primary: '#2D626D',
-                      primary25: '#EBFAFD',
-                    },
-                  })}
                 />
               </div>
 
@@ -265,7 +237,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 <button
                   type="button"
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="flex items-center justify-between w-full text-left text-sm font-medium text-[#2D626D] hover:text-[#2D626D]/80"
+                  className="flex items-center justify-between w-full text-left text-sm font-medium text-primary hover:text-primary/80"
                   disabled={isSubmitting}
                 >
                   Advanced Settings
@@ -278,68 +250,38 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 {showAdvanced && (
                   <div className="mt-4 space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="narrator">Narrator Perspective</Label>
-                      <Select
+                      <Label htmlFor="narrator" className="text-accent">Narrator Perspective</Label>
+                      <CustomSelect
                         id="narrator"
                         value={selectedNarrator}
-                        onChange={(newValue) => setSelectedNarrator(newValue as { value: string; label: string; narrator: Narrator })}
-                        options={mapToOptions(narrators, 'narrator')}
-                        className="react-select-container"
-                        classNamePrefix="react-select"
+                        onChange={(newValue) => setSelectedNarrator(newValue as SelectOption)}
+                        options={mapToSelectOptions(narrators, 'narrator')}
                         placeholder="Select narrator perspective..."
                         isDisabled={isSubmitting}
-                        theme={(theme) => ({
-                          ...theme,
-                          colors: {
-                            ...theme.colors,
-                            primary: '#2D626D',
-                            primary25: '#EBFAFD',
-                          },
-                        })}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="style">Literature Style</Label>
-                      <Select
+                      <Label htmlFor="style" className="text-accent">Literature Style</Label>
+                      <CustomSelect
                         id="style"
                         value={selectedStyle}
-                        onChange={(newValue) => setSelectedStyle(newValue as { value: string; label: string; style: LiteratureStyle })}
-                        options={mapToOptions(literatureStyles, 'style')}
-                        className="react-select-container"
-                        classNamePrefix="react-select"
+                        onChange={(newValue) => setSelectedStyle(newValue as SelectOption)}
+                        options={mapToSelectOptions(literatureStyles, 'style')}
                         placeholder="Select literature style..."
                         isDisabled={isSubmitting}
-                        theme={(theme) => ({
-                          ...theme,
-                          colors: {
-                            ...theme.colors,
-                            primary: '#2D626D',
-                            primary25: '#EBFAFD',
-                          },
-                        })}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="tone">Writing Tone</Label>
-                      <Select
+                      <Label htmlFor="tone" className="text-accent">Writing Tone</Label>
+                      <CustomSelect
                         id="tone"
                         value={selectedTone}
-                        onChange={(newValue) => setSelectedTone(newValue as { value: string; label: string; tone: Tone })}
-                        options={mapToOptions(tones, 'tone')}
-                        className="react-select-container"
-                        classNamePrefix="react-select"
+                        onChange={(newValue) => setSelectedTone(newValue as SelectOption)}
+                        options={mapToSelectOptions(tones, 'tone')}
                         placeholder="Select writing tone..."
                         isDisabled={isSubmitting}
-                        theme={(theme) => ({
-                          ...theme,
-                          colors: {
-                            ...theme.colors,
-                            primary: '#2D626D',
-                            primary25: '#EBFAFD',
-                          },
-                        })}
                       />
                     </div>
                   </div>

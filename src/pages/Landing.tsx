@@ -20,7 +20,7 @@ export function Landing() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <img src="/logo.png" alt="ProsePilot Logo" className="h-12 w-12" />
-              <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
+              <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -45,7 +45,7 @@ export function Landing() {
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block">Transform your ideas into</span>
-                  <span className="block text-[#31606D]">captivating stories</span>
+                  <span className="block text-primary">captivating stories</span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
                   ProsePilot is your AI-powered writing companion that helps you craft compelling narratives, develop rich characters, and bring your stories to life.
@@ -77,7 +77,7 @@ export function Landing() {
       <div className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-base text-[#31606D] font-semibold tracking-wide uppercase">Features</h2>
+            <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Features</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
               Everything you need to write your next masterpiece
             </p>
@@ -86,7 +86,7 @@ export function Landing() {
           <div className="mt-20">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               <div className="flex flex-col items-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-[#31606D]">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-primary">
                   <Sparkles className="h-8 w-8" />
                 </div>
                 <h3 className="mt-6 text-xl font-bold text-gray-900">AI-Powered Assistance</h3>
@@ -96,7 +96,7 @@ export function Landing() {
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-[#31606D]">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-primary">
                   <PenTool className="h-8 w-8" />
                 </div>
                 <h3 className="mt-6 text-xl font-bold text-gray-900">Rich Text Editor</h3>
@@ -106,7 +106,7 @@ export function Landing() {
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-[#31606D]">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-primary">
                   <Brain className="h-8 w-8" />
                 </div>
                 <h3 className="mt-6 text-xl font-bold text-gray-900">Story Structure</h3>
@@ -124,20 +124,20 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <div className="flex flex-col items-center">
-              <Star className="h-12 w-12 text-[#31606D]" />
-              <p className="mt-4 text-5xl font-extrabold text-[#31606D]">4.9/5</p>
+              <Star className="h-12 w-12 text-primary" />
+              <p className="mt-4 text-5xl font-extrabold text-primary">4.9/5</p>
               <p className="mt-2 text-lg text-gray-600">Average Rating</p>
             </div>
 
             <div className="flex flex-col items-center">
-              <Users className="h-12 w-12 text-[#31606D]" />
-              <p className="mt-4 text-5xl font-extrabold text-[#31606D]">50K+</p>
+              <Users className="h-12 w-12 text-primary" />
+              <p className="mt-4 text-5xl font-extrabold text-primary">50K+</p>
               <p className="mt-2 text-lg text-gray-600">Active Writers</p>
             </div>
 
             <div className="flex flex-col items-center">
-              <Zap className="h-12 w-12 text-[#31606D]" />
-              <p className="mt-4 text-5xl font-extrabold text-[#31606D]">1M+</p>
+              <Zap className="h-12 w-12 text-primary" />
+              <p className="mt-4 text-5xl font-extrabold text-primary">1M+</p>
               <p className="mt-2 text-lg text-gray-600">Stories Created</p>
             </div>
           </div>
@@ -147,7 +147,7 @@ export function Landing() {
       {/* CTA Section */}
       <div className="bg-white">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-          <div className="bg-[#31606D] rounded-lg shadow-xl overflow-hidden">
+          <div className="bg-primary rounded-lg shadow-xl overflow-hidden">
             <div className="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
               <div className="lg:self-center">
                 <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
@@ -159,7 +159,7 @@ export function Landing() {
                 </p>
                 <Link
                   to="/signup"
-                  className="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-[#31606D] bg-white hover:bg-gray-50"
+                  className="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50"
                 >
                   Get Started Free
                   <ChevronRight className="ml-2 h-5 w-5" />
@@ -176,7 +176,7 @@ export function Landing() {
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
-              <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
+              <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
             </div>
             <p className="text-gray-500 text-sm">© 2025 ProsePilot. All rights reserved.</p>
           </div>

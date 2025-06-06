@@ -70,8 +70,8 @@ export function EditProfile() {
 
   const getStrengthColor = () => {
     switch (passwordStrength) {
-      case 0: return 'bg-red-500';
-      case 1: return 'bg-red-500';
+      case 0: return 'bg-danger';
+      case 1: return 'bg-danger';
       case 2: return 'bg-orange-500';
       case 3: return 'bg-yellow-500';
       case 4: return 'bg-green-500';
@@ -393,7 +393,7 @@ export function EditProfile() {
                   type="checkbox"
                   checked={profile.newsletter_product}
                   onChange={(e) => setProfileData({ ...profile, newsletter_product: e.target.checked })}
-                  className="h-4 w-4 text-[#31606D] border-gray-300 rounded"
+                  className="h-4 w-4 text-primary border-gray-300 rounded"
                 />
               </div>
               <div className="ml-3">
@@ -409,7 +409,7 @@ export function EditProfile() {
                   type="checkbox"
                   checked={profile.newsletter_features}
                   onChange={(e) => setProfileData({ ...profile, newsletter_features: e.target.checked })}
-                  className="h-4 w-4 text-[#31606D] border-gray-300 rounded"
+                  className="h-4 w-4 text-primary border-gray-300 rounded"
                 />
               </div>
               <div className="ml-3">
@@ -425,7 +425,7 @@ export function EditProfile() {
                   type="checkbox"
                   checked={profile.newsletter_writing}
                   onChange={(e) => setProfileData({ ...profile, newsletter_writing: e.target.checked })}
-                  className="h-4 w-4 text-[#31606D] border-gray-300 rounded"
+                  className="h-4 w-4 text-primary border-gray-300 rounded"
                 />
               </div>
               <div className="ml-3">
@@ -543,7 +543,7 @@ export function EditProfile() {
             {/* Sidebar */}
             <div className="w-64 shrink-0">
               <div className="sticky top-8">
-                <h2 className="text-2xl font-semibold text-[#31606D] mb-4">Settings</h2>
+                <h2 className="text-2xl font-semibold text-primary mb-4">Settings</h2>
                 <nav className="flex flex-col gap-1">
                   {sections.map(({ id, label, icon }) => (
                     <button
@@ -551,7 +551,7 @@ export function EditProfile() {
                       onClick={() => setActiveSection(id)}
                       className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
                         activeSection === id
-                          ? 'bg-[#31606D] text-white'
+                          ? 'bg-primary text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >

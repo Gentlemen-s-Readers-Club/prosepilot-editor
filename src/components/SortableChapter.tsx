@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, FileEdit, ExternalLink, Trash2, FileText, Pencil, BookOpen } from 'lucide-react';
+import { GripVertical, FileEdit, Trash2, FileText, Pencil, BookOpen } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 
@@ -56,7 +56,7 @@ export function SortableChapter({
         style={style}
         className="flex items-center gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200"
       >
-        <div className="cursor-move text-gray-400" {...attributes} {...listeners}>
+        <div className="cursor-move text-accent" {...attributes} {...listeners}>
           <GripVertical size={20} />
         </div>
         <Input
@@ -91,25 +91,25 @@ export function SortableChapter({
       className="flex items-center gap-2 bg-white p-3 rounded-lg border border-gray-200 hover:bg-gray-50 group"
     >
       {!disabled && (
-        <div className="cursor-move text-gray-400" {...attributes} {...listeners}>
+        <div className="cursor-move text-accent" {...attributes} {...listeners}>
           <GripVertical size={20} />
         </div>
       )}
-      <div className="text-gray-400">
+      <div className="text-accent">
         {chapter.type === 'chapter' ? (
           <BookOpen size={20} />
         ) : (
           <FileText size={20} />
         )}
       </div>
-      <span className="flex-1 font-medium text-gray-700">
+      <span className="flex-1 font-medium text-secondary">
         {chapter.title}
       </span>
       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         {!disabled && (
           <button
             onClick={onEdit}
-            className="p-1 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
+            className="p-1 text-accent hover:text-primary rounded-md hover:bg-gray-100"
             title="Rename"
           >
             <Pencil size={16} />
@@ -117,7 +117,7 @@ export function SortableChapter({
         )}
         <button
           onClick={onNavigate}
-          className="p-1 text-gray-400 hover:text-blue-600 rounded-md hover:bg-gray-100"
+          className="p-1 text-accent hover:text-primary rounded-md hover:bg-gray-100"
           title={disabled ? "View content" : "Edit content"}
         >
           <FileEdit size={16} />
@@ -126,7 +126,7 @@ export function SortableChapter({
         {!disabled && (
           <button
             onClick={onDelete}
-            className="p-1 text-gray-400 hover:text-red-600 rounded-md hover:bg-gray-100"
+            className="p-1 text-accent hover:text-red-600 rounded-md hover:bg-gray-100"
             title="Delete"
           >
             <Trash2 size={16} />

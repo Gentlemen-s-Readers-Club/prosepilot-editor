@@ -90,7 +90,7 @@ const plans: Plan[] = [
     price: 199,
     credits: -1, // Unlimited
     icon: <Zap className="w-6 h-6" />,
-    color: 'bg-red-500',
+    color: 'bg-danger',
     description: 'For publishers, agencies, and heavy users',
     features: [
       'Unlimited credits',
@@ -183,7 +183,7 @@ export function Subscription() {
           {/* Current Plan Status */}
           <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-[#31606D]">Current Subscription</h2>
+              <h2 className="text-2xl font-bold text-primary">Current Subscription</h2>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-gray-500" />
                 <span className="text-gray-600">Next billing date: April 15, 2025</span>
@@ -193,7 +193,7 @@ export function Subscription() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <div className="text-gray-600">Current Plan</div>
-                <div className="text-2xl font-bold text-[#31606D]">Pro Author</div>
+                <div className="text-2xl font-bold text-primary">Pro Author</div>
                 <div className="text-gray-600">$29/month</div>
               </div>
 
@@ -202,20 +202,20 @@ export function Subscription() {
                 <div className="relative pt-1">
                   <div className="flex mb-2 items-center justify-between">
                     <div>
-                      <span className="text-xs font-semibold inline-block text-[#31606D]">
+                      <span className="text-xs font-semibold inline-block text-primary">
                         {Math.round((creditsUsed / creditsLimit) * 100)}%
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs font-semibold inline-block text-[#31606D]">
+                      <span className="text-xs font-semibold inline-block text-primary">
                         {creditsUsed}/{creditsLimit} credits
                       </span>
                     </div>
                   </div>
-                  <div className="overflow-hidden h-2 text-xs flex rounded bg-[#31606D]/10">
+                  <div className="overflow-hidden h-2 text-xs flex rounded bg-primary/10">
                     <div
                       style={{ width: `${(creditsUsed / creditsLimit) * 100}%` }}
-                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[#31606D]"
+                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary"
                     />
                   </div>
                 </div>
@@ -236,14 +236,14 @@ export function Subscription() {
             <div className="mt-8 pt-8 border-t">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-[#31606D]">Buy More Credits</h3>
+                  <h3 className="text-lg font-semibold text-primary">Buy More Credits</h3>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {creditPackages.map((pkg) => (
                   <div
                     key={pkg.id}
-                    className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-[#31606D] transition-colors"
+                    className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-primary transition-colors"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <div className="text-lg font-semibold">
@@ -256,7 +256,7 @@ export function Subscription() {
                     )}
                       
                     </div>
-                    <div className="text-2xl font-bold text-[#31606D] mb-4">${pkg.price}</div>
+                    <div className="text-2xl font-bold text-primary mb-4">${pkg.price}</div>
                     <Button
                       onClick={() => handleBuyCredits(pkg)}
                       className="w-full"
@@ -273,17 +273,17 @@ export function Subscription() {
 
           {/* Pricing Plans */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#31606D]">Available Plans</h2>
+            <h2 className="text-2xl font-bold text-primary">Available Plans</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {plans.map((plan) => (
                 <div
                   key={plan.id}
                   className={`relative bg-white rounded-lg shadow-lg overflow-hidden flex flex-col ${
-                    plan.isPopular ? 'ring-2 ring-[#31606D]' : ''
+                    plan.isPopular ? 'ring-2 ring-primary' : ''
                   } ${plan.comingSoon ? 'opacity-75' : ''}`}
                 >
                   {plan.isPopular && (
-                    <div className="absolute top-0 right-0 bg-[#31606D] text-white px-3 py-1 text-sm font-medium">
+                    <div className="absolute top-0 right-0 bg-primary text-white px-3 py-1 text-sm font-medium">
                       Most Popular
                     </div>
                   )}
@@ -299,7 +299,7 @@ export function Subscription() {
                     <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
                     <p className="text-sm text-gray-500 mt-1">{plan.description}</p>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold text-[#31606D]">${plan.price}</span>
+                      <span className="text-4xl font-bold text-primary">${plan.price}</span>
                       <span className="text-gray-600">/month</span>
                     </div>
                     <ul className="mt-6 space-y-4 flex-1">
@@ -328,7 +328,7 @@ export function Subscription() {
 
           {/* Billing History */}
           <div className="mt-12">
-            <h2 className="text-2xl font-bold text-[#31606D] mb-6">Billing History</h2>
+            <h2 className="text-2xl font-bold text-primary mb-6">Billing History</h2>
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -368,7 +368,7 @@ export function Subscription() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Button variant="ghost" className="text-[#31606D] hover:text-[#31606D]/80">
+                        <Button variant="ghost" className="text-primary hover:text-primary/80">
                           <Download className="w-4 h-4" />
                         </Button>
                       </td>

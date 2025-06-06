@@ -10,7 +10,7 @@ import { ChapterList } from '../components/ChapterList';
 import { StatusBadge } from '../components/ui/status-badge';
 import { useToast } from '../hooks/use-toast';
 import { ArrowLeft, Trash2, Archive, Download, AlertCircle } from 'lucide-react';
-import Select from 'react-select';
+import { CustomSelect, SelectOption, mapToSelectOptions } from '../components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -31,8 +31,8 @@ interface BookFormData {
   isbn: string;
   coverUrl: string;
   synopsis: string;
-  categories: Array<{ value: string; label: string }>;
-  language: { value: string; label: string } | null;
+  categories: SelectOption[];
+  language: SelectOption | null;
   status: Status;
 }
 
@@ -387,7 +387,7 @@ export function BookDetails() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         <button
           onClick={() => navigate('/app')}
-          className="flex items-center text-textblue hover:text-accent mb-6"
+          className="flex items-center text-primary hover:text-accent mb-6"
         >
           <ArrowLeft className="mr-2" size={20} />
           Back to Books
@@ -448,7 +448,7 @@ export function BookDetails() {
                         className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors"
                         title="Delete cover image"
                       >
-                        <Trash2 className="w-5 h-5 text-red-500" />
+                        <Trash2 className="w-5 h-5 text-danger" />
                       </button>
                     )}
                   </div>
@@ -497,14 +497,14 @@ export function BookDetails() {
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-lg p-6">
               <div className="flex items-center gap-3 mb-6">
-                <h1 className="text-3xl font-bold text-[#31606D]">Book Details</h1>
+                <h1 className="text-3xl font-bold text-primary">Book Details</h1>
                 <StatusBadge status={formData.status} />
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <Label htmlFor="title" className="flex items-center gap-1 mb-1">
+                  <Label htmlFor="title" className="flex items-center gap-1 mb-1 text-primary">
                     Book Title
-                    <span className="text-red-500">*</span>
+                    <span className="text-danger">*</span>
                   </Label>
                   <Input
                     id="title"
@@ -513,18 +513,18 @@ export function BookDetails() {
                       setFormData({ ...formData, title: e.target.value });
                       setFormErrors({ ...formErrors, title: false });
                     }}
-                    className={`bg-card ${formErrors.title ? 'border-red-500 focus:ring-red-500' : ''}`}
+                    className={`bg-card ${formErrors.title ? 'border-danger focus:ring-danger' : ''}`}
                     disabled={isPublished}
                   />
                   {formErrors.title && (
-                    <p className="mt-1 text-sm text-red-500">Title is required</p>
+                    <p className="mt-1 text-sm text-danger">Title is required</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="authorName" className="flex items-center gap-1 mb-1">
+                  <Label htmlFor="authorName" className="flex items-center gap-1 mb-1 text-primary">
                     Author Name
-                    <span className="text-red-500">*</span>
+                    <span className="text-danger">*</span>
                   </Label>
                   <Input
                     id="authorName"
@@ -533,16 +533,16 @@ export function BookDetails() {
                       setFormData({ ...formData, authorName: e.target.value });
                       setFormErrors({ ...formErrors, authorName: false });
                     }}
-                    className={`bg-card ${formErrors.authorName ? 'border-red-500 focus:ring-red-500' : ''}`}
+                    className={`bg-card ${formErrors.authorName ? 'border-danger focus:ring-danger' : ''}`}
                     disabled={isPublished}
                   />
                   {formErrors.authorName && (
-                    <p className="mt-1 text-sm text-red-500">Author name is required</p>
+                    <p className="mt-1 text-sm text-danger">Author name is required</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="isbn" className="flex items-center gap-1 mb-1">ISBN</Label>
+                  <Label htmlFor="isbn" className="flex items-center gap-1 mb-1 text-primary">ISBN</Label>
                   <Input
                     id="isbn"
                     value={formData.isbn}
@@ -554,76 +554,46 @@ export function BookDetails() {
                 </div>
 
                 <div>
-                  <Label htmlFor="categories" className="flex items-center gap-1 mb-1">
+                  <Label htmlFor="categories" className="flex items-center gap-1 mb-1 text-primary">
                     Categories
-                    <span className="text-red-500">*</span>
+                    <span className="text-danger">*</span>
                   </Label>
-                  <Select
+                  <CustomSelect
                     id="categories"
                     isMulti
                     value={formData.categories}
                     onChange={(newValue) => {
-                      setFormData({ ...formData, categories: newValue as Array<{ value: string; label: string }> });
+                      setFormData({ ...formData, categories: newValue as SelectOption[] });
                       setFormErrors({ ...formErrors, categories: false });
                     }}
-                    options={categories.map(category => ({
-                      value: category.id,
-                      label: category.name
-                    }))}
-                    className={`react-select-container ${formErrors.categories ? 'select-error' : ''}`}
-                    classNamePrefix="react-select"
+                    options={mapToSelectOptions(categories, 'category')}
                     placeholder="Select categories..."
                     isDisabled={isPublished}
-                    theme={(theme) => ({
-                      ...theme,
-                      colors: {
-                        ...theme.colors,
-                        primary: '#2D626D',
-                        primary25: '#EBFAFD',
-                      },
-                    })}
+                    error={formErrors.categories ? 'At least one category is required' : undefined}
                   />
-                  {formErrors.categories && (
-                    <p className="mt-1 text-sm text-red-500">At least one category is required</p>
-                  )}
                 </div>
 
                 <div>
-                  <Label htmlFor="language" className="flex items-center gap-1 mb-1">
+                  <Label htmlFor="language" className="flex items-center gap-1 mb-1 text-primary">
                     Language
-                    <span className="text-red-500">*</span>
+                    <span className="text-danger">*</span>
                   </Label>
-                  <Select
+                  <CustomSelect
                     id="language"
                     value={formData.language}
                     onChange={(newValue) => {
-                      setFormData({ ...formData, language: newValue as { value: string; label: string } });
+                      setFormData({ ...formData, language: newValue as SelectOption });
                       setFormErrors({ ...formErrors, language: false });
                     }}
-                    options={languages.map(language => ({
-                      value: language.id,
-                      label: language.name
-                    }))}
-                    className={`react-select-container ${formErrors.language ? 'select-error' : ''}`}
-                    classNamePrefix="react-select"
+                    options={mapToSelectOptions(languages, 'language')}
                     placeholder="Select language..."
                     isDisabled={isPublished}
-                    theme={(theme) => ({
-                      ...theme,
-                      colors: {
-                        ...theme.colors,
-                        primary: '#2D626D',
-                        primary25: '#EBFAFD',
-                      },
-                    })}
+                    error={formErrors.language ? 'Language is required' : undefined}
                   />
-                  {formErrors.language && (
-                    <p className="mt-1 text-sm text-red-500">Language is required</p>
-                  )}
                 </div>
 
                 <div>
-                  <Label htmlFor="synopsis" className="flex items-center gap-1 mb-1">Synopsis</Label>
+                  <Label htmlFor="synopsis" className="flex items-center gap-1 mb-1 text-primary">Synopsis</Label>
                   <textarea
                     id="synopsis"
                     value={formData.synopsis}
@@ -670,7 +640,7 @@ export function BookDetails() {
                   setShowDeleteDialog(false);
                   handleDeleteBook();
                 }}
-                className="bg-red-500 hover:bg-red-600 text-white"
+                className="bg-danger hover:bg-red-600 text-white"
               >
                 Delete Book
               </Button>

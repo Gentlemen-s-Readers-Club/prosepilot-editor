@@ -28,9 +28,7 @@ Book[],
         cover_url,
         status,
         languages (name),
-        book_categories (
-          categories (name)
-        )
+        categories (name)
       `)
       .order('updated_at', { ascending: false });
 

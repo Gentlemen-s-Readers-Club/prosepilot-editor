@@ -6,13 +6,12 @@ export interface Book {
   cover_url: string | null;
   status: Status;
   languages: Language;
-  book_categories: Category[];
+  categories: Category[];
 }
 
 export interface Category {
   id: string;
   name: string;
-  description?: string;
 }
 
 export interface Language {

@@ -44,23 +44,23 @@ export function ForgotPassword() {
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-[#31606D]">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">
               Reset your password
             </h2>
-            <p className="mt-2 text-center text-sm text-textsecondary">
+            <p className="mt-2 text-center text-sm text-secondary">
               Enter your email address and we'll send you a link to reset your password.
             </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
             <div>
-              <Label htmlFor="email" className="text-textblue">Email address</Label>
+              <Label htmlFor="email" className="text-primary">Email address</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-card border-textsecondary/20 focus:border-accent"
+                className="bg-card border-secondary/20 focus:border-accent"
               />
             </div>
 

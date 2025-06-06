@@ -138,7 +138,7 @@ export function Dashboard() {
       <Navigation />
         <div className="max-w-[1600px] mx-auto px-6 py-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-[#31606D]">My Library</h1>
+            <h1 className="text-2xl font-bold text-primary">My Library</h1>
             <Button
               onClick={() => setIsModalOpen(true)}
               className="flex items-center gap-2"
@@ -151,7 +151,7 @@ export function Dashboard() {
           <div className="flex gap-8">
             {/* Filters */}
             <div className="w-72">
-              <div className="bg-[#4F9EBC] rounded-lg shadow p-6 text-white">
+              <div className="bg-accent rounded-lg shadow p-6 text-white">
                 <h2 className="text-lg font-semibold mb-6">Filters</h2>
                 
                 <div className="space-y-6">
@@ -212,13 +212,13 @@ export function Dashboard() {
             {/* Main Content */}
             <div className="flex-1 flex flex-col gap-6">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-accent" size={20} />
                 <Input
                   type="text"
                   placeholder="Search by title"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white border-gray-200 focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                  className="pl-10 bg-white border-gray-200 text-secondary focus:border-primary focus:ring-1 focus:ring-primary"
                 />
               </div>
               

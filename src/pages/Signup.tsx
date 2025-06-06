@@ -34,8 +34,8 @@ export function Signup() {
 
   const getStrengthColor = () => {
     switch (passwordStrength) {
-      case 0: return 'bg-red-500';
-      case 1: return 'bg-red-500';
+      case 0: return 'bg-danger';
+      case 1: return 'bg-danger';
       case 2: return 'bg-orange-500';
       case 3: return 'bg-yellow-500';
       case 4: return 'bg-green-500';
@@ -134,7 +134,7 @@ export function Signup() {
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-[#31606D]">
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">
               Create your account
             </h2>
           </div>
