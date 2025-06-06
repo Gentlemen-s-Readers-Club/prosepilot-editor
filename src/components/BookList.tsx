@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Search, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, BookOpen, Loader2 } from 'lucide-react';
 import { StatusBadge, type Status } from './ui/status-badge';
 import { Button } from './ui/button';
 
@@ -72,8 +72,8 @@ export function BookList({ books, currentPage, totalPages, onPageChange }: BookL
         {books.map((book) => (
           <div
             key={book.id}
-            onClick={() => navigate(`/app/book/${book.id}`)}
-            className="group cursor-pointer"
+            onClick={() => book.state !== 'writing' && navigate(`/app/book/${book.id}`)}
+            className={`group ${book.state !== 'writing' ? 'cursor-pointer' : 'cursor-default'}`}
           >
             <div className="relative aspect-[10/16] rounded-sm overflow-hidden">
               <div className="absolute top-2 left-2 z-10">
@@ -87,7 +87,11 @@ export function BookList({ books, currentPage, totalPages, onPageChange }: BookL
                 />
               ) : (
                 <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center p-4 transition-colors group-hover:bg-gray-200">
-                  <BookOpen className="w-12 h-12 text-gray-400 mb-4" />
+                  {book.state === 'writing' ? (
+                    <Loader2 className="w-12 h-12 text-gray-400 animate-spin" />
+                  ) : (
+                    <BookOpen className="w-12 h-12 text-gray-400 mb-4" />
+                  )}
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
