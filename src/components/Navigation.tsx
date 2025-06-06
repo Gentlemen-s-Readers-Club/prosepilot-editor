@@ -52,8 +52,8 @@ export function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/app')}>
-              <img src="/logo.png" alt="Wraiter Logo" className="h-12 w-12" />
-              <span className="ml-2 text-xl font-bold text-[#31606D]">WrAIter</span>
+              <img src="/logo.png" alt="ProsePilot Logo" className="h-12 w-12" />
+              <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
             </div>
           </div>
           <div className="flex items-center">
