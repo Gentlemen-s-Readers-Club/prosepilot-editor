@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, BookOpen, Loader2 } from 'lucide-react';
 import { StatusBadge, type Status } from './ui/status-badge';
 import { Button } from './ui/button';
-import { supabase } from '../lib/supabase';
-import { useEffect } from 'react';
 
 interface Book {
   id: string;
