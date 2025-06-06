@@ -134,7 +134,7 @@ export function Dashboard() {
   }
 
   return (
-    <div className="bg-background pt-16 min-h-screen">
+    <div className="min-h-screen bg-background pt-16">
       <Navigation />
         <div className="max-w-[1600px] mx-auto px-6 py-8">
           <div className="flex justify-between items-center mb-6">
