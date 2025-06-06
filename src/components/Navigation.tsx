@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BookOpen, LogOut, User, CreditCard } from 'lucide-react';
+import { LogOut, User, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
@@ -52,7 +52,7 @@ export function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/app')}>
-              <BookOpen className="h-8 w-8 text-[#31606D]" />
+              <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
               <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
             </div>
           </div>
