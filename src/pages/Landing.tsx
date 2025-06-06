@@ -19,7 +19,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <img src="/logo.png" alt="ProsePilot Logo" className="h-10 w-10" />
+              <img src="/logo.png" alt="ProsePilot Logo" className="h-12 w-12" />
               <span className="ml-2 text-xl font-bold text-[#31606D]">ProsePilot</span>
             </div>
             <div className="flex items-center space-x-4">
