@@ -45,10 +45,6 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleBooksUpdate = useCallback((updatedBooks: Book[]) => {
-    setBooks(updatedBooks);
-  }, []);
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -107,6 +103,57 @@ export function Dashboard() {
     fetchData();
   }, [toast]);
 
+  useEffect(() => {
+    // Subscribe to real-time changes
+    const subscription = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'books'
+        },
+        async (payload) => {
+          console.log('Change received!', payload);
+
+          // Fetch the updated book data with related information
+          const { data: updatedBooks, error } = await supabase
+            .from('books')
+            .select(`
+              id,
+              title,
+              cover_url,
+              status,
+              languages (name),
+              book_categories (
+                categories (name)
+              )
+            `)
+            .order('updated_at', { ascending: false });
+
+          if (!error && updatedBooks) {
+            const formattedBooks = updatedBooks.map(book => ({
+              id: book.id,
+              title: book.title,
+              coverUrl: book.cover_url,
+              state: book.status as Status,
+              category: book.book_categories
+                .map((bc: any) => bc.categories.name)
+                .join(', '),
+              language: book.languages.name
+            }));
+            setBooks(formattedBooks);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   const filteredBooks = useMemo(() => {
     return books.filter(book => {
       const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -154,19 +201,6 @@ export function Dashboard() {
         .single();
 
       if (fetchError) throw fetchError;
-
-      const newBook = {
-        id: updatedBook.id,
-        title: updatedBook.title,
-        coverUrl: updatedBook.cover_url,
-        state: updatedBook.status as Status,
-        category: updatedBook.book_categories
-          .map((bc: any) => bc.categories.name)
-          .join(', '),
-        language: updatedBook.languages.name
-      };
-
-      setBooks(prevBooks => [newBook, ...prevBooks]);
 
       toast({
         title: "Success",
@@ -305,7 +339,6 @@ export function Dashboard() {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={setCurrentPage}
-                  onBooksUpdate={handleBooksUpdate}
                 />
               )}
             </div>
