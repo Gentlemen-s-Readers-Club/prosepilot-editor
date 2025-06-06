@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Search, BookOpen, Loader2 } from 'lucide-react';
 import { StatusBadge, type Status } from './ui/status-badge';
 import { Button } from './ui/button';
+import { supabase } from '../lib/supabase';
+import { useEffect } from 'react';
 
 interface Book {
   id: string;
@@ -18,10 +20,60 @@ interface BookListProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onBooksUpdate: (books: Book[]) => void;
 }
 
-export function BookList({ books, currentPage, totalPages, onPageChange }: BookListProps) {
+export function BookList({ books, currentPage, totalPages, onPageChange, onBooksUpdate }: BookListProps) {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Subscribe to real-time changes
+    const subscription = supabase
+      .channel('books_channel')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'books'
+        },
+        async (payload) => {
+          // Fetch the updated book data with related information
+          const { data: updatedBooks, error } = await supabase
+            .from('books')
+            .select(`
+              id,
+              title,
+              cover_url,
+              status,
+              languages (name),
+              book_categories (
+                categories (name)
+              )
+            `)
+            .order('updated_at', { ascending: false });
+
+          if (!error && updatedBooks) {
+            const formattedBooks = updatedBooks.map(book => ({
+              id: book.id,
+              title: book.title,
+              coverUrl: book.cover_url,
+              state: book.status as Status,
+              category: book.book_categories
+                .map((bc: any) => bc.categories.name)
+                .join(', '),
+              language: book.languages.name
+            }));
+            onBooksUpdate(formattedBooks);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [onBooksUpdate]);
 
   const renderPageNumbers = () => {
     const pages = [];

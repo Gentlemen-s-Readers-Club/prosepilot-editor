@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Plus, Search, ChevronDown, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Navigation } from '../components/Navigation';
@@ -52,6 +52,10 @@ export function Dashboard() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handleBooksUpdate = useCallback((updatedBooks: Book[]) => {
+    setBooks(updatedBooks);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -309,6 +313,7 @@ export function Dashboard() {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={setCurrentPage}
+                  onBooksUpdate={handleBooksUpdate}
                 />
               )}
             </div>
