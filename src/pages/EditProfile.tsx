@@ -305,7 +305,7 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="avatar\" className="block text-sm font-medium text-gray-700">
+              <Label htmlFor="avatar\" className="block text-sm font-medium text-primary">
                 Profile Picture
               </Label>
               <div className="mt-2 flex items-center space-x-4">
@@ -323,10 +323,10 @@ export function EditProfile() {
                   )}
                 </div>
                 <label className="cursor-pointer">
-                  <span className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isFileLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <span className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isFileLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     {isFileLoading ? (
                       <div className="flex items-center">
-                        <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-700" />
+                        <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" />
                         Uploading...
                       </div>
                     ) : (
@@ -346,7 +346,7 @@ export function EditProfile() {
             </div>
 
             <div>
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="block text-sm font-medium text-primary">Email Address</Label>
               <Input
                 id="email"
                 type="email"
@@ -357,7 +357,7 @@ export function EditProfile() {
             </div>
 
             <div>
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName" className="block text-sm font-medium text-primary">Full Name</Label>
               <Input
                 id="fullName"
                 type="text"
@@ -384,7 +384,7 @@ export function EditProfile() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
-                <span className="text-gray-700">Google</span>
+                <span className="text-primary">Google</span>
               </div>
               <Button
                 variant="outline"
@@ -397,7 +397,7 @@ export function EditProfile() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Facebook className="w-6 h-6 text-[#1877F2]" />
-                <span className="text-gray-700">Facebook</span>
+                <span className="text-primary">Facebook</span>
               </div>
               <Button
                 variant="outline"
@@ -424,7 +424,7 @@ export function EditProfile() {
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_product" className="font-medium text-gray-700">Product Updates</Label>
+                <Label htmlFor="newsletter_product" className="font-medium text-primary">Product Updates</Label>
                 <p className="text-gray-500 text-sm">Be the first to know about new AI capabilities, tools, and improvements in the platform.</p>
               </div>
             </div>
@@ -440,7 +440,7 @@ export function EditProfile() {
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_writing" className="font-medium text-gray-700">Writing Tips & Resources</Label>
+                <Label htmlFor="newsletter_writing" className="font-medium text-primary">Writing Tips & Resources</Label>
                 <p className="text-gray-500 text-sm">Get weekly inspiration, creative prompts, and storytelling advice to keep your writing flowing.</p>
               </div>
             </div>
@@ -456,7 +456,7 @@ export function EditProfile() {
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_marketing" className="font-medium text-gray-700">Publishing & Marketing Advice</Label>
+                <Label htmlFor="newsletter_marketing" className="font-medium text-primary">Publishing & Marketing Advice</Label>
                 <p className="text-gray-500 text-sm">Learn how to publish, promote, and sell your book—plus tips on reaching your audience.</p>
               </div>
             </div>
@@ -475,15 +475,15 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-gray-900">Change Password</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <h3 className="text-sm font-medium text-primary">Change Password</h3>
+              <p className="mt-1 text-sm text-secondary">
                 Make sure your new password is at least 8 characters long and includes a mix of letters, numbers, and symbols.
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
+                <Label htmlFor="newPassword" className="block text-sm font-medium text-primary">New Password</Label>
                 <Input
                   id="newPassword"
                   type="password"
@@ -495,8 +495,8 @@ export function EditProfile() {
                 {newPassword && (
                   <div className="mt-2">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm text-gray-500">Password strength:</span>
-                      <span className="text-sm font-medium text-gray-700">{getStrengthText()}</span>
+                      <span className="text-sm text-secondary">Password strength:</span>
+                      <span className="text-sm font-medium text-primary">{getStrengthText()}</span>
                     </div>
                     <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                       <div
@@ -504,7 +504,7 @@ export function EditProfile() {
                         style={{ width: `${(passwordStrength / 5) * 100}%` }}
                       />
                     </div>
-                    <ul className="mt-2 text-sm text-gray-500 space-y-1">
+                    <ul className="mt-2 text-sm text-secondary space-y-1">
                       <li className={newPassword.length >= 8 ? "text-green-600" : ""}>• At least 8 characters</li>
                       <li className={newPassword.match(/[A-Z]/) ? "text-green-600" : ""}>• At least one uppercase letter</li>
                       <li className={newPassword.match(/[a-z]/) ? "text-green-600" : ""}>• At least one lowercase letter</li>
@@ -516,7 +516,7 @@ export function EditProfile() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-primary">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -592,8 +592,8 @@ export function EditProfile() {
 
             {/* Main Content */}
             <div className="flex-1">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">
+              <div className="bg-card rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-primary mb-6">
                   {sections.find(s => s.id === activeSection)?.label}
                 </h2>
                 {renderSection()}

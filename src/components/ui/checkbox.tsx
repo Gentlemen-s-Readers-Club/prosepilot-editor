@@ -12,7 +12,7 @@ interface CheckboxProps {
 
 export function Checkbox({ id, checked, onChange, disabled = false, className }: CheckboxProps) {
   return (
-    <div className="relative">
+    <div className="relative top-[2px]">
       <input
         type="checkbox"
         id={id}
@@ -34,7 +34,7 @@ export function Checkbox({ id, checked, onChange, disabled = false, className }:
         )}
       >
         {checked && (
-          <Check className="w-3 h-3 text-white\" strokeWidth={3} />
+          <Check className="w-3 h-3 text-white" strokeWidth={3} />
         )}
       </label>
     </div>
