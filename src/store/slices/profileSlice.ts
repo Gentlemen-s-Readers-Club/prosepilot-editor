@@ -9,6 +9,9 @@ export interface Profile {
   email?: string;
   created_at?: string;
   updated_at?: string;
+  newsletter_product?: boolean;
+  newsletter_marketing?: boolean;
+  newsletter_writing?: boolean;
 }
 
 interface ProfileState extends ApiState {
@@ -74,6 +77,37 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const updateNewsletterPreferences = createAsyncThunk(
+  'profile/updateNewsletterPreferences',
+  async (preferences: {
+    newsletter_product?: boolean;
+    newsletter_marketing?: boolean;
+    newsletter_writing?: boolean;
+  }) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session?.user) {
+      throw new Error('No authenticated user');
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(preferences)
+      .eq('id', session.user.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return {
+      ...data,
+      email: session.user.email,
+    };
+  }
+);
+
 const profileSlice = createSlice({
   name: 'profile',
   initialState,
@@ -113,9 +147,22 @@ const profileSlice = createSlice({
       .addCase(updateProfile.rejected, (state, action) => {
         state.status = 'error';
         state.error = action.error.message || 'Failed to update profile';
+      })
+      // Update Newsletter Preferences
+      .addCase(updateNewsletterPreferences.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(updateNewsletterPreferences.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.profile = action.payload;
+      })
+      .addCase(updateNewsletterPreferences.rejected, (state, action) => {
+        state.status = 'error';
+        state.error = action.error.message || 'Failed to update newsletter preferences';
       });
   },
 });
 
 export const { setProfile, clearProfile } = profileSlice.actions;
-export default profileSlice.reducer; 
+export default profileSlice.reducer;

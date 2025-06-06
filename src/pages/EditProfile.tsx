@@ -17,7 +17,7 @@ import {
 } from '../components/ui/dialog';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-import { updateProfile } from '../store/slices/profileSlice';
+import { updateProfile, updateNewsletterPreferences } from '../store/slices/profileSlice';
 
 export function EditProfile() {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,19 +38,25 @@ export function EditProfile() {
   const [profileData, setProfileData] = useState({
     full_name: profile?.full_name || '',
     avatar_url: profile?.avatar_url || '',
-    newsletter_product: true,
-    newsletter_marketing: true,
-    newsletter_writing: true,
   });
+
+  const [newsletterPreferences, setNewsletterPreferences] = useState({
+    newsletter_product: profile?.newsletter_product ?? true,
+    newsletter_marketing: profile?.newsletter_marketing ?? true,
+    newsletter_writing: profile?.newsletter_writing ?? true,
+  });
+
   const [connectedProviders, setConnectedProviders] = useState<string[]>([]);
 
   useEffect(() => {
     setProfileData({
       full_name: profile?.full_name || '',
       avatar_url: profile?.avatar_url || '',
-      newsletter_product: profile?.newsletter_product || true,
-      newsletter_marketing: profile?.newsletter_marketing || true,
-      newsletter_writing: profile?.newsletter_writing || true,
+    });
+    setNewsletterPreferences({
+      newsletter_product: profile?.newsletter_product ?? true,
+      newsletter_marketing: profile?.newsletter_marketing ?? true,
+      newsletter_writing: profile?.newsletter_writing ?? true,
     });
   }, [profile]);  
 
@@ -109,6 +115,26 @@ export function EditProfile() {
         variant: "destructive",
         title: "Error",
         description: "Error updating profile",
+      });
+    } finally { 
+      setLoading(false);
+    }
+  }
+
+  async function handleNewsletterSave() {
+    try {
+      setLoading(true);
+      await dispatch(updateNewsletterPreferences(newsletterPreferences));
+      toast({
+        title: "Success",
+        description: "Newsletter preferences updated successfully",
+      });
+    } catch (err) {
+      console.error('Error updating newsletter preferences:', err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error updating newsletter preferences",
       });
     } finally { 
       setLoading(false);
@@ -391,8 +417,11 @@ export function EditProfile() {
                 <input
                   id="newsletter_product"
                   type="checkbox"
-                  checked={profile.newsletter_product}
-                  onChange={(e) => setProfileData({ ...profile, newsletter_product: e.target.checked })}
+                  checked={newsletterPreferences.newsletter_product}
+                  onChange={(e) => setNewsletterPreferences({ 
+                    ...newsletterPreferences, 
+                    newsletter_product: e.target.checked 
+                  })}
                   className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
                 />
               </div>
@@ -407,8 +436,11 @@ export function EditProfile() {
                 <input
                   id="newsletter_writing"
                   type="checkbox"
-                  checked={profile.newsletter_writing}
-                  onChange={(e) => setProfileData({ ...profile, newsletter_writing: e.target.checked })}
+                  checked={newsletterPreferences.newsletter_writing}
+                  onChange={(e) => setNewsletterPreferences({ 
+                    ...newsletterPreferences, 
+                    newsletter_writing: e.target.checked 
+                  })}
                   className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
                 />
               </div>
@@ -423,8 +455,11 @@ export function EditProfile() {
                 <input
                   id="newsletter_marketing"
                   type="checkbox"
-                  checked={profile.newsletter_marketing}
-                  onChange={(e) => setProfileData({ ...profile, newsletter_marketing: e.target.checked })}
+                  checked={newsletterPreferences.newsletter_marketing}
+                  onChange={(e) => setNewsletterPreferences({ 
+                    ...newsletterPreferences, 
+                    newsletter_marketing: e.target.checked 
+                  })}
                   className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
                 />
               </div>
@@ -435,7 +470,7 @@ export function EditProfile() {
             </div>
 
             <Button
-              onClick={handleProfileSave}
+              onClick={handleNewsletterSave}
               className="w-full mt-6"
               disabled={loading}
             >
