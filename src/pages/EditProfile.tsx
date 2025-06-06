@@ -39,7 +39,7 @@ export function EditProfile() {
     full_name: profile?.full_name || '',
     avatar_url: profile?.avatar_url || '',
     newsletter_product: true,
-    newsletter_features: true,
+    newsletter_marketing: true,
     newsletter_writing: true,
   });
   const [connectedProviders, setConnectedProviders] = useState<string[]>([]);
@@ -49,7 +49,7 @@ export function EditProfile() {
       full_name: profile?.full_name || '',
       avatar_url: profile?.avatar_url || '',
       newsletter_product: profile?.newsletter_product || true,
-      newsletter_features: profile?.newsletter_features || true,
+      newsletter_marketing: profile?.newsletter_marketing || true,
       newsletter_writing: profile?.newsletter_writing || true,
     });
   }, [profile]);  
@@ -393,28 +393,12 @@ export function EditProfile() {
                   type="checkbox"
                   checked={profile.newsletter_product}
                   onChange={(e) => setProfileData({ ...profile, newsletter_product: e.target.checked })}
-                  className="h-4 w-4 text-primary border-gray-300 rounded"
+                  className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
                 />
               </div>
               <div className="ml-3">
                 <Label htmlFor="newsletter_product" className="font-medium text-gray-700">Product Updates</Label>
-                <p className="text-gray-500 text-sm">Receive updates about new features and improvements</p>
-              </div>
-            </div>
-
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  id="newsletter_features"
-                  type="checkbox"
-                  checked={profile.newsletter_features}
-                  onChange={(e) => setProfileData({ ...profile, newsletter_features: e.target.checked })}
-                  className="h-4 w-4 text-primary border-gray-300 rounded"
-                />
-              </div>
-              <div className="ml-3">
-                <Label htmlFor="newsletter_features" className="font-medium text-gray-700">Feature Announcements</Label>
-                <p className="text-gray-500 text-sm">Be the first to know about new features</p>
+                <p className="text-gray-500 text-sm">Be the first to know about new AI capabilities, tools, and improvements in the platform.</p>
               </div>
             </div>
 
@@ -425,12 +409,28 @@ export function EditProfile() {
                   type="checkbox"
                   checked={profile.newsletter_writing}
                   onChange={(e) => setProfileData({ ...profile, newsletter_writing: e.target.checked })}
-                  className="h-4 w-4 text-primary border-gray-300 rounded"
+                  className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
                 />
               </div>
               <div className="ml-3">
                 <Label htmlFor="newsletter_writing" className="font-medium text-gray-700">Writing Tips & Resources</Label>
-                <p className="text-gray-500 text-sm">Get writing advice and resources to improve your craft</p>
+                <p className="text-gray-500 text-sm">Get weekly inspiration, creative prompts, and storytelling advice to keep your writing flowing.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="flex items-center h-5">
+                <input
+                  id="newsletter_marketing"
+                  type="checkbox"
+                  checked={profile.newsletter_marketing}
+                  onChange={(e) => setProfileData({ ...profile, newsletter_marketing: e.target.checked })}
+                  className="h-4 w-4 text-primary border-gray-300 rounded relative top-1"
+                />
+              </div>
+              <div className="ml-3">
+                <Label htmlFor="newsletter_marketing" className="font-medium text-gray-700">Publishing & Marketing Advice</Label>
+                <p className="text-gray-500 text-sm">Learn how to publish, promote, and sell your book—plus tips on reaching your audience.</p>
               </div>
             </div>
 
