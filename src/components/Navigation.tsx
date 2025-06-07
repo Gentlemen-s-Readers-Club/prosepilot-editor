@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogOut, User, CreditCard } from 'lucide-react';
+import { LogOut, User, CreditCard, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,7 +35,14 @@ export function Navigation() {
               <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-6">
+            <button
+              onClick={() => navigate('/docs')}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              <BookOpen className="h-4 w-4" />
+              <span>Documentation</span>
+            </button>
             {profile && (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center space-x-3 hover:bg-gray-50 rounded-full p-1 -mr-1 transition-colors focus:border-primary focus:ring-1 focus:ring-primary" >
