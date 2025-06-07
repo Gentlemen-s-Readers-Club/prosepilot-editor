@@ -8,6 +8,7 @@ import { BookDetails } from './pages/BookDetails';
 import { ChapterEditor } from './pages/ChapterEditor';
 import { EditProfile } from './pages/EditProfile';
 import { Subscription } from './pages/Subscription';
+import { Documentation } from './pages/Documentation';
 import { Landing } from './pages/Landing';
 import { Toaster } from './components/Toaster';
 import { useAuth } from './hooks/useAuth';
@@ -35,6 +36,7 @@ function App() {
     <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/docs" element={<Documentation />} />
           <Route
             path="/app"
             element={

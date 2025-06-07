@@ -7,7 +7,8 @@ import {
   ChevronRight,
   Star,
   Users,
-  Zap
+  Zap,
+  BookOpen
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
@@ -23,6 +24,12 @@ export function Landing() {
               <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
             </div>
             <div className="flex items-center space-x-4">
+              <Link
+                to="/docs"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Documentation
+              </Link>
               <Link
                 to="/app/login"
                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
@@ -52,7 +59,7 @@ export function Landing() {
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
-                    <Link to="/signup">
+                    <Link to="/app/signup">
                       <Button className="w-full flex items-center justify-center px-8 py-3 text-base font-medium">
                         Start Writing Free
                         <ChevronRight className="ml-2 h-5 w-5" />
@@ -158,7 +165,7 @@ export function Landing() {
                   Join thousands of writers who trust ProsePilot to bring their stories to life.
                 </p>
                 <Link
-                  to="/signup"
+                  to="/app/signup"
                   className="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50"
                 >
                   Get Started Free
@@ -178,7 +185,12 @@ export function Landing() {
               <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
               <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
             </div>
-            <p className="text-gray-500 text-sm">© 2025 ProsePilot. All rights reserved.</p>
+            <div className="flex items-center space-x-6">
+              <Link to="/docs" className="text-gray-500 hover:text-gray-900 text-sm">
+                Documentation
+              </Link>
+              <p className="text-gray-500 text-sm">© 2025 ProsePilot. All rights reserved.</p>
+            </div>
           </div>
         </div>
       </footer>
