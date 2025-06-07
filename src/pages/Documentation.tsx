@@ -70,7 +70,7 @@ export function Documentation() {
     switch (activeSection) {
       case 'what-is-prosepilot':
         return (
-          <div id="what-is-prosepilot" className="space-y-8">
+          <div id="what-is-prosepilot\" className="space-y-8">
             <div>
               <h2 className="text-3xl font-bold text-primary mb-4">What is ProsePilot?</h2>
               <p className="text-lg text-gray-600 mb-6">
