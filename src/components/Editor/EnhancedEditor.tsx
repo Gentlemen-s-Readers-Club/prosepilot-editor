@@ -213,9 +213,12 @@ export function EnhancedEditor({
       // Re-highlight annotations after content changes
       if (showAnnotations) {
         setTimeout(() => {
-          const editorElement = iframeRef.current?.contentDocument?.querySelector('.ProseMirror');
-          if (editorElement) {
-            highlightAnnotatedText(editorElement, annotations, handleAnnotationClick);
+          const iframe = iframeRef.current;
+          if (iframe && iframe.contentDocument) {
+            const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+            if (editorElement) {
+              highlightAnnotatedText(editorElement, annotations, handleAnnotationClick);
+            }
           }
         }, 100);
       }
@@ -229,9 +232,12 @@ export function EnhancedEditor({
   useEffect(() => {
     if (!editor || !showAnnotations) return;
 
-    const editorElement = iframeRef.current?.contentDocument?.querySelector('.ProseMirror');
-    if (editorElement) {
-      highlightAnnotatedText(editorElement, annotations, handleAnnotationClick);
+    const iframe = iframeRef.current;
+    if (iframe && iframe.contentDocument) {
+      const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+      if (editorElement) {
+        highlightAnnotatedText(editorElement, annotations, handleAnnotationClick);
+      }
     }
   }, [editor, annotations, showAnnotations]);
 
@@ -290,7 +296,7 @@ export function EnhancedEditor({
     if (readOnly) return;
 
     const selection = getTextSelection();
-    if (!selection) {
+    if (!selection || !selection.text) {
       alert('Please select some text to annotate.');
       return;
     }

@@ -6,7 +6,19 @@ export function getTextSelection(): {
   endOffset: number; 
   range: Range | null;
 } | null {
-  const selection = window.getSelection();
+  // First try to get selection from the main document
+  let selection = window.getSelection();
+  let doc = document;
+  
+  // If no selection in main document, check iframe
+  if (!selection || selection.rangeCount === 0 || !selection.toString().trim()) {
+    const iframe = document.querySelector('iframe');
+    if (iframe && iframe.contentDocument) {
+      doc = iframe.contentDocument;
+      selection = iframe.contentWindow?.getSelection() || null;
+    }
+  }
+  
   if (!selection || selection.rangeCount === 0) return null;
 
   const range = selection.getRangeAt(0);
@@ -14,10 +26,11 @@ export function getTextSelection(): {
   
   if (!text) return null;
 
-  // Calculate offsets relative to the editor content
-  const editorElement = document.querySelector('.ProseMirror');
+  // Find the editor element in the appropriate document
+  const editorElement = doc.querySelector('.ProseMirror');
   if (!editorElement) return null;
 
+  // Calculate offsets relative to the editor content
   const startOffset = getTextOffset(editorElement, range.startContainer, range.startOffset);
   const endOffset = getTextOffset(editorElement, range.endContainer, range.endOffset);
 
@@ -239,9 +252,20 @@ export function setupAnnotationKeyboardShortcuts(
     }
   };
 
+  // Listen for events on both main document and iframe
   document.addEventListener('keydown', handleKeyDown);
+  
+  // Also listen on iframe if it exists
+  const iframe = document.querySelector('iframe');
+  if (iframe && iframe.contentDocument) {
+    iframe.contentDocument.addEventListener('keydown', handleKeyDown);
+  }
   
   return () => {
     document.removeEventListener('keydown', handleKeyDown);
+    const iframe = document.querySelector('iframe');
+    if (iframe && iframe.contentDocument) {
+      iframe.contentDocument.removeEventListener('keydown', handleKeyDown);
+    }
   };
 }
