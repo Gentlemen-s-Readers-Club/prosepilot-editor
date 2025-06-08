@@ -9,6 +9,8 @@ import { ChapterEditor } from './pages/ChapterEditor';
 import { EditProfile } from './pages/EditProfile';
 import { Subscription } from './pages/Subscription';
 import { Documentation } from './pages/Documentation';
+import { Teams } from './pages/Teams';
+import { TeamDetails } from './pages/TeamDetails';
 import { Landing } from './pages/Landing';
 import { Toaster } from './components/Toaster';
 import { useAuth } from './hooks/useAuth';
@@ -46,6 +48,14 @@ function App() {
                 <Navigate to="/app/login" />
               )
             }
+          />
+          <Route
+            path="/app/teams"
+            element={session ? <Teams /> : <Navigate to="/app/login" />}
+          />
+          <Route
+            path="/app/teams/:teamId"
+            element={session ? <TeamDetails /> : <Navigate to="/app/login" />}
           />
           <Route
             path="/app/book/:id"

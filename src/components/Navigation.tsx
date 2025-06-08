@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogOut, User, CreditCard, BookOpen } from 'lucide-react';
+import { LogOut, User, CreditCard, BookOpen, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -42,6 +42,13 @@ export function Navigation() {
             >
               <BookOpen className="h-4 w-4" />
               <span>Documentation</span>
+            </button>
+            <button
+              onClick={() => navigate('/app/teams')}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              <Users className="h-4 w-4" />
+              <span>Teams</span>
             </button>
             {profile && (
               <DropdownMenu>

@@ -6,6 +6,7 @@ import narratorsReducer from './slices/narratorsSlice';
 import literatureStylesReducer from './slices/literatureStylesSlice';
 import profileReducer from './slices/profileSlice';
 import booksReducer from './slices/booksSlice';
+import teamsReducer from './slices/teamsSlice';
 
 const rootReducer = combineReducers({
   categories: categoriesReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   literatureStyles: literatureStylesReducer,
   profile: profileReducer,
   books: booksReducer,
+  teams: teamsReducer,
 });
 
-export default rootReducer; 
+export default rootReducer;
