@@ -32,10 +32,10 @@ const helpCategories = [
     icon: <BookOpen className="w-6 h-6" />,
     description: 'Learn the basics of ProsePilot',
     articles: [
-      'How to create your first book',
-      'Understanding credits and pricing',
-      'Setting up your author profile',
-      'Choosing the right plan for you'
+      { title: 'How to create your first book', link: '/help/create-first-book' },
+      { title: 'Understanding credits and pricing', link: '/help/credit-system' },
+      { title: 'Setting up your author profile', link: '' },
+      { title: 'Choosing the right plan for you', link: '/pricing' }
     ]
   },
   {
@@ -44,10 +44,10 @@ const helpCategories = [
     icon: <FileText className="w-6 h-6" />,
     description: 'Master our AI writing tools',
     articles: [
-      'Using AI story generation',
-      'Character development tools',
-      'Plot consistency checking',
-      'Advanced writing settings'
+      { title: 'Best practices for AI-generated content', link: '/help/ai-best-practices' },
+      { title: 'Character development tools', link: '' },
+      { title: 'Plot consistency checking', link: '' },
+      { title: 'Advanced writing settings', link: '' }
     ]
   },
   {
@@ -56,10 +56,10 @@ const helpCategories = [
     icon: <Users className="w-6 h-6" />,
     description: 'Work together with your team',
     articles: [
-      'Creating and managing teams',
-      'Inviting team members',
-      'Setting roles and permissions',
-      'Collaborative writing workflows'
+      { title: 'Setting up team collaboration', link: '/help/team-collaboration' },
+      { title: 'Inviting team members', link: '' },
+      { title: 'Setting roles and permissions', link: '' },
+      { title: 'Collaborative writing workflows', link: '' }
     ]
   },
   {
@@ -68,10 +68,10 @@ const helpCategories = [
     icon: <Zap className="w-6 h-6" />,
     description: 'Get your book ready for publication',
     articles: [
-      'Export formats explained',
-      'Preparing for publication',
-      'Cover design guidelines',
-      'ISBN and metadata setup'
+      { title: 'Export formats explained', link: '' },
+      { title: 'Preparing for publication', link: '' },
+      { title: 'Cover design guidelines', link: '' },
+      { title: 'ISBN and metadata setup', link: '' }
     ]
   },
   {
@@ -80,10 +80,10 @@ const helpCategories = [
     icon: <CreditCard className="w-6 h-6" />,
     description: 'Manage your account and billing',
     articles: [
-      'Upgrading or downgrading plans',
-      'Purchasing additional credits',
-      'Understanding billing cycles',
-      'Cancellation and refunds'
+      { title: 'Understanding the credit system', link: '/help/credit-system' },
+      { title: 'Purchasing additional credits', link: '' },
+      { title: 'Understanding billing cycles', link: '' },
+      { title: 'Cancellation and refunds', link: '' }
     ]
   },
   {
@@ -92,10 +92,10 @@ const helpCategories = [
     icon: <Settings className="w-6 h-6" />,
     description: 'Troubleshooting and technical issues',
     articles: [
-      'Browser compatibility',
-      'Performance optimization',
-      'Data backup and recovery',
-      'API documentation'
+      { title: 'Browser compatibility', link: '' },
+      { title: 'Performance optimization', link: '' },
+      { title: 'Data backup and recovery', link: '' },
+      { title: 'API documentation', link: '' }
     ]
   }
 ];
@@ -105,25 +105,29 @@ const popularArticles = [
     title: 'How to create your first book with AI',
     category: 'Getting Started',
     readTime: '5 min read',
-    views: '12.5k views'
+    views: '12.5k views',
+    link: '/help/create-first-book'
   },
   {
     title: 'Understanding the credit system',
     category: 'Billing',
     readTime: '3 min read',
-    views: '8.2k views'
+    views: '8.2k views',
+    link: '/help/credit-system'
   },
   {
     title: 'Best practices for AI-generated content',
     category: 'Writing Features',
     readTime: '7 min read',
-    views: '6.8k views'
+    views: '6.8k views',
+    link: '/help/ai-best-practices'
   },
   {
     title: 'Setting up team collaboration',
     category: 'Teams',
     readTime: '4 min read',
-    views: '5.1k views'
+    views: '5.1k views',
+    link: '/help/team-collaboration'
   }
 ];
 
@@ -276,8 +280,9 @@ export function Support() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {popularArticles.map((article, index) => (
-              <div
+              <Link 
                 key={index}
+                to={article.link}
                 className="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors cursor-pointer group"
               >
                 <div className="flex items-start justify-between">
@@ -295,7 +300,7 @@ export function Support() {
                   </div>
                   <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -332,9 +337,21 @@ export function Support() {
                 
                 <ul className="space-y-2">
                   {category.articles.slice(0, 3).map((article, index) => (
-                    <li key={index} className="flex items-center text-sm text-gray-700 hover:text-primary transition-colors">
-                      <ChevronRight className="w-4 h-4 mr-2 text-gray-400" />
-                      {article}
+                    <li key={index}>
+                      {article.link ? (
+                        <Link 
+                          to={article.link} 
+                          className="flex items-center text-sm text-gray-700 hover:text-primary transition-colors"
+                        >
+                          <ChevronRight className="w-4 h-4 mr-2 text-gray-400" />
+                          {article.title}
+                        </Link>
+                      ) : (
+                        <span className="flex items-center text-sm text-gray-700">
+                          <ChevronRight className="w-4 h-4 mr-2 text-gray-400" />
+                          {article.title}
+                        </span>
+                      )}
                     </li>
                   ))}
                   {category.articles.length > 3 && (
