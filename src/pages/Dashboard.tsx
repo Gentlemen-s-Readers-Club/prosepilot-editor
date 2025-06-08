@@ -42,6 +42,9 @@ export function Dashboard() {
   const { teams, status: teamsStatus } = useSelector((state: RootState) => state.teams);
   const { profile } = useSelector((state: RootState) => state.profile);
 
+  // Check if user has any teams
+  const hasTeams = teams.length > 0;
+
   // Create workspace options
   const workspaceOptions: WorkspaceOption[] = useMemo(() => {
     const options: WorkspaceOption[] = [
@@ -126,9 +129,9 @@ export function Dashboard() {
     };
   }, [dispatch]);
 
-  // Filter books based on selected workspace
+  // Filter books based on selected workspace (only if user has teams)
   const workspaceFilteredBooks = useMemo(() => {
-    if (!selectedWorkspace) return books;
+    if (!hasTeams || !selectedWorkspace) return books;
 
     if (selectedWorkspace.type === 'personal') {
       // Show personal books (no team_id)
@@ -137,7 +140,7 @@ export function Dashboard() {
       // Show team books for selected team
       return books.filter((book: Book) => book.team_id === selectedWorkspace.id);
     }
-  }, [books, selectedWorkspace]);
+  }, [books, selectedWorkspace, hasTeams]);
 
   const filteredBooks = useMemo(() => {
     return workspaceFilteredBooks.filter((book: Book) => {
@@ -209,47 +212,49 @@ export function Dashboard() {
             {/* Sidebar */}
             <div className="w-72">
               <div className="space-y-6">
-                {/* Workspace Selector */}
-                <div className="bg-primary rounded-lg shadow p-6 text-white">
-                  <h2 className="text-lg font-semibold mb-4">Workspace</h2>
-                  <div className="relative">
-                    <select
-                      value={selectedWorkspace?.id || ''}
-                      onChange={(e) => {
-                        const workspace = workspaceOptions.find(w => w.id === e.target.value);
-                        setSelectedWorkspace(workspace || null);
-                      }}
-                      className="flex h-10 w-full rounded-md border-0 bg-white/10 px-3 py-1 text-sm text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/20 appearance-none cursor-pointer pr-8"
-                    >
-                      {workspaceOptions.map((workspace) => (
-                        <option key={workspace.id} value={workspace.id} className="text-gray-900">
-                          {workspace.name}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white pointer-events-none" size={16} />
-                  </div>
-                  
-                  {/* Workspace Info */}
-                  <div className="mt-4 pt-4 border-t border-white/20">
-                    <div className="flex items-center gap-2 text-sm">
-                      {selectedWorkspace?.type === 'personal' ? (
-                        <User className="w-4 h-4" />
-                      ) : (
-                        <Users className="w-4 h-4" />
-                      )}
-                      <span className="opacity-90">
-                        {selectedWorkspace?.type === 'personal' 
-                          ? 'Personal workspace' 
-                          : `Team workspace • ${selectedWorkspace?.team?.user_role || 'Member'}`
-                        }
-                      </span>
+                {/* Workspace Selector - Only show if user has teams */}
+                {hasTeams && (
+                  <div className="bg-primary rounded-lg shadow p-6 text-white">
+                    <h2 className="text-lg font-semibold mb-4">Workspace</h2>
+                    <div className="relative">
+                      <select
+                        value={selectedWorkspace?.id || ''}
+                        onChange={(e) => {
+                          const workspace = workspaceOptions.find(w => w.id === e.target.value);
+                          setSelectedWorkspace(workspace || null);
+                        }}
+                        className="flex h-10 w-full rounded-md border-0 bg-white/10 px-3 py-1 text-sm text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/20 appearance-none cursor-pointer pr-8"
+                      >
+                        {workspaceOptions.map((workspace) => (
+                          <option key={workspace.id} value={workspace.id} className="text-gray-900">
+                            {workspace.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white pointer-events-none" size={16} />
                     </div>
-                    <div className="text-sm opacity-75 mt-1">
-                      {workspaceFilteredBooks.length} book{workspaceFilteredBooks.length !== 1 ? 's' : ''}
+                    
+                    {/* Workspace Info */}
+                    <div className="mt-4 pt-4 border-t border-white/20">
+                      <div className="flex items-center gap-2 text-sm">
+                        {selectedWorkspace?.type === 'personal' ? (
+                          <User className="w-4 h-4" />
+                        ) : (
+                          <Users className="w-4 h-4" />
+                        )}
+                        <span className="opacity-90">
+                          {selectedWorkspace?.type === 'personal' 
+                            ? 'Personal workspace' 
+                            : `Team workspace • ${selectedWorkspace?.team?.user_role || 'Member'}`
+                          }
+                        </span>
+                      </div>
+                      <div className="text-sm opacity-75 mt-1">
+                        {workspaceFilteredBooks.length} book{workspaceFilteredBooks.length !== 1 ? 's' : ''}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* Filters */}
                 <div className="bg-accent rounded-lg shadow p-6 text-white">
@@ -332,7 +337,7 @@ export function Dashboard() {
                     Create Your First Book
                   </Button>
                 </div>
-              ) : workspaceFilteredBooks.length === 0 ? (
+              ) : hasTeams && workspaceFilteredBooks.length === 0 ? (
                 <div className="text-center py-12">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
                     No books in {selectedWorkspace?.name}
