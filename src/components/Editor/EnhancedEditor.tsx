@@ -155,6 +155,7 @@ const editorStyles = `
   .annotation-highlight {
     position: relative;
     transition: all 0.2s ease;
+    display: inline;
   }
 
   .annotation-highlight:hover {
@@ -234,7 +235,13 @@ export function EnhancedEditor({
   // Handle annotation highlighting when annotations or visibility changes
   useEffect(() => {
     if (!editor) return;
-    updateAnnotationHighlights();
+    
+    // Add a small delay to ensure the iframe content is ready
+    const timer = setTimeout(() => {
+      updateAnnotationHighlights();
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, [editor, annotations, showAnnotations, updateAnnotationHighlights]);
 
   // Set up iframe and editor
@@ -263,13 +270,18 @@ export function EnhancedEditor({
       editorRef.current.appendChild(editorElement);
     }
     
+    // Update highlights after editor is mounted
+    setTimeout(() => {
+      updateAnnotationHighlights();
+    }, 100);
+    
     return () => {
       if (editorRef.current) {
         editorRef.current.remove();
         editorRef.current = null;
       }
     };
-  }, [editor, iframeRef]);
+  }, [editor, iframeRef, updateAnnotationHighlights]);
 
   // Set up keyboard shortcuts
   useEffect(() => {
@@ -310,12 +322,29 @@ export function EnhancedEditor({
     if (newAnnotation) {
       setSelectedAnnotation(newAnnotation);
       setShowAnnotationPanel(true);
+      // Update highlights after creating annotation
+      setTimeout(() => {
+        updateAnnotationHighlights();
+      }, 100);
     }
   };
 
   const handleToggleAnnotations = useCallback(() => {
-    setShowAnnotations(!showAnnotations);
-  }, [showAnnotations]);
+    setShowAnnotations(prev => {
+      const newValue = !prev;
+      // Update highlights immediately when toggling
+      setTimeout(() => {
+        const iframe = iframeRef.current;
+        if (iframe && iframe.contentDocument) {
+          const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+          if (editorElement) {
+            highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, newValue);
+          }
+        }
+      }, 50);
+      return newValue;
+    });
+  }, [annotations, handleAnnotationClick]);
 
   const handleExportAnnotations = () => {
     const exportData = exportAnnotations(annotations, chapterTitle);

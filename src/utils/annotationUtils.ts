@@ -89,7 +89,7 @@ function removeExistingHighlights(editorElement: Element): void {
     const parent = highlight.parentNode;
     if (parent) {
       // Replace the highlight span with its text content
-      const textNode = document.createTextNode(highlight.textContent || '');
+      const textNode = highlight.ownerDocument.createTextNode(highlight.textContent || '');
       parent.replaceChild(textNode, highlight);
       parent.normalize();
     }
@@ -111,17 +111,25 @@ function highlightAnnotation(
     return;
   }
 
-  const walker = document.createTreeWalker(
-    editorElement,
-    NodeFilter.SHOW_TEXT,
-    null
-  );
-
+  // Get the document context (iframe or main document)
+  const doc = editorElement.ownerDocument;
+  
+  // Create a range to find the text nodes
+  const range = doc.createRange();
+  range.selectNodeContents(editorElement);
+  
+  // Get all text content and find the correct positions
   let currentOffset = 0;
   let startNode: Text | null = null;
   let endNode: Text | null = null;
   let startNodeOffset = 0;
   let endNodeOffset = 0;
+
+  const walker = doc.createTreeWalker(
+    editorElement,
+    NodeFilter.SHOW_TEXT,
+    null
+  );
 
   let currentNode;
   while (currentNode = walker.nextNode()) {
@@ -152,27 +160,34 @@ function highlightAnnotation(
 
   if (startNode && endNode) {
     try {
-      const range = document.createRange();
-      range.setStart(startNode, startNodeOffset);
-      range.setEnd(endNode, endNodeOffset);
+      const highlightRange = doc.createRange();
+      highlightRange.setStart(startNode, startNodeOffset);
+      highlightRange.setEnd(endNode, endNodeOffset);
 
       // Check if the range is valid and has content
-      if (range.collapsed || !range.toString().trim()) {
+      if (highlightRange.collapsed || !highlightRange.toString().trim()) {
         return;
       }
 
-      const highlight = document.createElement('span');
+      const highlight = doc.createElement('span');
       highlight.className = `annotation-highlight ${
         annotation.status === 'resolved' ? 'resolved' : 'open'
       }`;
+      
+      // Use inline styles to ensure they work in iframe
+      const backgroundColor = annotation.status === 'resolved' ? '#dcfce7' : '#fef3c7';
+      const borderColor = annotation.status === 'resolved' ? '#16a34a' : '#d97706';
+      
       highlight.style.cssText = `
-        background-color: ${annotation.status === 'resolved' ? '#dcfce7' : '#fef3c7'} !important;
-        border-bottom: 2px solid ${annotation.status === 'resolved' ? '#16a34a' : '#d97706'} !important;
+        background-color: ${backgroundColor} !important;
+        border-bottom: 2px solid ${borderColor} !important;
         cursor: pointer !important;
         padding: 1px 2px !important;
         border-radius: 2px !important;
         position: relative !important;
+        display: inline !important;
       `;
+      
       highlight.title = annotation.content;
       highlight.setAttribute('data-annotation-id', annotation.id);
       
@@ -182,9 +197,20 @@ function highlightAnnotation(
         onAnnotationClick(annotation);
       });
 
-      range.surroundContents(highlight);
+      // Try to surround the content with the highlight
+      try {
+        highlightRange.surroundContents(highlight);
+      } catch (error) {
+        // If surroundContents fails, try extracting and inserting
+        try {
+          const contents = highlightRange.extractContents();
+          highlight.appendChild(contents);
+          highlightRange.insertNode(highlight);
+        } catch (fallbackError) {
+          console.warn('Could not highlight annotation:', annotation.id, fallbackError);
+        }
+      }
     } catch (error) {
-      // Handle cases where range spans multiple elements
       console.warn('Could not highlight annotation:', annotation.id, error);
     }
   }
