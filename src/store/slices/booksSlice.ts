@@ -27,8 +27,17 @@ Book[],
         title,
         cover_url,
         status,
-        languages (name),
-        categories (name)
+        languages (
+          id,
+          name,
+          code
+        ),
+        book_categories (
+          categories (
+            id,
+            name
+          )
+        )
       `)
       .order('updated_at', { ascending: false });
 
@@ -36,8 +45,17 @@ Book[],
       throw new Error(booksError.message);
     }
 
-    // First cast to unknown, then to RawBook[] to safely handle the type conversion
-    return booksData as unknown as Book[];
+    // Transform the data to match the expected Book interface
+    const transformedBooks = booksData?.map((book: any) => ({
+      id: book.id,
+      title: book.title,
+      cover_url: book.cover_url,
+      status: book.status,
+      languages: book.languages,
+      categories: book.book_categories?.map((bc: any) => bc.categories) || []
+    })) || [];
+
+    return transformedBooks as Book[];
   }
 );
 
@@ -67,4 +85,4 @@ const booksSlice = createSlice({
 });
 
 export const { setBooks } = booksSlice.actions;
-export default booksSlice.reducer; 
+export default booksSlice.reducer;
