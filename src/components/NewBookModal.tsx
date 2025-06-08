@@ -6,11 +6,12 @@ import { Label } from './ui/label';
 import { CustomSelect, SelectOption, mapToSelectOptions } from './ui/select';
 import { useToast } from '../hooks/use-toast';
 import { AppDispatch, RootState } from '../store';
-import type { Category, Language, Tone, Narrator, LiteratureStyle } from '../store/types';
+import type { Category, Language, Tone, Narrator, LiteratureStyle, Team } from '../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTones } from '../store/slices/tonesSlice';
 import { fetchNarrators } from '../store/slices/narratorsSlice';
 import { fetchLiteratureStyles } from '../store/slices/literatureStylesSlice';
+import { fetchUserTeams } from '../store/slices/teamsSlice';
 
 interface ValidationIssue {
   type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration';
@@ -20,6 +21,11 @@ interface ValidationIssue {
 interface NewBookModalProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface OwnerOption extends SelectOption {
+  type: 'user' | 'team';
+  team?: Team;
 }
 
 export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
@@ -37,14 +43,33 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const { items: tones, status: tonesStatus } = useSelector((state: RootState) => state.tones);
   const { items: narrators, status: narratorsStatus } = useSelector((state: RootState) => state.narrators);
   const { items: literatureStyles, status: literatureStylesStatus } = useSelector((state: RootState) => state.literatureStyles);
+  const { teams, status: teamsStatus } = useSelector((state: RootState) => state.teams);
   const { profile } = useSelector((state: RootState) => state.profile);
 
   // Selection states
+  const [selectedOwner, setSelectedOwner] = useState<OwnerOption | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<SelectOption[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<SelectOption | null>(null);
   const [selectedNarrator, setSelectedNarrator] = useState<SelectOption | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<SelectOption | null>(null);
   const [selectedTone, setSelectedTone] = useState<SelectOption | null>(null);
+
+  // Create owner options (user + teams where user can create books)
+  const ownerOptions: OwnerOption[] = [
+    {
+      value: 'user',
+      label: `Personal (${profile?.full_name || 'Me'})`,
+      type: 'user'
+    },
+    ...teams
+      .filter(team => team.user_role === 'admin' || team.user_role === 'editor')
+      .map(team => ({
+        value: team.id,
+        label: team.name,
+        type: 'team' as const,
+        team
+      }))
+  ];
 
   useEffect(() => {
     const loadData = async () => {
@@ -59,8 +84,16 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
         if (literatureStylesStatus === 'idle') {
           promises.push(dispatch(fetchLiteratureStyles()).unwrap());
         }
+        if (teamsStatus === 'idle') {
+          promises.push(dispatch(fetchUserTeams()).unwrap());
+        }
 
         await Promise.all(promises);
+
+        // Set default owner to personal
+        if (ownerOptions.length > 0) {
+          setSelectedOwner(ownerOptions[0]);
+        }
       } catch(error) {
         console.error('Error loading data:', error);
         toast({
@@ -78,6 +111,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
       loadData();
     } else  {
       setPrompt('');
+      setSelectedOwner(null);
       setSelectedCategories([]);
       setSelectedLanguage(null);
       setSelectedNarrator(null);
@@ -85,10 +119,17 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
       setSelectedTone(null);
       setShowAdvanced(false);
     }
-  }, [dispatch, isOpen, tonesStatus, narratorsStatus, literatureStylesStatus, toast, onClose]);
+  }, [dispatch, isOpen, tonesStatus, narratorsStatus, literatureStylesStatus, teamsStatus, toast, onClose, ownerOptions.length]);
+
+  // Update default owner when options change
+  useEffect(() => {
+    if (!selectedOwner && ownerOptions.length > 0) {
+      setSelectedOwner(ownerOptions[0]);
+    }
+  }, [ownerOptions, selectedOwner]);
 
   const handleSubmit = async () => {
-    if (!selectedLanguage) return;
+    if (!selectedLanguage || !selectedOwner) return;
     
     setIsSubmitting(true);
     setIssues(null);
@@ -100,6 +141,23 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error('No session found');
       
+      // Prepare the request payload
+      const requestPayload = {
+        prompt,
+        language: selectedLanguage.language as Language,
+        categories: selectedCategories.map(c => c.category as Category),
+        narrator: selectedNarrator?.narrator as Narrator | undefined,
+        tone: selectedTone?.tone as Tone | undefined,
+        literatureStyle: selectedStyle?.style as LiteratureStyle | undefined,
+        author_name: profile?.full_name || 'Anonymous',
+        // Add owner information
+        owner: {
+          type: selectedOwner.type,
+          id: selectedOwner.type === 'user' ? user.id : selectedOwner.value,
+          team_id: selectedOwner.type === 'team' ? selectedOwner.value : null
+        }
+      };
+      
       // Call the API to generate the book
       const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
         method: 'POST',
@@ -107,15 +165,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`
         },
-        body: JSON.stringify({
-          prompt,
-          language: selectedLanguage.language as Language,
-          categories: selectedCategories.map(c => c.category as Category),
-          narrator: selectedNarrator?.narrator as Narrator | undefined,
-          tone: selectedTone?.tone as Tone | undefined,
-          literatureStyle: selectedStyle?.style as LiteratureStyle | undefined,
-          author_name: profile?.full_name || 'Anonymous'
-        })
+        body: JSON.stringify(requestPayload)
       });
 
       if (!response.ok) {
@@ -136,7 +186,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
 
       toast({
         title: "Success",
-        description: "Book created successfully",
+        description: `Book created successfully${selectedOwner.type === 'team' ? ` for team ${selectedOwner.team?.name}` : ''}`,
       });
     } catch (error) {
       console.error('Error creating book:', error);
@@ -195,6 +245,24 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                   </div>
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label htmlFor="owner" className="text-primary">Book Owner</Label>
+                <CustomSelect
+                  id="owner"
+                  value={selectedOwner}
+                  onChange={(newValue) => setSelectedOwner(newValue as OwnerOption)}
+                  options={ownerOptions}
+                  placeholder="Select who will own this book..."
+                  isDisabled={isSubmitting}
+                />
+                <p className="text-xs text-gray-500">
+                  {selectedOwner?.type === 'team' 
+                    ? `This book will be created for the team "${selectedOwner.team?.name}" and can be edited by team admins and editors.`
+                    : 'This book will be created as a personal book that only you can edit.'
+                  }
+                </p>
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="prompt" className="text-primary">Story Idea or Outline</Label>
@@ -303,7 +371,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting || !prompt || !selectedLanguage || selectedCategories.length === 0}
+              disabled={isSubmitting || !prompt || !selectedLanguage || selectedCategories.length === 0 || !selectedOwner}
             >
               {isSubmitting ? 'Creating Book...' : 'Create Book'}
             </Button>
