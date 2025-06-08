@@ -241,60 +241,6 @@ export function Dashboard() {
               Create New Book
             </Button>
           </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4">
-                <div className="bg-blue-100 p-3 rounded-lg">
-                  <BookOpen className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Total Books</p>
-                  <p className="text-2xl font-bold text-gray-900">{books.length}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4">
-                <div className="bg-green-100 p-3 rounded-lg">
-                  <Sparkles className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Published</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {books.filter(b => b.status === 'published').length}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4">
-                <div className="bg-amber-100 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">In Progress</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {books.filter(b => ['draft', 'writing', 'reviewing'].includes(b.status)).length}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4">
-                <div className="bg-purple-100 p-3 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Recent Activity</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {books.filter(b => new Date(b.updated_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000).length}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -338,9 +284,6 @@ export function Dashboard() {
                         }
                       </span>
                     </div>
-                    <div className="text-sm opacity-75 mt-1">
-                      {workspaceFilteredBooks.length} book{workspaceFilteredBooks.length !== 1 ? 's' : ''}
-                    </div>
                   </div>
                 </div>
               )}
@@ -348,7 +291,7 @@ export function Dashboard() {
               {/* Filters */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+                  <h2 className="text-lg font-semibold text-primary">Filters</h2>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -404,7 +347,7 @@ export function Dashboard() {
                       >
                         <option className="text-gray-900">All Statuses</option>
                         {BOOK_STATES.map(state => (
-                          <option key={state} className="capitalize text-gray-900">{state}</option>
+                          <option key={state} className="capitalize text-gray-900">{state.charAt(0).toUpperCase() + state.slice(1)}</option>
                         ))}
                       </select>
                       <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
@@ -507,7 +450,7 @@ export function Dashboard() {
                       key={filter} 
                       className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs"
                     >
-                      <span>{filter}</span>
+                      <span>{filter.charAt(0).toUpperCase() + filter.slice(1)}</span>
                       <button 
                         onClick={() => clearFilter(filter)}
                         className="text-gray-500 hover:text-gray-700"
@@ -588,7 +531,6 @@ export function Dashboard() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-md p-6 flex-1">
                 <BookList
                   books={paginatedBooks}
                   currentPage={currentPage}
@@ -596,7 +538,6 @@ export function Dashboard() {
                   onPageChange={setCurrentPage}
                   viewMode={viewMode}
                 />
-              </div>
             )}
           </div>
         </div>

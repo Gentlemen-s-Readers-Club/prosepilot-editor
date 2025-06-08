@@ -463,20 +463,17 @@ export function BookDetails() {
               <span className="font-medium">Back to Books</span>
             </button>
           </div>
-          
-          <div className="flex items-center gap-3">
-            <StatusBadge status={formData.status} />
+            
             {!isEditMode && !isPublished && (
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 onClick={() => setIsEditMode(true)}
                 className="flex items-center gap-2"
               >
                 <Edit3 size={16} />
-                Edit Book
+                Edit Book Details
               </Button>
             )}
-          </div>
         </div>
 
         {/* Alert Banners */}
@@ -561,17 +558,11 @@ export function BookDetails() {
               </div>
 
               {/* Book Stats */}
+              {!isEditMode && (
               <div className="space-y-3 mb-6">
                 <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Book Stats</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                      <BookOpen className="w-4 h-4" />
-                      <span>Chapters</span>
-                    </div>
-                    <p className="text-lg font-semibold text-gray-900">{bookStats.chapterCount}</p>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="flex flex-col gap-3">
+                  <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <Calendar className="w-4 h-4" />
                       <span>Created</span>
@@ -580,14 +571,7 @@ export function BookDetails() {
                       {formatDistanceToNow(new Date(bookStats.createdAt), { addSuffix: true })}
                     </p>
                   </div>
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                      <User className="w-4 h-4" />
-                      <span>Author</span>
-                    </div>
-                    <p className="text-sm font-medium text-gray-900 truncate">{formData.authorName}</p>
-                  </div>
-                  <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <Clock className="w-4 h-4" />
                       <span>Updated</span>
@@ -598,8 +582,10 @@ export function BookDetails() {
                   </div>
                 </div>
               </div>
+              )}
 
               {/* Action Buttons */}
+              {!isEditMode && (
               <div className="space-y-3">
                 <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</h3>
                 <div className="space-y-2">
@@ -634,40 +620,13 @@ export function BookDetails() {
                   </Button>
                 </div>
               </div>
+              )}
             </div>
           </div>
 
           {/* Right Column - Book Details and Chapters */}
           <div className="space-y-6">
-            {/* Tabs */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="border-b border-gray-200">
-                <nav className="flex space-x-8 px-6">
-                  <button
-                    onClick={() => setActiveTab('details')}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'details'
-                        ? 'border-primary text-primary'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    Book Details
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('chapters')}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'chapters'
-                        ? 'border-primary text-primary'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    Chapters & Content
-                  </button>
-                </nav>
-              </div>
-
-              {/* Details Tab */}
-              {activeTab === 'details' && (
                 <div className="p-6">
                   {isEditMode ? (
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -810,7 +769,10 @@ export function BookDetails() {
                     <div className="space-y-8">
                       {/* Book Title and Author */}
                       <div>
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">{formData.title}</h1>
+                        <div className="flex items-start justify-between">
+                          <h1 className="text-3xl font-bold text-primary mb-2">{formData.title}</h1>
+                          <StatusBadge status={formData.status} />
+                        </div>
                         <div className="flex items-center text-gray-600">
                           <User className="w-4 h-4 mr-1" />
                           <span>By {formData.authorName}</span>
@@ -872,15 +834,11 @@ export function BookDetails() {
                     </div>
                   )}
                 </div>
-              )}
-
-              {/* Chapters Tab */}
-              {activeTab === 'chapters' && (
-                <div className="p-6">
-                  <ChapterList bookId={id!} isPublished={isPublished} />
-                </div>
-              )}
             </div>
+
+            {!isEditMode && (
+              <ChapterList bookId={id!} isPublished={isPublished} />
+            )}
           </div>
         </div>
 

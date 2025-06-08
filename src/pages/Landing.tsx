@@ -64,7 +64,7 @@ export function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-white via-[#EBFAFD] to-white">
+      <div className="relative overflow-hidden bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
@@ -109,18 +109,12 @@ export function Landing() {
                         </Button>
                       </Link>
                     </div>
-                    <div className="mt-3 sm:mt-0 sm:ml-3">
-                      <Button variant="outline" className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium">
-                        <Play className="mr-2 h-5 w-5" />
-                        Watch Demo
-                      </Button>
-                    </div>
                   </div>
 
                   {/* Trust Indicators */}
                   <div className="mt-6 text-sm text-gray-500">
-                    <span>✓ 30-day money-back guarantee</span>
-                    <span className="mx-3">•</span>
+                    {/* <span>✓ 30-day money-back guarantee</span>
+                    <span className="mx-3">•</span> */}
                     <span>✓ Cancel anytime</span>
                     <span className="mx-3">•</span>
                     <span>✓ Start from just $9/month</span>
@@ -353,40 +347,6 @@ export function Landing() {
           <p className="mt-4 text-xl text-white/90">
             Choose the plan that fits your writing goals
           </p>
-          
-          <div className="mt-8 bg-white rounded-lg p-8 max-w-md mx-auto">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900">Starter Plan</h3>
-              <div className="mt-4">
-                <span className="text-4xl font-extrabold text-primary">$9</span>
-                <span className="text-gray-600">/month</span>
-              </div>
-              <ul className="mt-6 space-y-3 text-left">
-                {[
-                  "5 credits/month (1 book)",
-                  "Max 15,000 words per book",
-                  "Basic genre selection",
-                  "AI-generated outline & chapters",
-                  "Export to PDF and ePub",
-                  "Community support"
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span className="text-gray-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link to="/app/signup" className="mt-8 block">
-                <Button className="w-full bg-primary hover:bg-primary/90 text-lg py-3">
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <p className="mt-3 text-sm text-gray-500">
-                30-day money-back guarantee • Cancel anytime
-              </p>
-            </div>
-          </div>
           
           <div className="mt-8">
             <Link to="/pricing">
