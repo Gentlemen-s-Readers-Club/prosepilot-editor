@@ -63,9 +63,21 @@ export const fetchUserTeams = createAsyncThunk(
 export const createTeam = createAsyncThunk(
   'teams/createTeam',
   async (teamData: CreateTeamData) => {
+    // Get the current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      throw new Error('User not authenticated');
+    }
+
+    // Add the created_by field to the team data
+    const teamDataWithCreator = {
+      ...teamData,
+      created_by: user.id
+    };
+
     const { data, error } = await supabase
       .from('teams')
-      .insert(teamData)
+      .insert(teamDataWithCreator)
       .select()
       .single();
 
