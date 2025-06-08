@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navigation } from '../../components/Navigation';
 import { Button } from '../../components/ui/button';
+import { Checkbox } from '../../components/ui/checkbox';
 import { 
   ArrowLeft,
   BookOpen,
@@ -314,26 +315,36 @@ export function CreateFirstBook() {
               <div className="border rounded-lg p-6">
                 <h4 className="font-semibold text-gray-900 mb-3">Review checklist:</h4>
                 <div className="space-y-3">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary" />
-                    <span className="text-gray-700">Read through the generated synopsis and chapter summaries</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary" />
-                    <span className="text-gray-700">Check character consistency across chapters</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary" />
-                    <span className="text-gray-700">Verify plot progression and pacing</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary" />
-                    <span className="text-gray-700">Review dialogue and narrative voice</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary" />
-                    <span className="text-gray-700">Make any necessary edits using the built-in editor</span>
-                  </label>
+                  <div className="flex items-start">
+                    <Checkbox id="check-synopsis" className="mt-1" />
+                    <label htmlFor="check-synopsis" className="ml-3 text-gray-700">
+                      Read through the generated synopsis and chapter summaries
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-characters" className="mt-1" />
+                    <label htmlFor="check-characters" className="ml-3 text-gray-700">
+                      Check character consistency across chapters
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-plot" className="mt-1" />
+                    <label htmlFor="check-plot" className="ml-3 text-gray-700">
+                      Verify plot progression and pacing
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-dialogue" className="mt-1" />
+                    <label htmlFor="check-dialogue" className="ml-3 text-gray-700">
+                      Review dialogue and narrative voice
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-edits" className="mt-1" />
+                    <label htmlFor="check-edits" className="ml-3 text-gray-700">
+                      Make any necessary edits using the built-in editor
+                    </label>
+                  </div>
                 </div>
               </div>
 

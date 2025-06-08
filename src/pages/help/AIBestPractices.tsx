@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navigation } from '../../components/Navigation';
 import { Button } from '../../components/ui/button';
+import { Checkbox } from '../../components/ui/checkbox';
 import { 
   ArrowLeft,
   Brain,
@@ -273,30 +274,42 @@ export function AIBestPractices() {
               <div className="border rounded-lg p-6">
                 <h4 className="font-semibold text-gray-900 mb-4">Quality checklist for prompts:</h4>
                 <div className="space-y-3">
-                  <label className="flex items-start">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary mt-1" />
-                    <span className="text-gray-700">Specific genre and subgenre mentioned</span>
-                  </label>
-                  <label className="flex items-start">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary mt-1" />
-                    <span className="text-gray-700">Clear protagonist with defined motivation</span>
-                  </label>
-                  <label className="flex items-start">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary mt-1" />
-                    <span className="text-gray-700">Specific setting (time and place)</span>
-                  </label>
-                  <label className="flex items-start">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary mt-1" />
-                    <span className="text-gray-700">Central conflict or problem clearly stated</span>
-                  </label>
-                  <label className="flex items-start">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary mt-1" />
-                    <span className="text-gray-700">Desired tone and style indicated</span>
-                  </label>
-                  <label className="flex items-start">
-                    <input type="checkbox" className="mr-3 h-4 w-4 text-primary mt-1" />
-                    <span className="text-gray-700">Target audience specified</span>
-                  </label>
+                  <div className="flex items-start">
+                    <Checkbox id="check-genre" className="mt-1" />
+                    <label htmlFor="check-genre" className="ml-3 text-gray-700">
+                      Specific genre and subgenre mentioned
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-protagonist" className="mt-1" />
+                    <label htmlFor="check-protagonist" className="ml-3 text-gray-700">
+                      Clear protagonist with defined motivation
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-setting" className="mt-1" />
+                    <label htmlFor="check-setting" className="ml-3 text-gray-700">
+                      Specific setting (time and place)
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-conflict" className="mt-1" />
+                    <label htmlFor="check-conflict" className="ml-3 text-gray-700">
+                      Central conflict or problem clearly stated
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-tone" className="mt-1" />
+                    <label htmlFor="check-tone" className="ml-3 text-gray-700">
+                      Desired tone and style indicated
+                    </label>
+                  </div>
+                  <div className="flex items-start">
+                    <Checkbox id="check-audience" className="mt-1" />
+                    <label htmlFor="check-audience" className="ml-3 text-gray-700">
+                      Target audience specified
+                    </label>
+                  </div>
                 </div>
               </div>
 

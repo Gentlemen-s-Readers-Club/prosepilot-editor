@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navigation } from '../../components/Navigation';
 import { Button } from '../../components/ui/button';
+import { Checkbox } from '../../components/ui/checkbox';
 import { 
   ArrowLeft,
   CreditCard,
