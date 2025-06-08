@@ -32,6 +32,18 @@ export function Landing() {
             </div>
             <div className="flex items-center space-x-4">
               <Link
+                to="/pricing"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                to="/support"
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Support
+              </Link>
+              <Link
                 to="/docs"
                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
@@ -375,6 +387,15 @@ export function Landing() {
               </p>
             </div>
           </div>
+          
+          <div className="mt-8">
+            <Link to="/pricing">
+              <Button variant="outline" className="border-white text-white hover:bg-white/10">
+                View All Plans
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -426,6 +447,12 @@ export function Landing() {
               <span className="ml-2 text-xl font-bold text-white">ProsePilot</span>
             </div>
             <div className="flex items-center space-x-6">
+              <Link to="/pricing" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Pricing
+              </Link>
+              <Link to="/support" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Support
+              </Link>
               <Link to="/docs" className="text-gray-400 hover:text-white text-sm transition-colors">
                 Documentation
               </Link>

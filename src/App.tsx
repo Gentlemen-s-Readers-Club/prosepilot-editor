@@ -12,6 +12,8 @@ import { Documentation } from './pages/Documentation';
 import { Teams } from './pages/Teams';
 import { TeamDetails } from './pages/TeamDetails';
 import { Landing } from './pages/Landing';
+import { Pricing } from './pages/Pricing';
+import { Support } from './pages/Support';
 import { Toaster } from './components/Toaster';
 import { useAuth } from './hooks/useAuth';
 import { AppDispatch } from './store';
@@ -38,6 +40,8 @@ function App() {
     <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/support" element={<Support />} />
           <Route path="/docs" element={<Documentation />} />
           <Route
             path="/app"
