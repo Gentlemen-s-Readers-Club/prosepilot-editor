@@ -20,6 +20,12 @@ import { AppDispatch } from './store';
 import { useDispatch } from 'react-redux';
 import { fetchProfile } from './store/slices/profileSlice';
 
+// Help Articles
+import { CreateFirstBook } from './pages/help/CreateFirstBook';
+import { CreditSystem } from './pages/help/CreditSystem';
+import { AIBestPractices } from './pages/help/AIBestPractices';
+import { TeamCollaboration } from './pages/help/TeamCollaboration';
+
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session, loading } = useAuth();
@@ -43,6 +49,13 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/support" element={<Support />} />
           <Route path="/docs" element={<Documentation />} />
+          
+          {/* Help Articles */}
+          <Route path="/help/create-first-book" element={<CreateFirstBook />} />
+          <Route path="/help/credit-system" element={<CreditSystem />} />
+          <Route path="/help/ai-best-practices" element={<AIBestPractices />} />
+          <Route path="/help/team-collaboration" element={<TeamCollaboration />} />
+          
           <Route
             path="/app"
             element={
