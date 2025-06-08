@@ -124,7 +124,7 @@ export const fetchTeamMembers = createAsyncThunk(
       .from('team_members')
       .select(`
         *,
-        user:profiles!team_members_user_id_fkey(id, full_name, avatar_url),
+        user:profiles!team_members_user_id_fkey(id, full_name, avatar_url, email),
         invited_by_user:profiles!team_members_invited_by_fkey(id, full_name)
       `)
       .eq('team_id', teamId)
@@ -166,7 +166,7 @@ export const updateTeamMember = createAsyncThunk(
       .eq('id', memberId)
       .select(`
         *,
-        user:profiles!team_members_user_id_fkey(id, full_name, avatar_url),
+        user:profiles!team_members_user_id_fkey(id, full_name, avatar_url, email),
         invited_by_user:profiles!team_members_invited_by_fkey(id, full_name)
       `)
       .single();
