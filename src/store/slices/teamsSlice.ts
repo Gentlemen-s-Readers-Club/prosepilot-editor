@@ -124,8 +124,8 @@ export const fetchTeamMembers = createAsyncThunk(
       .from('team_members')
       .select(`
         *,
-        user:user_id(id, full_name, avatar_url),
-        invited_by_user:invited_by(id, full_name)
+        user:profiles!team_members_user_id_fkey(id, full_name, avatar_url),
+        invited_by_user:profiles!team_members_invited_by_fkey(id, full_name)
       `)
       .eq('team_id', teamId)
       .order('joined_at', { ascending: false });
@@ -166,8 +166,8 @@ export const updateTeamMember = createAsyncThunk(
       .eq('id', memberId)
       .select(`
         *,
-        user:user_id(id, full_name, avatar_url),
-        invited_by_user:invited_by(id, full_name)
+        user:profiles!team_members_user_id_fkey(id, full_name, avatar_url),
+        invited_by_user:profiles!team_members_invited_by_fkey(id, full_name)
       `)
       .single();
 
@@ -198,7 +198,7 @@ export const fetchTeamInvitations = createAsyncThunk(
       .from('team_invitations')
       .select(`
         *,
-        invited_by_user:invited_by(id, full_name)
+        invited_by_user:profiles!team_invitations_invited_by_fkey(id, full_name)
       `)
       .eq('team_id', teamId)
       .is('accepted_at', null)
@@ -247,7 +247,7 @@ export const fetchTeamActivity = createAsyncThunk(
       .from('team_activity_logs')
       .select(`
         *,
-        user:user_id(id, full_name, avatar_url)
+        user:profiles!team_activity_logs_user_id_fkey(id, full_name, avatar_url)
       `)
       .eq('team_id', teamId)
       .order('created_at', { ascending: false })
@@ -283,7 +283,7 @@ export const fetchUserInvitations = createAsyncThunk(
       .select(`
         *,
         team:team_id(id, name, description, logo_url),
-        invited_by_user:invited_by(id, full_name)
+        invited_by_user:profiles!team_invitations_invited_by_fkey(id, full_name)
       `)
       .eq('email', user.email)
       .is('accepted_at', null)
