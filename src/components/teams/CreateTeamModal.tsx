@@ -44,18 +44,45 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
       const fileExt = file.name.split('.').pop();
       const fileName = `team-logos/${user.id}/${Date.now()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('team-assets')
-        .upload(fileName, file, { 
-          upsert: true,
-          contentType: file.type 
-        });
+      // Try to upload to team-assets bucket, fallback to avatars bucket if it doesn't exist
+      let uploadResult;
+      try {
+        uploadResult = await supabase.storage
+          .from('team-assets')
+          .upload(fileName, file, { 
+            upsert: true,
+            contentType: file.type 
+          });
+      } catch (bucketError: any) {
+        // If team-assets bucket doesn't exist, try avatars bucket as fallback
+        if (bucketError.message?.includes('Bucket not found')) {
+          uploadResult = await supabase.storage
+            .from('avatars')
+            .upload(fileName, file, { 
+              upsert: true,
+              contentType: file.type 
+            });
+        } else {
+          throw bucketError;
+        }
+      }
 
-      if (uploadError) throw uploadError;
+      if (uploadResult.error) throw uploadResult.error;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('team-assets')
-        .getPublicUrl(fileName);
+      // Get public URL from the appropriate bucket
+      let publicUrl;
+      try {
+        const { data: { publicUrl: teamAssetsUrl } } = supabase.storage
+          .from('team-assets')
+          .getPublicUrl(fileName);
+        publicUrl = teamAssetsUrl;
+      } catch {
+        // Fallback to avatars bucket
+        const { data: { publicUrl: avatarsUrl } } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(fileName);
+        publicUrl = avatarsUrl;
+      }
 
       setFormData({ ...formData, logo_url: publicUrl });
       
@@ -68,7 +95,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to upload team logo",
+        description: "Failed to upload team logo. Please try again or contact support if the issue persists.",
       });
     } finally {
       setIsUploadingLogo(false);

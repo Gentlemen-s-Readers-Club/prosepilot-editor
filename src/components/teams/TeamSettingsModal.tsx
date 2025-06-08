@@ -61,28 +61,59 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
 
       // Delete old logo if exists
       if (formData.logo_url) {
-        const oldFileName = formData.logo_url.split('/').pop();
-        if (oldFileName) {
-          await supabase.storage
-            .from('team-assets')
-            .remove([`team-logos/${user.id}/${oldFileName}`]);
+        try {
+          const oldFileName = formData.logo_url.split('/').pop();
+          if (oldFileName) {
+            // Try to delete from team-assets first, then avatars as fallback
+            try {
+              await supabase.storage
+                .from('team-assets')
+                .remove([`team-logos/${user.id}/${oldFileName}`]);
+            } catch {
+              await supabase.storage
+                .from('avatars')
+                .remove([`team-logos/${user.id}/${oldFileName}`]);
+            }
+          }
+        } catch (error) {
+          // Ignore deletion errors for old files
+          console.warn('Could not delete old logo:', error);
         }
       }
 
       const fileExt = file.name.split('.').pop();
       const fileName = `team-logos/${user.id}/${Date.now()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('team-assets')
-        .upload(fileName, file, { 
-          upsert: true,
-          contentType: file.type 
-        });
+      // Try to upload to team-assets bucket, fallback to avatars bucket if it doesn't exist
+      let uploadResult;
+      let bucketUsed = 'team-assets';
+      try {
+        uploadResult = await supabase.storage
+          .from('team-assets')
+          .upload(fileName, file, { 
+            upsert: true,
+            contentType: file.type 
+          });
+      } catch (bucketError: any) {
+        // If team-assets bucket doesn't exist, try avatars bucket as fallback
+        if (bucketError.message?.includes('Bucket not found')) {
+          bucketUsed = 'avatars';
+          uploadResult = await supabase.storage
+            .from('avatars')
+            .upload(fileName, file, { 
+              upsert: true,
+              contentType: file.type 
+            });
+        } else {
+          throw bucketError;
+        }
+      }
 
-      if (uploadError) throw uploadError;
+      if (uploadResult.error) throw uploadResult.error;
 
+      // Get public URL from the bucket that was used
       const { data: { publicUrl } } = supabase.storage
-        .from('team-assets')
+        .from(bucketUsed)
         .getPublicUrl(fileName);
 
       setFormData({ ...formData, logo_url: publicUrl });
@@ -96,7 +127,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to upload team logo",
+        description: "Failed to upload team logo. Please try again or contact support if the issue persists.",
       });
     } finally {
       setIsUploadingLogo(false);
@@ -106,14 +137,26 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
   const handleRemoveLogo = async () => {
     try {
       if (formData.logo_url) {
-        const fileName = formData.logo_url.split('/').pop();
-        if (fileName) {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            await supabase.storage
-              .from('team-assets')
-              .remove([`team-logos/${user.id}/${fileName}`]);
+        try {
+          const fileName = formData.logo_url.split('/').pop();
+          if (fileName) {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              // Try to delete from team-assets first, then avatars as fallback
+              try {
+                await supabase.storage
+                  .from('team-assets')
+                  .remove([`team-logos/${user.id}/${fileName}`]);
+              } catch {
+                await supabase.storage
+                  .from('avatars')
+                  .remove([`team-logos/${user.id}/${fileName}`]);
+              }
+            }
           }
+        } catch (error) {
+          // Ignore deletion errors
+          console.warn('Could not delete logo file:', error);
         }
       }
       setFormData({ ...formData, logo_url: '' });
