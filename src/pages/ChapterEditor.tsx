@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Navigation } from '../components/Navigation';
-import { Editor } from '../components/Editor';
+import { EnhancedEditor } from '../components/Editor/EnhancedEditor';
 import { EditorSidebar } from '../components/Editor/EditorSidebar';
 import { ChapterToolbar } from '../components/Editor/ChapterToolbar';
 import { Button } from '../components/ui/button';
@@ -226,7 +226,7 @@ function ChapterEditorContent() {
         )}
         
         <main className="flex-1 p-8 bg-background overflow-y-auto">
-          <div className="max-w-5xl mx-auto flex flex-col">
+          <div className="max-w-5xl mx-auto flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
               <button
                 onClick={() => navigate(`/app/book/${book?.id}`)}
@@ -268,7 +268,7 @@ function ChapterEditorContent() {
                 </div>
               </div>
             ) : (
-              <>
+              <div className="flex-1 flex flex-col">
                 <ChapterToolbar
                   title={chapterTitle}
                   onTitleChange={handleTitleChange}
@@ -277,14 +277,15 @@ function ChapterEditorContent() {
                   isPublished={isPublished}
                 />
                 <div className="bg-white rounded-lg shadow-lg p-6 flex-1">
-                  <Editor
-                    key={id}
+                  <EnhancedEditor
+                    chapterId={id || ''}
+                    chapterTitle={chapterTitle}
                     initialContent={content}
                     onChange={setContent}
                     readOnly={isPublished}
                   />
                 </div>
-              </>
+              </div>
             )}
           </div>
         </main>
