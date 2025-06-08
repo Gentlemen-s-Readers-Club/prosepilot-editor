@@ -211,35 +211,31 @@ export function EnhancedEditor({
       onChange?.(html);
       
       // Re-highlight annotations after content changes
-      if (showAnnotations) {
-        setTimeout(() => {
-          const iframe = iframeRef.current;
-          if (iframe && iframe.contentDocument) {
-            const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
-            if (editorElement) {
-              highlightAnnotatedText(editorElement, annotations, handleAnnotationClick);
-            }
-          }
-        }, 100);
-      }
+      setTimeout(() => {
+        updateAnnotationHighlights();
+      }, 100);
     },
     editable: !readOnly,
   });
 
   const stats = getAnnotationStats();
 
-  // Handle annotation highlighting
-  useEffect(() => {
-    if (!editor || !showAnnotations) return;
-
+  // Function to update annotation highlights
+  const updateAnnotationHighlights = useCallback(() => {
     const iframe = iframeRef.current;
     if (iframe && iframe.contentDocument) {
       const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
       if (editorElement) {
-        highlightAnnotatedText(editorElement, annotations, handleAnnotationClick);
+        highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, showAnnotations);
       }
     }
-  }, [editor, annotations, showAnnotations]);
+  }, [annotations, showAnnotations]);
+
+  // Handle annotation highlighting when annotations or visibility changes
+  useEffect(() => {
+    if (!editor) return;
+    updateAnnotationHighlights();
+  }, [editor, annotations, showAnnotations, updateAnnotationHighlights]);
 
   // Set up iframe and editor
   useEffect(() => {
@@ -317,6 +313,10 @@ export function EnhancedEditor({
     }
   };
 
+  const handleToggleAnnotations = useCallback(() => {
+    setShowAnnotations(!showAnnotations);
+  }, [showAnnotations]);
+
   const handleExportAnnotations = () => {
     const exportData = exportAnnotations(annotations, chapterTitle);
     
@@ -366,7 +366,7 @@ export function EnhancedEditor({
         openCount={stats.open}
         resolvedCount={stats.resolved}
         showAnnotations={showAnnotations}
-        onToggleAnnotations={() => setShowAnnotations(!showAnnotations)}
+        onToggleAnnotations={handleToggleAnnotations}
         onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
         onCreateAnnotation={handleCreateAnnotation}
         onExportAnnotations={handleExportAnnotations}

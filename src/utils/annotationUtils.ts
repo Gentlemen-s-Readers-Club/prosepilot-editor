@@ -64,10 +64,16 @@ function getTextOffset(root: Element, node: Node, offset: number): number {
 export function highlightAnnotatedText(
   editorElement: Element, 
   annotations: Annotation[],
-  onAnnotationClick: (annotation: Annotation) => void
+  onAnnotationClick: (annotation: Annotation) => void,
+  showAnnotations: boolean = true
 ): void {
-  // Remove existing highlights
+  // Always remove existing highlights first
   removeExistingHighlights(editorElement);
+
+  // Only add highlights if showAnnotations is true
+  if (!showAnnotations || annotations.length === 0) {
+    return;
+  }
 
   // Sort annotations by start offset to handle overlapping correctly
   const sortedAnnotations = [...annotations].sort((a, b) => a.start_offset - b.start_offset);
@@ -82,7 +88,9 @@ function removeExistingHighlights(editorElement: Element): void {
   existingHighlights.forEach(highlight => {
     const parent = highlight.parentNode;
     if (parent) {
-      parent.replaceChild(document.createTextNode(highlight.textContent || ''), highlight);
+      // Replace the highlight span with its text content
+      const textNode = document.createTextNode(highlight.textContent || '');
+      parent.replaceChild(textNode, highlight);
       parent.normalize();
     }
   });
@@ -93,6 +101,16 @@ function highlightAnnotation(
   annotation: Annotation,
   onAnnotationClick: (annotation: Annotation) => void
 ): void {
+  const textContent = editorElement.textContent || '';
+  
+  // Validate annotation offsets
+  if (annotation.start_offset < 0 || 
+      annotation.end_offset > textContent.length || 
+      annotation.start_offset >= annotation.end_offset) {
+    console.warn('Invalid annotation offsets:', annotation);
+    return;
+  }
+
   const walker = document.createTreeWalker(
     editorElement,
     NodeFilter.SHOW_TEXT,
@@ -113,15 +131,19 @@ function highlightAnnotation(
     const nodeEnd = currentOffset + nodeLength;
 
     // Check if annotation starts in this node
-    if (!startNode && annotation.start_offset >= nodeStart && annotation.start_offset <= nodeEnd) {
+    if (!startNode && annotation.start_offset >= nodeStart && annotation.start_offset < nodeEnd) {
       startNode = textNode;
       startNodeOffset = annotation.start_offset - nodeStart;
     }
 
     // Check if annotation ends in this node
-    if (!endNode && annotation.end_offset >= nodeStart && annotation.end_offset <= nodeEnd) {
+    if (!endNode && annotation.end_offset > nodeStart && annotation.end_offset <= nodeEnd) {
       endNode = textNode;
       endNodeOffset = annotation.end_offset - nodeStart;
+    }
+
+    // If we have both start and end nodes, we can break
+    if (startNode && endNode) {
       break;
     }
 
@@ -129,33 +151,41 @@ function highlightAnnotation(
   }
 
   if (startNode && endNode) {
-    const range = document.createRange();
-    range.setStart(startNode, startNodeOffset);
-    range.setEnd(endNode, endNodeOffset);
-
-    const highlight = document.createElement('span');
-    highlight.className = `annotation-highlight ${
-      annotation.status === 'resolved' ? 'resolved' : 'open'
-    }`;
-    highlight.style.cssText = `
-      background-color: ${annotation.status === 'resolved' ? '#dcfce7' : '#fef3c7'};
-      border-bottom: 2px solid ${annotation.status === 'resolved' ? '#16a34a' : '#d97706'};
-      cursor: pointer;
-      padding: 1px 2px;
-      border-radius: 2px;
-    `;
-    highlight.title = annotation.content;
-    highlight.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onAnnotationClick(annotation);
-    });
-
     try {
+      const range = document.createRange();
+      range.setStart(startNode, startNodeOffset);
+      range.setEnd(endNode, endNodeOffset);
+
+      // Check if the range is valid and has content
+      if (range.collapsed || !range.toString().trim()) {
+        return;
+      }
+
+      const highlight = document.createElement('span');
+      highlight.className = `annotation-highlight ${
+        annotation.status === 'resolved' ? 'resolved' : 'open'
+      }`;
+      highlight.style.cssText = `
+        background-color: ${annotation.status === 'resolved' ? '#dcfce7' : '#fef3c7'} !important;
+        border-bottom: 2px solid ${annotation.status === 'resolved' ? '#16a34a' : '#d97706'} !important;
+        cursor: pointer !important;
+        padding: 1px 2px !important;
+        border-radius: 2px !important;
+        position: relative !important;
+      `;
+      highlight.title = annotation.content;
+      highlight.setAttribute('data-annotation-id', annotation.id);
+      
+      highlight.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onAnnotationClick(annotation);
+      });
+
       range.surroundContents(highlight);
     } catch (error) {
       // Handle cases where range spans multiple elements
-      console.warn('Could not highlight annotation:', error);
+      console.warn('Could not highlight annotation:', annotation.id, error);
     }
   }
 }
