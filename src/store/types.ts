@@ -9,6 +9,10 @@ export interface Book {
   categories: Category[];
   team_id?: string | null;
   team?: Team | null;
+  author_name: string;
+  synopsis?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Category {
