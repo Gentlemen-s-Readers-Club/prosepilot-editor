@@ -44,7 +44,7 @@ export function Landing() {
                 Log in
               </Link>
               <Link to="/app/signup">
-                <Button className="bg-primary hover:bg-primary/90">Start Writing Free</Button>
+                <Button className="bg-primary hover:bg-primary/90">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -92,7 +92,7 @@ export function Landing() {
                     <div className="rounded-md shadow">
                       <Link to="/app/signup">
                         <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium bg-primary hover:bg-primary/90">
-                          Start Writing Your Book Free
+                          Start Writing Your Book
                           <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                       </Link>
@@ -107,11 +107,11 @@ export function Landing() {
 
                   {/* Trust Indicators */}
                   <div className="mt-6 text-sm text-gray-500">
-                    <span>✓ No credit card required</span>
-                    <span className="mx-3">•</span>
-                    <span>✓ 5 free books included</span>
+                    <span>✓ 30-day money-back guarantee</span>
                     <span className="mx-3">•</span>
                     <span>✓ Cancel anytime</span>
+                    <span className="mx-3">•</span>
+                    <span>✓ Start from just $9/month</span>
                   </div>
                 </div>
 
@@ -339,22 +339,23 @@ export function Landing() {
             Start writing today, publish tomorrow
           </h2>
           <p className="mt-4 text-xl text-white/90">
-            Join the writing revolution with our free starter plan
+            Choose the plan that fits your writing goals
           </p>
           
           <div className="mt-8 bg-white rounded-lg p-8 max-w-md mx-auto">
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900">Free Starter Plan</h3>
+              <h3 className="text-2xl font-bold text-gray-900">Starter Plan</h3>
               <div className="mt-4">
-                <span className="text-4xl font-extrabold text-primary">$0</span>
+                <span className="text-4xl font-extrabold text-primary">$9</span>
                 <span className="text-gray-600">/month</span>
               </div>
               <ul className="mt-6 space-y-3 text-left">
                 {[
-                  "5 complete books included",
-                  "15,000 words per book",
-                  "All core AI features",
-                  "Export to PDF & ePub",
+                  "5 credits/month (1 book)",
+                  "Max 15,000 words per book",
+                  "Basic genre selection",
+                  "AI-generated outline & chapters",
+                  "Export to PDF and ePub",
                   "Community support"
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">
@@ -365,12 +366,12 @@ export function Landing() {
               </ul>
               <Link to="/app/signup" className="mt-8 block">
                 <Button className="w-full bg-primary hover:bg-primary/90 text-lg py-3">
-                  Start Writing Free
+                  Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <p className="mt-3 text-sm text-gray-500">
-                No credit card required • Upgrade anytime
+                30-day money-back guarantee • Cancel anytime
               </p>
             </div>
           </div>
@@ -396,7 +397,7 @@ export function Landing() {
                     to="/app/signup"
                     className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-primary bg-white hover:bg-gray-50 transition-colors"
                   >
-                    Start Your Free Book
+                    Start Your Writing Journey
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                   <Link
