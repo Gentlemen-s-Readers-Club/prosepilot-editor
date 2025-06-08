@@ -247,6 +247,18 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
               )}
 
               <div className="space-y-2">
+                <Label htmlFor="prompt" className="text-primary">Story Idea or Outline</Label>
+                <textarea
+                  id="prompt"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Enter your story idea or outline..."
+                  className="w-full h-32 p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400 border-border"
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="owner" className="text-primary">Book Owner</Label>
                 <CustomSelect
                   id="owner"
@@ -262,18 +274,6 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                     : 'This book will be created as a personal book that only you can edit.'
                   }
                 </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="prompt" className="text-primary">Story Idea or Outline</Label>
-                <textarea
-                  id="prompt"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Enter your story idea or outline..."
-                  className="w-full h-32 p-3 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400 border-border"
-                  disabled={isSubmitting}
-                />
               </div>
 
               <div className="space-y-2">
