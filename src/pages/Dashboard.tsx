@@ -1,9 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Search, ChevronDown, Users, User, BookOpen, Filter, Clock, Calendar, Bookmark, Sparkles, TrendingUp, LayoutGrid, List, X } from 'lucide-react';
+import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigation } from '../components/Navigation';
 import { BookList } from '../components/BookList';
-import { NewBookModal } from '../components/NewBookModal';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { toast } from '../hooks/use-toast';
@@ -13,28 +12,24 @@ import { fetchLanguages } from '../store/slices/languagesSlice';
 import { fetchUserTeams } from '../store/slices/teamsSlice';
 import { supabase } from '../lib/supabase';
 import { AppDispatch, RootState } from '../store';
-import type { Book, Category, Language, Team } from '../store/types';
-import { BOOK_STATES } from '../lib/consts';
+import type { Book, Category, Language, Status } from '../store/types';
+import { BOOK_STATES, TEAM_ROLES } from '../lib/consts';
+import { CustomSelect, SelectOption } from '../components/ui/select';
+import { NewBookModal } from '../components/NewBookModal';
 
 const BOOKS_PER_PAGE = 30;
 
-interface WorkspaceOption {
-  id: string;
-  name: string;
-  type: 'personal' | 'team';
-  team?: Team;
-}
-
 export function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
-  const [selectedLanguage, setSelectedLanguage] = useState('All Languages');
-  const [selectedStatus, setSelectedStatus] = useState('All Statuses');
+  const [showNewBookModal, setShowNewBookModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceOption | null>(null);
+  const [workspaceOptions, setWorkspaceOptions] = useState<SelectOption[]>([]);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<SelectOption>();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -48,36 +43,32 @@ export function Dashboard() {
   // Check if user has any teams
   const hasTeams = teams.length > 0;
 
-  // Create workspace options
-  const workspaceOptions: WorkspaceOption[] = useMemo(() => {
-    const options: WorkspaceOption[] = [
-      {
-        id: 'personal',
-        name: `Personal (${profile?.full_name || 'Me'})`,
-        type: 'personal'
-      }
-    ];
-
-    // Add team workspaces
-    teams.forEach(team => {
-      options.push({
-        id: team.id,
-        name: team.name,
-        type: 'team',
-        team
-      });
-    });
-
-    return options;
-  }, [teams, profile]);
-
-  // Set default workspace to personal
+  // Set workspace options and default workspace
   useEffect(() => {
-    if (!selectedWorkspace && workspaceOptions.length > 0) {
-      setSelectedWorkspace(workspaceOptions[0]);
-    }
-  }, [workspaceOptions, selectedWorkspace]);
+    if (profile?.full_name) {
+      const options: SelectOption[] = [
+        {
+          value: 'personal',
+          label: `Personal (${profile?.full_name})`
+        }
+      ];
+      
+      teams.forEach(team => {
+        options.push({
+          value: team.id,
+          label: team.name
+        });
+      });
+      setWorkspaceOptions(options);
 
+      if (!selectedWorkspace && options.length > 0) {
+        setSelectedWorkspace(options[0]);
+      }
+    }
+    
+  }, [profile, selectedWorkspace, teams]);
+
+  // Load data
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -110,8 +101,9 @@ export function Dashboard() {
     loadData();
   }, [dispatch, booksStatus, categoriesStatus, languagesStatus, teamsStatus]);
 
+
+  // Subscribe to real-time changes
   useEffect(() => {
-    // Subscribe to real-time changes
     const subscription = supabase
       .channel('schema-db-changes')
       .on(
@@ -136,21 +128,21 @@ export function Dashboard() {
   const workspaceFilteredBooks = useMemo(() => {
     if (!hasTeams || !selectedWorkspace) return books;
 
-    if (selectedWorkspace.type === 'personal') {
+    if (selectedWorkspace.value === 'personal') {
       // Show personal books (no team_id)
       return books.filter((book: Book) => !book.team_id);
     } else {
       // Show team books for selected team
-      return books.filter((book: Book) => book.team_id === selectedWorkspace.id);
+      return books.filter((book: Book) => book.team_id === selectedWorkspace.value);
     }
   }, [books, selectedWorkspace, hasTeams]);
 
   const filteredBooks = useMemo(() => {
     return workspaceFilteredBooks.filter((book: Book) => {
       const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'All Categories' || book.categories.some(cat => cat.name === selectedCategory);
-      const matchesLanguage = selectedLanguage === 'All Languages' || book.languages.name === selectedLanguage;
-      const matchesStatus = selectedStatus === 'All Statuses' || book.status === selectedStatus.toLowerCase();
+      const matchesCategory = selectedCategory === '' || book.categories.some(cat => cat.id === selectedCategory);
+      const matchesLanguage = selectedLanguage === '' || book.languages.id === selectedLanguage;
+      const matchesStatus = selectedStatus === '' || book.status === selectedStatus;
       
       // Only show archived books if explicitly selected
       if (book.status === 'archived' && selectedStatus !== 'archived') {
@@ -176,26 +168,27 @@ export function Dashboard() {
   // Update active filters
   useEffect(() => {
     const filters = [];
-    if (selectedCategory !== 'All Categories') filters.push(selectedCategory);
-    if (selectedLanguage !== 'All Languages') filters.push(selectedLanguage);
-    if (selectedStatus !== 'All Statuses') filters.push(selectedStatus);
+    console.log(selectedCategory, selectedLanguage, selectedStatus);
+    if (selectedCategory !== '') filters.push(categories.find(category => category.id === selectedCategory)?.name || '');
+    if (selectedLanguage !== '') filters.push(languages.find(language => language.id === selectedLanguage)?.name || '');
+    if (selectedStatus !== '') filters.push(BOOK_STATES[selectedStatus as Status] || '');
     setActiveFilters(filters);
-  }, [selectedCategory, selectedLanguage, selectedStatus]);
+  }, [categories, languages, selectedCategory, selectedLanguage, selectedStatus]);
 
   const clearFilter = (filter: string) => {
     if (categories.some((c: Category) => c.name === filter)) {
-      setSelectedCategory('All Categories');
+      setSelectedCategory('');
     } else if (languages.some((l: Language) => l.name === filter)) {
-      setSelectedLanguage('All Languages');
-    } else if (BOOK_STATES.some(s => s === filter.toLowerCase())) {
-      setSelectedStatus('All Statuses');
+      setSelectedLanguage('');
+    } else if (Object.values(BOOK_STATES).includes(filter)) {
+      setSelectedStatus('');
     }
   };
 
   const clearAllFilters = () => {
-    setSelectedCategory('All Categories');
-    setSelectedLanguage('All Languages');
-    setSelectedStatus('All Statuses');
+    setSelectedCategory('');
+    setSelectedLanguage('');
+    setSelectedStatus('');
     setSearchQuery('');
   };
 
@@ -234,8 +227,10 @@ export function Dashboard() {
               <p className="text-gray-600 mt-1">Manage and organize your writing projects</p>
             </div>
             <Button
-              onClick={() => setIsModalOpen(true)}
               className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white shadow-md transition-all hover:shadow-lg"
+              onClick={() => {
+                setShowNewBookModal(true);
+              }}
             >
               <Plus size={20} />
               Create New Book
@@ -249,38 +244,28 @@ export function Dashboard() {
             <div className="space-y-6">
               {/* Workspace Selector - Only show if user has teams */}
               {hasTeams && (
-                <div className="bg-primary rounded-lg shadow-md p-6 text-white">
+                <div className="bg-card rounded-lg shadow-md p-6 text-primary">
                   <h2 className="text-lg font-semibold mb-4">Workspace</h2>
                   <div className="relative">
-                    <select
-                      value={selectedWorkspace?.id || ''}
-                      onChange={(e) => {
-                        const workspace = workspaceOptions.find(w => w.id === e.target.value);
-                        setSelectedWorkspace(workspace || null);
-                      }}
-                      className="flex h-10 w-full rounded-md border-0 bg-white/10 px-3 py-1 text-sm text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-white/20 appearance-none cursor-pointer pr-8"
-                    >
-                      {workspaceOptions.map((workspace) => (
-                        <option key={workspace.id} value={workspace.id} className="text-gray-900">
-                          {workspace.name}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white pointer-events-none" size={16} />
+                    <CustomSelect
+                      value={selectedWorkspace}
+                      onChange={(newValue) => {setSelectedWorkspace(newValue as SelectOption)}}
+                      options={workspaceOptions}
+                      placeholder="Select workspace" />
                   </div>
                   
                   {/* Workspace Info */}
-                  <div className="mt-4 pt-4 border-t border-white/20">
+                  <div className="mt-4 pt-4 border-t border-border">
                     <div className="flex items-center gap-2 text-sm">
-                      {selectedWorkspace?.type === 'personal' ? (
+                      {selectedWorkspace?.value === 'personal' ? (
                         <User className="w-4 h-4" />
                       ) : (
                         <Users className="w-4 h-4" />
                       )}
                       <span className="opacity-90">
-                        {selectedWorkspace?.type === 'personal' 
+                        {selectedWorkspace?.value === 'personal' 
                           ? 'Personal workspace' 
-                          : `Team workspace • ${selectedWorkspace?.team?.user_role || 'Member'}`
+                          : `Team workspace • ${TEAM_ROLES[teams.find(team => team.id === selectedWorkspace?.value)?.user_role || 'Member']}`
                         }
                       </span>
                     </div>
@@ -305,53 +290,56 @@ export function Dashboard() {
                 <div className={`space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                   <div>
                     <label className="block text-sm font-medium mb-2 text-gray-700">Category</label>
-                    <div className="relative">
-                      <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="flex h-9 w-full rounded-md border border-gray-200 bg-white px-3 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer pr-8"
-                      >
-                        <option className="text-gray-900">All Categories</option>
-                        {categories.map((category: Category) => (
-                          <option key={category.id} className="text-gray-900">{category.name}</option>
-                        ))}
-                      </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
-                    </div>
+                    <CustomSelect
+                      value={{
+                        value: selectedCategory,
+                        label: categories.find(category => category.id === selectedCategory)?.name || 'All Categories'
+                      }}
+                      onChange={(newValue) => {setSelectedCategory((newValue as SelectOption).value)}}
+                      options={[
+                        { value: '', label: 'All Categories' },
+                        ...categories.map((category: Category) => ({
+                          value: category.id,
+                          label: category.name
+                        }))
+                      ]}
+                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2 text-gray-700">Language</label>
-                    <div className="relative">
-                      <select
-                        value={selectedLanguage}
-                        onChange={(e) => setSelectedLanguage(e.target.value)}
-                        className="flex h-9 w-full rounded-md border border-gray-200 bg-white px-3 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer pr-8"
-                      >
-                        <option className="text-gray-900">All Languages</option>
-                        {languages.map((language: Language) => (
-                          <option key={language.id} className="text-gray-900">{language.name}</option>
-                        ))}
-                      </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
-                    </div>
+                    <CustomSelect
+                      value={{
+                        value: selectedLanguage,
+                        label: languages.find(language => language.id === selectedLanguage)?.name || 'All Languages'
+                      }}
+                      onChange={(newValue) => {setSelectedLanguage((newValue as SelectOption).value)}}
+                      options={[
+                        { value: '', label: 'All Languages' },
+                        ...languages.map((language: Language) => ({
+                          value: language.id,
+                          label: language.name
+                        }))
+                      ]}
+                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2 text-gray-700">Status</label>
-                    <div className="relative">
-                      <select
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                        className="flex h-9 w-full rounded-md border border-gray-200 bg-white px-3 py-1 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer pr-8"
-                      >
-                        <option className="text-gray-900">All Statuses</option>
-                        {BOOK_STATES.map(state => (
-                          <option key={state} className="capitalize text-gray-900">{state.charAt(0).toUpperCase() + state.slice(1)}</option>
-                        ))}
-                      </select>
-                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
-                    </div>
+                    <CustomSelect
+                      value={{
+                        value: selectedStatus,
+                        label: BOOK_STATES[selectedStatus as Status] || 'All Statuses'
+                      }}
+                      onChange={(newValue) => {setSelectedStatus((newValue as SelectOption).value)}}
+                      options={[
+                        { value: '', label: 'All Statuses' },
+                        ...Object.keys(BOOK_STATES).map((state: string) => ({
+                          value: state,
+                          label: BOOK_STATES[state as Status]
+                        }))
+                      ]}
+                    />
                   </div>
 
                   {/* Quick Links */}
@@ -450,7 +438,7 @@ export function Dashboard() {
                       key={filter} 
                       className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs"
                     >
-                      <span>{filter.charAt(0).toUpperCase() + filter.slice(1)}</span>
+                      <span>{filter}</span>
                       <button 
                         onClick={() => clearFilter(filter)}
                         className="text-gray-500 hover:text-gray-700"
@@ -472,15 +460,14 @@ export function Dashboard() {
             {books.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
-                  <div className="bg-primary/10 rounded-full p-4 mb-4">
-                    <BookOpen className="h-12 w-12 text-primary" />
+                  <div className="bg-background rounded-full p-4 mb-4">
+                    <BookOpen className="w-12 h-12 text-primary" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-2">No books yet</h3>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  <h3 className="text-lg font-medium text-primary mb-2">No books yet</h3>
+                  <p className="text-secondary max-w-md mb-6">
                     Start your writing journey by creating your first book. Our AI will help you transform your ideas into compelling stories.
                   </p>
                   <Button 
-                    onClick={() => setIsModalOpen(true)}
                     className="bg-primary hover:bg-primary/90 text-white"
                   >
                     <Plus className="mr-2 h-4 w-4" />
@@ -491,20 +478,19 @@ export function Dashboard() {
             ) : hasTeams && workspaceFilteredBooks.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
-                  <div className="bg-primary/10 rounded-full p-4 mb-4">
-                    <BookOpen className="h-12 w-12 text-primary" />
+                  <div className="bg-background rounded-full p-4 mb-4">
+                    <BookOpen className="w-12 h-12 text-primary" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-2">
-                    No books in {selectedWorkspace?.name}
+                  <h3 className="text-lg font-medium text-primary mb-2">
+                    No books in {selectedWorkspace?.label}
                   </h3>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  <p className="text-secondary max-w-md mb-6">
                     {selectedWorkspace?.type === 'personal' 
                       ? 'Create your first personal book to get started.'
                       : 'This team doesn\'t have any books yet. Create the first one!'
                     }
                   </p>
                   <Button 
-                    onClick={() => setIsModalOpen(true)}
                     className="bg-primary hover:bg-primary/90 text-white"
                   >
                     <Plus className="mr-2 h-4 w-4" />
@@ -515,11 +501,11 @@ export function Dashboard() {
             ) : filteredBooks.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
-                  <div className="bg-gray-100 rounded-full p-4 mb-4">
-                    <Search className="h-12 w-12 text-gray-400" />
+                  <div className="bg-background rounded-full p-4 mb-4">
+                    <Search className="w-12 h-12 text-primary" />
                   </div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-2">No books found</h3>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  <h3 className="text-lg font-medium text-primary mb-2">No books found</h3>
+                  <p className="text-secondary max-w-md mb-6">
                     We couldn't find any books matching your current filters. Try adjusting your search criteria or clear the filters to see all books.
                   </p>
                   <Button 
@@ -541,14 +527,12 @@ export function Dashboard() {
             )}
           </div>
         </div>
-        
-        <NewBookModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-          }}
-        />
       </div>
+
+      <NewBookModal
+        isOpen={showNewBookModal}
+        onClose={() => setShowNewBookModal(false)}
+      />
     </div>
   );
 }

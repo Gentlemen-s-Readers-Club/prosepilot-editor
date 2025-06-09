@@ -90,7 +90,6 @@ export function BookDetails() {
     updatedAt: ''
   });
 
-  const [activeTab, setActiveTab] = useState<'details' | 'chapters'>('details');
   const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {

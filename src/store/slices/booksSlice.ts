@@ -13,11 +13,7 @@ const initialState: BooksState = {
   error: null,
 };
 
-export const fetchBooks = createAsyncThunk<
-Book[],
-  { force?: boolean } | undefined,
-  { state: RootState }
->(
+export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
   async () => {
     const { data: booksData, error: booksError } = await supabase

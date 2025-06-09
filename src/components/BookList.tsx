@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Search, BookOpen, Loader2, Calendar, Clock, User, MoreVertical } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Calendar, Clock, User, MoreVertical } from 'lucide-react';
 import { StatusBadge } from './ui/status-badge';
 import { Book } from '../store/types';
 import { Button } from './ui/button';
@@ -45,20 +45,6 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
 
     return pages;
   };
-
-  if (books.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="bg-gray-100 rounded-full p-4 mb-4">
-          <Search className="w-8 h-8 text-gray-400" />
-        </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No books found</h3>
-        <p className="text-gray-500 max-w-md mb-6">
-          We couldn't find any books matching your current filters. Try adjusting your search criteria or clear the filters to see all books.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8">
