@@ -374,6 +374,30 @@ export function BookDetails() {
     }
   };
 
+  const handleStatusChange = async (newStatus: Status) => {
+    try {
+      const { error } = await supabase
+        .from('books')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setFormData({ ...formData, status: newStatus });
+      
+      toast({
+        title: "Success",
+        description: `Book status changed to ${newStatus} successfully`,
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: `Failed to change book status to ${newStatus}`,
+      });
+    }
+  };
+
   const handleDeleteBook = async () => {
     try {
       const { error } = await supabase
@@ -588,25 +612,36 @@ export function BookDetails() {
               <div className="space-y-3">
                 <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</h3>
                 <div className="space-y-2">
-                  <Button
-                    onClick={() => {}}
-                    variant="outline"
-                    className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50"
-                  >
-                    <Download className="w-4 h-4" />
-                    Export as EPUB
-                  </Button>
+                  {formData.status === 'draft' && (
+                    <Button
+                      onClick={() => handleStatusChange('reviewing')}
+                      variant="outline"
+                      className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
+                    >
+                      <AlertCircle className="w-4 h-4" />
+                      Start Reviewing
+                    </Button>
+                  )}
                   
                   <Button
                     onClick={handleArchiveToggle}
                     variant="outline"
                     className={`w-full flex items-center justify-center gap-2 ${
                       formData.status === 'archived'
-                        && 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200'
+                        && 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-700 border-blue-200'
                     }`}
                   >
                     <Archive className="w-4 h-4" />
                     {formData.status === 'archived' ? 'Unarchive Book' : 'Archive Book'}
+                  </Button>
+
+                  <Button
+                    onClick={() => {}}
+                    variant="outline"
+                    className="w-full flex items-center justify-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    Export as EPUB
                   </Button>
 
                   <Button

@@ -40,14 +40,14 @@ export function Navigation() {
               onClick={() => navigate('/docs')}
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              <BookOpen className="h-4 w-4" />
+              <BookOpen className="h-4 w-4 text-accent" />
               <span>Documentation</span>
             </button>
             <button
               onClick={() => navigate('/app/teams')}
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              <Users className="h-4 w-4" />
+              <Users className="h-4 w-4 text-accent" />
               <span>Teams</span>
             </button>
             {profile && (

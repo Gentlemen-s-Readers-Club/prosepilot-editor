@@ -235,17 +235,12 @@ export function Documentation() {
                 
                 <div className="space-y-4">
                   <div className="bg-green-50 border-l-4 border-green-400 p-4">
-                    <p className="font-medium text-green-800">Example 1: Genre + Setting</p>
-                    <p className="text-green-700 mt-1">"A romance novel set in a small bookstore in Paris."</p>
-                  </div>
-                  
-                  <div className="bg-green-50 border-l-4 border-green-400 p-4">
-                    <p className="font-medium text-green-800">Example 2: Character + Situation</p>
+                    <p className="font-medium text-green-800">Example 1: Character + Situation</p>
                     <p className="text-green-700 mt-1">"A retired teacher discovers a hidden talent for solving cold cases."</p>
                   </div>
                   
                   <div className="bg-green-50 border-l-4 border-green-400 p-4">
-                    <p className="font-medium text-green-800">Example 3: Concept + Twist</p>
+                    <p className="font-medium text-green-800">Example 2: Concept + Twist</p>
                     <p className="text-green-700 mt-1">"A time travel story where the protagonist can only go back 24 hours."</p>
                   </div>
                 </div>
@@ -293,7 +288,7 @@ export function Documentation() {
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h4 className="font-semibold text-gray-900 mb-3">✅ Do This</h4>
                     <ul className="text-gray-600 space-y-2">
-                      <li>• Be specific about genre and tone</li>
+                      <li>• Be specific on the main plot and characters</li>
                       <li>• Include character motivations</li>
                       <li>• Mention themes you want to explore</li>
                       <li>• Specify the target audience</li>
@@ -321,7 +316,7 @@ export function Documentation() {
                 <p className="text-yellow-700 mb-3">For best results, try this structure:</p>
                 <div className="bg-white rounded p-4 border border-yellow-200">
                   <p className="font-mono text-sm text-gray-800">
-                    [Genre] + [Main Character] + [Central Conflict] + [Setting] + [Theme/Tone] + [Unique Element]
+                    [Main Plot] + [Main Characters] + [Central Conflict] + [Setting]
                   </p>
                 </div>
                 <p className="text-yellow-700 mt-3 text-sm">
@@ -427,11 +422,11 @@ export function Documentation() {
                     <div className="space-y-3">
                       <div>
                         <p className="font-medium text-gray-800">📚 Chapters</p>
-                        <p className="text-gray-600 text-sm">Main story sections with substantial content</p>
+                        <p className="text-gray-600 text-sm">Main story sections with substantial content, automatically included in the table of contents</p>
                       </div>
                       <div>
                         <p className="font-medium text-gray-800">📄 Pages</p>
-                        <p className="text-gray-600 text-sm">Standalone content like prologues, epilogues, or appendices</p>
+                        <p className="text-gray-600 text-sm">Standalone content like prologues, epilogues, or appendices (not included in the table of contents)</p>
                       </div>
                     </div>
                   </div>

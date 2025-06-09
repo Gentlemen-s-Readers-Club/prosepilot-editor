@@ -129,15 +129,6 @@ export interface TeamActivityLog {
   };
 }
 
-export interface TeamStats {
-  total_members: number;
-  active_members: number;
-  total_books: number;
-  books_by_status: Record<Status, number>;
-  member_roles: Record<TeamRole, number>;
-  recent_activity_count: number;
-}
-
 export interface CreateTeamData {
   name: string;
   description?: string;

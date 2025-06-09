@@ -5,8 +5,7 @@ import {
   Team, 
   TeamMember, 
   TeamInvitation, 
-  TeamActivityLog, 
-  TeamStats,
+  TeamActivityLog,
   CreateTeamData,
   InviteMembersData,
   UpdateMemberData,
@@ -19,7 +18,6 @@ interface TeamsState extends ApiState {
   members: TeamMember[];
   invitations: TeamInvitation[];
   activityLogs: TeamActivityLog[];
-  stats: TeamStats | null;
 }
 
 const initialState: TeamsState = {
@@ -28,7 +26,6 @@ const initialState: TeamsState = {
   members: [],
   invitations: [],
   activityLogs: [],
-  stats: null,
   status: 'idle',
   error: null,
 };
@@ -258,19 +255,6 @@ export const fetchTeamActivity = createAsyncThunk(
   }
 );
 
-// Fetch team statistics
-export const fetchTeamStats = createAsyncThunk(
-  'teams/fetchTeamStats',
-  async (teamId: string) => {
-    const { data, error } = await supabase.rpc('get_team_stats', {
-      team_uuid: teamId
-    });
-
-    if (error) throw new Error(error.message);
-    return data;
-  }
-);
-
 // Get user's pending invitations
 export const fetchUserInvitations = createAsyncThunk(
   'teams/fetchUserInvitations',
@@ -307,7 +291,6 @@ const teamsSlice = createSlice({
       state.members = [];
       state.invitations = [];
       state.activityLogs = [];
-      state.stats = null;
     },
     updateMemberRole: (state, action: PayloadAction<{ memberId: string; role: TeamRole }>) => {
       const member = state.members.find(m => m.id === action.payload.memberId);
@@ -387,11 +370,6 @@ const teamsSlice = createSlice({
       // Fetch team activity
       .addCase(fetchTeamActivity.fulfilled, (state, action) => {
         state.activityLogs = action.payload;
-      })
-      
-      // Fetch team stats
-      .addCase(fetchTeamStats.fulfilled, (state, action) => {
-        state.stats = action.payload;
       });
   },
 });

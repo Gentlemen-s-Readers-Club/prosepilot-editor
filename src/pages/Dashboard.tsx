@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X } from 'lucide-react';
+import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X, Pencil, Archive, Rocket } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigation } from '../components/Navigation';
 import { BookList } from '../components/BookList';
@@ -350,7 +350,7 @@ export function Dashboard() {
                         onClick={() => setSelectedStatus('published')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
                       >
-                        <Bookmark className="w-4 h-4 text-green-600" />
+                        <Rocket className="w-4 h-4 text-green-600" />
                         <span>Published Books</span>
                       </button>
                       <button 
@@ -368,10 +368,17 @@ export function Dashboard() {
                         <span>Drafts</span>
                       </button>
                       <button 
+                        onClick={() => setSelectedStatus('reviewing')}
+                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
+                      >
+                        <Pencil className="w-4 h-4 text-yellow-600" />
+                        <span>Reviewing</span>
+                      </button>
+                      <button 
                         onClick={() => setSelectedStatus('archived')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
                       >
-                        <Bookmark className="w-4 h-4 text-gray-600" />
+                        <Archive className="w-4 h-4 text-gray-600" />
                         <span>Archived</span>
                       </button>
                     </div>

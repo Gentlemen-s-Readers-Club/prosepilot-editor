@@ -14,11 +14,8 @@ import {
   Eye,
   MoreVertical,
   Mail,
-  Calendar,
   Trash2,
-  Shield,
-  AlertCircle,
-  Loader2
+  AlertCircle
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
@@ -26,14 +23,13 @@ import {
   fetchTeamMembers, 
   fetchTeamInvitations, 
   fetchTeamActivity,
-  fetchTeamStats,
   setCurrentTeam,
   updateTeamMember,
   removeTeamMember,
   cancelInvitation
 } from '../store/slices/teamsSlice';
 import { useToast } from '../hooks/use-toast';
-import { TeamMember, TeamInvitation, TeamActivityLog, TeamRole } from '../store/types';
+import { TeamMember, TeamInvitation, TeamRole } from '../store/types';
 import { InviteMembersModal } from '../components/teams/InviteMembersModal';
 import { TeamSettingsModal } from '../components/teams/TeamSettingsModal';
 import {
@@ -81,11 +77,10 @@ export function TeamDetails() {
     currentTeam, 
     members, 
     invitations, 
-    activityLogs, 
-    stats 
+    activityLogs
   } = useSelector((state: RootState) => state.teams);
 
-  const [activeTab, setActiveTab] = useState<'members' | 'activity' | 'books'>('members');
+  const [activeTab, setActiveTab] = useState<'members' | 'activity'>('members');
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<TeamMember | null>(null);
@@ -114,7 +109,6 @@ export function TeamDetails() {
           dispatch(fetchTeamMembers(teamId)).unwrap(),
           dispatch(fetchTeamInvitations(teamId)).unwrap(),
           dispatch(fetchTeamActivity({ teamId })).unwrap(),
-          dispatch(fetchTeamStats(teamId)).unwrap(),
         ]);
       } catch (err) {
         console.error('Error loading team data:', err);
@@ -246,41 +240,40 @@ export function TeamDetails() {
       <Navigation />
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/app/teams')}
+            className="flex items-center text-primary hover:text-accent transition-colors mr-4"
+          >
+            <ArrowLeft className="mr-2" size={20} />
+            <span className="font-medium">Back to Teams</span>
+          </button>
+        </div>
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/app/teams')}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft size={20} />
-              Back to Teams
-            </Button>
-            <div className="flex items-center gap-3">
-              {team.logo_url ? (
-                <img
-                  src={team.logo_url}
-                  alt={team.name}
-                  className="w-12 h-12 rounded-lg object-cover"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-primary" />
-                </div>
-              )}
-              <div>
-                <h1 className="text-3xl font-bold text-primary">{team.name}</h1>
-                {team.description && (
-                  <p className="text-gray-600">{team.description}</p>
-                )}
+          <div className="flex items-center gap-3">
+            {team.logo_url ? (
+              <img
+                src={team.logo_url}
+                alt={team.name}
+                className="w-12 h-12 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary" />
               </div>
+            )}
+            <div>
+              <h1 className="text-3xl font-bold text-primary">{team.name}</h1>
+              {team.description && (
+                <p className="text-gray-600">{team.description}</p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-3">
             {isAdmin && (
               <>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setShowInviteModal(true)}
                   className="flex items-center gap-2"
                 >
@@ -288,7 +281,7 @@ export function TeamDetails() {
                   Invite Members
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setShowSettingsModal(true)}
                   className="flex items-center gap-2"
                 >
@@ -300,61 +293,6 @@ export function TeamDetails() {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Users className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Total Members</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.total_members}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <BookOpen className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Total Books</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.total_books}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Activity className="w-5 h-5 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Recent Activity</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.recent_activity_count}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Shield className="w-5 h-5 text-yellow-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Your Role</p>
-                  <div className="flex items-center gap-2">
-                    {roleIcons[userRole as TeamRole]}
-                    <span className="text-lg font-semibold text-gray-900">
-                      {roleLabels[userRole as TeamRole]}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Tabs */}
         <div className="bg-white rounded-lg shadow-lg">
           <div className="border-b border-gray-200">
@@ -362,7 +300,6 @@ export function TeamDetails() {
               {[
                 { id: 'members', label: 'Members', icon: Users },
                 { id: 'activity', label: 'Activity', icon: Activity },
-                { id: 'books', label: 'Books', icon: BookOpen },
               ].map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
@@ -533,16 +470,6 @@ export function TeamDetails() {
                       No recent activity
                     </div>
                   )}
-                </div>
-              </div>
-            )}
-
-            {/* Books Tab */}
-            {activeTab === 'books' && (
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Team Books</h3>
-                <div className="text-center py-8 text-gray-500">
-                  Team books feature coming soon...
                 </div>
               </div>
             )}

@@ -187,7 +187,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
                 ))}
               </div>
               
-              {emails.length < 20 && (
+              {emails.length < 2 && (
                 <Button
                   type="button"
                   variant="outline"
@@ -201,7 +201,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
               )}
               
               <p className="text-xs text-gray-500 mt-2">
-                You can invite up to 20 people at once. ({emails.length}/20)
+                You can invite up to 2 people at once. ({emails.length}/2)
               </p>
             </div>
 
