@@ -33,16 +33,56 @@ export const fetchProfile = createAsyncThunk(
       throw new Error('No authenticated user');
     }
 
+    console.log('Fetching profile for user:', session.user.id);
+    
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', session.user.id)
       .single();
 
+    // If no profile exists, create a fallback profile from auth user
+    if (error && error.code === 'PGRST116') {
+      console.log('No profile found, creating fallback from auth user');
+      const fallbackProfile = {
+        id: session.user.id,
+        email: session.user.email,
+        full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+        avatar_url: session.user.user_metadata?.avatar_url || null,
+        newsletter_product: true,
+        newsletter_marketing: true,
+        newsletter_writing: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      // Try to create the profile in the database
+      try {
+        const { data: newProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert([fallbackProfile])
+          .select()
+          .single();
+          
+        if (!insertError) {
+          console.log('Successfully created new profile');
+          return newProfile;
+        } else {
+          console.warn('Failed to create profile, using fallback:', insertError);
+        }
+      } catch (insertErr) {
+        console.warn('Error creating profile, using fallback:', insertErr);
+      }
+      
+      return fallbackProfile;
+    }
+    
     if (error) {
+      console.error('Profile fetch error:', error);
       throw new Error(error.message);
     }
 
+    console.log('Successfully fetched profile:', data);
     return {
       ...data,
       email: session.user.email,

@@ -136,11 +136,18 @@ export const fetchTeamMembers = createAsyncThunk(
 export const inviteMembers = createAsyncThunk(
   'teams/inviteMembers',
   async ({ teamId, inviteData }: { teamId: string; inviteData: InviteMembersData }) => {
+    // Get the current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      throw new Error('User not authenticated');
+    }
+
     const invitations = inviteData.emails.map(email => ({
       team_id: teamId,
       email,
       role: inviteData.role,
-      message: inviteData.message
+      message: inviteData.message,
+      invited_by: user.id
     }));
 
     const { data, error } = await supabase

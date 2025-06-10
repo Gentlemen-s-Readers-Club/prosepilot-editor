@@ -1,31 +1,37 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Login } from './pages/Login';
-import { Signup } from './pages/Signup';
-import { ForgotPassword } from './pages/ForgotPassword';
-import { Dashboard } from './pages/Dashboard';
-import { BookDetails } from './pages/BookDetails';
-import { ChapterEditor } from './pages/ChapterEditor';
-import { EditProfile } from './pages/EditProfile';
-import { Subscription } from './pages/Subscription';
-import { Documentation } from './pages/Documentation';
-import { Teams } from './pages/Teams';
-import { TeamDetails } from './pages/TeamDetails';
-import { Landing } from './pages/Landing';
-import { Pricing } from './pages/Pricing';
-import { Support } from './pages/Support';
-import { Toaster } from './components/Toaster';
-import { useAuth } from './hooks/useAuth';
-import { AppDispatch, RootState } from './store';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProfile } from './store/slices/profileSlice';
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { Login } from "./pages/Login";
+import { Signup } from "./pages/Signup";
+import { ForgotPassword } from "./pages/ForgotPassword";
+import { Dashboard } from "./pages/Dashboard";
+import { BookDetails } from "./pages/BookDetails";
+import { ChapterEditor } from "./pages/ChapterEditor";
+import { EditProfile } from "./pages/EditProfile";
+import { Subscription } from "./pages/Subscription";
+import { Documentation } from "./pages/Documentation";
+import { Teams } from "./pages/Teams";
+import { TeamDetails } from "./pages/TeamDetails";
+import { Landing } from "./pages/Landing";
+import { Pricing } from "./pages/Pricing";
+import { Support } from "./pages/Support";
+import { Toaster } from "./components/Toaster";
+import { useAuth } from "./hooks/useAuth";
+import { AppDispatch, RootState } from "./store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProfile } from "./store/slices/profileSlice";
+import { PaddleProvider } from "./contexts/PaddleContext";
 
 // Help Articles
-import { CreateFirstBook } from './pages/help/CreateFirstBook';
-import { CreditSystem } from './pages/help/CreditSystem';
-import { AIBestPractices } from './pages/help/AIBestPractices';
-import { TeamCollaboration } from './pages/help/TeamCollaboration';
-import { Navigation } from './components/Navigation';
+import { CreateFirstBook } from "./pages/help/CreateFirstBook";
+import { CreditSystem } from "./pages/help/CreditSystem";
+import { AIBestPractices } from "./pages/help/AIBestPractices";
+import { TeamCollaboration } from "./pages/help/TeamCollaboration";
+import { Navigation } from "./components/Navigation";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -48,69 +54,78 @@ function App() {
 
   return (
     <div className="bg-background pt-16 min-h-screen">
-      <Router>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/support" element={<Support />} />
-          <Route path="/docs" element={<Documentation />} />
-          
-          {/* Help Articles */}
-          <Route path="/help/create-first-book" element={<CreateFirstBook />} />
-          <Route path="/help/credit-system" element={<CreditSystem />} />
-          <Route path="/help/ai-best-practices" element={<AIBestPractices />} />
-          <Route path="/help/team-collaboration" element={<TeamCollaboration />} />
-          
-          <Route
-            path="/app"
-            element={
-              session ? (
-                <Dashboard />
-              ) : (
-                <Navigate to="/app/login" />
-              )
-            }
-          />
-          <Route
-            path="/app/teams"
-            element={session ? <Teams /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/teams/:teamId"
-            element={session ? <TeamDetails /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/book/:id"
-            element={session ? <BookDetails /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/chapter/:id"
-            element={session ? <ChapterEditor /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/profile"
-            element={session ? <EditProfile /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/subscription"
-            element={session ? <Subscription /> : <Navigate to="/app/login" />}
-          />
-          <Route
-            path="/app/login"
-            element={session ? <Navigate to="/app" /> : <Login />}
-          />
-          <Route
-            path="/app/signup"
-            element={session ? <Navigate to="/app" /> : <Signup />}
-          />
-          <Route
-            path="/app/forgot-password"
-            element={session ? <Navigate to="/app" /> : <ForgotPassword />}
-          />
-        </Routes>
-        <Toaster />
-      </Router>
+      <PaddleProvider>
+        <Router>
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/docs" element={<Documentation />} />
+
+            {/* Help Articles */}
+            <Route
+              path="/help/create-first-book"
+              element={<CreateFirstBook />}
+            />
+            <Route path="/help/credit-system" element={<CreditSystem />} />
+            <Route
+              path="/help/ai-best-practices"
+              element={<AIBestPractices />}
+            />
+            <Route
+              path="/help/team-collaboration"
+              element={<TeamCollaboration />}
+            />
+
+            <Route
+              path="/app"
+              element={session ? <Dashboard /> : <Navigate to="/app/login" />}
+            />
+            <Route
+              path="/app/teams"
+              element={session ? <Teams /> : <Navigate to="/app/login" />}
+            />
+            <Route
+              path="/app/teams/:teamId"
+              element={session ? <TeamDetails /> : <Navigate to="/app/login" />}
+            />
+            <Route
+              path="/app/book/:id"
+              element={session ? <BookDetails /> : <Navigate to="/app/login" />}
+            />
+            <Route
+              path="/app/chapter/:id"
+              element={
+                session ? <ChapterEditor /> : <Navigate to="/app/login" />
+              }
+            />
+            <Route
+              path="/app/profile"
+              element={session ? <EditProfile /> : <Navigate to="/app/login" />}
+            />
+            <Route
+              path="/app/subscription"
+              element={
+                session ? <Subscription /> : <Navigate to="/app/login" />
+              }
+            />
+            <Route
+              path="/app/login"
+              element={session ? <Navigate to="/app" /> : <Login />}
+            />
+            <Route
+              path="/app/signup"
+              element={session ? <Navigate to="/app" /> : <Signup />}
+            />
+            <Route
+              path="/app/forgot-password"
+              element={session ? <Navigate to="/app" /> : <ForgotPassword />}
+            />
+          </Routes>
+          <Toaster />
+        </Router>
+      </PaddleProvider>
     </div>
   );
 }
