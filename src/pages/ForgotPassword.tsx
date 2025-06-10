@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Navigation } from '../components/Navigation';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -27,11 +26,11 @@ export function ForgotPassword() {
         title: "Success",
         description: "Check your email for the password reset link",
       });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : 'Unknown error',
       });
     } finally {
       setLoading(false);
@@ -39,51 +38,48 @@ export function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-16">
-      <Navigation />
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">
-              Reset your password
-            </h2>
-            <p className="mt-2 text-center text-sm text-secondary">
-              Enter your email address and we'll send you a link to reset your password.
-            </p>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
-            <div>
-              <Label htmlFor="email" className="text-primary">Email address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-card border-secondary/20 focus:border-accent"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? 'Sending reset link...' : 'Send reset link'}
-            </Button>
-
-            <div className="text-center">
-              <Button
-                variant="link"
-                asChild
-              >
-                <Link to="/app/login">
-                  Back to login
-                </Link>
-              </Button>
-            </div>
-          </form>
+    <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">
+            Reset your password
+          </h2>
+          <p className="mt-2 text-center text-sm text-secondary">
+            Enter your email address and we'll send you a link to reset your password.
+          </p>
         </div>
+        <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
+          <div>
+            <Label htmlFor="email" className="text-primary">Email address</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="bg-card border-secondary/20 focus:border-accent"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+          >
+            {loading ? 'Sending reset link...' : 'Send reset link'}
+          </Button>
+
+          <div className="text-center">
+            <Button
+              variant="link"
+              asChild
+            >
+              <Link to="/app/login">
+                Back to login
+              </Link>
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );

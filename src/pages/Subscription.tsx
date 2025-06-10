@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigation } from '../components/Navigation';
 import { Button } from '../components/ui/button';
-import { CreditCard, Check, AlertCircle, Clock, FileText, Download, Users, Zap, Crown, Plus } from 'lucide-react';
+import { Check, AlertCircle, Clock, FileText, Download, Users, Zap, Crown, Plus } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -145,7 +145,6 @@ export function Subscription() {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showBuyCreditsDialog, setShowBuyCreditsDialog] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<typeof creditPackages[0] | null>(null);
-  const [remainingCredits] = useState(10);
 
   const handleUpgrade = (plan: Plan) => {
     if (plan.comingSoon) {
@@ -176,8 +175,7 @@ export function Subscription() {
   };
 
   return (
-    <div className="bg-background pt-16">
-      <Navigation />
+    <>
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Current Plan Status */}
@@ -569,6 +567,6 @@ export function Subscription() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

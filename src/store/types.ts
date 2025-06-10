@@ -13,11 +13,25 @@ export interface Book {
   synopsis?: string;
   created_at: string;
   updated_at: string;
+  chapters: Chapter[];
+}
+
+export interface Chapter {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  type: 'chapter' | 'page';
 }
 
 export interface Category {
   id: string;
   name: string;
+}
+
+export interface BookCategory {
+  categories: Category;
 }
 
 export interface Language {

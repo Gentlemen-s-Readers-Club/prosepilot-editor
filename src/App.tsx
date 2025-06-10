@@ -16,8 +16,8 @@ import { Pricing } from './pages/Pricing';
 import { Support } from './pages/Support';
 import { Toaster } from './components/Toaster';
 import { useAuth } from './hooks/useAuth';
-import { AppDispatch } from './store';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from './store';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchProfile } from './store/slices/profileSlice';
 
 // Help Articles
@@ -25,14 +25,18 @@ import { CreateFirstBook } from './pages/help/CreateFirstBook';
 import { CreditSystem } from './pages/help/CreditSystem';
 import { AIBestPractices } from './pages/help/AIBestPractices';
 import { TeamCollaboration } from './pages/help/TeamCollaboration';
+import { Navigation } from './components/Navigation';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session, loading } = useAuth();
+  const { profile } = useSelector((state: RootState) => state.profile);
 
   useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
+    if (session && !profile) {
+      dispatch(fetchProfile());
+    }
+  }, [dispatch, session, profile]);
 
   if (loading) {
     return (
@@ -43,7 +47,9 @@ function App() {
   }
 
   return (
-    <Router>
+    <div className="bg-background pt-16 min-h-screen">
+      <Router>
+        <Navigation />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/pricing" element={<Pricing />} />
@@ -104,7 +110,8 @@ function App() {
           />
         </Routes>
         <Toaster />
-    </Router>
+      </Router>
+    </div>
   );
 }
 

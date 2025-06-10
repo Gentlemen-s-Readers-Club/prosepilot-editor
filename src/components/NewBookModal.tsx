@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { X, AlertCircle, Loader2, BookOpen, Lightbulb, Sparkles, Globe } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { supabase } from '../lib/supabase';
@@ -62,7 +62,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const [selectedTone, setSelectedTone] = useState<SelectOption | null>(null);
 
   // Create owner options (user + teams where user can create books)
-  const ownerOptions: OwnerOption[] = [
+  const ownerOptions: OwnerOption[] = useMemo(() => [
     {
       value: 'user',
       label: `Personal (${profile?.full_name || 'Me'})`,
@@ -76,7 +76,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
         type: 'team' as const,
         team
       }))
-  ];
+  ], [profile?.full_name, teams]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -115,8 +115,10 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   useEffect(() => {
     if (!isOpen) {
       resetForm();
+    } else {
+      setSelectedOwner(ownerOptions[0]);  
     }
-  }, [isOpen]);
+  }, [isOpen, ownerOptions]);
 
   // Update character count
   useEffect(() => {
@@ -193,7 +195,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
 
       toast({
         title: "Success",
-        description: `Book created successfully${selectedOwner.type === 'team' ? ` for team ${selectedOwner.team?.name}` : ''}`,
+        description: 'Book created successfully',
       });
     } catch (error) {
       console.error('Error creating book:', error);
@@ -380,32 +382,34 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                     </div>
 
                     <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="owner" className="text-gray-700 flex items-center gap-1">
-                          Book Owner
-                          <span className="text-red-500">*</span>
-                        </Label>
-                        <CustomSelect
-                          id="owner"
-                          value={selectedOwner}
-                          onChange={(newValue) => {
-                            setSelectedOwner(newValue as OwnerOption);
-                            setOwnerError(null);
-                          }}
-                          options={ownerOptions}
-                          placeholder="Select who will own this book"
-                          isDisabled={isSubmitting}
-                        />
-                        {ownerError && (
-                          <p className="text-sm text-red-600 mt-1">{ownerError}</p>
-                        )}
-                        <p className="text-xs text-gray-500">
-                          {selectedOwner?.type === 'team' 
-                            ? `This book will be created for the team "${selectedOwner.team?.name}" and can be edited by team admins and editors.`
-                            : 'This book will be created as a personal book that only you can edit.'
-                          }
-                        </p>
-                      </div>
+                      {ownerOptions.length > 0 && (
+                        <div className="space-y-2">
+                          <Label htmlFor="owner" className="text-gray-700 flex items-center gap-1">
+                            Book Owner
+                            <span className="text-red-500">*</span>
+                          </Label>
+                          <CustomSelect
+                            id="owner"
+                            value={selectedOwner}
+                            onChange={(newValue) => {
+                              setSelectedOwner(newValue as OwnerOption);
+                              setOwnerError(null);
+                            }}
+                            options={ownerOptions}
+                            placeholder="Select who will own this book"
+                            isDisabled={isSubmitting}
+                          />
+                          {ownerError && (
+                            <p className="text-sm text-red-600 mt-1">{ownerError}</p>
+                          )}
+                          <p className="text-xs text-gray-500">
+                            {selectedOwner?.type === 'team' 
+                              ? `This book will be created for the team "${selectedOwner.team?.name}" and can be edited by team admins and editors.`
+                              : 'This book will be created as a personal book that only you can edit.'
+                            }
+                          </p>
+                        </div>
+                      )}
 
                       <div className="space-y-2">
                         <Label htmlFor="categories" className="text-gray-700 flex items-center gap-1">

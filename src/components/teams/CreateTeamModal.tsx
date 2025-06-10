@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Upload, Loader2 } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -45,7 +45,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
       const fileName = `team-logos/${user.id}/${Date.now()}.${fileExt}`;
 
       // Use avatars bucket as the primary bucket for team logos
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, file, { 
           upsert: true,
@@ -65,7 +65,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
         title: "Success",
         description: "Team logo uploaded successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error uploading logo:', error);
       toast({
         variant: "destructive",
@@ -105,6 +105,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
       setErrors({ name: false });
     } catch (error) {
       // Error handling is done in parent component
+      console.error('Error creating team:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -160,7 +161,8 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
                   <div className="relative">
                     <FileUpload 
                       onFileSelect={handleLogoUpload}
-                      className="w-24 h-24"
+                      className="w-40 h-40"
+                      showInstructions={false}
                     />
                     {isUploadingLogo && (
                       <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
@@ -228,8 +230,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h4 className="text-sm font-medium text-blue-800 mb-2">Team Limits</h4>
               <ul className="text-sm text-blue-700 space-y-1">
-                <li>• Maximum 50 members per team</li>
-                <li>• Invite up to 20 users at once</li>
+                <li>• Maximum 3 members per team</li>
                 <li>• Unlimited collaborative books</li>
                 <li>• Full activity tracking</li>
               </ul>

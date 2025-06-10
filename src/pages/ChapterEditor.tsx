@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Navigation } from '../components/Navigation';
 import { EnhancedEditor } from '../components/Editor/EnhancedEditor';
 import { EditorSidebar } from '../components/Editor/EditorSidebar';
 import { ChapterToolbar } from '../components/Editor/ChapterToolbar';
@@ -17,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog';
+import { Book, Chapter } from '../store/types';
 
 interface Version {
   id: string;
@@ -33,7 +33,7 @@ function ChapterEditorContent() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [chapterTitle, setChapterTitle] = useState('');
-  const [book, setBook] = useState<any>(null);
+  const [book, setBook] = useState<Book | null>(null);
   const [versions, setVersions] = useState<Version[]>([]);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
@@ -92,7 +92,7 @@ function ChapterEditorContent() {
 
         setContent(versionsData[0]?.content || '');
         setChapterTitle(chapter.title);
-      } catch (error: any) {
+      } catch (error) {
         console.error('Error fetching data:', error);
         toast({
           variant: "destructive",
@@ -123,7 +123,7 @@ function ChapterEditorContent() {
       if (book) {
         setBook({
           ...book,
-          chapters: book.chapters.map((chapter: any) =>
+          chapters: book.chapters.map((chapter: Chapter) =>
             chapter.id === id
               ? { ...chapter, title: newTitle }
               : chapter
@@ -175,7 +175,7 @@ function ChapterEditorContent() {
         title: "Success",
         description: "New version created successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error creating version:', error);
       throw error;
     }
@@ -189,7 +189,8 @@ function ChapterEditorContent() {
     try {
       await createNewVersion(content);
       setShowSaveDialog(false);
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error saving content:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -202,7 +203,8 @@ function ChapterEditorContent() {
     try {
       await createNewVersion(version.content);
       setContent(version.content);
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error restoring version:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -212,8 +214,7 @@ function ChapterEditorContent() {
   };
 
   return (
-    <div className="h-screen bg-background pt-16">
-      <Navigation />
+    <div className="h-[calc(100vh-64px)]">
       <div className="flex flex-1 h-full">
         {book && (
           <EditorSidebar
@@ -225,7 +226,8 @@ function ChapterEditorContent() {
           />
         )}
         
-        <main className="flex-1 p-8 bg-background overflow-y-auto">
+        <main className="flex-1 p-8 overflow-y-auto">
+          <div>
           <div className="max-w-5xl mx-auto flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
               <button
@@ -287,6 +289,7 @@ function ChapterEditorContent() {
                 </div>
               </div>
             )}
+          </div>
           </div>
         </main>
       </div>

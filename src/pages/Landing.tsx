@@ -4,65 +4,19 @@ import {
   Sparkles, 
   PenTool, 
   Brain,
-  ChevronRight,
   Star,
-  Users,
-  Zap,
-  BookOpen,
   Clock,
   TrendingUp,
   Award,
   CheckCircle,
   ArrowRight,
-  Play,
   Quote
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 export function Landing() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="ProsePilot Logo" className="h-12 w-12" />
-              <span className="ml-2 text-xl font-bold text-primary">ProsePilot</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                to="/pricing"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Pricing
-              </Link>
-              <Link
-                to="/support"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Support
-              </Link>
-              <Link
-                to="/docs"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                How It Works
-              </Link>
-              <Link
-                to="/app/login"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Log in
-              </Link>
-              <Link to="/app/signup">
-                <Button className="bg-primary hover:bg-primary/90">Get Started</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <>
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-background">
         <div className="max-w-7xl mx-auto">
@@ -424,6 +378,6 @@ export function Landing() {
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

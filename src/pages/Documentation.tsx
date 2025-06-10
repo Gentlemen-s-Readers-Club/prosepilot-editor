@@ -10,13 +10,10 @@ import {
   Users, 
   CreditCard, 
   Shield,
-  ChevronRight,
   Lightbulb,
   Target,
-  Clock,
   CheckCircle
 } from 'lucide-react';
-import { Navigation } from '../components/Navigation';
 
 interface Section {
   id: string;
@@ -1292,40 +1289,35 @@ export function Documentation() {
   };
 
   return (
-    <div className="bg-background pt-16">
-      <Navigation />
-      <div className="min-h-screen bg-background">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex gap-8">
-            {/* Sidebar */}
-            <div className="w-64 shrink-0">
-              <div className="sticky top-8">
-                <h2 className="text-2xl font-semibold text-primary mb-4">Documentation</h2>
-                <nav className="flex flex-col gap-1">
-                  {sections.map(({ id, label, icon }) => (
-                    <button
-                      key={id}
-                      onClick={() => handleSectionClick(id)}
-                      className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
-                        activeSection === id
-                          ? 'bg-primary text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      {icon}
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </div>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="flex gap-8">
+        {/* Sidebar */}
+        <div className="w-64 shrink-0">
+          <div className="sticky top-8">
+            <h2 className="text-2xl font-semibold text-primary mb-4">Documentation</h2>
+            <nav className="flex flex-col gap-1">
+              {sections.map(({ id, label, icon }) => (
+                <button
+                  key={id}
+                  onClick={() => handleSectionClick(id)}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
+                    activeSection === id
+                      ? 'bg-primary text-white'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {icon}
+                  <span>{label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
 
-            {/* Main Content */}
-            <div className="flex-1">
-              <div className="bg-card rounded-lg shadow p-6">
-                {renderSection()}
-              </div>
-            </div>
+        {/* Main Content */}
+        <div className="flex-1">
+          <div className="bg-card rounded-lg shadow p-6">
+            {renderSection()}
           </div>
         </div>
       </div>

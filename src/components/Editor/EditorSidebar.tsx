@@ -2,24 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, BookOpen, FileText, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
-import { StatusBadge, type Status } from '../ui/status-badge';
+import { StatusBadge } from '../ui/status-badge';
 import { NewContentModal } from '../NewContentModal';
 import { useToast } from '../../hooks/use-toast';
 import { supabase } from '../../lib/supabase';
-
-interface Chapter {
-  id: string;
-  title: string;
-  type: 'chapter' | 'page';
-}
-
-interface Book {
-  id: string;
-  title: string;
-  coverUrl: string;
-  status: Status;
-  chapters: Chapter[];
-}
+import { Book } from '../../store/types';
 
 interface EditorSidebarProps {
   book: Book;
@@ -61,7 +48,8 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
         title: "Success",
         description: `${type === 'chapter' ? 'Chapter' : 'Page'} created successfully`,
       });
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error creating chapter:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -92,9 +80,9 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
         <>
           <div className="p-4 border-b border-gray-200">
             <div className="aspect-[10/16] rounded-lg overflow-hidden shadow-md mb-4 max-w-44 mx-auto">
-              {book.coverUrl ? (
+              {book.cover_url ? (
                 <img
-                  src={book.coverUrl}
+                  src={book.cover_url}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />

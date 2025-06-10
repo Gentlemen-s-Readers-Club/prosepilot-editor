@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X, Pencil, Archive, Rocket } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigation } from '../components/Navigation';
 import { BookList } from '../components/BookList';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
@@ -168,7 +167,6 @@ export function Dashboard() {
   // Update active filters
   useEffect(() => {
     const filters = [];
-    console.log(selectedCategory, selectedLanguage, selectedStatus);
     if (selectedCategory !== '') filters.push(categories.find(category => category.id === selectedCategory)?.name || '');
     if (selectedLanguage !== '') filters.push(languages.find(language => language.id === selectedLanguage)?.name || '');
     if (selectedStatus !== '') filters.push(BOOK_STATES[selectedStatus as Status] || '');
@@ -194,19 +192,16 @@ export function Dashboard() {
 
   if (loading || booksStatus === 'loading') {
     return (
-      <div className="bg-background pt-16 min-h-screen">
-        <Navigation />
-        <div className="h-full">
-          <div className="max-w-[1600px] mx-auto px-6 py-8">
-            <div className="animate-pulse">
-              <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
-              <div className="flex gap-8">
-                <div className="w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 flex-1">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <div key={n} className="aspect-[2/3] bg-gray-200 rounded-lg"></div>
-                  ))}
-                </div>
+      <div className="h-full">
+        <div className="max-w-[1600px] mx-auto px-6 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
+            <div className="flex gap-8">
+              <div className="w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-1">
+                {[1, 2, 3, 4].map((n) => (
+                  <div key={n} className="aspect-[2/3] bg-gray-200 rounded-lg"></div>
+                ))}
               </div>
             </div>
           </div>
@@ -216,8 +211,7 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-16">
-      <Navigation />
+    <>
       <div className="max-w-[1600px] mx-auto px-6 py-8">
         {/* Header with Stats */}
         <div className="mb-8">
@@ -497,9 +491,7 @@ export function Dashboard() {
                       : 'This team doesn\'t have any books yet. Create the first one!'
                     }
                   </p>
-                  <Button 
-                    className="bg-primary hover:bg-primary/90 text-white"
-                  >
+                  <Button  onClick={() => { setShowNewBookModal(true) }}>
                     <Plus className="mr-2 h-4 w-4" />
                     Create Book
                   </Button>
@@ -515,10 +507,7 @@ export function Dashboard() {
                   <p className="text-secondary max-w-md mb-6">
                     We couldn't find any books matching your current filters. Try adjusting your search criteria or clear the filters to see all books.
                   </p>
-                  <Button 
-                    variant="outline"
-                    onClick={clearAllFilters}
-                  >
+                  <Button onClick={clearAllFilters}>
                     Clear All Filters
                   </Button>
                 </div>
@@ -540,6 +529,6 @@ export function Dashboard() {
         isOpen={showNewBookModal}
         onClose={() => setShowNewBookModal(false)}
       />
-    </div>
+    </>
   );
 }

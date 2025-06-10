@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Navigation } from '../components/Navigation';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -25,7 +24,7 @@ export function EditProfile() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const { profile, status } = useSelector((state: RootState) => state.profile);
+  const { profile } = useSelector((state: RootState) => state.profile);
 
   const [loading, setLoading] = useState(false);
   const [isFileLoading, setIsFileLoading] = useState(false);
@@ -171,7 +170,8 @@ export function EditProfile() {
         title: "Success",
         description: "Avatar uploaded successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -224,11 +224,12 @@ export function EditProfile() {
       });
       setNewPassword('');
       setConfirmPassword('');
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error updating password:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : 'Unknown error',
       });
     } finally {
       setLoading(false);
@@ -245,11 +246,12 @@ export function EditProfile() {
       });
 
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error signing in with social provider:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   }
@@ -279,7 +281,8 @@ export function EditProfile() {
         title: "Success",
         description: "Your account has been deleted",
       });
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error deleting account:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -562,42 +565,39 @@ export function EditProfile() {
   };
 
   return (
-    <div className="bg-background pt-16">
-      <Navigation />
-      <div className="min-h-screen">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="flex gap-8">
-            {/* Sidebar */}
-            <div className="w-64 shrink-0">
-              <div className="sticky top-8">
-                <h2 className="text-2xl font-semibold text-primary mb-4">Settings</h2>
-                <nav className="flex flex-col gap-1">
-                  {sections.map(({ id, label, icon }) => (
-                    <button
-                      key={id}
-                      onClick={() => setActiveSection(id)}
-                      className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
-                        activeSection === id
-                          ? 'bg-primary text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      {icon}
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </nav>
-              </div>
+    <>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          {/* Sidebar */}
+          <div className="w-64 shrink-0">
+            <div className="sticky top-8">
+              <h2 className="text-2xl font-semibold text-primary mb-4">Settings</h2>
+              <nav className="flex flex-col gap-1">
+                {sections.map(({ id, label, icon }) => (
+                  <button
+                    key={id}
+                    onClick={() => setActiveSection(id)}
+                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
+                      activeSection === id
+                        ? 'bg-primary text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {icon}
+                    <span>{label}</span>
+                  </button>
+                ))}
+              </nav>
             </div>
+          </div>
 
-            {/* Main Content */}
-            <div className="flex-1">
-              <div className="bg-card rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-primary mb-6">
-                  {sections.find(s => s.id === activeSection)?.label}
-                </h2>
-                {renderSection()}
-              </div>
+          {/* Main Content */}
+          <div className="flex-1">
+            <div className="bg-card rounded-lg shadow p-6">
+              <h2 className="text-lg font-semibold text-primary mb-6">
+                {sections.find(s => s.id === activeSection)?.label}
+              </h2>
+              {renderSection()}
             </div>
           </div>
         </div>
@@ -665,6 +665,6 @@ export function EditProfile() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

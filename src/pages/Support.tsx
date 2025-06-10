@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Navigation } from '../components/Navigation';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -12,14 +11,12 @@ import {
   Phone,
   Clock,
   ChevronRight,
-  HelpCircle,
   FileText,
   Video,
   Users,
   Zap,
   CreditCard,
   Settings,
-  AlertCircle,
   CheckCircle,
   ArrowRight,
   ExternalLink
@@ -177,8 +174,7 @@ export function Support() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+    <>
       
       {/* Header */}
       <div className="bg-white pt-16">
@@ -546,6 +542,6 @@ export function Support() {
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
