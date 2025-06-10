@@ -113,7 +113,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send invitations",
+        description: "Failed to send invitations. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
