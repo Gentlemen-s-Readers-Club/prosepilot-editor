@@ -98,7 +98,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
         title: "Success",
         description: "Team logo updated successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error uploading logo:', error);
       toast({
         variant: "destructive",
@@ -133,7 +133,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
         title: "Success",
         description: "Team logo removed successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error removing logo:', error);
       toast({
         variant: "destructive",
@@ -172,7 +172,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       });
       
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error updating team:', error);
       toast({
         variant: "destructive",
@@ -205,7 +205,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       
       navigate('/app/teams');
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error deleting team:', error);
       toast({
         variant: "destructive",
@@ -273,7 +273,8 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                     <div className="relative">
                       <FileUpload 
                         onFileSelect={handleLogoUpload}
-                        className="w-24 h-24"
+                        className="w-40 h-40"
+                        showInstructions={false}
                       />
                       {isUploadingLogo && (
                         <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">

@@ -216,71 +216,10 @@ function highlightAnnotation(
   }
 }
 
-export function exportAnnotations(
-  annotations: Annotation[],
-  chapterTitle: string
-): AnnotationExportData {
-  return {
-    chapter_title: chapterTitle,
-    annotations: annotations.map(annotation => ({
-      id: annotation.id,
-      content: annotation.content,
-      selected_text: annotation.selected_text,
-      status: annotation.status,
-      created_at: annotation.created_at,
-      user_name: annotation.user?.full_name || 'Unknown User',
-      replies: annotation.replies?.map(reply => ({
-        content: reply.content,
-        created_at: reply.created_at,
-        user_name: reply.user?.full_name || 'Unknown User'
-      })) || []
-    })),
-    exported_at: new Date().toISOString()
-  };
-}
-
-export function downloadAnnotationsAsJSON(data: AnnotationExportData): void {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `annotations-${data.chapter_title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${new Date().toISOString().split('T')[0]}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-export function downloadAnnotationsAsCSV(data: AnnotationExportData): void {
-  const headers = ['ID', 'Content', 'Selected Text', 'Status', 'Created At', 'User', 'Replies Count'];
-  const rows = data.annotations.map(annotation => [
-    annotation.id,
-    `"${annotation.content.replace(/"/g, '""')}"`,
-    `"${annotation.selected_text.replace(/"/g, '""')}"`,
-    annotation.status,
-    annotation.created_at,
-    annotation.user_name,
-    annotation.replies.length.toString()
-  ]);
-
-  const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
-  const blob = new Blob([csvContent], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `annotations-${data.chapter_title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${new Date().toISOString().split('T')[0]}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
 // Keyboard shortcuts
 export function setupAnnotationKeyboardShortcuts(
   onCreateAnnotation: () => void,
-  onTogglePanel: () => void,
-  onNextAnnotation: () => void,
-  onPrevAnnotation: () => void
+  onTogglePanel: () => void
 ): () => void {
   const handleKeyDown = (e: KeyboardEvent) => {
     // Ctrl+Shift+A - Create annotation
@@ -293,18 +232,6 @@ export function setupAnnotationKeyboardShortcuts(
     if (e.ctrlKey && e.shiftKey && e.key === 'P') {
       e.preventDefault();
       onTogglePanel();
-    }
-    
-    // Ctrl+Shift+N - Next annotation
-    if (e.ctrlKey && e.shiftKey && e.key === 'N') {
-      e.preventDefault();
-      onNextAnnotation();
-    }
-    
-    // Ctrl+Shift+B - Previous annotation
-    if (e.ctrlKey && e.shiftKey && e.key === 'B') {
-      e.preventDefault();
-      onPrevAnnotation();
     }
   };
 

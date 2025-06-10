@@ -20,7 +20,6 @@ export function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const {profile} = useSelector((state: RootState) => state.profile);
-  const {teams} = useSelector((state: RootState) => state.teams);
   const {session, loading} = useAuth();
 
   const handleLogout = async () => {

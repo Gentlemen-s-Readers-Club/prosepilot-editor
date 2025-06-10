@@ -9,11 +9,7 @@ import { AnnotationPanel } from '../annotations/AnnotationPanel';
 import { CreateAnnotationModal } from '../annotations/CreateAnnotationModal';
 import { useAnnotations } from '../../hooks/useAnnotations';
 import { 
-  getTextSelection, 
-  highlightAnnotatedText, 
-  exportAnnotations,
-  downloadAnnotationsAsJSON,
-  downloadAnnotationsAsCSV,
+  getTextSelection,
   setupAnnotationKeyboardShortcuts
 } from '../../utils/annotationUtils';
 import { Annotation } from '../../types/annotations';
@@ -175,7 +171,6 @@ const editorStyles = `
 
 export function EnhancedEditor({ 
   chapterId,
-  chapterTitle,
   initialContent = '', 
   onChange, 
   readOnly = false 
@@ -183,7 +178,6 @@ export function EnhancedEditor({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const editorRef = useRef<HTMLDivElement | null>(null);
   const [showAnnotationPanel, setShowAnnotationPanel] = useState(false);
-  const [showAnnotations, setShowAnnotations] = useState(true);
   const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectionData, setSelectionData] = useState<{
@@ -212,9 +206,9 @@ export function EnhancedEditor({
       onChange?.(html);
       
       // Re-highlight annotations after content changes
-      setTimeout(() => {
-        updateAnnotationHighlights();
-      }, 100);
+      // setTimeout(() => {
+      //   updateAnnotationHighlights();
+      // }, 100);
     },
     editable: !readOnly,
   });
@@ -222,27 +216,27 @@ export function EnhancedEditor({
   const stats = getAnnotationStats();
 
   // Function to update annotation highlights
-  const updateAnnotationHighlights = useCallback(() => {
-    const iframe = iframeRef.current;
-    if (iframe && iframe.contentDocument) {
-      const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
-      if (editorElement) {
-        highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, showAnnotations);
-      }
-    }
-  }, [annotations, showAnnotations]);
+  // const updateAnnotationHighlights = useCallback(() => {
+  //   const iframe = iframeRef.current;
+  //   if (iframe && iframe.contentDocument) {
+  //     const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+  //     if (editorElement) {
+  //       highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, showAnnotations);
+  //     }
+  //   }
+  // }, [annotations, showAnnotations]);
 
   // Handle annotation highlighting when annotations or visibility changes
-  useEffect(() => {
-    if (!editor) return;
+  // useEffect(() => {
+  //   if (!editor) return;
     
-    // Add a small delay to ensure the iframe content is ready
-    const timer = setTimeout(() => {
-      updateAnnotationHighlights();
-    }, 200);
+  //   // Add a small delay to ensure the iframe content is ready
+  //   const timer = setTimeout(() => {
+  //     updateAnnotationHighlights();
+  //   }, 200);
 
-    return () => clearTimeout(timer);
-  }, [editor, annotations, showAnnotations, updateAnnotationHighlights]);
+  //   return () => clearTimeout(timer);
+  // }, [editor, annotations, showAnnotations, updateAnnotationHighlights]);
 
   // Set up iframe and editor
   useEffect(() => {
@@ -271,9 +265,9 @@ export function EnhancedEditor({
     }
     
     // Update highlights after editor is mounted
-    setTimeout(() => {
-      updateAnnotationHighlights();
-    }, 100);
+    // setTimeout(() => {
+    //   updateAnnotationHighlights();
+    // }, 100);
     
     return () => {
       if (editorRef.current) {
@@ -281,24 +275,13 @@ export function EnhancedEditor({
         editorRef.current = null;
       }
     };
-  }, [editor, iframeRef, updateAnnotationHighlights]);
+  }, [editor, iframeRef]);
 
-  // Set up keyboard shortcuts
-  useEffect(() => {
-    const cleanup = setupAnnotationKeyboardShortcuts(
-      handleCreateAnnotation,
-      () => setShowAnnotationPanel(!showAnnotationPanel),
-      handleNextAnnotation,
-      handlePrevAnnotation
-    );
 
-    return cleanup;
-  }, [showAnnotationPanel, annotations, selectedAnnotation]);
-
-  const handleAnnotationClick = useCallback((annotation: Annotation) => {
-    setSelectedAnnotation(annotation);
-    setShowAnnotationPanel(true);
-  }, []);
+  // const handleAnnotationClick = useCallback((annotation: Annotation) => {
+  //   setSelectedAnnotation(annotation);
+  //   setShowAnnotationPanel(true);
+  // }, []);
 
   const handleCreateAnnotation = useCallback(() => {
     if (readOnly) return;
@@ -323,64 +306,39 @@ export function EnhancedEditor({
       setSelectedAnnotation(newAnnotation);
       setShowAnnotationPanel(true);
       // Update highlights after creating annotation
-      setTimeout(() => {
-        updateAnnotationHighlights();
-      }, 100);
+      // setTimeout(() => {
+      //   updateAnnotationHighlights();
+      // }, 100);
     }
   };
 
-  const handleToggleAnnotations = useCallback(() => {
-    setShowAnnotations(prev => {
-      const newValue = !prev;
-      // Update highlights immediately when toggling
-      setTimeout(() => {
-        const iframe = iframeRef.current;
-        if (iframe && iframe.contentDocument) {
-          const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
-          if (editorElement) {
-            highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, newValue);
-          }
-        }
-      }, 50);
-      return newValue;
-    });
-  }, [annotations, handleAnnotationClick]);
+  // const handleToggleAnnotations = useCallback(() => {
+  //   setShowAnnotations(prev => {
+  //     const newValue = !prev;
+  //     // Update highlights immediately when toggling
+  //     setTimeout(() => {
+  //       const iframe = iframeRef.current;
+  //       if (iframe && iframe.contentDocument) {
+  //         const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+  //         if (editorElement) {
+  //           highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, newValue);
+  //         }
+  //       }
+  //     }, 50);
+  //     return newValue;
+  //   });
+  // }, [annotations, handleAnnotationClick]);
 
-  const handleExportAnnotations = () => {
-    const exportData = exportAnnotations(annotations, chapterTitle);
-    
-    // Show export options
-    const format = window.confirm('Export as JSON? (Cancel for CSV)');
-    if (format) {
-      downloadAnnotationsAsJSON(exportData);
-    } else {
-      downloadAnnotationsAsCSV(exportData);
-    }
-  };
 
-  const handleNextAnnotation = () => {
-    if (annotations.length === 0) return;
-    
-    const currentIndex = selectedAnnotation 
-      ? annotations.findIndex(a => a.id === selectedAnnotation.id)
-      : -1;
-    
-    const nextIndex = (currentIndex + 1) % annotations.length;
-    setSelectedAnnotation(annotations[nextIndex]);
-    setShowAnnotationPanel(true);
-  };
+  // Set up keyboard shortcuts
+  useEffect(() => {
+    const cleanup = setupAnnotationKeyboardShortcuts(
+      handleCreateAnnotation,
+      () => setShowAnnotationPanel(!showAnnotationPanel)
+    );
 
-  const handlePrevAnnotation = () => {
-    if (annotations.length === 0) return;
-    
-    const currentIndex = selectedAnnotation 
-      ? annotations.findIndex(a => a.id === selectedAnnotation.id)
-      : -1;
-    
-    const prevIndex = currentIndex <= 0 ? annotations.length - 1 : currentIndex - 1;
-    setSelectedAnnotation(annotations[prevIndex]);
-    setShowAnnotationPanel(true);
-  };
+    return cleanup;
+  }, [showAnnotationPanel, annotations, selectedAnnotation, handleCreateAnnotation]);
 
   if (!editor) {
     return null;
@@ -393,12 +351,10 @@ export function EnhancedEditor({
       <AnnotationToolbar
         annotationCount={stats.total}
         openCount={stats.open}
-        resolvedCount={stats.resolved}
-        showAnnotations={showAnnotations}
-        onToggleAnnotations={handleToggleAnnotations}
+        // showAnnotations={showAnnotations}
+        // onToggleAnnotations={handleToggleAnnotations}
         onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
         onCreateAnnotation={handleCreateAnnotation}
-        onExportAnnotations={handleExportAnnotations}
         isReadOnly={readOnly}
       />
       
@@ -416,7 +372,6 @@ export function EnhancedEditor({
             onClose={() => setShowAnnotationPanel(false)}
             selectedAnnotation={selectedAnnotation}
             onAnnotationSelect={setSelectedAnnotation}
-            onExportAnnotations={handleExportAnnotations}
           />
         )}
       </div>

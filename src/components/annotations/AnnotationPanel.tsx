@@ -1,29 +1,16 @@
 import React, { useState } from 'react';
 import { 
   MessageSquare, 
-  Filter, 
-  Download, 
-  X, 
-  Plus,
+  Filter,
+  X,
   CheckCircle,
   Circle,
-  MoreVertical,
-  Trash2,
-  Edit3,
-  Reply
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Annotation, AnnotationFilters } from '../../types/annotations';
+import { Annotation } from '../../types/annotations';
 import { useAnnotations } from '../../hooks/useAnnotations';
 import { AnnotationCard } from './AnnotationCard';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
 
 interface AnnotationPanelProps {
   chapterId: string;
@@ -31,7 +18,6 @@ interface AnnotationPanelProps {
   onClose: () => void;
   selectedAnnotation?: Annotation | null;
   onAnnotationSelect: (annotation: Annotation | null) => void;
-  onExportAnnotations: () => void;
 }
 
 export function AnnotationPanel({ 
@@ -40,7 +26,6 @@ export function AnnotationPanel({
   onClose, 
   selectedAnnotation,
   onAnnotationSelect,
-  onExportAnnotations
 }: AnnotationPanelProps) {
   const { 
     annotations, 
@@ -108,19 +93,6 @@ export function AnnotationPanel({
           >
             <Filter className="w-4 h-4" />
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={onExportAnnotations}>
-                <Download className="w-4 h-4 mr-2" />
-                Export Annotations
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
           <Button
             variant="ghost"
             size="sm"
@@ -178,7 +150,7 @@ export function AnnotationPanel({
                     key={value}
                     variant={filters.status === value ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => handleStatusFilter(value as any)}
+                    onClick={() => handleStatusFilter(value as 'all' | 'open' | 'resolved')}
                     className="text-xs"
                   >
                     {label}
