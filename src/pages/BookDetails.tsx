@@ -471,6 +471,25 @@ export function BookDetails() {
     }
   };
 
+  const downloadExportedFile = async (filePath: string, format: 'epub' | 'pdf' | 'docx') => {
+    const { data, error } = await supabase.storage.from('book-files').download(filePath);
+  
+    if (error) {
+      console.error('Error downloading File', error);
+      throw new Error('Error downloading File');
+    }
+
+    const blob = new Blob([data], { 
+      type: format === 'epub' ? 'application/epub+zip' : 
+            format === 'pdf' ? 'application/pdf' : 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${formData.title}.${format}`;
+    link.click();
+  };
+
   const handleExport = async (format: 'epub' | 'pdf' | 'docx') => {
     if (!id) return;
     
@@ -508,22 +527,7 @@ export function BookDetails() {
       }
       
       // Get the file from Supabase storage
-      const { data, error } = await supabase.storage
-        .from('book-files')
-        .download(result.fileUrl);
-        
-      if (error) throw error;
-      
-      // Create a download link for the file
-      const blob = new Blob([data], { type: `application/${format}` });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${formData.title}.${format}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      downloadExportedFile(result.fileUrl, format);
       
       toast({
         title: "Export Complete",
