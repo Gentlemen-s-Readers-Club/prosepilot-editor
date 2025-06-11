@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { useToast } from '../hooks/use-toast';
-import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2 } from 'lucide-react';
+import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, Google } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -47,6 +47,7 @@ export function EditProfile() {
   });
 
   const [connectedProviders, setConnectedProviders] = useState<string[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
 
   useEffect(() => {
     setProfileData({
@@ -63,6 +64,28 @@ export function EditProfile() {
   useEffect(() => {
     setPasswordStrength(calculatePasswordStrength(newPassword));
   }, [newPassword]);
+
+  // Fetch connected providers
+  useEffect(() => {
+    const fetchUserIdentities = async () => {
+      try {
+        setLoadingProviders(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user && user.identities) {
+          // Extract provider names from identities
+          const providers = user.identities.map(identity => identity.provider);
+          setConnectedProviders(providers);
+        }
+      } catch (error) {
+        console.error('Error fetching user identities:', error);
+      } finally {
+        setLoadingProviders(false);
+      }
+    };
+
+    fetchUserIdentities();
+  }, []);
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -384,32 +407,61 @@ export function EditProfile() {
       case 'connected':
         return (
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
-                <span className="text-base-heading">Google</span>
+            {loadingProviders ? (
+              <div className="flex items-center justify-center py-6">
+                <Loader2 className="w-6 h-6 text-brand-primary animate-spin mr-2" />
+                <span className="text-base-paragraph">Loading connected accounts...</span>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => handleSocialConnect('google')}
-                disabled={connectedProviders.includes('google')}
-              >
-                {connectedProviders.includes('google') ? 'Connected' : 'Connect'}
-              </Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Facebook className="w-6 h-6 text-[#1877F2]" />
-                <span className="text-base-heading">Facebook</span>
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => handleSocialConnect('facebook')}
-                disabled={connectedProviders.includes('facebook')}
-              >
-                {connectedProviders.includes('facebook') ? 'Connected' : 'Connect'}
-              </Button>
-            </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Google className="w-6 h-6 text-[#4285F4]" />
+                    <span className="text-base-heading">Google</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSocialConnect('google')}
+                    disabled={connectedProviders.includes('google')}
+                  >
+                    {connectedProviders.includes('google') ? 'Connected' : 'Connect'}
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Facebook className="w-6 h-6 text-[#1877F2]" />
+                    <span className="text-base-heading">Facebook</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSocialConnect('facebook')}
+                    disabled={connectedProviders.includes('facebook')}
+                  >
+                    {connectedProviders.includes('facebook') ? 'Connected' : 'Connect'}
+                  </Button>
+                </div>
+                
+                {/* Email provider is always connected since it's the primary auth method */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Mail className="w-6 h-6 text-gray-600" />
+                    <span className="text-base-heading">Email</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    disabled={true}
+                  >
+                    Connected
+                  </Button>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="text-sm text-gray-600">
+                    Connecting social accounts allows for easier login and account recovery options.
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         );
 
