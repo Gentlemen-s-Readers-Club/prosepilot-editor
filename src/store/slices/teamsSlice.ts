@@ -202,7 +202,7 @@ export const fetchTeamInvitations = createAsyncThunk(
       .from('team_invitations')
       .select(`
         *,
-        invited_by_user:profiles!team_invitations_invited_by_fkey(id, full_name)
+        invited_by_user:users(id, email)
       `)
       .eq('team_id', teamId)
       .is('accepted_at', null)
@@ -274,7 +274,7 @@ export const fetchUserInvitations = createAsyncThunk(
       .select(`
         *,
         team:team_id(id, name, description, logo_url),
-        invited_by_user:profiles!team_invitations_invited_by_fkey(id, full_name)
+        invited_by_user:users(id, email)
       `)
       .eq('email', user.email)
       .is('accepted_at', null)
