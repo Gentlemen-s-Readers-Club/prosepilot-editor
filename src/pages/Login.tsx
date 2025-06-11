@@ -68,7 +68,7 @@ export function Login() {
               Sign in to ProsePilot
             </h2>
           </div>
-
+          -brand-accent
           <div className="flex flex-col gap-4">
             <Button
               variant="outline"
@@ -94,10 +94,10 @@ export function Login() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-brand-accent" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-base-background text-gray-500">
+                <span className="px-2 bg-base-background text-brand-accent">
                   Or continue with email
                 </span>
               </div>

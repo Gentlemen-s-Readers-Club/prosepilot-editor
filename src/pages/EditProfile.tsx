@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { useToast } from '../hooks/use-toast';
-import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, ToggleLeft as Google } from 'lucide-react';
+import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, ToggleLeft as Google, Mail } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -416,7 +416,7 @@ export function EditProfile() {
               <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Google className="w-6 h-6 text-[#4285F4]" />
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
                     <span className="text-base-heading">Google</span>
                   </div>
                   <Button
@@ -444,7 +444,7 @@ export function EditProfile() {
                 {/* Email provider is always connected since it's the primary auth method */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Mail className="w-6 h-6 text-gray-600" />
+                    <Mail className="w-6 h-6 text-brand-accent" />
                     <span className="text-base-heading">Email</span>
                   </div>
                   <Button
@@ -645,7 +645,7 @@ export function EditProfile() {
 
           {/* Main Content */}
           <div className="flex-1">
-            <div className="bg-brand-brand-accent rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-base-heading mb-6">
                 {sections.find(s => s.id === activeSection)?.label}
               </h2>
