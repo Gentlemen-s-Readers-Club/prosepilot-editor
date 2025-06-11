@@ -39,6 +39,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
+import { updateBookInList } from '../store/slices/booksSlice';
 import { formatDistanceToNow } from 'date-fns';
 
 interface BookFormData {
@@ -211,6 +212,12 @@ export function BookDetails() {
       if (updateError) throw updateError;
 
       setFormData({ ...formData, cover_url: publicUrl });
+
+      // Update the book in the Redux store
+      dispatch(updateBookInList({
+        bookId: id!,
+        updates: { cover_url: publicUrl }
+      }));
       
       toast({
         title: "Success",
@@ -249,6 +256,12 @@ export function BookDetails() {
       if (updateError) throw updateError;
 
       setFormData({ ...formData, cover_url: '' });
+
+      // Update the book in the Redux store
+      dispatch(updateBookInList({
+        bookId: id!,
+        updates: { cover_url: null }
+      }));
       
       toast({
         title: "Success",
@@ -327,10 +340,27 @@ export function BookDetails() {
       }
 
       // Update bookStats with new updated_at time
+      const newUpdatedAt = new Date().toISOString();
       setBookStats({
         ...bookStats,
-        updatedAt: new Date().toISOString()
+        updatedAt: newUpdatedAt
       });
+
+      // Update the book in the Redux store
+      dispatch(updateBookInList({
+        bookId: id!,
+        updates: {
+          title: formData.title,
+          author_name: formData.authorName,
+          synopsis: formData.synopsis || undefined,
+          status: formData.status,
+          languages: languages.find(lang => lang.id === formData.language?.value)!,
+          categories: formData.categories.map(cat => 
+            categories.find(category => category.id === cat.value)!
+          ),
+          updated_at: newUpdatedAt
+        }
+      }));
 
       setIsEditMode(false);
       
@@ -362,6 +392,12 @@ export function BookDetails() {
       if (error) throw error;
 
       setFormData({ ...formData, status: newStatus });
+
+      // Update the book in the Redux store
+      dispatch(updateBookInList({
+        bookId: id!,
+        updates: { status: newStatus }
+      }));
       
       toast({
         title: "Success",
@@ -387,6 +423,12 @@ export function BookDetails() {
       if (error) throw error;
 
       setFormData({ ...formData, status: newStatus });
+
+      // Update the book in the Redux store
+      dispatch(updateBookInList({
+        bookId: id!,
+        updates: { status: newStatus }
+      }));
       
       toast({
         title: "Success",

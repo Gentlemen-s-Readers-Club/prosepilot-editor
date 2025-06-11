@@ -65,12 +65,39 @@ export const fetchBooks = createAsyncThunk(
   }
 );
 
+export const updateBook = createAsyncThunk(
+  'books/updateBook',
+  async ({ bookId, updates }: { bookId: string; updates: Partial<Book> }) => {
+    const { error } = await supabase
+      .from('books')
+      .update(updates)
+      .eq('id', bookId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { bookId, updates };
+  }
+);
+
 const booksSlice = createSlice({
   name: 'books',
   initialState,
   reducers: {
     setBooks: (state, action: PayloadAction<Book[]>) => {
       state.items = action.payload;
+    },
+    updateBookInList: (state, action: PayloadAction<{ bookId: string; updates: Partial<Book> }>) => {
+      const { bookId, updates } = action.payload;
+      const bookIndex = state.items.findIndex(book => book.id === bookId);
+      if (bookIndex !== -1) {
+        state.items[bookIndex] = {
+          ...state.items[bookIndex],
+          ...updates,
+          updated_at: new Date().toISOString() // Update the timestamp
+        };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -86,9 +113,20 @@ const booksSlice = createSlice({
       .addCase(fetchBooks.rejected, (state, action) => {
         state.status = 'error';
         state.error = action.error.message || 'Failed to fetch books';
+      })
+      .addCase(updateBook.fulfilled, (state, action) => {
+        const { bookId, updates } = action.payload;
+        const bookIndex = state.items.findIndex(book => book.id === bookId);
+        if (bookIndex !== -1) {
+          state.items[bookIndex] = {
+            ...state.items[bookIndex],
+            ...updates,
+            updated_at: new Date().toISOString()
+          };
+        }
       });
   },
 });
 
-export const { setBooks } = booksSlice.actions;
+export const { setBooks, updateBookInList } = booksSlice.actions;
 export default booksSlice.reducer;
