@@ -27,8 +27,7 @@ import {
   ChevronDown,
   FileText,
   BookText,
-  FileType,
-  Loader2
+  FileType
 } from 'lucide-react';
 import { CustomSelect, SelectOption, mapToSelectOptions } from '../components/ui/select';
 import {
@@ -79,7 +78,6 @@ export function BookDetails() {
   const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [publishingLoading, setPublishingLoading] = useState(false);
   const [formErrors, setFormErrors] = useState({
     title: false,
     authorName: false,
@@ -456,55 +454,10 @@ export function BookDetails() {
 
   const handlePublishBook = async () => {
     try {
-      setPublishingLoading(true);
-      
-      // First update the book status to published
       await handleStatusChange('published');
-      
-      // Then call the API to generate exports
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No active session');
-      
-      toast({
-        title: "Publishing",
-        description: "Generating export files for your book. This may take a moment.",
-      });
-      
-      // Call the API to generate exports
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-exports`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({ bookId: id })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to generate exports');
-      }
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        toast({
-          title: "Success",
-          description: "Book published and exports generated successfully",
-        });
-      } else {
-        throw new Error(result.message || 'Failed to generate exports');
-      }
-      
       setShowPublishDialog(false);
     } catch (error) {
       console.error('Error publishing book:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to publish book. The book status has been updated, but export generation failed.",
-      });
-    } finally {
-      setPublishingLoading(false);
     }
   };
 
@@ -517,61 +470,23 @@ export function BookDetails() {
     }
   };
 
-  const handleExport = async (format: 'epub' | 'pdf' | 'docx') => {
+  const handleExport = (format: 'epub' | 'pdf' | 'docx') => {
     // This would typically call an API endpoint to generate the export
     toast({
       title: "Export Started",
       description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
     });
     
-    try {
-      // Get the session for authentication
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No active session');
-      
-      // Call the API to generate the specific export format
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/export-book`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({ 
-          bookId: id,
-          format: format
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to export as ${format.toUpperCase()}`);
-      }
-      
-      // For a real implementation, this would trigger a download
-      // const blob = await response.blob();
-      // const url = window.URL.createObjectURL(blob);
-      // const a = document.createElement('a');
-      // a.href = url;
-      // a.download = `${formData.title}.${format}`;
-      // document.body.appendChild(a);
-      // a.click();
-      // window.URL.revokeObjectURL(url);
-      
-      // Simulate successful export
-      setTimeout(() => {
-        toast({
-          title: "Export Complete",
-          description: `Your book has been exported to ${format.toUpperCase()} format.`,
-        });
-      }, 2000);
-      
-    } catch (error) {
-      console.error(`Error exporting as ${format}:`, error);
+    // Simulate export process
+    setTimeout(() => {
       toast({
-        variant: "destructive",
-        title: "Export Failed",
-        description: `Failed to export your book as ${format.toUpperCase()}. Please try again.`,
+        title: "Export Complete",
+        description: `Your book has been exported to ${format.toUpperCase()} format.`,
       });
-    }
+      
+      // In a real implementation, this would trigger a download
+      // window.location.href = `/api/export/${id}?format=${format}`;
+    }, 2000);
   };
 
   const handleDeleteBook = async () => {
@@ -1154,23 +1069,14 @@ export function BookDetails() {
               variant="outline"
               onClick={() => setShowPublishDialog(false)}
               className="bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200"
-              disabled={publishingLoading}
             >
               Cancel
             </Button>
             <Button
               onClick={handlePublishBook}
               className="bg-green-600 hover:bg-green-700 text-white"
-              disabled={publishingLoading}
             >
-              {publishingLoading ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Publishing...
-                </div>
-              ) : (
-                'Publish Book'
-              )}
+              Publish Book
             </Button>
           </DialogFooter>
         </DialogContent>
