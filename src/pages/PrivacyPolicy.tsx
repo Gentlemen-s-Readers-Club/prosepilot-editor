@@ -489,7 +489,7 @@ export function PrivacyPolicy() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-green-900 mb-3">For California Residents</h3>
                 <p className="text-green-800 text-sm">
-                  If you are a California resident, you can learn more about your consumer privacy rights by reviewing the <a href="https://oag.ca.gov/privacy/ccpa" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">California Consumer Privacy Act</a> and the <a href="https://cppa.ca.gov/" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">California Privacy Rights Act</a>.
+                  If you are a California resident, you can learn more about your consumer privacy rights by reviewing the <a href="https://oag.ca.gov/privacy/ccpa" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">California Consumer Privacy Act</a> and the <a href="https://cppa.ca.gov/" target=\"_blank" rel="noopener noreferrer\" className="text-brand-primary hover:underline">California Privacy Rights Act</a>.
                 </p>
               </div>
               
