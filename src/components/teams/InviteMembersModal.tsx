@@ -135,7 +135,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-primary">Invite Team Members</h2>
+          <h2 className="text-xl font-semibold text-base-heading">Invite Team Members</h2>
           <button 
             onClick={handleClose} 
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -149,7 +149,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
           <div className="space-y-6">
             {/* Email Addresses */}
             <div>
-              <Label className="flex items-center gap-1 text-primary">
+              <Label className="flex items-center gap-1 text-base-heading">
                 Email Addresses
                 <span className="text-red-500">*</span>
               </Label>
@@ -207,7 +207,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
 
             {/* Role Selection */}
             <div>
-              <Label className="text-primary">Role</Label>
+              <Label className="text-base-heading">Role</Label>
               <div className="mt-2">
                 <CustomSelect
                   value={selectedRole}
@@ -234,7 +234,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
 
             {/* Custom Message */}
             <div>
-              <Label htmlFor="message" className="text-primary">
+              <Label htmlFor="message" className="text-base-heading">
                 Custom Message (Optional)
               </Label>
               <textarea
@@ -244,7 +244,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
                 placeholder="Add a personal message to your invitation..."
                 rows={3}
                 maxLength={500}
-                className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isSubmitting}
               />
               <p className="text-xs text-gray-500 mt-1">

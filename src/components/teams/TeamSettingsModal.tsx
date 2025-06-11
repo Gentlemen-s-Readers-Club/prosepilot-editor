@@ -237,7 +237,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg w-full max-w-md mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
           <div className="flex justify-between items-center p-6 border-b">
-            <h2 className="text-xl font-semibold text-primary">Team Settings</h2>
+            <h2 className="text-xl font-semibold text-base-heading">Team Settings</h2>
             <button 
               onClick={handleClose} 
               className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -251,7 +251,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
             <div className="space-y-6">
               {/* Team Logo */}
               <div>
-                <Label className="text-primary">Team Logo</Label>
+                <Label className="text-base-heading">Team Logo</Label>
                 <div className="mt-2">
                   {formData.logo_url ? (
                     <div className="relative inline-block">
@@ -278,7 +278,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                       />
                       {isUploadingLogo && (
                         <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
-                          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                          <Loader2 className="w-6 h-6 animate-spin text-base-heading" />
                         </div>
                       )}
                     </div>
@@ -288,7 +288,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
 
               {/* Team Name */}
               <div>
-                <Label htmlFor="teamName" className="flex items-center gap-1 text-primary">
+                <Label htmlFor="teamName" className="flex items-center gap-1 text-base-heading">
                   Team Name
                   <span className="text-red-500">*</span>
                 </Label>
@@ -317,7 +317,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
 
               {/* Team Description */}
               <div>
-                <Label htmlFor="teamDescription" className="text-primary">
+                <Label htmlFor="teamDescription" className="text-base-heading">
                   Description
                 </Label>
                 <textarea
@@ -327,7 +327,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                   placeholder="Describe your team's purpose and goals..."
                   rows={3}
                   maxLength={200}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isSubmitting}
                 />
                 <p className="text-xs text-gray-500 mt-1">

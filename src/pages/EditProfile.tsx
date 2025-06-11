@@ -76,8 +76,8 @@ export function EditProfile() {
 
   const getStrengthColor = () => {
     switch (passwordStrength) {
-      case 0: return 'bg-danger';
-      case 1: return 'bg-danger';
+      case 0: return 'bg-state-error';
+      case 1: return 'bg-state-error';
       case 2: return 'bg-orange-500';
       case 3: return 'bg-yellow-500';
       case 4: return 'bg-green-500';
@@ -308,7 +308,7 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="avatar\" className="block text-sm font-medium text-primary">
+              <Label htmlFor="avatar\" className="block text-sm font-medium text-base-heading">
                 Profile Picture
               </Label>
               <div className="mt-2 flex items-center space-x-4">
@@ -326,10 +326,10 @@ export function EditProfile() {
                   )}
                 </div>
                 <label className="cursor-pointer">
-                  <span className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isFileLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <span className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-base-heading bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isFileLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     {isFileLoading ? (
                       <div className="flex items-center">
-                        <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" />
+                        <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4 text-base-heading" />
                         Uploading...
                       </div>
                     ) : (
@@ -349,7 +349,7 @@ export function EditProfile() {
             </div>
 
             <div>
-              <Label htmlFor="email" className="block text-sm font-medium text-primary">Email Address</Label>
+              <Label htmlFor="email" className="block text-sm font-medium text-base-heading">Email Address</Label>
               <Input
                 id="email"
                 type="email"
@@ -360,7 +360,7 @@ export function EditProfile() {
             </div>
 
             <div>
-              <Label htmlFor="fullName" className="block text-sm font-medium text-primary">Full Name</Label>
+              <Label htmlFor="fullName" className="block text-sm font-medium text-base-heading">Full Name</Label>
               <Input
                 id="fullName"
                 type="text"
@@ -387,7 +387,7 @@ export function EditProfile() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
-                <span className="text-primary">Google</span>
+                <span className="text-base-heading">Google</span>
               </div>
               <Button
                 variant="outline"
@@ -400,7 +400,7 @@ export function EditProfile() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Facebook className="w-6 h-6 text-[#1877F2]" />
-                <span className="text-primary">Facebook</span>
+                <span className="text-base-heading">Facebook</span>
               </div>
               <Button
                 variant="outline"
@@ -427,7 +427,7 @@ export function EditProfile() {
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_product" className="font-medium text-primary">Product Updates</Label>
+                <Label htmlFor="newsletter_product" className="font-medium text-base-heading">Product Updates</Label>
                 <p className="text-gray-500 text-sm">Be the first to know about new AI capabilities, tools, and improvements in the platform.</p>
               </div>
             </div>
@@ -443,7 +443,7 @@ export function EditProfile() {
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_writing" className="font-medium text-primary">Writing Tips & Resources</Label>
+                <Label htmlFor="newsletter_writing" className="font-medium text-base-heading">Writing Tips & Resources</Label>
                 <p className="text-gray-500 text-sm">Get weekly inspiration, creative prompts, and storytelling advice to keep your writing flowing.</p>
               </div>
             </div>
@@ -459,7 +459,7 @@ export function EditProfile() {
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_marketing" className="font-medium text-primary">Publishing & Marketing Advice</Label>
+                <Label htmlFor="newsletter_marketing" className="font-medium text-base-heading">Publishing & Marketing Advice</Label>
                 <p className="text-gray-500 text-sm">Learn how to publish, promote, and sell your book—plus tips on reaching your audience.</p>
               </div>
             </div>
@@ -478,15 +478,15 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-primary">Change Password</h3>
-              <p className="mt-1 text-sm text-secondary">
+              <h3 className="text-sm font-medium text-base-heading">Change Password</h3>
+              <p className="mt-1 text-sm text-base-paragraph">
                 Make sure your new password is at least 8 characters long and includes a mix of letters, numbers, and symbols.
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="newPassword" className="block text-sm font-medium text-primary">New Password</Label>
+                <Label htmlFor="newPassword" className="block text-sm font-medium text-base-heading">New Password</Label>
                 <Input
                   id="newPassword"
                   type="password"
@@ -498,8 +498,8 @@ export function EditProfile() {
                 {newPassword && (
                   <div className="mt-2">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm text-secondary">Password strength:</span>
-                      <span className="text-sm font-medium text-primary">{getStrengthText()}</span>
+                      <span className="text-sm text-base-paragraph">Password strength:</span>
+                      <span className="text-sm font-medium text-base-heading">{getStrengthText()}</span>
                     </div>
                     <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                       <div
@@ -507,7 +507,7 @@ export function EditProfile() {
                         style={{ width: `${(passwordStrength / 5) * 100}%` }}
                       />
                     </div>
-                    <ul className="mt-2 text-sm text-secondary space-y-1">
+                    <ul className="mt-2 text-sm text-base-paragraph space-y-1">
                       <li className={newPassword.length >= 8 ? "text-green-600" : ""}>• At least 8 characters</li>
                       <li className={newPassword.match(/[A-Z]/) ? "text-green-600" : ""}>• At least one uppercase letter</li>
                       <li className={newPassword.match(/[a-z]/) ? "text-green-600" : ""}>• At least one lowercase letter</li>
@@ -519,7 +519,7 @@ export function EditProfile() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-primary">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-base-heading">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -571,7 +571,7 @@ export function EditProfile() {
           {/* Sidebar */}
           <div className="w-64 shrink-0">
             <div className="sticky top-8">
-              <h2 className="text-2xl font-semibold text-primary mb-4">Settings</h2>
+              <h2 className="text-2xl font-semibold text-base-heading mb-4">Settings</h2>
               <nav className="flex flex-col gap-1">
                 {sections.map(({ id, label, icon }) => (
                   <button
@@ -579,7 +579,7 @@ export function EditProfile() {
                     onClick={() => setActiveSection(id)}
                     className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
                       activeSection === id
-                        ? 'bg-primary text-white'
+                        ? 'bg-brand-primary text-white'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
@@ -593,8 +593,8 @@ export function EditProfile() {
 
           {/* Main Content */}
           <div className="flex-1">
-            <div className="bg-card rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold text-primary mb-6">
+            <div className="bg-brand-brand-accent rounded-lg shadow p-6">
+              <h2 className="text-lg font-semibold text-base-heading mb-6">
                 {sections.find(s => s.id === activeSection)?.label}
               </h2>
               {renderSection()}

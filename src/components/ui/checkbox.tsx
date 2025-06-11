@@ -26,10 +26,10 @@ export function Checkbox({ id, checked, onChange, disabled = false, className }:
         className={cn(
           "flex items-center justify-center w-4 h-4 border-2 rounded cursor-pointer transition-all duration-200",
           checked
-            ? "bg-accent border-accent"
-            : "bg-white border-gray-300 hover:border-accent",
+            ? "bg-brand-accent border-brand-accent"
+            : "bg-white border-gray-300 hover:border-brand-accent",
           disabled && "opacity-50 cursor-not-allowed",
-          "focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-1",
+          "focus-within:ring-2 focus-within:ring-brand-accent focus-within:ring-offset-1",
           className
         )}
       >

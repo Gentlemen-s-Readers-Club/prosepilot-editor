@@ -121,7 +121,7 @@ export function Teams() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-primary">My Teams</h1>
+          <h1 className="text-3xl font-bold text-base-heading">My Teams</h1>
           <p className="text-gray-600 mt-2">Collaborate with others on your writing projects</p>
         </div>
         <Button
@@ -137,11 +137,11 @@ export function Teams() {
       {teams.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
           <div className="flex flex-col items-center">
-            <div className="bg-background rounded-full p-4 mb-4">
-              <Users className="w-12 h-12 text-primary" />
+            <div className="bg-base-background rounded-full p-4 mb-4">
+              <Users className="w-12 h-12 text-base-heading" />
             </div>
-            <h3 className="text-lg font-medium text-primary mb-2">No teams yet</h3>
-            <p className="text-secondary max-w-md mb-6">
+            <h3 className="text-lg font-medium text-base-heading mb-2">No teams yet</h3>
+            <p className="text-base-paragraph max-w-md mb-6">
             Create your first team to start collaborating with others.
             </p>
             <Button onClick={() => setShowCreateModal(true)}>
@@ -167,15 +167,15 @@ export function Teams() {
                         className="w-12 h-12 rounded-lg object-cover"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-lg bg-background flex items-center justify-center">
-                        <Users className="w-6 h-6 text-primary" />
+                      <div className="w-12 h-12 rounded-lg bg-base-background flex items-center justify-center">
+                        <Users className="w-6 h-6 text-base-heading" />
                       </div>
                     )}
                     <div>
-                      <h3 className="text-lg font-semibold text-primary  transition-colors">
+                      <h3 className="text-lg font-semibold text-base-heading  transition-colors">
                         {team.name}
                       </h3>
-                      <div className="flex items-center gap-1 text-sm text-secondary">
+                      <div className="flex items-center gap-1 text-sm text-base-paragraph">
                         {roleIcons[team.user_role as TeamRole]}
                         <span>{roleLabels[team.user_role as TeamRole]}</span>
                       </div>
@@ -189,7 +189,7 @@ export function Teams() {
                         className="opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <MoreVertical className="w-4 h-4 text-accent" />
+                        <MoreVertical className="w-4 h-4 text-brand-accent" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -197,14 +197,14 @@ export function Teams() {
                         e.stopPropagation();
                         handleTeamClick(team);
                       }}>
-                        <Settings className="w-4 h-4 mr-2 text-accent" />
+                        <Settings className="w-4 h-4 mr-2 text-brand-accent" />
                         Manage Team
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={(e) => {
                         e.stopPropagation();
                         handleTeamClick(team);
                       }}>
-                        <UserPlus className="w-4 h-4 mr-2 text-accent" />
+                        <UserPlus className="w-4 h-4 mr-2 text-brand-accent" />
                         Invite
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -222,17 +222,17 @@ export function Teams() {
                 <div className="flex items-center justify-between text-sm text-gray-500">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4 text-accent" />
-                      <span className="text-secondary">{team.member_count || 0} members</span>
+                      <Users className="w-4 h-4 text-brand-accent" />
+                      <span className="text-base-paragraph">{team.member_count || 0} members</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-accent" />
-                      <span className="text-secondary">{new Date(team.created_at).toLocaleDateString()}</span>
+                      <Calendar className="w-4 h-4 text-brand-accent" />
+                      <span className="text-base-paragraph">{new Date(team.created_at).toLocaleDateString()}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Activity className="w-4 h-4 text-accent" />
-                    <span className="text-secondary">Active</span>
+                    <Activity className="w-4 h-4 text-brand-accent" />
+                    <span className="text-base-paragraph">Active</span>
                   </div>
                 </div>
               </div>

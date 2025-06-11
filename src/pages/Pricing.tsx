@@ -8,12 +8,11 @@ import {
   Users, 
   Zap,
   ArrowRight,
-  Star,
-  Clock,
-  Shield,
   CreditCard,
-  HelpCircle
+  HelpCircle,
+  CheckCircle
 } from 'lucide-react';
+import Footer from '../components/Footer';
 
 interface Plan {
   id: string;
@@ -120,10 +119,6 @@ const faqs = [
     answer: "Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at your next billing cycle."
   },
   {
-    question: "What's included in the 30-day money-back guarantee?",
-    answer: "If you're not satisfied within 30 days of your first purchase, we'll refund your money, no questions asked. This applies to your first subscription only."
-  },
-  {
     question: "Do you offer annual billing discounts?",
     answer: "Yes! Annual subscribers save 20% compared to monthly billing. You can switch to annual billing from your subscription settings."
   },
@@ -144,26 +139,22 @@ export function Pricing() {
       <div className="bg-white pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl">
               Choose Your Writing Plan
             </h1>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-4 text-xl text-base-paragraph max-w-3xl mx-auto">
               From first-time authors to publishing houses, we have a plan that fits your writing goals and budget.
             </p>
             
             {/* Trust Indicators */}
             <div className="mt-8 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
               <div className="flex items-center">
-                <Shield className="w-4 h-4 mr-2 text-green-500" />
-                30-day money-back guarantee
-              </div>
-              <div className="flex items-center">
-                <CreditCard className="w-4 h-4 mr-2 text-blue-500" />
+                <CheckCircle className="w-4 h-4 mr-2 text-blue-500" />
                 Cancel anytime
               </div>
               <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-purple-500" />
-                No setup fees
+                <CreditCard className="w-4 h-4 mr-2 text-purple-500" />
+                Start from just $9/month
               </div>
             </div>
           </div>
@@ -178,11 +169,11 @@ export function Pricing() {
               <div
                 key={plan.id}
                 className={`relative bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-105 ${
-                  plan.isPopular ? 'ring-2 ring-primary scale-105' : ''
+                  plan.isPopular ? 'ring-2 ring-brand-primary scale-105' : ''
                 } ${plan.comingSoon ? 'opacity-75' : ''}`}
               >
                 {plan.isPopular && (
-                  <div className="absolute top-0 right-0 bg-primary text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                  <div className="absolute top-0 right-0 bg-brand-primary text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
                     Most Popular
                   </div>
                 )}
@@ -198,14 +189,14 @@ export function Pricing() {
                     <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
                       {plan.icon}
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
-                    <p className="text-gray-600 mt-2">{plan.description}</p>
+                    <h3 className="text-2xl font-bold text-base-heading">{plan.name}</h3>
+                    <p className="text-base-paragraph mt-2">{plan.description}</p>
                   </div>
 
                   {/* Pricing */}
                   <div className="text-center mb-8">
                     <div className="flex items-baseline justify-center">
-                      <span className="text-5xl font-extrabold text-gray-900">${plan.price}</span>
+                      <span className="text-5xl font-extrabold text-base-heading">${plan.price}</span>
                       <span className="text-xl text-gray-500 ml-1">/month</span>
                     </div>
                     <div className="mt-2 text-sm text-gray-500">
@@ -228,8 +219,8 @@ export function Pricing() {
                     <Button
                       className={`w-full ${
                         plan.isPopular 
-                          ? 'bg-primary hover:bg-primary/90' 
-                          : 'bg-gray-900 hover:bg-gray-800'
+                          ? 'bg-brand-primary hover:bg-brand-primary/90' 
+                          : 'bg-base-heading hover:bg-gray-800'
                       }`}
                       disabled={plan.comingSoon}
                     >
@@ -244,7 +235,7 @@ export function Pricing() {
 
           {/* Additional Info */}
           <div className="mt-16 text-center">
-            <p className="text-gray-600 mb-4">
+            <p className="text-base-paragraph mb-4">
               All plans include our core AI writing features and export capabilities
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
@@ -261,8 +252,8 @@ export function Pricing() {
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900">Need More Credits?</h2>
-            <p className="mt-4 text-xl text-gray-600">
+            <h2 className="text-3xl font-extrabold text-base-heading">Need More Credits?</h2>
+            <p className="mt-4 text-xl text-base-paragraph">
               Purchase additional credits that never expire
             </p>
           </div>
@@ -276,18 +267,18 @@ export function Pricing() {
               <div
                 key={index}
                 className={`bg-gray-50 rounded-lg p-6 text-center ${
-                  pack.popular ? 'ring-2 ring-primary' : ''
+                  pack.popular ? 'ring-2 ring-brand-primary' : ''
                 }`}
               >
                 {pack.popular && (
-                  <div className="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
+                  <div className="bg-brand-primary text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
                     Best Value
                   </div>
                 )}
-                <div className="text-3xl font-bold text-gray-900 mb-2">
+                <div className="text-3xl font-bold text-base-heading mb-2">
                   {pack.credits} Credits
                 </div>
-                <div className="text-2xl font-bold text-primary mb-4">
+                <div className="text-2xl font-bold text-base-heading mb-4">
                   ${pack.price}
                 </div>
                 {pack.savings && (
@@ -313,8 +304,8 @@ export function Pricing() {
       <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900">Frequently Asked Questions</h2>
-            <p className="mt-4 text-xl text-gray-600">
+            <h2 className="text-3xl font-extrabold text-base-heading">Frequently Asked Questions</h2>
+            <p className="mt-4 text-xl text-base-paragraph">
               Everything you need to know about our pricing
             </p>
           </div>
@@ -322,8 +313,8 @@ export function Pricing() {
           <div className="space-y-8">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                  <HelpCircle className="w-5 h-5 text-primary mr-3" />
+                <h3 className="text-lg font-semibold text-base-heading mb-3 flex items-center">
+                  <HelpCircle className="w-5 h-5 text-base-heading mr-3" />
                   {faq.question}
                 </h3>
                 <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
@@ -332,9 +323,9 @@ export function Pricing() {
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-gray-600 mb-4">Still have questions?</p>
+            <p className="text-base-paragraph mb-4">Still have questions?</p>
             <Link to="/support">
-              <Button variant="outline">
+              <Button>
                 Contact Support
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -343,55 +334,8 @@ export function Pricing() {
         </div>
       </div>
 
-      {/* Final CTA */}
-      <div className="bg-primary py-16">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-white mb-4">
-            Ready to start writing your book?
-          </h2>
-          <p className="text-xl text-white/90 mb-8">
-            Join thousands of authors who've published their books with ProsePilot
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/app/signup">
-              <Button className="bg-white text-primary hover:bg-gray-100 px-8 py-3 text-lg">
-                Start Your Free Trial
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link to="/docs">
-              <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg">
-                Learn More
-              </Button>
-            </Link>
-          </div>
-          <div className="mt-6 flex items-center justify-center text-white/80">
-            <Star className="w-5 h-5 mr-2" />
-            <span className="text-sm">30-day money-back guarantee</span>
-          </div>
-        </div>
-      </div>
-
       {/* Footer */}
-      <footer className="bg-gray-900">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
-              <span className="ml-2 text-xl font-bold text-white">ProsePilot</span>
-            </div>
-            <div className="flex items-center space-x-6">
-              <Link to="/docs" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Documentation
-              </Link>
-              <Link to="/support" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Support
-              </Link>
-              <p className="text-gray-400 text-sm">© 2025 ProsePilot. All rights reserved.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

@@ -217,11 +217,11 @@ export function Dashboard() {
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-primary">My Library</h1>
-              <p className="text-gray-600 mt-1">Manage and organize your writing projects</p>
+              <h1 className="text-3xl font-bold text-base-heading">My Library</h1>
+              <p className="text-base-paragraph mt-1">Manage and organize your writing projects</p>
             </div>
             <Button
-              className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white shadow-md transition-all hover:shadow-lg"
+              className="flex items-center gap-2"
               onClick={() => {
                 setShowNewBookModal(true);
               }}
@@ -238,7 +238,7 @@ export function Dashboard() {
             <div className="space-y-6">
               {/* Workspace Selector - Only show if user has teams */}
               {hasTeams && (
-                <div className="bg-card rounded-lg shadow-md p-6 text-primary">
+                <div className="bg-white rounded-lg shadow-md p-6 text-base-heading">
                   <h2 className="text-lg font-semibold mb-4">Workspace</h2>
                   <div className="relative">
                     <CustomSelect
@@ -249,7 +249,7 @@ export function Dashboard() {
                   </div>
                   
                   {/* Workspace Info */}
-                  <div className="mt-4 pt-4 border-t border-border">
+                  <div className="mt-4 pt-4 border-t border-brand-accent">
                     <div className="flex items-center gap-2 text-sm">
                       {selectedWorkspace?.value === 'personal' ? (
                         <User className="w-4 h-4" />
@@ -270,7 +270,7 @@ export function Dashboard() {
               {/* Filters */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-primary">Filters</h2>
+                  <h2 className="text-lg font-semibold text-base-heading">Filters</h2>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -283,7 +283,7 @@ export function Dashboard() {
                 
                 <div className={`space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">Category</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading">Category</label>
                     <CustomSelect
                       value={{
                         value: selectedCategory,
@@ -301,7 +301,7 @@ export function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">Language</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading">Language</label>
                     <CustomSelect
                       value={{
                         value: selectedLanguage,
@@ -319,7 +319,7 @@ export function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">Status</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading">Status</label>
                     <CustomSelect
                       value={{
                         value: selectedStatus,
@@ -337,42 +337,42 @@ export function Dashboard() {
                   </div>
 
                   {/* Quick Links */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <h3 className="text-sm font-medium text-gray-700 mb-3">Quick Filters</h3>
+                  <div className="pt-4 border-t border-brand-accent">
+                    <h3 className="text-sm font-medium text-base-heading mb-3">Quick Filters</h3>
                     <div className="space-y-2">
                       <button 
                         onClick={() => setSelectedStatus('published')}
-                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
+                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
-                        <Rocket className="w-4 h-4 text-green-600" />
+                        <Rocket className="w-4 h-4 text-brand-accent" />
                         <span>Published Books</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('writing')}
-                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
+                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
-                        <Clock className="w-4 h-4 text-blue-600" />
+                        <Clock className="w-4 h-4 text-brand-accent" />
                         <span>In Progress</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('draft')}
-                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
+                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
-                        <Bookmark className="w-4 h-4 text-amber-600" />
+                        <Bookmark className="w-4 h-4 text-brand-accent" />
                         <span>Drafts</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('reviewing')}
-                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
+                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
-                        <Pencil className="w-4 h-4 text-yellow-600" />
+                        <Pencil className="w-4 h-4 text-brand-accent" />
                         <span>Reviewing</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('archived')}
-                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm rounded-md hover:bg-gray-100"
+                        className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
-                        <Archive className="w-4 h-4 text-gray-600" />
+                        <Archive className="w-4 h-4 text-brand-accent" />
                         <span>Archived</span>
                       </button>
                     </div>
@@ -406,7 +406,7 @@ export function Dashboard() {
                     placeholder="Search by title"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-white border-gray-200 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="pl-10 bg-white border-gray-200 text-gray-900 focus:border-base-border focus:ring-1 focus:ring-brand-primary"
                   />
                 </div>
                 
@@ -415,7 +415,7 @@ export function Dashboard() {
                     variant={viewMode === 'grid' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setViewMode('grid')}
-                    className={viewMode === 'grid' ? 'bg-primary text-white' : 'text-gray-700'}
+                    className={viewMode === 'grid' ? 'bg-brand-primary text-white' : 'text-base-heading'}
                   >
                     <LayoutGrid size={18} />
                   </Button>
@@ -423,7 +423,7 @@ export function Dashboard() {
                     variant={viewMode === 'list' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setViewMode('list')}
-                    className={viewMode === 'list' ? 'bg-primary text-white' : 'text-gray-700'}
+                    className={viewMode === 'list' ? 'bg-brand-primary text-white' : 'text-base-heading'}
                   >
                     <List size={18} />
                   </Button>
@@ -442,7 +442,7 @@ export function Dashboard() {
                       <span>{filter}</span>
                       <button 
                         onClick={() => clearFilter(filter)}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-base-heading"
                       >
                         <X size={14} />
                       </button>
@@ -450,7 +450,7 @@ export function Dashboard() {
                   ))}
                   <button 
                     onClick={clearAllFilters}
-                    className="text-xs text-primary hover:text-primary/80"
+                    className="text-xs text-base-heading hover:text-base-heading/80"
                   >
                     Clear all
                   </button>
@@ -461,15 +461,18 @@ export function Dashboard() {
             {books.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
-                  <div className="bg-background rounded-full p-4 mb-4">
-                    <BookOpen className="w-12 h-12 text-primary" />
+                  <div className="bg-base-background rounded-full p-4 mb-4">
+                    <BookOpen className="w-12 h-12 text-base-heading" />
                   </div>
-                  <h3 className="text-lg font-medium text-primary mb-2">No books yet</h3>
-                  <p className="text-secondary max-w-md mb-6">
+                  <h3 className="text-lg font-medium text-base-heading mb-2">No books yet</h3>
+                  <p className="text-base-paragraph max-w-md mb-6">
                     Start your writing journey by creating your first book. Our AI will help you transform your ideas into compelling stories.
                   </p>
                   <Button 
-                    className="bg-primary hover:bg-primary/90 text-white"
+                    className="bg-brand-primary hover:bg-brand-primary/90 text-white"
+                    onClick={() => {
+                      setShowNewBookModal(true);
+                    }}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Create Your First Book
@@ -479,13 +482,13 @@ export function Dashboard() {
             ) : hasTeams && workspaceFilteredBooks.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
-                  <div className="bg-background rounded-full p-4 mb-4">
-                    <BookOpen className="w-12 h-12 text-primary" />
+                  <div className="bg-base-background rounded-full p-4 mb-4">
+                    <BookOpen className="w-12 h-12 text-base-heading" />
                   </div>
-                  <h3 className="text-lg font-medium text-primary mb-2">
+                  <h3 className="text-lg font-medium text-base-heading mb-2">
                     No books in {selectedWorkspace?.label}
                   </h3>
-                  <p className="text-secondary max-w-md mb-6">
+                  <p className="text-base-paragraph max-w-md mb-6">
                     {selectedWorkspace?.type === 'personal' 
                       ? 'Create your first personal book to get started.'
                       : 'This team doesn\'t have any books yet. Create the first one!'
@@ -500,11 +503,11 @@ export function Dashboard() {
             ) : filteredBooks.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
-                  <div className="bg-background rounded-full p-4 mb-4">
-                    <Search className="w-12 h-12 text-primary" />
+                  <div className="bg-base-background rounded-full p-4 mb-4">
+                    <Search className="w-12 h-12 text-base-heading" />
                   </div>
-                  <h3 className="text-lg font-medium text-primary mb-2">No books found</h3>
-                  <p className="text-secondary max-w-md mb-6">
+                  <h3 className="text-lg font-medium text-base-heading mb-2">No books found</h3>
+                  <p className="text-base-paragraph max-w-md mb-6">
                     We couldn't find any books matching your current filters. Try adjusting your search criteria or clear the filters to see all books.
                   </p>
                   <Button onClick={clearAllFilters}>

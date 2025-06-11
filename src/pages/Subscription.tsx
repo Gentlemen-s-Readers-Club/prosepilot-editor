@@ -187,9 +187,9 @@ export function Subscription() {
     subscriptionLoading
   ) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-base-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-base-border mx-auto mb-4"></div>
           <p className="text-muted-foreground">
             Loading subscription system...
           </p>
@@ -201,7 +201,7 @@ export function Subscription() {
   // Show error state if there are any errors
   if (profileStatus === "error" || paddleError || pricesError) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-base-background flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-500 mb-4">
             Failed to load subscription system
@@ -355,11 +355,11 @@ export function Subscription() {
   };
 
   return (
-    <div className="bg-background pt-16">
+    <div className="bg-base-background pt-16">
       <Navigation />
       <div className="min-h-screen">
         <div className="max-w-5xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-primary mb-8">
+          <h1 className="text-3xl font-bold text-base-heading mb-8">
             Subscription Plans
           </h1>
 
@@ -370,18 +370,18 @@ export function Subscription() {
                 key={plan.id}
                 className={`relative rounded-lg p-6 ${
                   currentPlan === plan.id
-                    ? "bg-primary/10 border-2 border-primary"
-                    : "bg-card border border-border"
+                    ? "bg-brand-primary/10 border-2 border-base-border"
+                    : "bg-brand-brand-accent border border-brand-accent"
                 }`}
               >
                 {currentPlan === plan.id && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-medium">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-medium">
                     Current Plan
                   </div>
                 )}
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-primary flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-base-heading flex items-center gap-2">
                       {plan.icon} {plan.name}
                     </h3>
                     <p className="text-muted-foreground mt-1">
@@ -389,7 +389,7 @@ export function Subscription() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-primary">
+                    <div className="text-2xl font-bold text-base-heading">
                       ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
                     </div>
                     <div className="text-sm text-muted-foreground">
@@ -400,8 +400,8 @@ export function Subscription() {
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-secondary">{feature}</span>
+                      <Check className="h-5 w-5 text-base-heading flex-shrink-0" />
+                      <span className="text-base-paragraph">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -422,10 +422,10 @@ export function Subscription() {
           </div>
 
           {/* Credits Section */}
-          <div className="bg-card border border-border rounded-lg p-6 mb-8">
+          <div className="bg-brand-brand-accent border border-brand-accent rounded-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-base-heading flex items-center gap-2">
                   <Zap className="h-6 w-6" /> Credits
                 </h2>
                 <p className="text-muted-foreground mt-1">
@@ -433,7 +433,7 @@ export function Subscription() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-xl font-bold text-primary">
+                <div className="text-xl font-bold text-base-heading">
                   {creditsUsed} / {creditsLimit}
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -489,13 +489,13 @@ export function Subscription() {
                     key={pkg.id}
                     className={`p-4 rounded-lg border cursor-pointer transition-colors ${
                       selectedPackage?.id === pkg.id
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary"
+                        ? "border-base-border bg-brand-primary/10"
+                        : "border-brand-accent hover:border-base-border"
                     }`}
                     onClick={() => setSelectedPackage(pkg)}
                   >
                     <div className="font-bold text-lg">{pkg.name}</div>
-                    <div className="text-2xl font-bold text-primary mt-2">
+                    <div className="text-2xl font-bold text-base-heading mt-2">
                       ${formatPrice(pkg.price, true)}
                     </div>
                     <div className="text-muted-foreground text-sm mt-1">

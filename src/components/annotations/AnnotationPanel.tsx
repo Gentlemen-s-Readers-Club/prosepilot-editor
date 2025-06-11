@@ -78,8 +78,8 @@ export function AnnotationPanel({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-primary" />
-          <h3 className="font-semibold text-primary">Annotations</h3>
+          <MessageSquare className="w-5 h-5 text-base-heading" />
+          <h3 className="font-semibold text-base-heading">Annotations</h3>
           <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
             {stats.total}
           </span>

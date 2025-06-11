@@ -79,7 +79,7 @@ export function CustomSelect({
     <div className={className}>
       <Select
         options={options}
-        className="react-select-container text-secondary"
+        className="react-select-container text-base-paragraph"
         classNamePrefix="react-select"
         styles={customStyles}
         {...props}

@@ -23,14 +23,14 @@ import {
 
 export function TeamCollaboration() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-base-background">
       <Navigation />
       
       {/* Header */}
       <div className="bg-white pt-16 border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center mb-6">
-            <Link to="/support" className="flex items-center text-primary hover:text-primary/80 mr-4">
+            <Link to="/support" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Support
             </Link>
@@ -65,12 +65,12 @@ export function TeamCollaboration() {
               <div className="bg-gray-50 rounded-lg p-6 w-64">
                 <h3 className="font-semibold text-gray-900 mb-4">In this article</h3>
                 <nav className="space-y-2 text-sm">
-                  <a href="#creating-teams" className="block text-gray-600 hover:text-primary">Creating your first team</a>
-                  <a href="#inviting-members" className="block text-gray-600 hover:text-primary">Inviting team members</a>
-                  <a href="#roles-permissions" className="block text-gray-600 hover:text-primary">Roles and permissions</a>
-                  <a href="#collaborative-workflow" className="block text-gray-600 hover:text-primary">Collaborative workflows</a>
-                  <a href="#managing-teams" className="block text-gray-600 hover:text-primary">Managing your team</a>
-                  <a href="#best-practices" className="block text-gray-600 hover:text-primary">Best practices</a>
+                  <a href="#creating-teams" className="block text-gray-600 hover:text-base-heading">Creating your first team</a>
+                  <a href="#inviting-members" className="block text-gray-600 hover:text-base-heading">Inviting team members</a>
+                  <a href="#roles-permissions" className="block text-gray-600 hover:text-base-heading">Roles and permissions</a>
+                  <a href="#collaborative-workflow" className="block text-gray-600 hover:text-base-heading">Collaborative workflows</a>
+                  <a href="#managing-teams" className="block text-gray-600 hover:text-base-heading">Managing your team</a>
+                  <a href="#best-practices" className="block text-gray-600 hover:text-base-heading">Best practices</a>
                 </nav>
               </div>
             </div>
@@ -100,7 +100,7 @@ export function TeamCollaboration() {
           {/* Creating Teams */}
           <section id="creating-teams" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <UserPlus className="w-8 h-8 text-primary mr-4" />
+              <UserPlus className="w-8 h-8 text-base-heading mr-4" />
               Creating your first team
             </h2>
             
@@ -159,7 +159,7 @@ export function TeamCollaboration() {
           {/* Inviting Members */}
           <section id="inviting-members" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Mail className="w-8 h-8 text-primary mr-4" />
+              <Mail className="w-8 h-8 text-base-heading mr-4" />
               Inviting team members
             </h2>
 
@@ -221,7 +221,7 @@ export function TeamCollaboration() {
           {/* Roles and Permissions */}
           <section id="roles-permissions" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Shield className="w-8 h-8 text-primary mr-4" />
+              <Shield className="w-8 h-8 text-base-heading mr-4" />
               Roles and permissions
             </h2>
 
@@ -332,7 +332,7 @@ export function TeamCollaboration() {
           {/* Collaborative Workflow */}
           <section id="collaborative-workflow" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Zap className="w-8 h-8 text-primary mr-4" />
+              <Zap className="w-8 h-8 text-base-heading mr-4" />
               Collaborative workflows
             </h2>
 
@@ -419,7 +419,7 @@ export function TeamCollaboration() {
           {/* Managing Teams */}
           <section id="managing-teams" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Settings className="w-8 h-8 text-primary mr-4" />
+              <Settings className="w-8 h-8 text-base-heading mr-4" />
               Managing your team
             </h2>
 
@@ -468,7 +468,7 @@ export function TeamCollaboration() {
           {/* Best Practices */}
           <section id="best-practices" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <CheckCircle className="w-8 h-8 text-primary mr-4" />
+              <CheckCircle className="w-8 h-8 text-base-heading mr-4" />
               Best practices for team collaboration
             </h2>
 
@@ -541,7 +541,7 @@ export function TeamCollaboration() {
               <Link to="/help/create-first-book" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
                 <h4 className="font-semibold text-gray-900 mb-2">How to create your first book with AI</h4>
                 <p className="text-gray-600 text-sm mb-3">Learn the basics of book creation before collaborating with your team.</p>
-                <div className="flex items-center text-primary text-sm">
+                <div className="flex items-center text-base-heading text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -550,7 +550,7 @@ export function TeamCollaboration() {
               <Link to="/help/ai-best-practices" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
                 <h4 className="font-semibold text-gray-900 mb-2">Best practices for AI-generated content</h4>
                 <p className="text-gray-600 text-sm mb-3">Optimize your team's AI-generated content quality.</p>
-                <div className="flex items-center text-primary text-sm">
+                <div className="flex items-center text-base-heading text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -561,12 +561,12 @@ export function TeamCollaboration() {
       </div>
 
       {/* Footer CTA */}
-      <div className="bg-primary py-12">
+      <div className="bg-brand-primary py-12">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-bold text-white mb-4">Ready to start collaborating?</h3>
           <p className="text-white/90 mb-6">Create your first team and invite collaborators to start writing together.</p>
           <Link to="/app/teams">
-            <Button className="bg-white text-primary hover:bg-gray-100 px-8 py-3">
+            <Button className="bg-white text-base-heading hover:bg-gray-100 px-8 py-3">
               Create Team
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>

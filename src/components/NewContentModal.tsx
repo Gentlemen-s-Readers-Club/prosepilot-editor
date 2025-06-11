@@ -27,10 +27,10 @@ export function NewContentModal({ open, onOpenChange, onAdd }: NewContentModalPr
         <div className="grid grid-cols-2 gap-4 py-4">
           <button
             onClick={() => onAdd('chapter')}
-            className="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-primary hover:bg-gray-50 transition-colors"
+            className="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-base-border hover:bg-gray-50 transition-colors"
           >
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-base-heading" />
             </div>
             <div className="text-center">
               <h3 className="font-medium text-gray-900">New Chapter</h3>
@@ -39,10 +39,10 @@ export function NewContentModal({ open, onOpenChange, onAdd }: NewContentModalPr
           </button>
           <button
             onClick={() => onAdd('page')}
-            className="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-primary hover:bg-gray-50 transition-colors"
+            className="flex flex-col items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-base-border hover:bg-gray-50 transition-colors"
           >
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <FileText className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center">
+              <FileText className="w-6 h-6 text-base-heading" />
             </div>
             <div className="text-center">
               <h3 className="font-medium text-gray-900">Single Page</h3>

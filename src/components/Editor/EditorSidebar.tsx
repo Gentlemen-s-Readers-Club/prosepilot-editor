@@ -118,7 +118,7 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
                     onClick={() => navigate(`/app/chapter/${chapter.id}`)}
                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm ${
                       chapter.id === currentChapterId
-                        ? 'bg-primary text-white'
+                        ? 'bg-brand-primary text-white'
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >

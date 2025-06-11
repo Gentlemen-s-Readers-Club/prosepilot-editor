@@ -232,7 +232,7 @@ function ChapterEditorContent() {
             <div className="flex items-center justify-between mb-6">
               <button
                 onClick={() => navigate(`/app/book/${book?.id}`)}
-                className="flex items-center text-primary hover:text-accent"
+                className="flex items-center text-base-heading hover:text-brand-accent"
               >
                 <ArrowLeft className="mr-2" size={20} />
                 Back to Book Details
@@ -264,7 +264,7 @@ function ChapterEditorContent() {
               <div className="bg-white rounded-lg shadow-lg p-6 flex-1">
                 <div className="h-[calc(100vh-300px)] flex items-center justify-center">
                   <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                    <Loader2 className="w-8 h-8 text-base-heading animate-spin" />
                     <p className="text-gray-600">Loading chapter content...</p>
                   </div>
                 </div>

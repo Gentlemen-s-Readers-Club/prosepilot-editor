@@ -19,12 +19,12 @@ export function AnnotationToolbar({
   return (
     <div className="flex items-center gap-2 p-2 bg-gray-50 border rounded-lg">
       <div className="flex items-center gap-2">
-        <MessageSquare className="w-4 h-4 text-primary" />
+        <MessageSquare className="w-4 h-4 text-base-heading" />
         <span className="text-sm font-medium text-gray-700">Annotations</span>
-        {annotationCount && (
-        <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-xs aspect-square">
-          {annotationCount}
-        </span>
+        {annotationCount > 0 && (
+          <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-xs aspect-square">
+            {annotationCount}
+          </span>
         )}
       </div>
       

@@ -240,7 +240,7 @@ export function TeamDetails() {
       <div className="mb-8">
         <button
           onClick={() => navigate('/app/teams')}
-          className="flex items-center text-primary hover:text-accent transition-colors mr-4"
+          className="flex items-center text-base-heading hover:text-brand-accent transition-colors mr-4"
         >
           <ArrowLeft className="mr-2" size={20} />
           <span className="font-medium">Back to Teams</span>
@@ -255,12 +255,12 @@ export function TeamDetails() {
               className="w-12 h-12 rounded-lg object-cover"
             />
           ) : (
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Users className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-lg bg-brand-primary/10 flex items-center justify-center">
+              <Users className="w-6 h-6 text-base-heading" />
             </div>
           )}
           <div>
-            <h1 className="text-3xl font-bold text-primary">{currentTeam.name}</h1>
+            <h1 className="text-3xl font-bold text-base-heading">{currentTeam.name}</h1>
             {currentTeam.description && (
               <p className="text-gray-600">{currentTeam.description}</p>
             )}
@@ -303,7 +303,7 @@ export function TeamDetails() {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === id
-                    ? 'border-primary text-primary'
+                    ? 'border-base-border text-base-heading'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -448,8 +448,8 @@ export function TeamDetails() {
               <div className="space-y-4">
                 {activityLogs.map((log) => (
                   <div key={log.id} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Activity className="w-4 h-4 text-primary" />
+                    <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Activity className="w-4 h-4 text-base-heading" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-900">

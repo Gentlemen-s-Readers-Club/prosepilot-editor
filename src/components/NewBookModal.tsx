@@ -184,6 +184,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
       const result = await response.json();
 
       if (!result.is_valid) {
+        setCurrentStep(1);
         setIssues(result.issues || null);
         setIsSubmitting(false);
         return result;
@@ -275,13 +276,13 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
           {/* Header with progress indicator - Fixed */}
           <div className="flex justify-between items-center p-6 border-b bg-white sticky top-0 z-10">
             <div className="flex-1">
-              <Dialog.Title className="text-2xl font-bold text-primary">Create New Book</Dialog.Title>
+              <Dialog.Title className="text-2xl font-bold text-base-heading">Create New Book</Dialog.Title>
               <div className="flex items-center mt-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
-                <div className={`h-1 w-12 ${currentStep >= 2 ? 'bg-primary' : 'bg-gray-200'}`}></div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
-                <div className={`h-1 w-12 ${currentStep >= 3 ? 'bg-primary' : 'bg-gray-200'}`}></div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'}`}>3</div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
+                <div className={`h-1 w-12 ${currentStep >= 2 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
+                <div className={`h-1 w-12 ${currentStep >= 3 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>3</div>
               </div>
             </div>
             <Dialog.Close asChild>
@@ -299,7 +300,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
             {loading ? (
               <div className="flex items-center justify-center h-full p-6">
                 <div className="flex flex-col items-center gap-4">
-                  <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                  <Loader2 className="w-10 h-10 text-base-heading animate-spin" />
                   <p className="text-gray-600">Loading...</p>
                 </div>
               </div>
@@ -331,8 +332,8 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 {currentStep === 1 && (
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-lg">
-                        <Lightbulb className="h-6 w-6 text-primary" />
+                      <div className="bg-brand-primary/10 p-3 rounded-lg">
+                        <Lightbulb className="h-6 w-6 text-base-heading" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">Story Idea or Outline</h3>
@@ -345,7 +346,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         placeholder="Enter your story idea or outline... Be as detailed as possible for better results."
-                        className="w-full h-64 p-4 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400 border-gray-200"
+                        className="w-full h-64 p-4 border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400 border-gray-200"
                         disabled={isSubmitting}
                       />
                       <div className="flex justify-between text-xs text-gray-500">
@@ -372,8 +373,8 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 {currentStep === 2 && (
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-lg">
-                        <BookOpen className="h-6 w-6 text-primary" />
+                      <div className="bg-brand-primary/10 p-3 rounded-lg">
+                        <BookOpen className="h-6 w-6 text-base-heading" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">Book Settings</h3>
@@ -467,8 +468,8 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 {currentStep === 3 && (
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-lg">
-                        <Sparkles className="h-6 w-6 text-primary" />
+                      <div className="bg-brand-primary/10 p-3 rounded-lg">
+                        <Sparkles className="h-6 w-6 text-base-heading" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">Advanced Settings</h3>
@@ -561,7 +562,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                   <Button
                     onClick={handleSubmit}
                     disabled={isSubmitting || !canSubmit}
-                    className="bg-primary hover:bg-primary/90"
+                    className="bg-brand-primary hover:bg-brand-primary/90"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">

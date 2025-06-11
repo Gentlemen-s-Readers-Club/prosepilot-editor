@@ -7,18 +7,18 @@ import {
   Star,
   Clock,
   TrendingUp,
-  Award,
   CheckCircle,
   ArrowRight,
   Quote
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import Footer from '../components/Footer';
 
 export function Landing() {
   return (
     <>
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-background">
+      <div className="relative overflow-hidden bg-base-background">
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
@@ -26,16 +26,16 @@ export function Landing() {
                 <div className="lg:col-span-6">
                   {/* Social Proof Badge */}
                   <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
-                    <Star className="w-4 h-4 text-yellow-500 mr-2" />
-                    <span className="text-sm font-medium text-gray-900">Trusted by 50,000+ writers</span>
-                    <span className="ml-2 text-sm text-gray-500">• 4.9/5 rating</span>
+                    <Star className="w-4 h-4 text-brand-accent mr-2" />
+                    <span className="text-sm font-medium text-base-heading">Trusted by 50,000+ writers</span>
+                    <span className="ml-2 text-sm text-base-paragraph">• 4.9/5 rating</span>
                   </div>
 
-                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
+                  <h1 className="text-4xl tracking-tight font-extrabold text-base-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
                     <span className="block">Write your book in</span>
-                    <span className="block text-primary">days, not years</span>
+                    <span className="block text-brand-accent">days, not years</span>
                   </h1>
-                  <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl sm:max-w-xl sm:mx-auto md:mt-5 lg:mx-0">
+                  <p className="mt-3 text-base-paragraph sm:mt-5 sm:text-xl sm:max-w-xl sm:mx-auto md:mt-5 lg:mx-0">
                     Stop staring at blank pages. ProsePilot's AI transforms your ideas into compelling, 
                     publication-ready books faster than you ever thought possible.
                   </p>
@@ -48,8 +48,8 @@ export function Landing() {
                       "Export to all major publishing formats"
                     ].map((benefit, index) => (
                       <div key={index} className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                        <span className="text-gray-700">{benefit}</span>
+                        <CheckCircle className="w-5 h-5 text-state-success mr-3" />
+                        <span className="text-base-paragraph">{benefit}</span>
                       </div>
                     ))}
                   </div>
@@ -57,7 +57,7 @@ export function Landing() {
                   <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
                       <Link to="/app/signup">
-                        <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium bg-primary hover:bg-primary/90">
+                        <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium">
                           Start Writing Your Book
                           <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
@@ -66,7 +66,7 @@ export function Landing() {
                   </div>
 
                   {/* Trust Indicators */}
-                  <div className="mt-6 text-sm text-gray-500">
+                  <div className="mt-6 text-sm text-base-paragraph">
                     {/* <span>✓ 30-day money-back guarantee</span>
                     <span className="mx-3">•</span> */}
                     <span>✓ Cancel anytime</span>
@@ -85,19 +85,19 @@ export function Landing() {
                     {/* Floating Stats */}
                     <div className="absolute -bottom-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
-                        <TrendingUp className="w-8 h-8 text-green-500 mr-3" />
+                        <TrendingUp className="w-8 h-8 text-brand-accent mr-3" />
                         <div>
-                          <div className="text-2xl font-bold text-gray-900">1M+</div>
-                          <div className="text-sm text-gray-500">Books Created</div>
+                          <div className="text-2xl font-bold text-base-heading">1M+</div>
+                          <div className="text-sm text-base-paragraph">Books Created</div>
                         </div>
                       </div>
                     </div>
                     <div className="absolute -top-6 -right-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
-                        <Clock className="w-8 h-8 text-blue-500 mr-3" />
+                        <Clock className="w-8 h-8 text-state-success mr-3" />
                         <div>
-                          <div className="text-2xl font-bold text-gray-900">72hrs</div>
-                          <div className="text-sm text-gray-500">Avg. Completion</div>
+                          <div className="text-2xl font-bold text-base-heading">72hrs</div>
+                          <div className="text-sm text-base-paragraph">Avg. Completion</div>
                         </div>
                       </div>
                     </div>
@@ -114,7 +114,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
             <div>
-              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl">
                 Stop letting your book ideas die in drafts
               </h2>
               <div className="mt-6 space-y-6">
@@ -134,17 +134,17 @@ export function Landing() {
                 ].map((item, index) => (
                   <div key={index} className="flex">
                     <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-12 w-12 rounded-md bg-red-100">
-                        <span className="text-red-600 font-bold">✗</span>
+                      <div className="flex items-center justify-center h-12 w-12 rounded-md bg-state-error/20">
+                        <span className="text-state-error font-bold">✗</span>
                       </div>
                     </div>
                     <div className="ml-4">
-                      <h3 className="text-lg font-medium text-gray-900 line-through opacity-60">
+                      <h3 className="text-lg font-medium text-base-paragraph line-through opacity-70">
                         {item.problem}
                       </h3>
                       <div className="flex items-center mt-2">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                        <p className="text-base text-green-700 font-medium">{item.solution}</p>
+                        <CheckCircle className="w-5 h-5 text-state-success mr-2" />
+                        <p className="text-base text-state-success font-medium">{item.solution}</p>
                       </div>
                     </div>
                   </div>
@@ -163,14 +163,14 @@ export function Landing() {
       </div>
 
       {/* Features Section */}
-      <div className="py-24 bg-gray-50">
+      <div className="py-24 bg-base-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Everything You Need</h2>
-            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-base text-brand-accent font-semibold tracking-wide uppercase">Everything You Need</h2>
+            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-base-heading sm:text-4xl">
               From idea to published book in record time
             </p>
-            <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+            <p className="mt-4 max-w-2xl text-xl text-base-paragraph lg:mx-auto">
               Our AI-powered platform handles the heavy lifting so you can focus on your creativity.
             </p>
           </div>
@@ -198,15 +198,15 @@ export function Landing() {
                 }
               ].map((feature, index) => (
                 <div key={index} className="relative bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#EBFAFD] text-primary mb-6">
+                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-accent text-white mb-6">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 mb-6">{feature.description}</p>
+                  <h3 className="text-xl font-bold text-base-heading mb-4">{feature.title}</h3>
+                  <p className="text-base-paragraph mb-6">{feature.description}</p>
                   <ul className="space-y-2">
                     {feature.benefits.map((benefit, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-gray-700">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                      <li key={idx} className="flex items-center text-sm text-base-paragraph">
+                        <CheckCircle className="w-4 h-4 text-state-success mr-2" />
                         {benefit}
                       </li>
                     ))}
@@ -222,10 +222,10 @@ export function Landing() {
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl">
               Join thousands of successful authors
             </h2>
-            <p className="mt-4 text-xl text-gray-600">
+            <p className="mt-4 text-xl text-base-paragraph">
               See what writers are saying about their ProsePilot experience
             </p>
           </div>
@@ -236,38 +236,34 @@ export function Landing() {
                 quote: "I went from idea to published novel in just 3 weeks. ProsePilot didn't just help me write—it helped me become a real author.",
                 author: "Sarah Chen",
                 role: "Romance Novelist",
-                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
-                achievement: "Published 3 bestsellers"
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
               },
               {
                 quote: "The AI understood my vision better than I did. It helped me develop plot threads I never would have thought of on my own.",
                 author: "Marcus Rodriguez",
                 role: "Sci-Fi Author",
-                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
-                achievement: "Amazon #1 New Release"
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
               },
               {
                 quote: "Finally, a tool that gets writers. The collaborative features helped my writing group finish our anthology in record time.",
                 author: "Emily Watson",
                 role: "Writing Group Leader",
-                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80",
-                achievement: "Led 50+ writers to publication"
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-8 relative">
-                <Quote className="absolute top-4 left-4 w-8 h-8 text-primary/20" />
+              <div key={index} className="bg-base-background rounded-lg p-8 relative">
+                <Quote className="absolute top-4 left-4 w-8 h-8 text-brand-accent/50" />
                 <div className="relative">
-                  <p className="text-gray-700 text-lg italic mb-6">"{testimonial.quote}"</p>
+                  <p className="text-base-paragraph text-lg italic mb-6">"{testimonial.quote}"</p>
                   <div className="flex items-center">
                     <img
                       src={testimonial.avatar}
                       alt={testimonial.author}
-                      className="w-12 h-12 rounded-full mr-4"
+                      className="w-12 h-12 rounded-full mr-4 object-cover"
                     />
                     <div>
-                      <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                      <div className="text-sm text-gray-600">{testimonial.role}</div>
-                      <div className="text-sm text-primary font-medium">{testimonial.achievement}</div>
+                      <div className="font-semibold text-base-heading">{testimonial.author}</div>
+                      <div className="text-sm text-base-paragraph">{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
@@ -284,8 +280,8 @@ export function Landing() {
               { number: "72hrs", label: "Avg. Completion" }
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl font-bold text-primary">{stat.number}</div>
-                <div className="text-gray-600 mt-2">{stat.label}</div>
+                <div className="text-4xl font-bold text-brand-accent">{stat.number}</div>
+                <div className="text-brand-primary mt-2">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -293,7 +289,7 @@ export function Landing() {
       </div>
 
       {/* Pricing Preview */}
-      <div className="bg-primary py-16">
+      <div className="bg-brand-primary py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
             Start writing today, publish tomorrow
@@ -304,7 +300,7 @@ export function Landing() {
           
           <div className="mt-8">
             <Link to="/pricing">
-              <Button variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button variant="secondaryOutline">
                 View All Plans
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -316,7 +312,7 @@ export function Landing() {
       {/* Final CTA Section */}
       <div className="bg-white">
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-primary to-accent rounded-lg shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-br from-brand-primary via-brand-primary to-brand-accent rounded-lg shadow-xl overflow-hidden">
             <div className="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
               <div className="lg:self-center">
                 <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
@@ -330,21 +326,17 @@ export function Landing() {
                 <div className="mt-8 flex flex-col sm:flex-row gap-4">
                   <Link
                     to="/app/signup"
-                    className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-primary bg-white hover:bg-gray-50 transition-colors"
+                    className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-base-heading bg-white hover:bg-base-background transition-colors"
                   >
                     Start Your Writing Journey
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/docs"
                     className="inline-flex items-center px-8 py-4 border-2 border-white text-lg font-medium rounded-md text-white hover:bg-white/10 transition-colors"
                   >
                     See How It Works
-                  </Link>
-                </div>
-                <div className="mt-6 flex items-center text-white/80">
-                  <Award className="w-5 h-5 mr-2" />
-                  <span className="text-sm">30-day money-back guarantee</span>
+                  </Link> */}
                 </div>
               </div>
             </div>
@@ -353,31 +345,7 @@ export function Landing() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 border-t">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="ProsePilot Logo" className="h-8 w-8" />
-              <span className="ml-2 text-xl font-bold text-white">ProsePilot</span>
-            </div>
-            <div className="flex items-center space-x-6">
-              <Link to="/pricing" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Pricing
-              </Link>
-              <Link to="/support" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Support
-              </Link>
-              <Link to="/docs" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Documentation
-              </Link>
-              <Link to="/app/login" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Login
-              </Link>
-              <p className="text-gray-400 text-sm">© 2025 ProsePilot. All rights reserved.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

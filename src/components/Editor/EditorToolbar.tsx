@@ -38,8 +38,8 @@ function ToolbarButton({ onClick, isActive, disabled, children, title }: Toolbar
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`p-2 rounded hover:bg-background text-primary ${
-        isActive ? 'bg-background' : ''
+      className={`p-2 rounded hover:bg-base-background text-base-heading ${
+        isActive ? 'bg-base-background' : ''
       } ${
         disabled ? 'opacity-50 cursor-not-allowed hover:bg-transparent' : ''
       }`}

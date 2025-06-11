@@ -21,14 +21,14 @@ import {
 
 export function CreateFirstBook() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-base-background">
       <Navigation />
       
       {/* Header */}
       <div className="bg-white pt-16 border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center mb-6">
-            <Link to="/support" className="flex items-center text-primary hover:text-primary/80 mr-4">
+            <Link to="/support" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Support
             </Link>
@@ -63,12 +63,12 @@ export function CreateFirstBook() {
               <div className="bg-gray-50 rounded-lg p-6 w-64">
                 <h3 className="font-semibold text-gray-900 mb-4">In this article</h3>
                 <nav className="space-y-2 text-sm">
-                  <a href="#step-1" className="block text-gray-600 hover:text-primary">1. Preparing your story idea</a>
-                  <a href="#step-2" className="block text-gray-600 hover:text-primary">2. Creating your book project</a>
-                  <a href="#step-3" className="block text-gray-600 hover:text-primary">3. Configuring AI settings</a>
-                  <a href="#step-4" className="block text-gray-600 hover:text-primary">4. Generating your content</a>
-                  <a href="#step-5" className="block text-gray-600 hover:text-primary">5. Reviewing and editing</a>
-                  <a href="#step-6" className="block text-gray-600 hover:text-primary">6. Exporting your book</a>
+                  <a href="#step-1" className="block text-gray-600 hover:text-base-heading">1. Preparing your story idea</a>
+                  <a href="#step-2" className="block text-gray-600 hover:text-base-heading">2. Creating your book project</a>
+                  <a href="#step-3" className="block text-gray-600 hover:text-base-heading">3. Configuring AI settings</a>
+                  <a href="#step-4" className="block text-gray-600 hover:text-base-heading">4. Generating your content</a>
+                  <a href="#step-5" className="block text-gray-600 hover:text-base-heading">5. Reviewing and editing</a>
+                  <a href="#step-6" className="block text-gray-600 hover:text-base-heading">6. Exporting your book</a>
                 </nav>
               </div>
             </div>
@@ -99,7 +99,7 @@ export function CreateFirstBook() {
           {/* Step 1 */}
           <section id="step-1" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">1</span>
+              <span className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">1</span>
               Preparing your story idea
             </h2>
             
@@ -144,7 +144,7 @@ export function CreateFirstBook() {
           {/* Step 2 */}
           <section id="step-2" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">2</span>
+              <span className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">2</span>
               Creating your book project
             </h2>
 
@@ -208,7 +208,7 @@ export function CreateFirstBook() {
           {/* Step 3 */}
           <section id="step-3" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">3</span>
+              <span className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">3</span>
               Configuring AI settings
             </h2>
 
@@ -247,7 +247,7 @@ export function CreateFirstBook() {
           {/* Step 4 */}
           <section id="step-4" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">4</span>
+              <span className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">4</span>
               Generating your content
             </h2>
 
@@ -283,15 +283,15 @@ export function CreateFirstBook() {
                 <h4 className="font-semibold text-gray-900 mb-3">Generation time estimates:</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary mb-1">2-3 min</div>
+                    <div className="text-2xl font-bold text-base-heading mb-1">2-3 min</div>
                     <div className="text-gray-600">Short stories<br/>(5,000-15,000 words)</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary mb-1">3-5 min</div>
+                    <div className="text-2xl font-bold text-base-heading mb-1">3-5 min</div>
                     <div className="text-gray-600">Novellas<br/>(20,000-40,000 words)</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary mb-1">5-8 min</div>
+                    <div className="text-2xl font-bold text-base-heading mb-1">5-8 min</div>
                     <div className="text-gray-600">Full novels<br/>(50,000+ words)</div>
                   </div>
                 </div>
@@ -302,7 +302,7 @@ export function CreateFirstBook() {
           {/* Step 5 */}
           <section id="step-5" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">5</span>
+              <span className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">5</span>
               Reviewing and editing
             </h2>
 
@@ -363,7 +363,7 @@ export function CreateFirstBook() {
           {/* Step 6 */}
           <section id="step-6" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">6</span>
+              <span className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold mr-4">6</span>
               Exporting your book
             </h2>
 
@@ -421,7 +421,7 @@ export function CreateFirstBook() {
               <Link to="/help/credit-system" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
                 <h4 className="font-semibold text-gray-900 mb-2">Understanding the credit system</h4>
                 <p className="text-gray-600 text-sm mb-3">Learn how credits work and how to manage your usage effectively.</p>
-                <div className="flex items-center text-primary text-sm">
+                <div className="flex items-center text-base-heading text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -430,7 +430,7 @@ export function CreateFirstBook() {
               <Link to="/help/ai-best-practices" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
                 <h4 className="font-semibold text-gray-900 mb-2">Best practices for AI-generated content</h4>
                 <p className="text-gray-600 text-sm mb-3">Tips and techniques for getting the best results from our AI.</p>
-                <div className="flex items-center text-primary text-sm">
+                <div className="flex items-center text-base-heading text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -441,12 +441,12 @@ export function CreateFirstBook() {
       </div>
 
       {/* Footer CTA */}
-      <div className="bg-primary py-12">
+      <div className="bg-brand-primary py-12">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-bold text-white mb-4">Ready to create your first book?</h3>
           <p className="text-white/90 mb-6">Start your writing journey today with ProsePilot's AI-powered tools.</p>
           <Link to="/app/signup">
-            <Button className="bg-white text-primary hover:bg-gray-100 px-8 py-3">
+            <Button className="bg-white text-base-heading hover:bg-gray-100 px-8 py-3">
               Get Started Now
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>

@@ -23,14 +23,14 @@ import {
 
 export function AIBestPractices() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-base-background">
       <Navigation />
       
       {/* Header */}
       <div className="bg-white pt-16 border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center mb-6">
-            <Link to="/support" className="flex items-center text-primary hover:text-primary/80 mr-4">
+            <Link to="/support" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Support
             </Link>
@@ -65,12 +65,12 @@ export function AIBestPractices() {
               <div className="bg-gray-50 rounded-lg p-6 w-64">
                 <h3 className="font-semibold text-gray-900 mb-4">In this article</h3>
                 <nav className="space-y-2 text-sm">
-                  <a href="#crafting-prompts" className="block text-gray-600 hover:text-primary">Crafting effective prompts</a>
-                  <a href="#ai-settings" className="block text-gray-600 hover:text-primary">Optimizing AI settings</a>
-                  <a href="#content-quality" className="block text-gray-600 hover:text-primary">Ensuring content quality</a>
-                  <a href="#editing-tips" className="block text-gray-600 hover:text-primary">Post-generation editing</a>
-                  <a href="#common-mistakes" className="block text-gray-600 hover:text-primary">Common mistakes to avoid</a>
-                  <a href="#advanced-techniques" className="block text-gray-600 hover:text-primary">Advanced techniques</a>
+                  <a href="#crafting-prompts" className="block text-gray-600 hover:text-base-heading">Crafting effective prompts</a>
+                  <a href="#ai-settings" className="block text-gray-600 hover:text-base-heading">Optimizing AI settings</a>
+                  <a href="#content-quality" className="block text-gray-600 hover:text-base-heading">Ensuring content quality</a>
+                  <a href="#editing-tips" className="block text-gray-600 hover:text-base-heading">Post-generation editing</a>
+                  <a href="#common-mistakes" className="block text-gray-600 hover:text-base-heading">Common mistakes to avoid</a>
+                  <a href="#advanced-techniques" className="block text-gray-600 hover:text-base-heading">Advanced techniques</a>
                 </nav>
               </div>
             </div>
@@ -100,7 +100,7 @@ export function AIBestPractices() {
           {/* Crafting effective prompts */}
           <section id="crafting-prompts" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Target className="w-8 h-8 text-primary mr-4" />
+              <Target className="w-8 h-8 text-base-heading mr-4" />
               Crafting effective prompts
             </h2>
             
@@ -171,7 +171,7 @@ export function AIBestPractices() {
           {/* AI Settings */}
           <section id="ai-settings" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Settings className="w-8 h-8 text-primary mr-4" />
+              <Settings className="w-8 h-8 text-base-heading mr-4" />
               Optimizing AI settings
             </h2>
 
@@ -261,7 +261,7 @@ export function AIBestPractices() {
           {/* Content Quality */}
           <section id="content-quality" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <TrendingUp className="w-8 h-8 text-primary mr-4" />
+              <TrendingUp className="w-8 h-8 text-base-heading mr-4" />
               Ensuring content quality
             </h2>
 
@@ -342,7 +342,7 @@ export function AIBestPractices() {
           {/* Editing Tips */}
           <section id="editing-tips" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <FileText className="w-8 h-8 text-primary mr-4" />
+              <FileText className="w-8 h-8 text-base-heading mr-4" />
               Post-generation editing
             </h2>
 
@@ -402,7 +402,7 @@ export function AIBestPractices() {
           {/* Common Mistakes */}
           <section id="common-mistakes" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <AlertTriangle className="w-8 h-8 text-primary mr-4" />
+              <AlertTriangle className="w-8 h-8 text-base-heading mr-4" />
               Common mistakes to avoid
             </h2>
 
@@ -461,7 +461,7 @@ export function AIBestPractices() {
           {/* Advanced Techniques */}
           <section id="advanced-techniques" className="mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Lightbulb className="w-8 h-8 text-primary mr-4" />
+              <Lightbulb className="w-8 h-8 text-base-heading mr-4" />
               Advanced techniques
             </h2>
 
@@ -537,7 +537,7 @@ export function AIBestPractices() {
               <Link to="/help/create-first-book" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
                 <h4 className="font-semibold text-gray-900 mb-2">How to create your first book with AI</h4>
                 <p className="text-gray-600 text-sm mb-3">Step-by-step guide to generating your first book using ProsePilot.</p>
-                <div className="flex items-center text-primary text-sm">
+                <div className="flex items-center text-base-heading text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -546,7 +546,7 @@ export function AIBestPractices() {
               <Link to="/help/team-collaboration" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
                 <h4 className="font-semibold text-gray-900 mb-2">Setting up team collaboration</h4>
                 <p className="text-gray-600 text-sm mb-3">Learn how to work with others on your writing projects.</p>
-                <div className="flex items-center text-primary text-sm">
+                <div className="flex items-center text-base-heading text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -557,12 +557,12 @@ export function AIBestPractices() {
       </div>
 
       {/* Footer CTA */}
-      <div className="bg-primary py-12">
+      <div className="bg-brand-primary py-12">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-bold text-white mb-4">Ready to put these techniques to work?</h3>
           <p className="text-white/90 mb-6">Start creating better AI-generated content with these proven strategies.</p>
           <Link to="/app/signup">
-            <Button className="bg-white text-primary hover:bg-gray-100 px-8 py-3">
+            <Button className="bg-white text-base-heading hover:bg-gray-100 px-8 py-3">
               Start Writing
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>

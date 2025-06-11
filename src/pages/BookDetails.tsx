@@ -482,7 +482,7 @@ export function BookDetails() {
         <div className="flex items-center">
           <button
             onClick={() => navigate('/app')}
-            className="flex items-center text-primary hover:text-accent transition-colors mr-4"
+            className="flex items-center text-base-heading hover:text-brand-accent transition-colors mr-4"
           >
             <ArrowLeft className="mr-2" size={20} />
             <span className="font-medium">Back to Books</span>
@@ -559,7 +559,7 @@ export function BookDetails() {
                       className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors shadow-md"
                       title="Delete cover image"
                     >
-                      <Trash2 className="w-5 h-5 text-danger" />
+                      <Trash2 className="w-5 h-5 text-state-error" />
                     </button>
                   )}
                 </div>
@@ -669,7 +669,7 @@ export function BookDetails() {
                     <div>
                       <Label htmlFor="title" className="flex items-center gap-1 mb-1 text-gray-700">
                         Book Title
-                        <span className="text-danger">*</span>
+                        <span className="text-state-error">*</span>
                       </Label>
                       <Input
                         id="title"
@@ -678,17 +678,17 @@ export function BookDetails() {
                           setFormData({ ...formData, title: e.target.value });
                           setFormErrors({ ...formErrors, title: false });
                         }}
-                        className={`bg-white ${formErrors.title ? 'border-danger focus:ring-danger' : ''}`}
+                        className={`bg-white ${formErrors.title ? 'border-state-error focus:ring-state-error' : ''}`}
                       />
                       {formErrors.title && (
-                        <p className="mt-1 text-sm text-danger">Title is required</p>
+                        <p className="mt-1 text-sm text-state-error">Title is required</p>
                       )}
                     </div>
 
                     <div>
                       <Label htmlFor="authorName" className="flex items-center gap-1 mb-1 text-gray-700">
                         Author Name
-                        <span className="text-danger">*</span>
+                        <span className="text-state-error">*</span>
                       </Label>
                       <Input
                         id="authorName"
@@ -697,10 +697,10 @@ export function BookDetails() {
                           setFormData({ ...formData, authorName: e.target.value });
                           setFormErrors({ ...formErrors, authorName: false });
                         }}
-                        className={`bg-white ${formErrors.authorName ? 'border-danger focus:ring-danger' : ''}`}
+                        className={`bg-white ${formErrors.authorName ? 'border-state-error focus:ring-state-error' : ''}`}
                       />
                       {formErrors.authorName && (
-                        <p className="mt-1 text-sm text-danger">Author name is required</p>
+                        <p className="mt-1 text-sm text-state-error">Author name is required</p>
                       )}
                     </div>
 
@@ -718,7 +718,7 @@ export function BookDetails() {
                     <div>
                       <Label htmlFor="categories" className="flex items-center gap-1 mb-1 text-gray-700">
                         Categories
-                        <span className="text-danger">*</span>
+                        <span className="text-state-error">*</span>
                       </Label>
                       <CustomSelect
                         id="categories"
@@ -737,7 +737,7 @@ export function BookDetails() {
                     <div>
                       <Label htmlFor="language" className="flex items-center gap-1 mb-1 text-gray-700">
                         Language
-                        <span className="text-danger">*</span>
+                        <span className="text-state-error">*</span>
                       </Label>
                       <CustomSelect
                         id="language"
@@ -759,7 +759,7 @@ export function BookDetails() {
                         value={formData.synopsis}
                         onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
                         rows={6}
-                        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
                         placeholder="Enter a brief summary of your book..."
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -806,7 +806,7 @@ export function BookDetails() {
                     {/* Book Title and Author */}
                     <div>
                       <div className="flex items-start justify-between">
-                        <h1 className="text-3xl font-bold text-primary mb-2">{formData.title}</h1>
+                        <h1 className="text-3xl font-bold text-base-heading mb-2">{formData.title}</h1>
                         <StatusBadge status={formData.status} />
                       </div>
                       <div className="flex items-center text-gray-600">
@@ -825,7 +825,7 @@ export function BookDetails() {
                               formData.categories.map((category) => (
                                 <span 
                                   key={category.value} 
-                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
+                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-base-heading"
                                 >
                                   <Tag className="w-3 h-3 mr-1" />
                                   {category.label}
@@ -912,7 +912,7 @@ export function BookDetails() {
             <Button
               variant="destructive"
               onClick={handleDeleteBook}
-              className="bg-danger hover:bg-red-600 text-white"
+              className="bg-state-error hover:bg-red-600 text-white"
             >
               Delete Book
             </Button>

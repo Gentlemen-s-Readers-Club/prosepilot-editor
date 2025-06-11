@@ -56,8 +56,8 @@ export function CreateAnnotationModal({
       <div className="bg-white rounded-lg w-full max-w-md mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
         <div className="flex justify-between items-center p-4 border-b">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold text-primary">Add Annotation</h2>
+            <MessageSquare className="w-5 h-5 text-base-heading" />
+            <h2 className="text-lg font-semibold text-base-heading">Add Annotation</h2>
           </div>
           <button 
             onClick={handleClose} 
@@ -72,7 +72,7 @@ export function CreateAnnotationModal({
           <div className="space-y-4">
             {/* Selected Text */}
             <div>
-              <Label className="text-primary">Selected Text</Label>
+              <Label className="text-base-heading">Selected Text</Label>
               <div className="mt-1 p-3 bg-gray-100 rounded-md text-sm italic text-gray-700 border">
                 "{selectedText}"
               </div>
@@ -80,7 +80,7 @@ export function CreateAnnotationModal({
 
             {/* Comment */}
             <div>
-              <Label htmlFor="content" className="flex items-center gap-1 text-primary">
+              <Label htmlFor="content" className="flex items-center gap-1 text-base-heading">
                 Your Comment
                 <span className="text-red-500">*</span>
               </Label>
@@ -90,7 +90,7 @@ export function CreateAnnotationModal({
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Add your comment or question about this text..."
                 rows={4}
-                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isSubmitting}
                 autoFocus
               />

@@ -213,7 +213,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-primary">Book Content</h2>
+        <h2 className="text-xl font-bold text-base-heading">Book Content</h2>
         {!isPublished && (
           <Button onClick={() => setShowAddDialog(true)} className="flex items-center gap-2">
             <Plus size={16} />
@@ -225,7 +225,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center gap-4">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            <Loader2 className="w-8 h-8 text-base-heading animate-spin" />
             <p className="text-gray-600">Loading chapters...</p>
           </div>
         </div>
@@ -264,10 +264,10 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
       {chapters.length === 0 && !isPublished && (
         <div className="text-center py-12">
           <div className="bg-gray-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-            <FileText className="w-8 h-8 text-accent" />
+            <FileText className="w-8 h-8 text-brand-accent" />
           </div>
-          <h3 className="text-lg font-medium text-primary mb-2">No chapters yet</h3>
-          <p className="text-secondary mb-6">Start organizing your book by adding chapters or pages.</p>
+          <h3 className="text-lg font-medium text-base-heading mb-2">No chapters yet</h3>
+          <p className="text-base-paragraph mb-6">Start organizing your book by adding chapters or pages.</p>
           <Button onClick={() => setShowAddDialog(true)}>
             Add Your First Chapter
           </Button>
@@ -299,7 +299,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
             <Button
               variant="destructive"
               onClick={handleDeleteConfirm}
-              className="bg-danger hover:bg-red-600 text-white"
+              className="bg-state-error hover:bg-red-600 text-white"
             >
               Delete
             </Button>

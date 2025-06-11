@@ -34,7 +34,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
           onClick={() => onPageChange(i)}
           className={`px-3 py-1 rounded-md text-sm font-medium ${
             currentPage === i
-              ? 'bg-primary text-white'
+              ? 'bg-brand-primary text-white'
               : 'text-gray-700 hover:bg-gray-100'
           }`}
         >
@@ -118,7 +118,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">{book.title}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-base-heading transition-colors">{book.title}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <StatusBadge status={book.status} />
                       <span className="text-sm text-gray-500">{book.languages.name}</span>

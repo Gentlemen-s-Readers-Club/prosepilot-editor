@@ -14,6 +14,7 @@ import {
   Target,
   CheckCircle
 } from 'lucide-react';
+import Footer from '../components/Footer';
 
 interface Section {
   id: string;
@@ -69,7 +70,7 @@ export function Documentation() {
         return (
           <div id="what-is-prosepilot\" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">What is ProsePilot?</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">What is ProsePilot?</h2>
               <p className="text-lg text-gray-600 mb-6">
                 ProsePilot is an AI-powered writing platform designed to help authors, writers, and storytellers create compelling narratives with ease. Whether you're a first-time novelist or an experienced author, ProsePilot provides the tools and guidance you need to bring your stories to life.
               </p>
@@ -102,26 +103,26 @@ export function Documentation() {
             </div>
 
             <div>
-              <h3 className="text-2xl font-semibold text-primary mb-4">Core Features</h3>
+              <h3 className="text-2xl font-semibold text-base-heading mb-4">Core Features</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="bg-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                    <Brain className="w-8 h-8 text-primary" />
+                  <div className="bg-brand-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                    <Brain className="w-8 h-8 text-base-heading" />
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">AI Story Generation</h4>
                   <p className="text-gray-600 text-sm">Transform your ideas into full-length books with intelligent AI assistance that understands narrative structure.</p>
                 </div>
 
                 <div className="text-center">
-                  <div className="bg-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                    <Edit3 className="w-8 h-8 text-primary" />
+                  <div className="bg-brand-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                    <Edit3 className="w-8 h-8 text-base-heading" />
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">Rich Text Editor</h4>
                   <p className="text-gray-600 text-sm">Write and format your content with our intuitive editor, complete with version control and collaboration features.</p>
                 </div>
 
-                <div className="bg-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Settings className="w-8 h-8 text-primary" />
+                <div className="bg-brand-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Settings className="w-8 h-8 text-base-heading" />
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Book Management</h4>
                 <p className="text-gray-600 text-sm">Organize your projects with powerful tools for chapter management, status tracking, and manuscript organization.</p>
@@ -134,7 +135,7 @@ export function Documentation() {
         return (
           <div id="quick-start" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Quick Start Guide</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Quick Start Guide</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Get up and running with ProsePilot in just a few minutes. Follow these simple steps to create your first book.
               </p>
@@ -142,7 +143,7 @@ export function Documentation() {
 
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">1</div>
+                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">1</div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Create Your Account</h3>
                   <p className="text-gray-600 mb-4">Sign up for ProsePilot using your email address or social media accounts. Choose a plan that fits your writing goals.</p>
@@ -153,7 +154,7 @@ export function Documentation() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">2</div>
+                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">2</div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Start Your First Book</h3>
                   <p className="text-gray-600 mb-4">Click "Create New Book" from your dashboard and provide a story idea or outline. The more detail you provide, the better the AI can assist you.</p>
@@ -164,7 +165,7 @@ export function Documentation() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">3</div>
+                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">3</div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Customize Your Book</h3>
                   <p className="text-gray-600 mb-4">Select your book's genre, language, narrator perspective, tone, and literature style. These settings help the AI generate content that matches your vision.</p>
@@ -189,7 +190,7 @@ export function Documentation() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">4</div>
+                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">4</div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Generate and Edit</h3>
                   <p className="text-gray-600 mb-4">Once your book is generated, you can edit chapters, add new content, and refine the story using our rich text editor. The AI provides a solid foundation that you can build upon.</p>
@@ -200,7 +201,7 @@ export function Documentation() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">5</div>
+                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">5</div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Export and Publish</h3>
                   <p className="text-gray-600 mb-4">When you're satisfied with your book, export it to various formats (PDF, ePub, Kindle) and share it with the world or continue refining it.</p>
@@ -219,7 +220,7 @@ export function Documentation() {
         return (
           <div id="prompt-examples" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Prompt Examples & Tips</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Prompt Examples & Tips</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Learn how to write effective prompts that help the AI generate exactly the kind of story you want. From simple concepts to detailed outlines, here's how to get the best results.
               </p>
@@ -227,7 +228,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🌱 Simple Prompts (Beginner)</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌱 Simple Prompts (Beginner)</h3>
                 <p className="text-gray-600 mb-4">Start with basic concepts and let the AI expand on them:</p>
                 
                 <div className="space-y-4">
@@ -244,7 +245,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🌿 Intermediate Prompts</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌿 Intermediate Prompts</h3>
                 <p className="text-gray-600 mb-4">Add more detail about characters, themes, and plot structure:</p>
                 
                 <div className="space-y-4">
@@ -261,7 +262,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🌳 Advanced Prompts (Detailed)</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌳 Advanced Prompts (Detailed)</h3>
                 <p className="text-gray-600 mb-4">Provide comprehensive outlines with character arcs, themes, and structure:</p>
                 
                 <div className="bg-purple-50 border-l-4 border-purple-400 p-6">
@@ -279,7 +280,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">💡 Pro Tips for Better Prompts</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">💡 Pro Tips for Better Prompts</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 rounded-lg p-6">
@@ -328,7 +329,7 @@ export function Documentation() {
         return (
           <div id="managing-books" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Managing Your Books</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Managing Your Books</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Learn how to organize, track, and manage your writing projects effectively within ProsePilot.
               </p>
@@ -336,7 +337,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">📚 Book Dashboard</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">📚 Book Dashboard</h3>
                 <p className="text-gray-600 mb-4">Your dashboard is the central hub for all your writing projects:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -363,7 +364,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">📊 Book Status Workflow</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">📊 Book Status Workflow</h3>
                 <p className="text-gray-600 mb-4">Understanding the different stages of your book's lifecycle:</p>
                 
                 <div className="space-y-4">
@@ -410,7 +411,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">📖 Chapter Organization</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">📖 Chapter Organization</h3>
                 <p className="text-gray-600 mb-4">Organize your book's structure with chapters and pages:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -448,7 +449,7 @@ export function Documentation() {
         return (
           <div id="editor-features" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Editor Features</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Editor Features</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Master the rich text editor and discover all the tools available for crafting your story.
               </p>
@@ -456,7 +457,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">✏️ Text Formatting</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">✏️ Text Formatting</h3>
                 <p className="text-gray-600 mb-4">Format your text with professional typography options:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -493,7 +494,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">⌨️ Keyboard Shortcuts</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">⌨️ Keyboard Shortcuts</h3>
                 <p className="text-gray-600 mb-4">Speed up your writing with these helpful shortcuts:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -536,7 +537,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🔄 Version Control</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🔄 Version Control</h3>
                 <p className="text-gray-600 mb-4">Track changes and manage different versions of your chapters:</p>
                 
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
@@ -552,7 +553,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🧭 Navigation</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🧭 Navigation</h3>
                 <p className="text-gray-600 mb-4">Move efficiently between chapters and sections:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -585,7 +586,7 @@ export function Documentation() {
         return (
           <div id="ai-features" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">AI-Powered Features</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">AI-Powered Features</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Discover how ProsePilot's AI assists you in creating compelling, well-structured narratives.
               </p>
@@ -593,7 +594,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🤖 Story Generation Process</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🤖 Story Generation Process</h3>
                 <p className="text-gray-600 mb-4">Understanding how the AI transforms your ideas into complete stories:</p>
                 
                 <div className="space-y-4">
@@ -632,7 +633,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">⚙️ Customization Options</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">⚙️ Customization Options</h3>
                 <p className="text-gray-600 mb-4">Fine-tune the AI's output to match your vision:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -657,7 +658,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🛡️ Content Safety & Guidelines</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🛡️ Content Safety & Guidelines</h3>
                 <p className="text-gray-600 mb-4">Our AI follows strict guidelines to ensure appropriate content:</p>
                 
                 <div className="bg-red-50 border border-red-200 rounded-lg p-6">
@@ -675,7 +676,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🎯 Getting the Best Results</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🎯 Getting the Best Results</h3>
                 <p className="text-gray-600 mb-4">Tips for maximizing the AI's effectiveness:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -710,7 +711,7 @@ export function Documentation() {
         return (
           <div id="collaboration" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Collaboration & Sharing</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Collaboration & Sharing</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Learn about team features, sharing options, and publishing integrations available in ProsePilot.
               </p>
@@ -718,7 +719,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">👥 Team Collaboration (Studio Plan)</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">👥 Team Collaboration (Studio Plan)</h3>
                 <p className="text-gray-600 mb-4">Work together with your writing team or editors:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -753,7 +754,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">📤 Export & Sharing Options</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">📤 Export & Sharing Options</h3>
                 <p className="text-gray-600 mb-4">Multiple ways to share and distribute your completed works:</p>
                 
                 <div className="space-y-4">
@@ -786,7 +787,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🚀 Publishing Integration</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🚀 Publishing Integration</h3>
                 <p className="text-gray-600 mb-4">Seamless integration with popular publishing platforms:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -821,7 +822,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🔗 Sharing & Feedback</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🔗 Sharing & Feedback</h3>
                 <p className="text-gray-600 mb-4">Get feedback and share your work with others:</p>
                 
                 <div className="space-y-4">
@@ -859,7 +860,7 @@ export function Documentation() {
         return (
           <div id="subscription" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Subscription & Credits</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Subscription & Credits</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Understand ProsePilot's pricing model, credit system, and how to manage your subscription.
               </p>
@@ -867,7 +868,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">💳 Subscription Plans</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">💳 Subscription Plans</h3>
                 <p className="text-gray-600 mb-4">Choose the plan that best fits your writing needs:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -931,7 +932,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🪙 Credit System</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🪙 Credit System</h3>
                 <p className="text-gray-600 mb-4">Understanding how credits work and how to manage them:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -967,7 +968,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">⚙️ Managing Your Subscription</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">⚙️ Managing Your Subscription</h3>
                 <p className="text-gray-600 mb-4">How to update, pause, or cancel your subscription:</p>
                 
                 <div className="space-y-4">
@@ -999,7 +1000,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">💰 Billing & Payments</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">💰 Billing & Payments</h3>
                 <p className="text-gray-600 mb-4">Payment methods, billing cycles, and invoice management:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1034,7 +1035,7 @@ export function Documentation() {
         return (
           <div id="privacy" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Privacy & Security</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Privacy & Security</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Learn how ProsePilot protects your data, ensures privacy, and maintains security standards.
               </p>
@@ -1042,7 +1043,7 @@ export function Documentation() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🔒 Data Protection</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🔒 Data Protection</h3>
                 <p className="text-gray-600 mb-4">Your creative work and personal information are protected with industry-standard security:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1071,7 +1072,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">📋 Privacy Policy</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">📋 Privacy Policy</h3>
                 <p className="text-gray-600 mb-4">Understanding how we collect, use, and protect your information:</p>
                 
                 <div className="space-y-4">
@@ -1103,7 +1104,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🌍 Compliance</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌍 Compliance</h3>
                 <p className="text-gray-600 mb-4">ProsePilot complies with international privacy and data protection regulations:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1125,7 +1126,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">👤 Your Rights</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">👤 Your Rights</h3>
                 <p className="text-gray-600 mb-4">You have full control over your data and privacy settings:</p>
                 
                 <div className="space-y-4">
@@ -1153,7 +1154,7 @@ export function Documentation() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-primary mb-4">🛡️ Account Security</h3>
+                <h3 className="text-2xl font-semibold text-base-heading mb-4">🛡️ Account Security</h3>
                 <p className="text-gray-600 mb-4">Best practices for keeping your account secure:</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1188,7 +1189,7 @@ export function Documentation() {
         return (
           <div id="faq" className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-primary mb-4">Frequently Asked Questions</h2>
+              <h2 className="text-3xl font-bold text-base-heading mb-4">Frequently Asked Questions</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Find answers to common questions about ProsePilot's features, pricing, and functionality.
               </p>
@@ -1289,38 +1290,42 @@ export function Documentation() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex gap-8">
-        {/* Sidebar */}
-        <div className="w-64 shrink-0">
-          <div className="sticky top-8">
-            <h2 className="text-2xl font-semibold text-primary mb-4">Documentation</h2>
-            <nav className="flex flex-col gap-1">
-              {sections.map(({ id, label, icon }) => (
-                <button
-                  key={id}
-                  onClick={() => handleSectionClick(id)}
-                  className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
-                    activeSection === id
-                      ? 'bg-primary text-white'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  {icon}
-                  <span>{label}</span>
-                </button>
-              ))}
-            </nav>
+    <>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          {/* Sidebar */}
+          <div className="w-64 shrink-0">
+            <div className="sticky top-8">
+              <h2 className="text-2xl font-semibold text-base-heading mb-4">Documentation</h2>
+              <nav className="flex flex-col gap-1">
+                {sections.map(({ id, label, icon }) => (
+                  <button
+                    key={id}
+                    onClick={() => handleSectionClick(id)}
+                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
+                      activeSection === id
+                        ? 'bg-brand-primary text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {icon}
+                    <span>{label}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="flex-1">
-          <div className="bg-card rounded-lg shadow p-6">
-            {renderSection()}
+          {/* Main Content */}
+          <div className="flex-1">
+            <div className="bg-brand-brand-accent rounded-lg shadow p-6">
+              {renderSection()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {/* Footer */}
+      <Footer />
+    </>
   );
 }
