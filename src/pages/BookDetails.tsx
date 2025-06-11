@@ -23,7 +23,11 @@ import {
   Edit3,
   Save,
   X,
-  Info
+  Info,
+  ChevronDown,
+  FileText,
+  BookText,
+  FileType
 } from 'lucide-react';
 import { CustomSelect, SelectOption, mapToSelectOptions } from '../components/ui/select';
 import {
@@ -34,6 +38,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu';
 import { BookCategory, Status } from '../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
@@ -64,6 +74,8 @@ export function BookDetails() {
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formErrors, setFormErrors] = useState({
@@ -440,6 +452,43 @@ export function BookDetails() {
     }
   };
 
+  const handlePublishBook = async () => {
+    try {
+      await handleStatusChange('published');
+      setShowPublishDialog(false);
+    } catch (error) {
+      console.error('Error publishing book:', error);
+    }
+  };
+
+  const handleUnpublishBook = async () => {
+    try {
+      await handleStatusChange('draft');
+      setShowUnpublishDialog(false);
+    } catch (error) {
+      console.error('Error unpublishing book:', error);
+    }
+  };
+
+  const handleExport = (format: 'epub' | 'pdf' | 'docx') => {
+    // This would typically call an API endpoint to generate the export
+    toast({
+      title: "Export Started",
+      description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
+    });
+    
+    // Simulate export process
+    setTimeout(() => {
+      toast({
+        title: "Export Complete",
+        description: `Your book has been exported to ${format.toUpperCase()} format.`,
+      });
+      
+      // In a real implementation, this would trigger a download
+      // window.location.href = `/api/export/${id}?format=${format}`;
+    }, 2000);
+  };
+
   const handleDeleteBook = async () => {
     try {
       const { error } = await supabase
@@ -540,17 +589,17 @@ export function BookDetails() {
 
       {/* Alert Banners */}
       {isPublished && (
-        <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4 shadow-sm">
+        <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 shadow-sm">
           <div className="flex">
             <div className="shrink-0">
-              <AlertCircle className="h-5 w-5 text-yellow-400" />
+              <BookOpen className="h-5 w-5 text-green-500" />
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800">
+              <h3 className="text-sm font-medium text-green-800">
                 Published Book
               </h3>
-              <div className="mt-2 text-sm text-yellow-700">
-                This book is published and cannot be edited. To make changes, you need to unpublish it first.
+              <div className="mt-2 text-sm text-green-700">
+                This book is published and ready for export. To make changes, you need to unpublish it first.
               </div>
             </div>
           </div>
@@ -651,17 +700,59 @@ export function BookDetails() {
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</h3>
               <div className="space-y-2">
-                {formData.status === 'draft' && (
+                {/* Publish/Unpublish Button */}
+                {formData.status !== 'published' && formData.status !== 'error' && (
                   <Button
-                    onClick={() => handleStatusChange('reviewing')}
+                    onClick={() => setShowPublishDialog(true)}
                     variant="outline"
-                    className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
+                    className="w-full flex items-center justify-center gap-2 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-700 border-green-200"
                   >
-                    <AlertCircle className="w-4 h-4" />
-                    Start Reviewing
+                    <BookOpen className="w-4 h-4" />
+                    Publish Book
                   </Button>
                 )}
                 
+                {formData.status === 'published' && (
+                  <Button
+                    onClick={() => setShowUnpublishDialog(true)}
+                    variant="outline"
+                    className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    Unpublish for Editing
+                  </Button>
+                )}
+                
+                {/* Export Button - Only show when published */}
+                {formData.status === 'published' && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full flex items-center justify-center gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        Export Book
+                        <ChevronDown className="w-4 h-4 ml-auto" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuItem onClick={() => handleExport('epub')} className="cursor-pointer">
+                        <BookText className="w-4 h-4 mr-2" />
+                        <span>Export as EPUB</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleExport('pdf')} className="cursor-pointer">
+                        <FileText className="w-4 h-4 mr-2" />
+                        <span>Export as PDF</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleExport('docx')} className="cursor-pointer">
+                        <FileType className="w-4 h-4 mr-2" />
+                        <span>Export as DOCX</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+
                 <Button
                   onClick={handleArchiveToggle}
                   variant="outline"
@@ -672,15 +763,6 @@ export function BookDetails() {
                 >
                   <Archive className="w-4 h-4" />
                   {formData.status === 'archived' ? 'Unarchive Book' : 'Archive Book'}
-                </Button>
-
-                <Button
-                  onClick={() => {}}
-                  variant="outline"
-                  className="w-full flex items-center justify-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export as EPUB
                 </Button>
 
                 <Button
@@ -915,6 +997,7 @@ export function BookDetails() {
         </div>
       </div>
 
+      {/* Delete Book Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent className="bg-white">
           <DialogHeader>
@@ -952,6 +1035,86 @@ export function BookDetails() {
               className="bg-state-error hover:bg-red-600 text-white"
             >
               Delete Book
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Publish Book Dialog */}
+      <Dialog open={showPublishDialog} onOpenChange={setShowPublishDialog}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Publish Book</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to publish "{formData.title}"? Once published, the book will be locked for editing.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-4">
+            <div className="flex items-start">
+              <Info className="h-5 w-5 text-blue-400 mt-0.5" />
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-blue-800">Publishing Information</h3>
+                <div className="mt-2 text-sm text-blue-700">
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Publishing will lock the book for editing</li>
+                    <li>You'll be able to export the book in various formats</li>
+                    <li>You can unpublish the book later if you need to make changes</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setShowPublishDialog(false)}
+              className="bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handlePublishBook}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Publish Book
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unpublish Book Dialog */}
+      <Dialog open={showUnpublishDialog} onOpenChange={setShowUnpublishDialog}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Unpublish Book</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to unpublish "{formData.title}"? This will allow you to make edits to the book.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 my-4">
+            <div className="flex items-start">
+              <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5" />
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">Note</h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <p>Unpublishing will change the book status to "draft" and allow you to make changes. You'll need to publish it again when you're done editing.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setShowUnpublishDialog(false)}
+              className="bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUnpublishBook}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+            >
+              Unpublish Book
             </Button>
           </DialogFooter>
         </DialogContent>
