@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X, Pencil, Archive, Rocket } from 'lucide-react';
+import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X, Pencil, Archive, Rocket, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BookList } from '../components/BookList';
 import { Input } from '../components/ui/input';
@@ -18,6 +18,25 @@ import { NewBookModal } from '../components/NewBookModal';
 
 const BOOKS_PER_PAGE = 30;
 
+type SortField = 'title' | 'created_at' | 'updated_at' | 'status' | 'author_name';
+type SortDirection = 'asc' | 'desc';
+
+interface SortOption {
+  field: SortField;
+  direction: SortDirection;
+  label: string;
+}
+
+const sortOptions: SortOption[] = [
+  { field: 'updated_at', direction: 'desc', label: 'Recently Updated' },
+  { field: 'created_at', direction: 'desc', label: 'Recently Created' },
+  { field: 'title', direction: 'asc', label: 'Title A-Z' },
+  { field: 'title', direction: 'desc', label: 'Title Z-A' },
+  { field: 'author_name', direction: 'asc', label: 'Author A-Z' },
+  { field: 'author_name', direction: 'desc', label: 'Author Z-A' },
+  { field: 'status', direction: 'asc', label: 'Status' },
+];
+
 export function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,6 +51,7 @@ export function Dashboard() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<SortOption>(sortOptions[0]);
 
   const { items: books, status: booksStatus } = useSelector((state: RootState) => state.books);
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
@@ -152,17 +172,45 @@ export function Dashboard() {
     });
   }, [workspaceFilteredBooks, searchQuery, selectedCategory, selectedLanguage, selectedStatus]);
 
+  // Sort books
+  const sortedBooks = useMemo(() => {
+    const sorted = [...filteredBooks].sort((a: Book, b: Book) => {
+      let aValue: any = a[sortBy.field];
+      let bValue: any = b[sortBy.field];
+
+      // Handle date fields
+      if (sortBy.field === 'created_at' || sortBy.field === 'updated_at') {
+        aValue = new Date(aValue).getTime();
+        bValue = new Date(bValue).getTime();
+      }
+
+      // Handle string fields
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+
+      if (sortBy.direction === 'asc') {
+        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+      } else {
+        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+      }
+    });
+
+    return sorted;
+  }, [filteredBooks, sortBy]);
+
   const paginatedBooks = useMemo(() => {
     const startIndex = (currentPage - 1) * BOOKS_PER_PAGE;
-    return filteredBooks.slice(startIndex, startIndex + BOOKS_PER_PAGE);
-  }, [filteredBooks, currentPage]);
+    return sortedBooks.slice(startIndex, startIndex + BOOKS_PER_PAGE);
+  }, [sortedBooks, currentPage]);
 
-  const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
+  const totalPages = Math.ceil(sortedBooks.length / BOOKS_PER_PAGE);
 
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus, selectedWorkspace]);
+  }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus, selectedWorkspace, sortBy]);
 
   // Update active filters
   useEffect(() => {
@@ -188,6 +236,14 @@ export function Dashboard() {
     setSelectedLanguage('');
     setSelectedStatus('');
     setSearchQuery('');
+  };
+
+  const getSortIcon = () => {
+    if (sortBy.direction === 'asc') {
+      return <ArrowUp className="w-4 h-4" />;
+    } else {
+      return <ArrowDown className="w-4 h-4" />;
+    }
   };
 
   if (loading || booksStatus === 'loading') {
@@ -411,6 +467,28 @@ export function Dashboard() {
                 </div>
                 
                 <div className="flex items-center gap-2">
+                  {/* Sort Dropdown */}
+                  <div className="relative">
+                    <CustomSelect
+                      value={{
+                        value: `${sortBy.field}-${sortBy.direction}`,
+                        label: sortBy.label
+                      }}
+                      onChange={(newValue) => {
+                        const option = sortOptions.find(opt => 
+                          `${opt.field}-${opt.direction}` === (newValue as SelectOption).value
+                        );
+                        if (option) {
+                          setSortBy(option);
+                        }
+                      }}
+                      options={sortOptions.map(option => ({
+                        value: `${option.field}-${option.direction}`,
+                        label: option.label
+                      }))}
+                    />
+                  </div>
+
                   <Button
                     variant={viewMode === 'grid' ? 'default' : 'outline'}
                     size="sm"
@@ -456,6 +534,18 @@ export function Dashboard() {
                   </button>
                 </div>
               )}
+
+              {/* Sort Info */}
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <ArrowUpDown className="w-4 h-4" />
+                  <span>Sorted by {sortBy.label}</span>
+                  {getSortIcon()}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {sortedBooks.length} book{sortedBooks.length !== 1 ? 's' : ''} found
+                </div>
+              </div>
             </div>
             
             {books.length === 0 ? (
@@ -500,7 +590,7 @@ export function Dashboard() {
                   </Button>
                 </div>
               </div>
-            ) : filteredBooks.length === 0 ? (
+            ) : sortedBooks.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex flex-col items-center">
                   <div className="bg-base-background rounded-full p-4 mb-4">
