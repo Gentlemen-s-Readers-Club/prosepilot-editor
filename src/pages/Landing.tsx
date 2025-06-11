@@ -9,9 +9,16 @@ import {
   TrendingUp,
   CheckCircle,
   ArrowRight,
-  Quote
+  Quote,
+  Zap,
+  Users,
+  BookOpen,
+  Award,
+  Target,
+  Rocket
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { SubscribeForm } from '../components/SubscribeForm';
 import Footer from '../components/Footer';
 
 export function Landing() {
@@ -67,8 +74,6 @@ export function Landing() {
 
                   {/* Trust Indicators */}
                   <div className="mt-6 text-sm text-base-paragraph">
-                    {/* <span>✓ 30-day money-back guarantee</span>
-                    <span className="mx-3">•</span> */}
                     <span>✓ Cancel anytime</span>
                     <span className="mx-3">•</span>
                     <span>✓ Start from just $9/month</span>
@@ -218,6 +223,45 @@ export function Landing() {
         </div>
       </div>
 
+      {/* Newsletter Subscription Section */}
+      <div className="bg-gradient-to-r from-brand-primary to-brand-accent py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+            <div className="text-center lg:text-left">
+              <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+                Get writing tips delivered to your inbox
+              </h2>
+              <p className="mt-4 text-xl text-white/90">
+                Join 25,000+ writers who receive our weekly newsletter with exclusive writing tips, 
+                AI prompts, and early access to new features.
+              </p>
+              <div className="mt-6 flex items-center gap-6 text-white/80">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  <span>Weekly writing tips</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  <span>AI prompt library</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  <span>Early access</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-10 lg:mt-0">
+              <SubscribeForm 
+                variant="minimal"
+                placeholder="Enter your email for writing tips"
+                buttonText="Get Writing Tips"
+                className="max-w-md mx-auto lg:mx-0"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Social Proof Section */}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -309,37 +353,111 @@ export function Landing() {
         </div>
       </div>
 
-      {/* Final CTA Section */}
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-brand-primary via-brand-primary to-brand-accent rounded-lg shadow-xl overflow-hidden">
-            <div className="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
-              <div className="lg:self-center">
-                <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                  <span className="block">Your book is waiting.</span>
-                  <span className="block">Start writing it today.</span>
-                </h2>
-                <p className="mt-4 text-lg leading-6 text-white/90">
-                  Don't let another year pass with your story untold. Join 50,000+ writers who've 
-                  transformed their ideas into published books with ProsePilot.
-                </p>
-                <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                  <Link
-                    to="/app/signup"
-                    className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-base-heading bg-white hover:bg-base-background transition-colors"
-                  >
-                    Start Your Writing Journey
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                  {/* <Link
-                    to="/docs"
-                    className="inline-flex items-center px-8 py-4 border-2 border-white text-lg font-medium rounded-md text-white hover:bg-white/10 transition-colors"
-                  >
-                    See How It Works
-                  </Link> */}
-                </div>
-              </div>
+      {/* Enhanced Final CTA Section */}
+      <div className="bg-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-accent/5"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23B08F6A" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
+        
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center bg-brand-primary/10 rounded-full px-6 py-2 mb-6">
+              <Rocket className="w-5 h-5 text-brand-primary mr-2" />
+              <span className="text-brand-primary font-medium">Ready to Transform Your Writing?</span>
             </div>
+            
+            <h2 className="text-4xl md:text-5xl font-extrabold text-base-heading mb-6">
+              Your book is waiting.
+              <span className="block text-brand-accent">Start writing it today.</span>
+            </h2>
+            
+            <p className="text-xl text-base-paragraph max-w-3xl mx-auto mb-8">
+              Don't let another year pass with your story untold. Join 50,000+ writers who've 
+              transformed their ideas into published books with ProsePilot.
+            </p>
+          </div>
+
+          {/* Feature Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {[
+              {
+                icon: <Zap className="w-8 h-8" />,
+                title: "Lightning Fast",
+                description: "Generate complete books in hours, not months"
+              },
+              {
+                icon: <Award className="w-8 h-8" />,
+                title: "Professional Quality",
+                description: "AI-powered editing ensures publication-ready content"
+              },
+              {
+                icon: <Target className="w-8 h-8" />,
+                title: "Your Vision",
+                description: "Maintain creative control while AI handles the heavy lifting"
+              }
+            ].map((feature, index) => (
+              <div key={index} className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary/10 rounded-full mb-4">
+                  <div className="text-brand-primary">
+                    {feature.icon}
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold text-base-heading mb-2">{feature.title}</h3>
+                <p className="text-base-paragraph">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Link to="/app/signup">
+              <Button className="px-8 py-4 text-lg font-semibold bg-brand-primary hover:bg-brand-primary/90 text-white shadow-lg hover:shadow-xl transition-all">
+                Start Your Writing Journey
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/pricing">
+              <Button variant="outline" className="px-8 py-4 text-lg font-semibold border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition-all">
+                View Pricing Plans
+              </Button>
+            </Link>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-base-paragraph">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-state-success" />
+              <span>No credit card required</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-state-success" />
+              <span>Cancel anytime</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-state-success" />
+              <span>Start from $9/month</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-state-success" />
+              <span>50,000+ happy writers</span>
+            </div>
+          </div>
+
+          {/* Newsletter Signup */}
+          <div className="mt-16 max-w-md mx-auto">
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-semibold text-base-heading mb-2">
+                Not ready to start? Get writing tips first.
+              </h3>
+              <p className="text-base-paragraph">
+                Join our newsletter for weekly writing advice and AI tips.
+              </p>
+            </div>
+            <SubscribeForm 
+              variant="inline"
+              placeholder="Enter your email"
+              buttonText="Get Tips"
+            />
           </div>
         </div>
       </div>
