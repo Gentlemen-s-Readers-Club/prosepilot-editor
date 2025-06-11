@@ -19,6 +19,7 @@ import { TeamDetails } from "./pages/TeamDetails";
 import { Landing } from "./pages/Landing";
 import { Pricing } from "./pages/Pricing";
 import { Support } from "./pages/Support";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { Toaster } from "./components/Toaster";
 import { useAuth } from "./hooks/useAuth";
 import { AppDispatch, RootState } from "./store";
@@ -62,6 +63,7 @@ function App() {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/support" element={<Support />} />
             <Route path="/docs" element={<Documentation />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
             {/* Help Articles */}
             <Route
