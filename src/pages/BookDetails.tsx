@@ -78,6 +78,7 @@ export function BookDetails() {
   const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [exporting, setExporting] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState({
     title: false,
     authorName: false,
@@ -470,23 +471,74 @@ export function BookDetails() {
     }
   };
 
-  const handleExport = (format: 'epub' | 'pdf' | 'docx') => {
-    // This would typically call an API endpoint to generate the export
-    toast({
-      title: "Export Started",
-      description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
-    });
+  const handleExport = async (format: 'epub' | 'pdf' | 'docx') => {
+    if (!id) return;
     
-    // Simulate export process
-    setTimeout(() => {
+    try {
+      setExporting(format);
+      
+      toast({
+        title: "Export Started",
+        description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
+      });
+      
+      // Call the appropriate API endpoint based on the format
+      const endpoint = `${import.meta.env.VITE_API_URL}/generate-${format}`;
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('No active session');
+      
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ bookId: id })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to generate ${format.toUpperCase()}: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      
+      if (!result.fileUrl) {
+        throw new Error('No file URL returned from the server');
+      }
+      
+      // Get the file from Supabase storage
+      const { data, error } = await supabase.storage
+        .from('book-files')
+        .download(result.fileUrl);
+        
+      if (error) throw error;
+      
+      // Create a download link for the file
+      const blob = new Blob([data], { type: `application/${format}` });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${formData.title}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
       toast({
         title: "Export Complete",
         description: `Your book has been exported to ${format.toUpperCase()} format.`,
       });
-      
-      // In a real implementation, this would trigger a download
-      // window.location.href = `/api/export/${id}?format=${format}`;
-    }, 2000);
+    } catch (error) {
+      console.error(`Error exporting to ${format}:`, error);
+      toast({
+        variant: "destructive",
+        title: "Export Failed",
+        description: error instanceof Error ? error.message : `Failed to export to ${format.toUpperCase()}`,
+      });
+    } finally {
+      setExporting(null);
+    }
   };
 
   const handleDeleteBook = async () => {
@@ -730,10 +782,25 @@ export function BookDetails() {
                       <Button
                         variant="outline"
                         className="w-full flex items-center justify-center gap-2"
+                        disabled={!!exporting}
                       >
-                        <Download className="w-4 h-4" />
-                        Export Book
-                        <ChevronDown className="w-4 h-4 ml-auto" />
+                        {exporting ? (
+                          <>
+                            <span className="animate-spin mr-2">
+                              <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                            </span>
+                            Exporting {exporting.toUpperCase()}...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4" />
+                            Export Book
+                            <ChevronDown className="w-4 h-4 ml-auto" />
+                          </>
+                        )}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
