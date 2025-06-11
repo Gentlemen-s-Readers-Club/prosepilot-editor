@@ -1,4 +1,4 @@
-import { Annotation, AnnotationExportData } from '../types/annotations';
+import { Annotation, AnnotationExportData } from '../../types/annotations';
 
 export function getTextSelection(): { 
   text: string; 

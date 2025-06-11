@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Calendar, Clock, User, MoreVertical, Globe } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Calendar, Clock, User, Globe } from 'lucide-react';
 import { StatusBadge } from './ui/status-badge';
 import { Book } from '../store/types';
 import { Button } from './ui/button';
 import { formatDistanceToNow } from 'date-fns';
+import { getCoverUrl } from '../lib/utils/covers';
 
 interface BookListProps {
   books: Book[];
@@ -62,7 +63,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
                 </div>
                 {book.cover_url ? (
                   <img
-                    src={book.cover_url}
+                    src={getCoverUrl({ src: book.cover_url, width: 275 })}
                     alt={book.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -100,7 +101,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
               <div className="relative h-32 w-20 rounded overflow-hidden bg-gray-100 flex-shrink-0">
                 {book.cover_url ? (
                   <img
-                    src={book.cover_url}
+                    src={getCoverUrl({ src: book.cover_url, width: 80 })}
                     alt={book.title}
                     className="w-full h-full object-cover"
                   />

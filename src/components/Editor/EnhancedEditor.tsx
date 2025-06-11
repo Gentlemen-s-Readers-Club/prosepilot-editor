@@ -11,7 +11,7 @@ import { useAnnotations } from '../../hooks/useAnnotations';
 import { 
   getTextSelection,
   setupAnnotationKeyboardShortcuts
-} from '../../utils/annotationUtils';
+} from '../../lib/utils/annotation';
 import { Annotation } from '../../types/annotations';
 
 interface EnhancedEditorProps {

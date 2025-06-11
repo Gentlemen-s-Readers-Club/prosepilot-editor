@@ -41,6 +41,7 @@ import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
 import { updateBookInList } from '../store/slices/booksSlice';
 import { formatDistanceToNow } from 'date-fns';
+import { getCoverUrl } from '../lib/utils/covers';
 
 interface BookFormData {
   title: string;
@@ -198,25 +199,20 @@ export function BookDetails() {
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('covers')
-        .getPublicUrl(fileName);
-
       // Update book cover URL in database
       const { error: updateError } = await supabase
         .from('books')
-        .update({ cover_url: publicUrl })
+        .update({ cover_url: fileName })
         .eq('id', id);
 
       if (updateError) throw updateError;
 
-      setFormData({ ...formData, cover_url: publicUrl });
+      setFormData({ ...formData, cover_url: fileName });
 
       // Update the book in the Redux store
       dispatch(updateBookInList({
         bookId: id!,
-        updates: { cover_url: publicUrl }
+        updates: { cover_url: fileName }
       }));
       
       toast({
@@ -589,12 +585,12 @@ export function BookDetails() {
                 <div className="relative">
                   <div className="aspect-[10/16] rounded-lg overflow-hidden shadow-lg">
                     <img
-                      src={formData.cover_url}
+                      src={getCoverUrl({ src: formData.cover_url })}
                       alt={formData.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  {!isPublished && !isEditMode && (
+                  {!isPublished && isEditMode && (
                     <button
                       onClick={handleDeleteCover}
                       className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors shadow-md"
