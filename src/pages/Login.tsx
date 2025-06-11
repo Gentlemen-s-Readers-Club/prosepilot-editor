@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { useToast } from '../hooks/use-toast';
-import { Eye, EyeOff, Facebook } from 'lucide-react';
-import Footer from '../components/Footer';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { useToast } from "../hooks/use-toast";
+import { Eye, EyeOff, Facebook } from "lucide-react";
+import Footer from "../components/Footer";
 
 export function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export function Login() {
 
       if (error) throw error;
 
-      navigate('/app');
+      navigate("/app");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -40,7 +40,7 @@ export function Login() {
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'facebook') => {
+  const handleSocialLogin = async (provider: "google" | "facebook") => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -54,13 +54,13 @@ export function Login() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     }
   };
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-64px)]'>
+    <div className="flex flex-col min-h-[calc(100vh-64px)]">
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
@@ -72,16 +72,20 @@ export function Login() {
           <div className="flex flex-col gap-4">
             <Button
               variant="outline"
-              onClick={() => handleSocialLogin('google')}
+              onClick={() => handleSocialLogin("google")}
               className="w-full flex items-center justify-center gap-3"
             >
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
               Continue with Google
             </Button>
 
             <Button
               variant="outline"
-              onClick={() => handleSocialLogin('facebook')}
+              onClick={() => handleSocialLogin("facebook")}
               className="w-full flex items-center justify-center gap-3"
             >
               <Facebook className="w-5 h-5 text-[#1877F2]" />
@@ -93,7 +97,9 @@ export function Login() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-base-background text-gray-500">Or continue with email</span>
+                <span className="px-2 bg-base-background text-gray-500">
+                  Or continue with email
+                </span>
               </div>
             </div>
           </div>
@@ -134,34 +140,20 @@ export function Login() {
             </div>
 
             <div className="flex items-center justify-between">
-              <Button
-                variant="link"
-                asChild
-              >
-                <Link to="/app/forgot-password">
-                  Forgot your password?
-                </Link>
+              <Button variant="link" asChild>
+                <Link to="/app/forgot-password">Forgot your password?</Link>
               </Button>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing in..." : "Sign in"}
             </Button>
 
             <div className="text-center">
               <span className="text-sm text-gray-500">
-                Don't have an account?{' '}
-                <Button
-                  variant="link"
-                  asChild
-                >
-                  <Link to="/app/signup">
-                    Sign up
-                  </Link>
+                Don't have an account?{" "}
+                <Button variant="link" asChild>
+                  <Link to="/app/signup">Sign up</Link>
                 </Button>
               </span>
             </div>

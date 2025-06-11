@@ -15,6 +15,9 @@ import { usePaddlePrices } from "../hooks/usePaddlePrices";
 import { useToast } from "../hooks/use-toast";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { useSubscriptions } from "../hooks/useSubscriptions";
+
+import { supabase } from "../lib/supabase";
 
 // Utility function to format price
 const formatPrice = (
@@ -94,15 +97,12 @@ export function Subscription() {
     (state: RootState) => state.profile
   );
   const { toast } = useToast();
-  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
   const [creditsUsed] = useState(0);
   const [creditsLimit] = useState(0);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showBuyCreditsDialog, setShowBuyCreditsDialog] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<
     (typeof creditPackages)[0] | null
   >(null);
-  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
 
   const { paddle, loading: paddleLoading, error: paddleError } = usePaddle();
   const {
@@ -111,13 +111,16 @@ export function Subscription() {
     availablePrices,
   } = usePaddlePrices(paddle);
 
-  // Debug logging
-  useEffect(() => {
-    console.log("Profile status:", profileStatus);
-    console.log("Profile data:", profile);
-    console.log("Paddle loading:", paddleLoading);
-    console.log("Paddle error:", paddleError);
-  }, [profile, profileStatus, paddleLoading, paddleError]);
+  const {
+    subscriptions,
+    loading: subscriptionsLoading,
+    error: subscriptionsError,
+    hasActivePlan,
+    canSubscribeToNewPlan,
+    getCurrentPlan,
+    getSubscriptionStatus,
+    refetch: refetchSubscriptions,
+  } = useSubscriptions();
 
   // Handle URL parameters for checkout success/cancel
   useEffect(() => {
@@ -130,6 +133,8 @@ export function Subscription() {
         title: "Success!",
         description: "Your subscription has been activated successfully.",
       });
+      // Refresh subscription data
+      refetchSubscriptions();
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (cancelled === "true") {
@@ -143,48 +148,16 @@ export function Subscription() {
     }
   }, [toast]);
 
-  useEffect(() => {
-    const fetchSubscriptionStatus = async () => {
-      setSubscriptionLoading(true);
-
-      if (!profile?.email) {
-        if (profileStatus === "error") {
-          console.error("Profile status error, skipping subscription fetch");
-        } else if (profileStatus === "success") {
-          console.warn("Profile loaded but no email found:", profile);
-        } else {
-          console.log("Profile not yet loaded, status:", profileStatus);
-        }
-        setSubscriptionLoading(false);
-        return;
-      }
-
-      try {
-        console.log("User email for subscription check:", profile.email);
-        console.log("User profile data:", profile);
-        setCurrentPlan(null);
-      } catch (error) {
-        console.error("Error fetching subscription status:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch subscription status. Please try again.",
-          variant: "destructive",
-        });
-        setCurrentPlan(null);
-      } finally {
-        setSubscriptionLoading(false);
-      }
-    };
-
-    fetchSubscriptionStatus();
-  }, [profile?.email, profileStatus, toast]);
+  // Get current plan and subscription status from the hook
+  const currentPlan = getCurrentPlan();
+  const subscriptionStatus = getSubscriptionStatus();
 
   // Show loading state if profile is still loading
   if (
     profileStatus === "loading" ||
     paddleLoading ||
     pricesLoading ||
-    subscriptionLoading
+    subscriptionsLoading
   ) {
     return (
       <div className="min-h-screen bg-base-background flex items-center justify-center">
@@ -199,7 +172,12 @@ export function Subscription() {
   }
 
   // Show error state if there are any errors
-  if (profileStatus === "error" || paddleError || pricesError) {
+  if (
+    profileStatus === "error" ||
+    paddleError ||
+    pricesError ||
+    subscriptionsError
+  ) {
     return (
       <div className="min-h-screen bg-base-background flex items-center justify-center">
         <div className="text-center">
@@ -209,6 +187,7 @@ export function Subscription() {
           <p className="text-muted-foreground">
             {paddleError ||
               pricesError ||
+              subscriptionsError ||
               "Please refresh the page to try again."}
           </p>
         </div>
@@ -242,15 +221,62 @@ export function Subscription() {
       return;
     }
 
-    try {
-      console.log("Opening checkout with price ID:", plan.priceId);
-      console.log("Customer email:", profile.email);
-      console.log("Available prices:", availablePrices);
+    // Get the current authenticated user ID
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user?.id) {
+      toast({
+        title: "Error",
+        description: "Authentication required to subscribe",
+        variant: "destructive",
+      });
+      return;
+    }
 
+    // Enhanced subscription validation
+    if (hasActivePlan(plan.priceId)) {
+      toast({
+        title: "Already Subscribed",
+        description: "You already have an active subscription to this plan.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check if user has any active subscription and wants to subscribe to a different plan
+    if (!canSubscribeToNewPlan && !hasActivePlan(plan.priceId)) {
+      toast({
+        title: "Multiple Subscriptions Not Allowed",
+        description:
+          "You can only have one active subscription. Please cancel your current subscription first or switch plans instead.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check for plan switching logic
+    if (
+      subscriptionStatus.isActive &&
+      subscriptionStatus.planId !== plan.priceId
+    ) {
+      const currentPlanDetails = plans.find(
+        (p) => p.priceId === subscriptionStatus.planId
+      );
+      toast({
+        title: "Plan Switch Required",
+        description: `You currently have the ${
+          currentPlanDetails?.name || "current"
+        } plan. To change plans, please cancel your current subscription first, then subscribe to the new plan.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
       // Validate that the price ID exists
       const priceExists = availablePrices.find((p) => p.id === plan.priceId);
       if (!priceExists) {
-        console.error("Price ID not found in available prices:", plan.priceId);
         toast({
           title: "Error",
           description:
@@ -273,7 +299,13 @@ export function Subscription() {
         settings: {
           displayMode: "overlay",
           theme: "light",
+          allowLogout: false,
+          showAddDiscounts: false,
+          showAddTaxId: false,
           successUrl: `${window.location.origin}/app/subscription?success=true`,
+        },
+        customData: {
+          user_id: user.id, // Use the authenticated user ID instead of profile.id
         },
       });
     } catch (error) {
@@ -283,12 +315,6 @@ export function Subscription() {
         response?: unknown;
       };
       console.error("Failed to open checkout:", paddleError);
-      console.error("Error details:", {
-        message: paddleError.message,
-        code: paddleError.code,
-        details: paddleError.details,
-        response: paddleError.response,
-      });
 
       const errorMessage =
         paddleError.message || "Failed to open checkout. Please try again.";
@@ -335,6 +361,9 @@ export function Subscription() {
           frameInitialHeight: 450,
           successUrl: `${window.location.origin}/dashboard?success=true`,
         },
+        customData: {
+          user_id: profile.id,
+        },
       });
     } catch (error) {
       console.error("Failed to open checkout:", error);
@@ -347,11 +376,35 @@ export function Subscription() {
     setShowBuyCreditsDialog(false);
   };
 
-  const handleCancel = async () => {
-    // Here you would implement the actual cancellation logic
-    // This might involve calling your backend API which would then
-    // use Paddle's API to cancel the subscription
-    setShowCancelDialog(false);
+  // Update the plan card rendering to focus on upgrades
+  const getButtonText = (
+    plan: (typeof plans)[0],
+    isCurrentPlan: boolean,
+    hasActiveButDifferentPlan: boolean
+  ) => {
+    if (isCurrentPlan) {
+      return "Current Plan";
+    }
+    if (hasActiveButDifferentPlan) {
+      // currentPlan returns 'starter' or 'pro', so match against plan.id
+      const currentPlanName =
+        plans.find((p) => p.id === currentPlan)?.name || "Unknown";
+      return `Upgrade from ${currentPlanName}`;
+    }
+    return "Subscribe";
+  };
+
+  const getButtonVariant = (
+    isCurrentPlan: boolean,
+    hasActiveButDifferentPlan: boolean
+  ) => {
+    if (isCurrentPlan) {
+      return "outline" as const;
+    }
+    if (hasActiveButDifferentPlan) {
+      return "default" as const; // Upgrade button
+    }
+    return "default" as const;
   };
 
   return (
@@ -363,63 +416,218 @@ export function Subscription() {
             Subscription Plans
           </h1>
 
+          {/* Current Subscriptions Section - Simplified */}
+          {subscriptions.length > 0 && (
+            <div className="bg-brand-brand-accent border border-brand-accent rounded-lg p-6 mb-8">
+              <h2 className="text-2xl font-bold text-base-heading mb-4">
+                My Subscriptions
+              </h2>
+              <div className="space-y-4">
+                {subscriptions.map((subscription) => {
+                  const plan = plans.find(
+                    (p) => p.priceId === subscription.price_id
+                  );
+                  const isActive =
+                    subscription.status === "active" ||
+                    subscription.status === "trialing";
+
+                  return (
+                    <div
+                      key={subscription.id}
+                      className={`p-4 border rounded-lg ${
+                        isActive
+                          ? "border-green-300 bg-green-50"
+                          : subscription.status === "canceled"
+                          ? "border-gray-300 bg-gray-50"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-semibold text-lg">
+                              {plan?.name || "Unknown Plan"}
+                            </h3>
+                            <div
+                              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                subscription.status === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : subscription.status === "canceled"
+                                  ? "bg-gray-100 text-gray-800"
+                                  : subscription.status === "trialing"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : "bg-yellow-100 text-yellow-800"
+                              }`}
+                            >
+                              {subscription.status.charAt(0).toUpperCase() +
+                                subscription.status.slice(1)}
+                            </div>
+                          </div>
+
+                          <div className="space-y-1 text-sm text-muted-foreground">
+                            {subscription.current_period_start && (
+                              <p>
+                                <strong>Started:</strong>{" "}
+                                {new Date(
+                                  subscription.current_period_start
+                                ).toLocaleDateString()}
+                              </p>
+                            )}
+                            {subscription.current_period_end && (
+                              <p>
+                                <strong>
+                                  {subscription.status === "active"
+                                    ? "Renews"
+                                    : "Ended"}
+                                  :
+                                </strong>{" "}
+                                {new Date(
+                                  subscription.current_period_end
+                                ).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2 ml-4">
+                          {isActive && (
+                            <div className="text-sm text-green-600 font-medium">
+                              ✓ Active
+                            </div>
+                          )}
+                          {subscription.status === "canceled" && (
+                            <div className="text-xs text-gray-600 text-center">
+                              To resubscribe, choose a plan below
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Subscription health warning */}
+              {subscriptionStatus.hasMultipleSubscriptions && (
+                <div className="mt-4 p-3 bg-orange-100 border border-orange-300 rounded-lg">
+                  <p className="text-orange-800 text-sm">
+                    <strong>⚠️ Notice:</strong> You have multiple subscriptions.
+                    Our system will automatically manage this to ensure you're
+                    only billed for one active plan.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Plans Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {plansWithPrices.map((plan) => (
-              <div
-                key={plan.id}
-                className={`relative rounded-lg p-6 ${
-                  currentPlan === plan.id
-                    ? "bg-brand-primary/10 border-2 border-base-border"
-                    : "bg-brand-brand-accent border border-brand-accent"
-                }`}
-              >
-                {currentPlan === plan.id && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-medium">
-                    Current Plan
-                  </div>
-                )}
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-base-heading flex items-center gap-2">
-                      {plan.icon} {plan.name}
-                    </h3>
-                    <p className="text-muted-foreground mt-1">
-                      {plan.description}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-base-heading">
-                      ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
+            {plansWithPrices.map((plan) => {
+              const isCurrentPlan = currentPlan === plan.id;
+              const canSubscribeToThisPlan =
+                canSubscribeToNewPlan || isCurrentPlan;
+              const hasActiveButDifferentPlan =
+                subscriptionStatus.isActive && !isCurrentPlan;
+
+              return (
+                <div
+                  key={plan.id}
+                  className={`relative rounded-lg p-6 ${
+                    isCurrentPlan
+                      ? "bg-brand-primary/10 border-2 border-brand-primary"
+                      : "bg-brand-brand-accent border border-brand-accent"
+                  }`}
+                >
+                  {isCurrentPlan && (
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-medium">
+                      Current Plan
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      per month
+                  )}
+
+                  {subscriptionStatus.hasMultipleSubscriptions && (
+                    <div className="absolute -top-3 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                      Multiple Subscriptions Detected
                     </div>
+                  )}
+
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-base-heading flex items-center gap-2">
+                        {plan.icon} {plan.name}
+                      </h3>
+                      <p className="text-muted-foreground mt-1">
+                        {plan.description}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-base-heading">
+                        ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        per month
+                      </div>
+                    </div>
+                  </div>
+                  <ul className="space-y-3 mb-6">
+                    {plan.features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <Check className="h-5 w-5 text-brand-primary flex-shrink-0" />
+                        <span className="text-secondary">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="space-y-2">
+                    <Button
+                      className="w-full"
+                      variant={getButtonVariant(
+                        isCurrentPlan,
+                        hasActiveButDifferentPlan
+                      )}
+                      onClick={() => handleSubscribe(plan)}
+                      disabled={
+                        !plan.priceId ||
+                        isCurrentPlan ||
+                        (!canSubscribeToThisPlan && hasActiveButDifferentPlan)
+                      }
+                      title={getButtonText(
+                        plan,
+                        isCurrentPlan,
+                        hasActiveButDifferentPlan
+                      )}
+                    >
+                      {getButtonText(
+                        plan,
+                        isCurrentPlan,
+                        hasActiveButDifferentPlan
+                      )}
+                    </Button>
+
+                    {hasActiveButDifferentPlan && (
+                      <div className="text-xs text-muted-foreground text-center mt-2">
+                        You can only have one active subscription at a time.
+                      </div>
+                    )}
                   </div>
                 </div>
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-base-heading flex-shrink-0" />
-                      <span className="text-base-paragraph">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  className="w-full"
-                  variant={currentPlan === plan.id ? "outline" : "default"}
-                  onClick={() => handleSubscribe(plan)}
-                  disabled={!plan.priceId || currentPlan === plan.id}
-                >
-                  {currentPlan === plan.id
-                    ? "Current Plan"
-                    : currentPlan
-                    ? "Switch Plan"
-                    : "Subscribe"}
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          {/* Subscription Status Alert */}
+          {subscriptionStatus.hasMultipleSubscriptions && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-8">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <h3 className="font-semibold text-orange-800">
+                  Multiple Subscriptions Detected
+                </h3>
+              </div>
+              <p className="text-orange-700 mt-2">
+                You have multiple active subscriptions. This may cause billing
+                issues. Please contact support to resolve this issue.
+              </p>
+            </div>
+          )}
 
           {/* Credits Section */}
           <div className="bg-brand-brand-accent border border-brand-accent rounded-lg p-6 mb-8">
@@ -445,31 +653,6 @@ export function Subscription() {
               Buy Credits
             </Button>
           </div>
-
-          {/* Cancel Dialog */}
-          <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Cancel Subscription</DialogTitle>
-                <DialogDescription>
-                  Are you sure you want to cancel your subscription? You'll lose
-                  access to all premium features at the end of your current
-                  billing period.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCancelDialog(false)}
-                >
-                  Keep Subscription
-                </Button>
-                <Button variant="destructive" onClick={handleCancel}>
-                  Cancel Subscription
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
 
           {/* Buy Credits Dialog */}
           <Dialog
