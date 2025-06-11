@@ -13,7 +13,11 @@ import {
   Sparkles,
   Zap,
   MessageSquare,
-  Settings
+  Settings,
+  Globe,
+  BookText,
+  Palette,
+  VolumeX
 } from 'lucide-react';
 import Footer from '../components/Footer';
 
@@ -56,7 +60,39 @@ export function Documentation() {
       title: 'Title-Specific Historical Fiction',
       prompt: 'Write a historical fiction novel titled "The Clockmaker\'s Daughter" set in Victorian London. The story follows a young woman who disguises herself as a man to become an apprentice to a renowned clockmaker, while secretly investigating her father\'s mysterious death which she believes is connected to a revolutionary clockwork invention that was stolen. The narrative should alternate between the Victorian era and present day, where a historian discovers the woman\'s diary and becomes obsessed with uncovering the truth.',
       explanation: 'This prompt specifies the exact title, time period, dual timeline structure, protagonist, and central mystery, giving the AI clear parameters for the book.'
+    },
+    {
+      id: 'advanced-style',
+      title: 'Advanced Style & Narrator Specification',
+      prompt: 'Write a Gothic horror novel set in a decaying New England mansion in the 1920s. The protagonist is a young architect hired to restore the property who begins experiencing strange phenomena. Use an unreliable narrator perspective to create ambiguity about whether the supernatural events are real or manifestations of the protagonist\'s deteriorating mental state. The writing style should blend Gothic and Modernism with a melancholic tone that gradually shifts to suspenseful as the story progresses.',
+      explanation: 'This prompt combines specific narrator choice (unreliable narrator), literature style (Gothic/Modernism), and tone progression (melancholic to suspenseful) to create a sophisticated stylistic framework.'
     }
+  ];
+
+  const narratorOptions = [
+    'First-person', 
+    'Second-person', 
+    'Third-person limited',
+    'Third-person omniscient',
+    'Third-person objective',
+    'Stream of consciousness',
+    'Unreliable narrator',
+    'Alternating narrators'
+  ];
+
+  const literatureStyles = [
+    'Realism', 'Modernism', 'Postmodernism', 'Romanticism', 'Gothic', 
+    'Magical Realism', 'Surrealism', 'Minimalism', 'Existentialism', 
+    'Naturalism', 'Expressionism', 'Symbolism', 'Absurdism', 
+    'Classicism', 'Futurism', 'Impressionism', 'Transcendentalism', 
+    'Baroque', 'Regionalism', 'Dadaism'
+  ];
+
+  const toneOptions = [
+    'Serious', 'Humorous', 'Formal', 'Informal', 'Optimistic', 
+    'Pessimistic', 'Nostalgic', 'Reflective', 'Suspenseful', 
+    'Dramatic', 'Playful', 'Somber', 'Joyful', 'Melancholic', 
+    'Ironic', 'Sarcastic', 'Affectionate', 'Bitter', 'Angry', 'Hopeful'
   ];
 
   return (
@@ -250,64 +286,107 @@ export function Documentation() {
               </h2>
               
               <div>
-                <p>
+                <p className="mb-6">
                   ProsePilot offers advanced AI settings to fine-tune your book generation. 
                   Understanding these options will help you achieve the exact style and tone you're looking for:
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div className="grid grid-cols-1 gap-8">
+                  {/* Narrator Perspective */}
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Narrator Perspective</h3>
-                    <ul className="space-y-3">
-                      <li>
-                        <strong>First Person:</strong>
-                        <p className="text-sm text-gray-600">Narrated from the "I" perspective. Creates intimacy and immediacy.</p>
-                      </li>
-                      <li>
-                        <strong>Third Person Limited:</strong>
-                        <p className="text-sm text-gray-600">Follows one character closely. Most versatile option.</p>
-                      </li>
-                      <li>
-                        <strong>Third Person Omniscient:</strong>
-                        <p className="text-sm text-gray-600">All-knowing narrator who can access any character's thoughts.</p>
-                      </li>
-                    </ul>
+                    <div className="flex items-start mb-4">
+                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
+                        <BookText className="w-6 h-6 text-brand-primary" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">Narrator Perspective</h3>
+                        <p className="text-gray-600 text-sm">Choose the viewpoint from which your story is told</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        {narratorOptions.slice(0, Math.ceil(narratorOptions.length/2)).map((option, index) => (
+                          <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                            <h4 className="font-medium text-gray-900 mb-1">{option}</h4>
+                            <p className="text-sm text-gray-600">
+                              {option === 'First-person' && 'Narrated from the "I" perspective. Creates intimacy and immediacy.'}
+                              {option === 'Second-person' && 'Addresses the reader as "you." Creates an immersive, interactive feel.'}
+                              {option === 'Third-person limited' && 'Follows one character closely. Most versatile option.'}
+                              {option === 'Third-person omniscient' && 'All-knowing narrator who can access any character\'s thoughts.'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="space-y-4">
+                        {narratorOptions.slice(Math.ceil(narratorOptions.length/2)).map((option, index) => (
+                          <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                            <h4 className="font-medium text-gray-900 mb-1">{option}</h4>
+                            <p className="text-sm text-gray-600">
+                              {option === 'Third-person objective' && 'Reports only what can be seen and heard, without access to characters\' thoughts.'}
+                              {option === 'Stream of consciousness' && 'Presents character thoughts as they occur, often in a flowing, non-linear style.'}
+                              {option === 'Unreliable narrator' && 'A narrator whose credibility is compromised, creating ambiguity and tension.'}
+                              {option === 'Alternating narrators' && 'Switches between different character perspectives throughout the story.'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Literature Style */}
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Literature Style</h3>
-                    <ul className="space-y-3">
-                      <li>
-                        <strong>Literary:</strong>
-                        <p className="text-sm text-gray-600">Emphasis on artistic quality, complex themes, and sophisticated prose.</p>
-                      </li>
-                      <li>
-                        <strong>Commercial:</strong>
-                        <p className="text-sm text-gray-600">Accessible, plot-driven, and designed for broad appeal.</p>
-                      </li>
-                      <li>
-                        <strong>Genre-Specific:</strong>
-                        <p className="text-sm text-gray-600">Follows conventions of specific genres (mystery, romance, etc.).</p>
-                      </li>
-                    </ul>
+                    <div className="flex items-start mb-4">
+                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
+                        <Palette className="w-6 h-6 text-brand-primary" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">Literature Style</h3>
+                        <p className="text-gray-600 text-sm">Define the artistic approach and aesthetic of your writing</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {literatureStyles.map((style, index) => (
+                        <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                          <h4 className="font-medium text-gray-900 text-sm">{style}</h4>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-6 space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-medium text-blue-900 mb-2">Popular Styles Explained:</h4>
+                        <div className="space-y-2 text-sm text-blue-800">
+                          <p><strong>Realism:</strong> Depicts everyday life and social issues with accuracy and detail.</p>
+                          <p><strong>Magical Realism:</strong> Blends realistic elements with magical or fantastical components.</p>
+                          <p><strong>Gothic:</strong> Features dark, mysterious settings, supernatural elements, and emotional intensity.</p>
+                          <p><strong>Modernism:</strong> Experiments with form and style, often featuring stream of consciousness and fragmentation.</p>
+                          <p><strong>Postmodernism:</strong> Self-referential, ironic, and playful, often challenging traditional narrative structures.</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Writing Tone */}
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Writing Tone</h3>
-                    <ul className="space-y-3">
-                      <li>
-                        <strong>Serious:</strong>
-                        <p className="text-sm text-gray-600">Formal, weighty, minimal humor.</p>
-                      </li>
-                      <li>
-                        <strong>Humorous:</strong>
-                        <p className="text-sm text-gray-600">Light, witty, with comedic elements.</p>
-                      </li>
-                      <li>
-                        <strong>Dramatic:</strong>
-                        <p className="text-sm text-gray-600">Heightened emotions, tension, vivid descriptions.</p>
-                      </li>
-                    </ul>
+                    <div className="flex items-start mb-4">
+                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
+                        <VolumeX className="w-6 h-6 text-brand-primary" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">Writing Tone</h3>
+                        <p className="text-gray-600 text-sm">Set the emotional quality and attitude of your narrative</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                      {toneOptions.map((tone, index) => (
+                        <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                          <h4 className="font-medium text-gray-900 text-sm">{tone}</h4>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -318,15 +397,50 @@ export function Documentation() {
                   <div className="space-y-3">
                     <div>
                       <h4 className="font-medium text-yellow-900">For Thrillers:</h4>
-                      <p className="text-yellow-800 text-sm">Third Person Limited + Commercial Style + Dramatic Tone</p>
+                      <p className="text-yellow-800 text-sm">Third Person Limited + Suspenseful Tone + Realism or Gothic Style</p>
                     </div>
                     <div>
                       <h4 className="font-medium text-yellow-900">For Romance:</h4>
-                      <p className="text-yellow-800 text-sm">First Person + Genre-Specific Style + Emotional Tone</p>
+                      <p className="text-yellow-800 text-sm">First Person or Alternating Narrators + Affectionate or Nostalgic Tone + Romanticism Style</p>
                     </div>
                     <div>
                       <h4 className="font-medium text-yellow-900">For Literary Fiction:</h4>
-                      <p className="text-yellow-800 text-sm">Third Person Omniscient + Literary Style + Reflective Tone</p>
+                      <p className="text-yellow-800 text-sm">Stream of Consciousness + Reflective Tone + Modernism or Postmodernism Style</p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-yellow-900">For Science Fiction:</h4>
+                      <p className="text-yellow-800 text-sm">Third Person Omniscient + Serious or Dramatic Tone + Futurism Style</p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-yellow-900">For Magical Realism:</h4>
+                      <p className="text-yellow-800 text-sm">Third Person Limited + Nostalgic Tone + Magical Realism or Surrealism Style</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-green-900 mb-3 flex items-center">
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Advanced Setting Combinations
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-green-900">Experimental Fiction:</h4>
+                      <p className="text-green-800 text-sm">
+                        <strong>Prompt:</strong> "Write a story about a person who discovers they can hear the thoughts of inanimate objects. Use a second-person perspective with a stream of consciousness style and an ironic tone that gradually shifts to melancholic as the protagonist realizes the loneliness of being the only one with this ability."
+                      </p>
+                      <p className="text-green-800 text-sm mt-1">
+                        <strong>Settings:</strong> Second-person + Stream of consciousness + Ironic/Melancholic tone
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-green-900">Psychological Horror:</h4>
+                      <p className="text-green-800 text-sm">
+                        <strong>Prompt:</strong> "Create a psychological horror story about a lighthouse keeper who begins to question their sanity during a violent winter storm. Use an unreliable narrator with Gothic style and a suspenseful tone that creates ambiguity about whether supernatural events are occurring or if it's all in the protagonist's mind."
+                      </p>
+                      <p className="text-green-800 text-sm mt-1">
+                        <strong>Settings:</strong> Unreliable narrator + Gothic style + Suspenseful tone
+                      </p>
                     </div>
                   </div>
                 </div>
