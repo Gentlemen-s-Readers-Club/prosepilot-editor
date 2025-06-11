@@ -11,8 +11,7 @@ import {
   FileText, 
   AlertTriangle, 
   Users, 
-  Mail, 
-  ExternalLink 
+  Mail
 } from 'lucide-react';
 import Footer from '../components/Footer';
 
@@ -49,7 +48,7 @@ export function PrivacyPolicy() {
           {/* Introduction */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
             <div className="flex items-start">
-              <Shield className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+              <Shield className="w-6 h-6 text-blue-600 mt-1 mr-3 shrink-0" />
               <div>
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">About This Policy</h3>
                 <p className="text-blue-800 text-sm">
@@ -489,7 +488,7 @@ export function PrivacyPolicy() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-green-900 mb-3">For California Residents</h3>
                 <p className="text-green-800 text-sm">
-                  If you are a California resident, you can learn more about your consumer privacy rights by reviewing the <a href="https://oag.ca.gov/privacy/ccpa" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">California Consumer Privacy Act</a> and the <a href="https://cppa.ca.gov/" target=\"_blank" rel="noopener noreferrer\" className="text-brand-primary hover:underline">California Privacy Rights Act</a>.
+                  If you are a California resident, you can learn more about your consumer privacy rights by reviewing the <a href="https://oag.ca.gov/privacy/ccpa" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">California Consumer Privacy Act</a> and the <a href="https://cppa.ca.gov/" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">California Privacy Rights Act</a>.
                 </p>
               </div>
               
@@ -599,12 +598,12 @@ export function PrivacyPolicy() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Contact Information</h3>
                 <div className="space-y-2">
                   <p><strong>Email:</strong> privacy@prosepilot.com</p>
-                  <p><strong>Postal Address:</strong> ProsePilot Inc., 123 Writer's Lane, Suite 456, San Francisco, CA 94107, USA</p>
+                  {/* <p><strong>Postal Address:</strong> ProsePilot Inc., 123 Writer's Lane, Suite 456, San Francisco, CA 94107, USA</p> */}
                   <p><strong>Data Protection Officer:</strong> dpo@prosepilot.com</p>
                 </div>
               </div>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-blue-900 mb-3">EU Representative</h3>
                 <p className="text-blue-800 text-sm">
                   For individuals in the EU/EEA, you may also contact our EU representative:
@@ -614,7 +613,7 @@ export function PrivacyPolicy() {
                   <p>Email: eu-rep@prosepilot.com</p>
                   <p>Address: Bergstrasse 15, 10115 Berlin, Germany</p>
                 </div>
-              </div>
+              </div> */}
               
               <p>
                 We will respond to your inquiry as soon as possible and within the timeframe required by applicable law.
