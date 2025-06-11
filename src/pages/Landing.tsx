@@ -438,23 +438,6 @@ export function Landing() {
               <span>50,000+ happy writers</span>
             </div>
           </div>
-
-          {/* Newsletter Signup */}
-          <div className="mt-16 max-w-md mx-auto">
-            <div className="text-center mb-6">
-              <h3 className="text-lg font-semibold text-base-heading mb-2">
-                Not ready to start? Get writing tips first.
-              </h3>
-              <p className="text-base-paragraph">
-                Join our newsletter for weekly writing advice and AI tips.
-              </p>
-            </div>
-            <SubscribeForm 
-              variant="inline"
-              placeholder="Enter your email"
-              buttonText="Get Tips"
-            />
-          </div>
         </div>
       </div>
 
