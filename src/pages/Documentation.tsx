@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
+import { Checkbox } from '../components/ui/checkbox';
 import { 
   ArrowLeft, 
   BookOpen, 
@@ -23,6 +24,42 @@ import Footer from '../components/Footer';
 
 export function Documentation() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('getting-started');
+
+  // Track scroll position to update active section
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        'getting-started',
+        'prompt-examples',
+        'ai-settings',
+        'editing-tools',
+        'team-collaboration',
+        'faq'
+      ];
+      
+      // Find the section that is currently in view
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // If the section is in view (with some buffer for better UX)
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -127,22 +164,64 @@ export function Documentation() {
           <div className="lg:w-64 shrink-0">
             <div className="sticky top-8">
               <nav className="space-y-1">
-                <a href="#getting-started" className="block px-3 py-2 rounded-md bg-brand-primary text-white">
+                <a 
+                  href="#getting-started" 
+                  className={`block px-3 py-2 rounded-md ${
+                    activeSection === 'getting-started' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   Getting Started
                 </a>
-                <a href="#prompt-examples" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                <a 
+                  href="#prompt-examples" 
+                  className={`block px-3 py-2 rounded-md ${
+                    activeSection === 'prompt-examples' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   Prompt Examples
                 </a>
-                <a href="#ai-settings" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                <a 
+                  href="#ai-settings" 
+                  className={`block px-3 py-2 rounded-md ${
+                    activeSection === 'ai-settings' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   AI Settings Guide
                 </a>
-                <a href="#editing-tools" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                <a 
+                  href="#editing-tools" 
+                  className={`block px-3 py-2 rounded-md ${
+                    activeSection === 'editing-tools' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   Editing Tools
                 </a>
-                <a href="#team-collaboration" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                <a 
+                  href="#team-collaboration" 
+                  className={`block px-3 py-2 rounded-md ${
+                    activeSection === 'team-collaboration' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   Team Collaboration
                 </a>
-                <a href="#faq" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                <a 
+                  href="#faq" 
+                  className={`block px-3 py-2 rounded-md ${
+                    activeSection === 'faq' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   FAQ
                 </a>
               </nav>
@@ -168,44 +247,29 @@ export function Documentation() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Start Guide</h3>
                   
                   <div className="space-y-4">
-                    <div className="flex items-start">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Create an account</h4>
-                        <p className="text-gray-700">Sign up for a ProsePilot account if you haven't already.</p>
-                      </div>
+                    <div className="flex items-center">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</div>
+                      <span className="text-gray-700">Create an account if you haven't already</span>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">2</div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Start a new book</h4>
-                        <p className="text-gray-700">From your dashboard, click "Create New Book" to open the book creation wizard.</p>
-                      </div>
+                    <div className="flex items-center">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</div>
+                      <span className="text-gray-700">From your dashboard, click "Create New Book"</span>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">3</div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Enter your story idea</h4>
-                        <p className="text-gray-700">Describe your story concept, including main characters, setting, and central conflict.</p>
-                      </div>
+                    <div className="flex items-center">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</div>
+                      <span className="text-gray-700">Enter your story idea or outline</span>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">4</div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Configure settings</h4>
-                        <p className="text-gray-700">Choose categories, language, and optional advanced settings like narrator perspective and tone.</p>
-                      </div>
+                    <div className="flex items-center">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</div>
+                      <span className="text-gray-700">Choose categories, language, and optional advanced settings</span>
                     </div>
                     
-                    <div className="flex items-start">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">5</div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Generate your book</h4>
-                        <p className="text-gray-700">Click "Create Book" and wait while our AI generates your complete book.</p>
-                      </div>
+                    <div className="flex items-center">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</div>
+                      <span className="text-gray-700">Click "Create Book" and wait while our AI generates your content</span>
                     </div>
                   </div>
                 </div>
@@ -390,10 +454,18 @@ export function Documentation() {
                   </div>
                 </div>
 
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-blue-900 mb-3">💡 Setting selection tips:</h3>
+                  <ul className="text-blue-800 space-y-2 text-sm">
+                    <li>• <strong>Match your genre:</strong> Thriller works well with third person limited and dramatic tone</li>
+                    <li>• <strong>Consider your audience:</strong> YA books often benefit from first person and conversational tone</li>
+                    <li>• <strong>Experiment:</strong> Try generating the same story with different settings to see what works best</li>
+                    <li>• <strong>Stay consistent:</strong> Don't mix conflicting styles (e.g., literary fiction with very casual tone)</li>
+                  </ul>
+                </div>
+
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-yellow-900 mb-3">
-                    Recommended Combinations
-                  </h3>
+                  <h3 className="text-lg font-semibold text-yellow-900 mb-3">Recommended Combinations</h3>
                   <div className="space-y-3">
                     <div>
                       <h4 className="font-medium text-yellow-900">For Thrillers:</h4>
