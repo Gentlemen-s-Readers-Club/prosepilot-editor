@@ -427,10 +427,6 @@ export function Landing() {
           <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-base-paragraph">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-state-success" />
-              <span>No credit card required</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-state-success" />
               <span>Cancel anytime</span>
             </div>
             <div className="flex items-center gap-2">
