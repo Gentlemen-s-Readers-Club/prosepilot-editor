@@ -122,7 +122,7 @@ export function Documentation() {
                 Getting Started
               </h2>
               
-              <div className="prose prose-lg max-w-none">
+              <div>
                 <p>
                   Welcome to ProsePilot! This guide will help you get started with our AI-powered writing platform.
                   Follow these simple steps to create your first book:
@@ -187,7 +187,7 @@ export function Documentation() {
                 Prompt Examples
               </h2>
               
-              <div className="prose prose-lg max-w-none">
+              <div>
                 <p>
                   The quality of your prompt greatly influences the quality of your generated book. 
                   Here are some examples of effective prompts for different genres:
@@ -249,7 +249,7 @@ export function Documentation() {
                 AI Settings Guide
               </h2>
               
-              <div className="prose prose-lg max-w-none">
+              <div>
                 <p>
                   ProsePilot offers advanced AI settings to fine-tune your book generation. 
                   Understanding these options will help you achieve the exact style and tone you're looking for:
@@ -340,7 +340,7 @@ export function Documentation() {
                 Editing Tools
               </h2>
               
-              <div className="prose prose-lg max-w-none">
+              <div>
                 <p>
                   ProsePilot provides a comprehensive set of editing tools to help you refine your generated content.
                   Here's how to make the most of these features:
@@ -463,7 +463,7 @@ export function Documentation() {
                 Team Collaboration
               </h2>
               
-              <div className="prose prose-lg max-w-none">
+              <div>
                 <p>
                   ProsePilot makes it easy to collaborate with other writers, editors, and beta readers.
                   Learn how to use our team features effectively:
