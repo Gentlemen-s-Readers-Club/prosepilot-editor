@@ -490,8 +490,7 @@ export function BookDetails() {
         </div>
           
           {!isEditMode && !isPublished && (
-            <Button 
-              variant="secondary" 
+            <Button
               onClick={() => setIsEditMode(true)}
               className="flex items-center gap-2"
             >

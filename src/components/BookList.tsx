@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, BookOpen, Loader2, Calendar, Clock, User, MoreVertical } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Loader2, Calendar, Clock, User, MoreVertical, Globe } from 'lucide-react';
 import { StatusBadge } from './ui/status-badge';
 import { Book } from '../store/types';
 import { Button } from './ui/button';
@@ -69,9 +69,9 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
                 ) : (
                   <div className="w-full h-full bg-gradient-to-b from-gray-100 to-gray-200 flex flex-col items-center justify-center p-4 transition-colors group-hover:bg-gray-200">
                     {book.status === 'writing' ? (
-                      <Loader2 className="w-12 h-12 text-gray-400 animate-spin" />
+                      <Loader2 className="w-12 h-12 text-brand-accent animate-spin" />
                     ) : (
-                      <BookOpen className="w-12 h-12 text-gray-400 mb-4" />
+                      <BookOpen className="w-12 h-12 text-brand-accent mb-4" />
                     )}
                   </div>
                 )}
@@ -107,43 +107,41 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
                 ) : (
                   <div className="w-full h-full bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
                     {book.status === 'writing' ? (
-                      <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
+                      <Loader2 className="w-6 h-6 text-brand-accent animate-spin" />
                     ) : (
-                      <BookOpen className="w-6 h-6 text-gray-400" />
+                      <BookOpen className="w-6 h-6 text-brand-accent" />
                     )}
                   </div>
                 )}
               </div>
               
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-base-heading transition-colors">{book.title}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <StatusBadge status={book.status} />
-                      <span className="text-sm text-gray-500">{book.languages.name}</span>
-                    </div>
+              <div className="flex-1 min-w-0 flex flex-col">
+                <div className="flex-1">
+                  <div className="flex justify-between items-start gap-2">
+                    <h3 className="text-lg font-semibold text-base-heading line-clamp-2">{book.title}</h3>
+                    <StatusBadge status={book.status} />
                   </div>
-                  <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <MoreVertical size={16} />
-                  </Button>
+                  
+                  <p className="text-sm text-base-paragraph mt-2 line-clamp-2">
+                    {book.synopsis || `A ${book.categories.map(bc => bc.name.toLowerCase()).join(', ')} book written in ${book.languages.name}.`}
+                  </p>
                 </div>
                 
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                  {book.synopsis || `A ${book.categories.map(bc => bc.name.toLowerCase()).join(', ')} book written in ${book.languages.name}.`}
-                </p>
-                
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 text-xs text-gray-500">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 text-xs text-base-paragraph">
                   <div className="flex items-center gap-1">
-                    <User size={14} />
+                    <User size={14} className="text-brand-accent" />
                     <span>{book.author_name}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Calendar size={14} />
+                    <Globe size={14} className="text-brand-accent" />
+                    <span>{book.languages.name}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar size={14} className="text-brand-accent" />
                     <span>Created {formatDistanceToNow(new Date(book.created_at), { addSuffix: true })}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Clock size={14} />
+                    <Clock size={14} className="text-brand-accent" />
                     <span>Updated {formatDistanceToNow(new Date(book.updated_at), { addSuffix: true })}</span>
                   </div>
                 </div>
@@ -173,7 +171,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
                 1
               </button>
               {currentPage > 4 && (
-                <span className="text-gray-500">...</span>
+                <span className="text-base-paragraph">...</span>
               )}
             </>
           )}
@@ -183,7 +181,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
           {currentPage < totalPages - 2 && (
             <>
               {currentPage < totalPages - 3 && (
-                <span className="text-gray-500">...</span>
+                <span className="text-base-paragraph">...</span>
               )}
               <button
                 onClick={() => onPageChange(totalPages)}
