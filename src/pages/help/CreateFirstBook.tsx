@@ -78,7 +78,7 @@ export function CreateFirstBook() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg max-w-none">
+        <div>
           
           {/* Introduction */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">

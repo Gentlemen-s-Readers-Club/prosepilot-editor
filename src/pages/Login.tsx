@@ -42,7 +42,7 @@ export function Login() {
 
   const handleSocialLogin = async (provider: "google" | "facebook") => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${window.location.origin}/app`,

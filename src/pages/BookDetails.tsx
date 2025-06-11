@@ -757,7 +757,7 @@ export function BookDetails() {
               <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</h3>
               <div className="space-y-2">
                 {/* Publish/Unpublish Button */}
-                {formData.status !== 'published' && formData.status !== 'error' && (
+                {formData.status !== 'published' && formData.status !== 'archived' && formData.status !== 'error' && (
                   <Button
                     onClick={() => setShowPublishDialog(true)}
                     variant="outline"
@@ -767,17 +767,8 @@ export function BookDetails() {
                     Publish Book
                   </Button>
                 )}
-                
-                {formData.status === 'published' && (
-                  <Button
-                    onClick={() => setShowUnpublishDialog(true)}
-                    variant="outline"
-                    className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                    Unpublish for Editing
-                  </Button>
-                )}
+
+
                 
                 {/* Export Button - Only show when published */}
                 {formData.status === 'published' && (
@@ -823,7 +814,19 @@ export function BookDetails() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
+                
+                {formData.status === 'published' && (
+                  <Button
+                    onClick={() => setShowUnpublishDialog(true)}
+                    variant="outline"
+                    className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    Unpublish for Editing
+                  </Button>
+                )}
 
+               {formData.status !== 'published' && (
                 <Button
                   onClick={handleArchiveToggle}
                   variant="outline"
@@ -835,7 +838,9 @@ export function BookDetails() {
                   <Archive className="w-4 h-4" />
                   {formData.status === 'archived' ? 'Unarchive Book' : 'Archive Book'}
                 </Button>
+                )}
 
+                {formData.status !== 'published' && (
                 <Button
                   onClick={() => setShowDeleteDialog(true)}
                   variant="destructive"
@@ -844,6 +849,7 @@ export function BookDetails() {
                   <Trash2 className="w-4 h-4" />
                   Delete Book
                 </Button>
+                )}
               </div>
             </div>
             )}
