@@ -1,1331 +1,650 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '../components/ui/button';
 import { 
+  ArrowLeft, 
   BookOpen, 
-  Zap, 
-  HelpCircle, 
-  Settings, 
-  Edit3, 
-  Brain, 
-  Users, 
-  CreditCard, 
-  Shield,
+  Code, 
+  Copy, 
+  Check, 
+  ChevronRight,
+  FileText,
   Lightbulb,
-  Target,
-  CheckCircle
+  Sparkles,
+  Zap,
+  MessageSquare,
+  Settings
 } from 'lucide-react';
 import Footer from '../components/Footer';
 
-interface Section {
-  id: string;
-  label: string;
-  icon: JSX.Element;
-}
-
-const sections: Section[] = [
-  { id: 'what-is-prosepilot', label: 'What is ProsePilot?', icon: <BookOpen className="w-4 h-4" /> },
-  { id: 'quick-start', label: 'Quick Start Guide', icon: <Zap className="w-4 h-4" /> },
-  { id: 'prompt-examples', label: 'Prompt Examples & Tips', icon: <Lightbulb className="w-4 h-4" /> },
-  { id: 'managing-books', label: 'Managing Your Books', icon: <Settings className="w-4 h-4" /> },
-  { id: 'editor-features', label: 'Editor Features', icon: <Edit3 className="w-4 h-4" /> },
-  { id: 'ai-features', label: 'AI-Powered Features', icon: <Brain className="w-4 h-4" /> },
-  { id: 'collaboration', label: 'Collaboration & Sharing', icon: <Users className="w-4 h-4" /> },
-  { id: 'subscription', label: 'Subscription & Credits', icon: <CreditCard className="w-4 h-4" /> },
-  { id: 'privacy', label: 'Privacy & Security', icon: <Shield className="w-4 h-4" /> },
-  { id: 'faq', label: 'FAQ', icon: <HelpCircle className="w-4 h-4" /> },
-];
-
 export function Documentation() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState('what-is-prosepilot');
+  const [copiedExample, setCopiedExample] = useState<string | null>(null);
 
-  // Update active section based on URL hash
-  useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    if (hash && sections.find(s => s.id === hash)) {
-      setActiveSection(hash);
-      // Scroll to the section
-      const element = document.getElementById(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [location.hash]);
-
-  const handleSectionClick = (sectionId: string) => {
-    setActiveSection(sectionId);
-    navigate(`/docs#${sectionId}`, { replace: true });
-    
-    // Scroll to the section
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedExample(id);
+    setTimeout(() => setCopiedExample(null), 2000);
   };
 
-  const renderSection = () => {
-    switch (activeSection) {
-      case 'what-is-prosepilot':
-        return (
-          <div id="what-is-prosepilot\" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">What is ProsePilot?</h2>
-              <p className="text-lg text-gray-600 mb-6">
-                ProsePilot is an AI-powered writing platform designed to help authors, writers, and storytellers create compelling narratives with ease. Whether you're a first-time novelist or an experienced author, ProsePilot provides the tools and guidance you need to bring your stories to life.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-blue-50 rounded-lg p-6">
-                <Target className="w-8 h-8 text-blue-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Who It's For</h3>
-                <ul className="text-gray-600 space-y-2">
-                  <li>• Aspiring novelists and storytellers</li>
-                  <li>• Content creators and bloggers</li>
-                  <li>• Students working on creative writing projects</li>
-                  <li>• Professional authors looking to streamline their workflow</li>
-                  <li>• Anyone with a story to tell</li>
-                </ul>
-              </div>
-
-              <div className="bg-green-50 rounded-lg p-6">
-                <CheckCircle className="w-8 h-8 text-green-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Key Benefits</h3>
-                <ul className="text-gray-600 space-y-2">
-                  <li>• Overcome writer's block with AI assistance</li>
-                  <li>• Generate structured, coherent narratives</li>
-                  <li>• Save time on plot development and character creation</li>
-                  <li>• Maintain consistency across your story</li>
-                  <li>• Export professional-quality manuscripts</li>
-                </ul>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-semibold text-base-heading mb-4">Core Features</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="bg-brand-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                    <Brain className="w-8 h-8 text-base-heading" />
-                  </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">AI Story Generation</h4>
-                  <p className="text-gray-600 text-sm">Transform your ideas into full-length books with intelligent AI assistance that understands narrative structure.</p>
-                </div>
-
-                <div className="text-center">
-                  <div className="bg-brand-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                    <Edit3 className="w-8 h-8 text-base-heading" />
-                  </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Rich Text Editor</h4>
-                  <p className="text-gray-600 text-sm">Write and format your content with our intuitive editor, complete with version control and collaboration features.</p>
-                </div>
-
-                <div className="bg-brand-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Settings className="w-8 h-8 text-base-heading" />
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Book Management</h4>
-                <p className="text-gray-600 text-sm">Organize your projects with powerful tools for chapter management, status tracking, and manuscript organization.</p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'quick-start':
-        return (
-          <div id="quick-start" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Quick Start Guide</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Get up and running with ProsePilot in just a few minutes. Follow these simple steps to create your first book.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">1</div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Create Your Account</h3>
-                  <p className="text-gray-600 mb-4">Sign up for ProsePilot using your email address or social media accounts. Choose a plan that fits your writing goals.</p>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600">💡 <strong>Tip:</strong> Start with the Starter plan to explore the platform before upgrading.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">2</div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Start Your First Book</h3>
-                  <p className="text-gray-600 mb-4">Click "Create New Book" from your dashboard and provide a story idea or outline. The more detail you provide, the better the AI can assist you.</p>
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <p className="text-sm text-blue-800"><strong>Example prompt:</strong> "A mystery novel about a detective investigating disappearances in a small coastal town, with supernatural elements and a focus on character development."</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">3</div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Customize Your Book</h3>
-                  <p className="text-gray-600 mb-4">Select your book's genre, language, narrator perspective, tone, and literature style. These settings help the AI generate content that matches your vision.</p>
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div className="bg-gray-50 rounded p-3">
-                      <p className="font-medium text-gray-900">Required Settings:</p>
-                      <ul className="text-sm text-gray-600 mt-1">
-                        <li>• Categories/Genres</li>
-                        <li>• Language</li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-50 rounded p-3">
-                      <p className="font-medium text-gray-900">Optional Settings:</p>
-                      <ul className="text-sm text-gray-600 mt-1">
-                        <li>• Narrator perspective</li>
-                        <li>• Writing tone</li>
-                        <li>• Literature style</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">4</div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Generate and Edit</h3>
-                  <p className="text-gray-600 mb-4">Once your book is generated, you can edit chapters, add new content, and refine the story using our rich text editor. The AI provides a solid foundation that you can build upon.</p>
-                  <div className="bg-green-50 rounded-lg p-4">
-                    <p className="text-sm text-green-800">✅ <strong>Remember:</strong> The AI-generated content is a starting point. Feel free to edit, expand, and make it uniquely yours!</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-brand-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">5</div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Export and Publish</h3>
-                  <p className="text-gray-600 mb-4">When you're satisfied with your book, export it to various formats (PDF, ePub, Kindle) and share it with the world or continue refining it.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-yellow-800 mb-2">⏱️ Estimated Time</h3>
-              <p className="text-yellow-700">From account creation to your first generated book: <strong>5-10 minutes</strong></p>
-            </div>
-          </div>
-        );
-
-      case 'prompt-examples':
-        return (
-          <div id="prompt-examples" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Prompt Examples & Tips</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Learn how to write effective prompts that help the AI generate exactly the kind of story you want. From simple concepts to detailed outlines, here's how to get the best results.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌱 Simple Prompts (Beginner)</h3>
-                <p className="text-gray-600 mb-4">Start with basic concepts and let the AI expand on them:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-green-50 border-l-4 border-green-400 p-4">
-                    <p className="font-medium text-green-800">Example 1: Character + Situation</p>
-                    <p className="text-green-700 mt-1">"A retired teacher discovers a hidden talent for solving cold cases."</p>
-                  </div>
-                  
-                  <div className="bg-green-50 border-l-4 border-green-400 p-4">
-                    <p className="font-medium text-green-800">Example 2: Concept + Twist</p>
-                    <p className="text-green-700 mt-1">"A time travel story where the protagonist can only go back 24 hours."</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌿 Intermediate Prompts</h3>
-                <p className="text-gray-600 mb-4">Add more detail about characters, themes, and plot structure:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
-                    <p className="font-medium text-blue-800">Example 1: Character-Driven Drama</p>
-                    <p className="text-blue-700 mt-1">"A psychological thriller about a forensic psychologist who starts experiencing the same symptoms as her patients. The story explores themes of identity, mental health, and the thin line between sanity and madness. Set in modern-day Seattle with a focus on character development and internal conflict."</p>
-                  </div>
-                  
-                  <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
-                    <p className="font-medium text-blue-800">Example 2: World-Building Focus</p>
-                    <p className="text-blue-700 mt-1">"A fantasy adventure in a world where magic is powered by emotions. The stronger the emotion, the more powerful the magic, but it comes at the cost of the caster's memories. Follow a young mage who must choose between saving her kingdom and preserving her identity."</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌳 Advanced Prompts (Detailed)</h3>
-                <p className="text-gray-600 mb-4">Provide comprehensive outlines with character arcs, themes, and structure:</p>
-                
-                <div className="bg-purple-50 border-l-4 border-purple-400 p-6">
-                  <p className="font-medium text-purple-800 mb-3">Example: Multi-Layered Mystery</p>
-                  <div className="text-purple-700 space-y-2">
-                    <p><strong>Setting:</strong> 1920s Chicago during Prohibition</p>
-                    <p><strong>Main Character:</strong> Elena Vasquez, a Mexican-American journalist who writes for a Spanish-language newspaper</p>
-                    <p><strong>Plot:</strong> Elena investigates the disappearance of several immigrant women, uncovering a conspiracy involving corrupt police, bootleggers, and human trafficking</p>
-                    <p><strong>Themes:</strong> Immigration, women's rights, corruption, identity, and justice</p>
-                    <p><strong>Structure:</strong> Three-act structure with parallel timelines showing Elena's investigation and flashbacks revealing the victims' stories</p>
-                    <p><strong>Tone:</strong> Noir atmosphere with social commentary, balancing dark themes with hope and resilience</p>
-                    <p><strong>Character Arc:</strong> Elena starts as an idealistic reporter but learns to navigate moral gray areas while maintaining her integrity</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">💡 Pro Tips for Better Prompts</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">✅ Do This</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Be specific on the main plot and characters</li>
-                      <li>• Include character motivations</li>
-                      <li>• Mention themes you want to explore</li>
-                      <li>• Specify the target audience</li>
-                      <li>• Include any unique elements or twists</li>
-                      <li>• Mention pacing preferences (fast/slow)</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-red-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">❌ Avoid This</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Vague descriptions like "a good story"</li>
-                      <li>• Contradictory genre elements</li>
-                      <li>• Too many complex subplots</li>
-                      <li>• Overly restrictive requirements</li>
-                      <li>• Copying existing works exactly</li>
-                      <li>• Inappropriate or harmful content</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-yellow-800 mb-2">🎯 Quick Prompt Formula</h4>
-                <p className="text-yellow-700 mb-3">For best results, try this structure:</p>
-                <div className="bg-white rounded p-4 border border-yellow-200">
-                  <p className="font-mono text-sm text-gray-800">
-                    [Main Plot] + [Main Characters] + [Central Conflict] + [Setting]
-                  </p>
-                </div>
-                <p className="text-yellow-700 mt-3 text-sm">
-                  <strong>Example:</strong> "A sci-fi thriller about a space station engineer who discovers the AI controlling their life support is becoming sentient. Set on a remote mining station in 2157, exploring themes of artificial consciousness and human survival, with a claustrophobic atmosphere and moral dilemmas about AI rights."
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'managing-books':
-        return (
-          <div id="managing-books" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Managing Your Books</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Learn how to organize, track, and manage your writing projects effectively within ProsePilot.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">📚 Book Dashboard</h3>
-                <p className="text-gray-600 mb-4">Your dashboard is the central hub for all your writing projects:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Filtering & Search</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Filter by category, language, or status</li>
-                      <li>• Search books by title</li>
-                      <li>• Sort by creation date or last modified</li>
-                      <li>• View archived projects separately</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Book Information</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Cover image and title display</li>
-                      <li>• Status badges for quick identification</li>
-                      <li>• Category and language tags</li>
-                      <li>• Last modified timestamps</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">📊 Book Status Workflow</h3>
-                <p className="text-gray-600 mb-4">Understanding the different stages of your book's lifecycle:</p>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
-                    <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">Writing</div>
-                    <div>
-                      <p className="font-medium text-gray-900">AI is generating your book</p>
-                      <p className="text-gray-600 text-sm">This process typically takes a few minutes. You'll receive a notification when it's complete.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 p-4 bg-yellow-50 rounded-lg">
-                    <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">Draft</div>
-                    <div>
-                      <p className="font-medium text-gray-900">Ready for editing and refinement</p>
-                      <p className="text-gray-600 text-sm">Your book has been generated and is ready for you to review, edit, and enhance.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg">
-                    <div className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium">Reviewing</div>
-                    <div>
-                      <p className="font-medium text-gray-900">Under review or being edited</p>
-                      <p className="text-gray-600 text-sm">Mark your book as "reviewing" when you're actively working on revisions.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 p-4 bg-green-50 rounded-lg">
-                    <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">Published</div>
-                    <div>
-                      <p className="font-medium text-gray-900">Completed and published</p>
-                      <p className="text-gray-600 text-sm">Your final version. Published books are read-only to preserve the final version.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium">Archived</div>
-                    <div>
-                      <p className="font-medium text-gray-900">Stored but not actively worked on</p>
-                      <p className="text-gray-600 text-sm">Archive books you're not currently working on to keep your dashboard organized.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">📖 Chapter Organization</h3>
-                <p className="text-gray-600 mb-4">Organize your book's structure with chapters and pages:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Chapters vs Pages</h4>
-                    <div className="space-y-3">
-                      <div>
-                        <p className="font-medium text-gray-800">📚 Chapters</p>
-                        <p className="text-gray-600 text-sm">Main story sections with substantial content, automatically included in the table of contents</p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-800">📄 Pages</p>
-                        <p className="text-gray-600 text-sm">Standalone content like prologues, epilogues, or appendices (not included in the table of contents)</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Organization Features</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Drag and drop to reorder</li>
-                      <li>• Rename chapters inline</li>
-                      <li>• Add new chapters or pages</li>
-                      <li>• Delete unwanted sections</li>
-                      <li>• Navigate between chapters easily</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'editor-features':
-        return (
-          <div id="editor-features" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Editor Features</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Master the rich text editor and discover all the tools available for crafting your story.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">✏️ Text Formatting</h3>
-                <p className="text-gray-600 mb-4">Format your text with professional typography options:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Basic Formatting</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• <strong>Bold</strong> text</li>
-                      <li>• <em>Italic</em> text</li>
-                      <li>• <u>Underlined</u> text</li>
-                      <li>• Text alignment options</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Structure</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Headings (H1-H6)</li>
-                      <li>• Bullet lists</li>
-                      <li>• Numbered lists</li>
-                      <li>• Block quotes</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Advanced</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Undo/Redo</li>
-                      <li>• Text alignment</li>
-                      <li>• Paragraph spacing</li>
-                      <li>• Custom styling</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">⌨️ Keyboard Shortcuts</h3>
-                <p className="text-gray-600 mb-4">Speed up your writing with these helpful shortcuts:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Formatting Shortcuts</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Bold</span>
-                        <code className="bg-white px-2 py-1 rounded">Ctrl+B</code>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Italic</span>
-                        <code className="bg-white px-2 py-1 rounded">Ctrl+I</code>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Underline</span>
-                        <code className="bg-white px-2 py-1 rounded">Ctrl+U</code>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Editor Shortcuts</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Undo</span>
-                        <code className="bg-white px-2 py-1 rounded">Ctrl+Z</code>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Redo</span>
-                        <code className="bg-white px-2 py-1 rounded">Ctrl+Y</code>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Save</span>
-                        <code className="bg-white px-2 py-1 rounded">Ctrl+S</code>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🔄 Version Control</h3>
-                <p className="text-gray-600 mb-4">Track changes and manage different versions of your chapters:</p>
-                
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                  <h4 className="font-semibold text-yellow-800 mb-3">How Version Control Works</h4>
-                  <ul className="text-yellow-700 space-y-2">
-                    <li>• Each time you save, a new version is created</li>
-                    <li>• View version history with timestamps</li>
-                    <li>• Compare different versions side by side</li>
-                    <li>• Restore any previous version if needed</li>
-                    <li>• Versions are automatically numbered for easy reference</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🧭 Navigation</h3>
-                <p className="text-gray-600 mb-4">Move efficiently between chapters and sections:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Sidebar Navigation</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Collapsible sidebar for more writing space</li>
-                      <li>• Quick chapter switching</li>
-                      <li>• Book overview and cover display</li>
-                      <li>• Add new chapters directly from sidebar</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Chapter Management</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Edit chapter titles inline</li>
-                      <li>• Navigate back to book details</li>
-                      <li>• Chapter type indicators (chapter/page)</li>
-                      <li>• Status-aware editing (read-only for published)</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'ai-features':
-        return (
-          <div id="ai-features" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">AI-Powered Features</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Discover how ProsePilot's AI assists you in creating compelling, well-structured narratives.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🤖 Story Generation Process</h3>
-                <p className="text-gray-600 mb-4">Understanding how the AI transforms your ideas into complete stories:</p>
-                
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
-                    <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">1</div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Prompt Analysis</h4>
-                      <p className="text-gray-600 text-sm">The AI analyzes your prompt to understand genre, themes, characters, and plot elements.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg">
-                    <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">2</div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Structure Planning</h4>
-                      <p className="text-gray-600 text-sm">Creates a coherent narrative structure with proper pacing and chapter organization.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4 p-4 bg-purple-50 rounded-lg">
-                    <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">3</div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Content Generation</h4>
-                      <p className="text-gray-600 text-sm">Generates chapters with consistent characters, plot development, and your specified tone.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4 p-4 bg-orange-50 rounded-lg">
-                    <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm">4</div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Quality Review</h4>
-                      <p className="text-gray-600 text-sm">Ensures narrative consistency, proper flow, and adherence to your specifications.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">⚙️ Customization Options</h3>
-                <p className="text-gray-600 mb-4">Fine-tune the AI's output to match your vision:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Basic Settings</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• <strong>Categories:</strong> Genre and subgenre selection</li>
-                      <li>• <strong>Language:</strong> Writing language preference</li>
-                      <li>• <strong>Length:</strong> Varies by subscription plan</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Advanced Settings</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• <strong>Narrator:</strong> First person, third person, etc.</li>
-                      <li>• <strong>Tone:</strong> Serious, humorous, dark, light</li>
-                      <li>• <strong>Style:</strong> Literary, commercial, experimental</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🛡️ Content Safety & Guidelines</h3>
-                <p className="text-gray-600 mb-4">Our AI follows strict guidelines to ensure appropriate content:</p>
-                
-                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                  <h4 className="font-semibold text-red-800 mb-3">Content Policy</h4>
-                  <p className="text-red-700 mb-3">The AI will not generate content that includes:</p>
-                  <ul className="text-red-700 space-y-1">
-                    <li>• Explicit violence or graphic content</li>
-                    <li>• Hate speech or discriminatory content</li>
-                    <li>• Adult or sexual content</li>
-                    <li>• Illegal activities or harmful instructions</li>
-                    <li>• Copyrighted material or plagiarism</li>
-                  </ul>
-                  <p className="text-red-700 mt-3 text-sm">If your prompt violates these guidelines, you'll receive specific feedback on how to modify it.</p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🎯 Getting the Best Results</h3>
-                <p className="text-gray-600 mb-4">Tips for maximizing the AI's effectiveness:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-green-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-green-800 mb-3">✅ Best Practices</h4>
-                    <ul className="text-green-700 space-y-2">
-                      <li>• Provide clear, detailed prompts</li>
-                      <li>• Specify your target audience</li>
-                      <li>• Include character motivations</li>
-                      <li>• Mention desired themes</li>
-                      <li>• Set clear genre expectations</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-blue-800 mb-3">💡 Pro Tips</h4>
-                    <ul className="text-blue-700 space-y-2">
-                      <li>• Use the generated content as a foundation</li>
-                      <li>• Edit and personalize the AI output</li>
-                      <li>• Experiment with different settings</li>
-                      <li>• Combine multiple shorter prompts</li>
-                      <li>• Review and refine iteratively</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'collaboration':
-        return (
-          <div id="collaboration" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Collaboration & Sharing</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Learn about team features, sharing options, and publishing integrations available in ProsePilot.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">👥 Team Collaboration (Studio Plan)</h3>
-                <p className="text-gray-600 mb-4">Work together with your writing team or editors:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Team Features</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Add up to 3 team members</li>
-                      <li>• Shared access to all books</li>
-                      <li>• Real-time collaborative editing</li>
-                      <li>• Comment and suggestion system</li>
-                      <li>• Role-based permissions</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Workflow Benefits</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Streamlined review process</li>
-                      <li>• Version control for team edits</li>
-                      <li>• Centralized project management</li>
-                      <li>• Shared credit pool</li>
-                      <li>• Team communication tools</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
-                  <p className="text-yellow-800 text-sm">
-                    <strong>Coming Soon:</strong> Team collaboration features are currently in development and will be available with the Studio plan launch.
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">📤 Export & Sharing Options</h3>
-                <p className="text-gray-600 mb-4">Multiple ways to share and distribute your completed works:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Export Formats</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="text-center">
-                        <div className="bg-red-100 rounded-lg p-4 mb-2">
-                          <p className="font-medium text-red-800">PDF</p>
-                        </div>
-                        <p className="text-sm text-gray-600">Professional formatting for print or digital distribution</p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="bg-blue-100 rounded-lg p-4 mb-2">
-                          <p className="font-medium text-blue-800">ePub</p>
-                        </div>
-                        <p className="text-sm text-gray-600">Standard e-book format for most e-readers</p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="bg-orange-100 rounded-lg p-4 mb-2">
-                          <p className="font-medium text-orange-800">Kindle</p>
-                        </div>
-                        <p className="text-sm text-gray-600">Optimized for Amazon Kindle devices and apps</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🚀 Publishing Integration</h3>
-                <p className="text-gray-600 mb-4">Seamless integration with popular publishing platforms:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-purple-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Self-Publishing Platforms</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Amazon Kindle Direct Publishing (KDP)</li>
-                      <li>• Apple Books</li>
-                      <li>• Google Play Books</li>
-                      <li>• Barnes & Noble Press</li>
-                      <li>• Smashwords</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-orange-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Publishing Features</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Metadata generation</li>
-                      <li>• ISBN assignment (Studio plan)</li>
-                      <li>• Cover design assistance</li>
-                      <li>• Formatting optimization</li>
-                      <li>• Marketing copy generation</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
-                  <p className="text-blue-800 text-sm">
-                    <strong>Note:</strong> Publishing integrations and advanced publishing features are available with Pro Author plan and above.
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🔗 Sharing & Feedback</h3>
-                <p className="text-gray-600 mb-4">Get feedback and share your work with others:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Sharing Options</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="font-medium text-gray-800 mb-2">Private Sharing</p>
-                        <ul className="text-gray-600 text-sm space-y-1">
-                          <li>• Share with specific email addresses</li>
-                          <li>• Password-protected links</li>
-                          <li>• Time-limited access</li>
-                          <li>• Download restrictions</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <p className="font-medium text-gray-800 mb-2">Public Sharing</p>
-                        <ul className="text-gray-600 text-sm space-y-1">
-                          <li>• Public preview links</li>
-                          <li>• Social media integration</li>
-                          <li>• Embed options for websites</li>
-                          <li>• Community showcase</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'subscription':
-        return (
-          <div id="subscription" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Subscription & Credits</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Understand ProsePilot's pricing model, credit system, and how to manage your subscription.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">💳 Subscription Plans</h3>
-                <p className="text-gray-600 mb-4">Choose the plan that best fits your writing needs:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                    <h4 className="font-semibold text-green-800 mb-2">Starter</h4>
-                    <p className="text-2xl font-bold text-green-800 mb-2">$9/mo</p>
-                    <p className="text-green-700 text-sm mb-3">5 credits/month (1 book)</p>
-                    <ul className="text-green-700 text-sm space-y-1">
-                      <li>• Max 15,000 words/book</li>
-                      <li>• Basic genres</li>
-                      <li>• Watermarked exports</li>
-                      <li>• Community support</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-blue-50 border-2 border-blue-400 rounded-lg p-6 relative">
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Most Popular
-                    </div>
-                    <h4 className="font-semibold text-blue-800 mb-2">Pro Author</h4>
-                    <p className="text-2xl font-bold text-blue-800 mb-2">$29/mo</p>
-                    <p className="text-blue-700 text-sm mb-3">25 credits/month (5 books)</p>
-                    <ul className="text-blue-700 text-sm space-y-1">
-                      <li>• Max 60,000 words/book</li>
-                      <li>• All genres & advanced settings</li>
-                      <li>• Clean exports</li>
-                      <li>• Priority support</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 opacity-75">
-                    <div className="bg-orange-500 text-white px-2 py-1 rounded text-xs font-medium mb-2 inline-block">
-                      Coming Soon
-                    </div>
-                    <h4 className="font-semibold text-orange-800 mb-2">Studio</h4>
-                    <p className="text-2xl font-bold text-orange-800 mb-2">$79/mo</p>
-                    <p className="text-orange-700 text-sm mb-3">75 credits/month (15 books)</p>
-                    <ul className="text-orange-700 text-sm space-y-1">
-                      <li>• Max 100,000 words/book</li>
-                      <li>• Team collaboration</li>
-                      <li>• AI illustrations</li>
-                      <li>• Live chat support</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-6 opacity-75">
-                    <div className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium mb-2 inline-block">
-                      Coming Soon
-                    </div>
-                    <h4 className="font-semibold text-red-800 mb-2">Enterprise</h4>
-                    <p className="text-2xl font-bold text-red-800 mb-2">$199/mo</p>
-                    <p className="text-red-700 text-sm mb-3">Unlimited credits</p>
-                    <ul className="text-red-700 text-sm space-y-1">
-                      <li>• Unlimited everything</li>
-                      <li>• API access</li>
-                      <li>• Custom AI tuning</li>
-                      <li>• Dedicated support</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🪙 Credit System</h3>
-                <p className="text-gray-600 mb-4">Understanding how credits work and how to manage them:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">How Credits Work</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• <strong>1 book = 5 credits</strong> to generate</li>
-                      <li>• Credits reset monthly with your subscription</li>
-                      <li>• Unused credits don't roll over</li>
-                      <li>• Additional credits can be purchased</li>
-                      <li>• Credits are consumed when generation starts</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Credit Packages</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700">10 Credits</span>
-                        <span className="font-semibold">$20</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700">25 Credits</span>
-                        <span className="font-semibold">$45 <span className="text-green-600 text-sm">(Save 10%)</span></span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700">50 Credits</span>
-                        <span className="font-semibold">$80 <span className="text-green-600 text-sm">(Save 20%)</span></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">⚙️ Managing Your Subscription</h3>
-                <p className="text-gray-600 mb-4">How to update, pause, or cancel your subscription:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Subscription Management</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <p className="font-medium text-gray-800 mb-2">Upgrading/Downgrading</p>
-                        <ul className="text-gray-600 text-sm space-y-1">
-                          <li>• Changes take effect next billing cycle</li>
-                          <li>• Prorated billing for upgrades</li>
-                          <li>• Keep current features until cycle ends</li>
-                          <li>• No refunds for downgrades</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <p className="font-medium text-gray-800 mb-2">Cancellation</p>
-                        <ul className="text-gray-600 text-sm space-y-1">
-                          <li>• Cancel anytime from your account</li>
-                          <li>• Access continues until period ends</li>
-                          <li>• Books remain accessible (read-only)</li>
-                          <li>• Can reactivate anytime</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">💰 Billing & Payments</h3>
-                <p className="text-gray-600 mb-4">Payment methods, billing cycles, and invoice management:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-purple-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Payment Options</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Credit and debit cards</li>
-                      <li>• PayPal</li>
-                      <li>• Bank transfers (Enterprise)</li>
-                      <li>• Secure payment processing</li>
-                      <li>• Automatic billing</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-yellow-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Billing Features</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Monthly or annual billing</li>
-                      <li>• Downloadable invoices</li>
-                      <li>• Billing history access</li>
-                      <li>• Email notifications</li>
-                      <li>• Tax calculations included</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'privacy':
-        return (
-          <div id="privacy" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Privacy & Security</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Learn how ProsePilot protects your data, ensures privacy, and maintains security standards.
-              </p>
-            </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🔒 Data Protection</h3>
-                <p className="text-gray-600 mb-4">Your creative work and personal information are protected with industry-standard security:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Data Encryption</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• End-to-end encryption for all data</li>
-                      <li>• SSL/TLS for data transmission</li>
-                      <li>• Encrypted database storage</li>
-                      <li>• Secure backup systems</li>
-                      <li>• Regular security audits</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Access Controls</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Multi-factor authentication</li>
-                      <li>• Role-based permissions</li>
-                      <li>• Session management</li>
-                      <li>• IP address monitoring</li>
-                      <li>• Automated logout</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">📋 Privacy Policy</h3>
-                <p className="text-gray-600 mb-4">Understanding how we collect, use, and protect your information:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">What We Collect</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="font-medium text-gray-800 mb-2">Account Information</p>
-                        <ul className="text-gray-600 text-sm space-y-1">
-                          <li>• Email address</li>
-                          <li>• Name and profile details</li>
-                          <li>• Subscription information</li>
-                          <li>• Payment details (encrypted)</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <p className="font-medium text-gray-800 mb-2">Usage Data</p>
-                        <ul className="text-gray-600 text-sm space-y-1">
-                          <li>• Books and content created</li>
-                          <li>• Feature usage analytics</li>
-                          <li>• Performance metrics</li>
-                          <li>• Error logs (anonymized)</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🌍 Compliance</h3>
-                <p className="text-gray-600 mb-4">ProsePilot complies with international privacy and data protection regulations:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6 text-center">
-                    <h4 className="font-semibold text-blue-800 mb-2">GDPR</h4>
-                    <p className="text-blue-700 text-sm">European Union General Data Protection Regulation compliance</p>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-6 text-center">
-                    <h4 className="font-semibold text-green-800 mb-2">CCPA</h4>
-                    <p className="text-green-700 text-sm">California Consumer Privacy Act compliance</p>
-                  </div>
-                  
-                  <div className="bg-purple-50 rounded-lg p-6 text-center">
-                    <h4 className="font-semibold text-purple-800 mb-2">SOC 2</h4>
-                    <p className="text-purple-700 text-sm">Security, availability, and confidentiality standards</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">👤 Your Rights</h3>
-                <p className="text-gray-600 mb-4">You have full control over your data and privacy settings:</p>
-                
-                <div className="space-y-4">
-                  <div className="bg-yellow-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Data Rights</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <ul className="text-gray-600 space-y-2">
-                          <li>• <strong>Access:</strong> Request copies of your data</li>
-                          <li>• <strong>Correction:</strong> Update incorrect information</li>
-                          <li>• <strong>Deletion:</strong> Request account and data removal</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <ul className="text-gray-600 space-y-2">
-                          <li>• <strong>Portability:</strong> Export your content</li>
-                          <li>• <strong>Restriction:</strong> Limit data processing</li>
-                          <li>• <strong>Objection:</strong> Opt out of certain uses</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-base-heading mb-4">🛡️ Account Security</h3>
-                <p className="text-gray-600 mb-4">Best practices for keeping your account secure:</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-red-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Security Recommendations</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Use a strong, unique password</li>
-                      <li>• Enable two-factor authentication</li>
-                      <li>• Regularly review account activity</li>
-                      <li>• Log out from shared devices</li>
-                      <li>• Keep your email secure</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-orange-50 rounded-lg p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Warning Signs</h4>
-                    <ul className="text-gray-600 space-y-2">
-                      <li>• Unexpected login notifications</li>
-                      <li>• Changes you didn't make</li>
-                      <li>• Suspicious account activity</li>
-                      <li>• Unfamiliar devices in settings</li>
-                      <li>• Phishing email attempts</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'faq':
-        return (
-          <div id="faq" className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-base-heading mb-4">Frequently Asked Questions</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Find answers to common questions about ProsePilot's features, pricing, and functionality.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">How does the AI generate books?</h3>
-                <p className="text-gray-600">
-                  ProsePilot uses advanced language models trained on diverse literary works to understand narrative structure, character development, and genre conventions. When you provide a prompt, the AI analyzes your requirements and generates a complete book with coherent plot, consistent characters, and proper pacing. The AI considers your specified genre, tone, narrator perspective, and other settings to create content that matches your vision.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I edit the AI-generated content?</h3>
-                <p className="text-gray-600">
-                  Absolutely! The AI-generated content is meant to be a foundation for your creativity. You can edit, expand, rewrite, or completely transform any part of the generated book using our rich text editor. Many authors use the AI output as a first draft and then personalize it with their unique voice and style. The version control system tracks all your changes, so you can always revert if needed.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">What happens if I run out of credits?</h3>
-                <p className="text-gray-600">
-                  If you exhaust your monthly credits, you have several options: wait until your next billing cycle for credits to reset, purchase additional credit packages, or upgrade to a higher plan with more monthly credits. Your existing books remain accessible for editing and export even if you're out of credits. Credits are only consumed when generating new books.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Do I own the rights to AI-generated content?</h3>
-                <p className="text-gray-600">
-                  Yes, you retain full ownership and copyright of all content generated through ProsePilot. The AI-generated text becomes your intellectual property, and you're free to publish, sell, or distribute it as you wish. We don't claim any rights to your creative work. However, we recommend reviewing and editing the content to ensure it meets your standards and reflects your unique voice.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">How long does it take to generate a book?</h3>
-                <p className="text-gray-600">
-                  Book generation typically takes 3-10 minutes, depending on the length and complexity of your request. Shorter books (15,000 words) generate faster than longer ones (60,000+ words). You'll see a progress indicator during generation, and you'll receive a notification when your book is ready. You can continue using other parts of the platform while generation is in progress.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I collaborate with others on my books?</h3>
-                <p className="text-gray-600">
-                  Team collaboration features are available with the Studio plan (coming soon). This includes shared access to books, real-time collaborative editing, comment systems, and role-based permissions. Currently, you can share exported versions of your books for feedback, but live collaboration features are in development.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">What file formats can I export to?</h3>
-                <p className="text-gray-600">
-                  ProsePilot supports export to PDF, ePub, and Kindle formats. PDF is great for print or digital distribution, ePub works with most e-readers, and Kindle format is optimized for Amazon's ecosystem. Higher-tier plans include additional formatting options and remove watermarks from exported files.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Is there a limit to how many books I can store?</h3>
-                <p className="text-gray-600">
-                  There's no limit to how many books you can store in your account. Your storage limit is based on your monthly credit allocation for generating new books. All previously generated books remain accessible indefinitely, even if you downgrade your plan or pause your subscription.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Can I cancel my subscription anytime?</h3>
-                <p className="text-gray-600">
-                  Yes, you can cancel your subscription at any time from your account settings. When you cancel, you'll continue to have access to all features until the end of your current billing period. Your books will remain accessible (in read-only mode) even after cancellation, and you can reactivate your subscription anytime to resume editing and generating new content.
-                </p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">What languages does ProsePilot support?</h3>
-                <p className="text-gray-600">
-                  ProsePilot currently supports multiple languages including English, Spanish, French, German, Italian, Portuguese, and more. The AI can generate content in your selected language and understands cultural nuances and literary conventions specific to each language. The quality and features may vary by language, with English having the most comprehensive support.
-                </p>
-              </div>
-
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">Still have questions?</h3>
-                <p className="text-blue-700 mb-4">
-                  Can't find the answer you're looking for? Our support team is here to help!
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-                    Contact Support
-                  </button>
-                  <button className="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md hover:bg-blue-50 transition-colors">
-                    Join Community
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
+  const promptExamples = [
+    {
+      id: 'fantasy',
+      title: 'Fantasy Adventure',
+      prompt: 'A young orphan discovers they have magical abilities and must attend a secret school to learn to control their powers. Along the way, they uncover a plot by a dark wizard to take over the magical world. The story should be suitable for young adults, with themes of friendship, courage, and finding one\'s identity.',
+      explanation: 'This prompt clearly defines the genre (fantasy), target audience (young adults), main character, central conflict, and key themes.'
+    },
+    {
+      id: 'mystery',
+      title: 'Murder Mystery',
+      prompt: 'A brilliant but socially awkward detective is called to a remote island mansion when a wealthy patriarch is found dead after a family gathering. What initially appears to be natural causes soon reveals itself as murder, and everyone in the family has a motive. Set in the 1930s with an Agatha Christie-inspired style and a focus on clever clues and psychological insights.',
+      explanation: 'This prompt establishes the genre (murder mystery), setting (1930s, remote mansion), main character, plot setup, and stylistic reference.'
+    },
+    {
+      id: 'romance',
+      title: 'Contemporary Romance',
+      prompt: 'Two rival chefs who despise each other are forced to collaborate on a cooking show. Despite their initial animosity, they begin to appreciate each other\'s culinary skills and eventually fall in love. The story should have a lighthearted, humorous tone with a focus on character growth and the slow-burn romance.',
+      explanation: 'This prompt outlines the romance trope (enemies to lovers), the specific setting (cooking show), character dynamics, and desired tone.'
+    },
+    {
+      id: 'sci-fi',
+      title: 'Science Fiction',
+      prompt: 'In the year 2150, a team of scientists discovers a way to communicate with parallel universes. When they make contact with a version of Earth that has solved climate change and eliminated poverty, they attempt to bring this knowledge back. However, they soon discover that this utopian world harbors a dark secret. The story should explore ethical dilemmas and the unintended consequences of technological advancement.',
+      explanation: 'This prompt specifies the time period, scientific concept, plot twist, and philosophical themes to explore.'
+    },
+    {
+      id: 'title-specific',
+      title: 'Title-Specific Historical Fiction',
+      prompt: 'Write a historical fiction novel titled "The Clockmaker\'s Daughter" set in Victorian London. The story follows a young woman who disguises herself as a man to become an apprentice to a renowned clockmaker, while secretly investigating her father\'s mysterious death which she believes is connected to a revolutionary clockwork invention that was stolen. The narrative should alternate between the Victorian era and present day, where a historian discovers the woman\'s diary and becomes obsessed with uncovering the truth.',
+      explanation: 'This prompt specifies the exact title, time period, dual timeline structure, protagonist, and central mystery, giving the AI clear parameters for the book.'
     }
-  };
+  ];
 
   return (
-    <>
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Sidebar */}
-          <div className="w-64 shrink-0">
+    <div className="min-h-screen bg-base-background">
+      {/* Header */}
+      <div className="bg-white pt-16 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center mb-6">
+            <Link to="/" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Link>
+          </div>
+          
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Documentation
+              </h1>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Learn how to use ProsePilot effectively with our comprehensive guides and examples.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar Navigation */}
+          <div className="lg:w-64 shrink-0">
             <div className="sticky top-8">
-              <h2 className="text-2xl font-semibold text-base-heading mb-4">Documentation</h2>
-              <nav className="flex flex-col gap-1">
-                {sections.map(({ id, label, icon }) => (
-                  <button
-                    key={id}
-                    onClick={() => handleSectionClick(id)}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
-                      activeSection === id
-                        ? 'bg-brand-primary text-white'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {icon}
-                    <span>{label}</span>
-                  </button>
-                ))}
+              <nav className="space-y-1">
+                <a href="#getting-started" className="block px-3 py-2 rounded-md bg-brand-primary text-white">
+                  Getting Started
+                </a>
+                <a href="#prompt-examples" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                  Prompt Examples
+                </a>
+                <a href="#ai-settings" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                  AI Settings Guide
+                </a>
+                <a href="#editing-tools" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                  Editing Tools
+                </a>
+                <a href="#team-collaboration" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                  Team Collaboration
+                </a>
+                <a href="#faq" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                  FAQ
+                </a>
               </nav>
             </div>
           </div>
 
           {/* Main Content */}
           <div className="flex-1">
-            <div className="bg-brand-brand-accent rounded-lg shadow p-6">
-              {renderSection()}
-            </div>
+            {/* Getting Started */}
+            <section id="getting-started" className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <BookOpen className="w-8 h-8 text-brand-primary mr-4" />
+                Getting Started
+              </h2>
+              
+              <div className="prose prose-lg max-w-none">
+                <p>
+                  Welcome to ProsePilot! This guide will help you get started with our AI-powered writing platform.
+                  Follow these simple steps to create your first book:
+                </p>
+
+                <div className="bg-white rounded-lg shadow-md p-6 my-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Start Guide</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Create an account</h4>
+                        <p className="text-gray-700">Sign up for a ProsePilot account if you haven't already.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">2</div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Start a new book</h4>
+                        <p className="text-gray-700">From your dashboard, click "Create New Book" to open the book creation wizard.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">3</div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Enter your story idea</h4>
+                        <p className="text-gray-700">Describe your story concept, including main characters, setting, and central conflict.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">4</div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Configure settings</h4>
+                        <p className="text-gray-700">Choose categories, language, and optional advanced settings like narrator perspective and tone.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">5</div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Generate your book</h4>
+                        <p className="text-gray-700">Click "Create Book" and wait while our AI generates your complete book.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p>
+                  For more detailed instructions, check out our <Link to="/help/create-first-book" className="text-brand-primary hover:underline">comprehensive guide</Link> to creating your first book.
+                </p>
+              </div>
+            </section>
+
+            {/* Prompt Examples */}
+            <section id="prompt-examples" className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <Lightbulb className="w-8 h-8 text-brand-primary mr-4" />
+                Prompt Examples
+              </h2>
+              
+              <div className="prose prose-lg max-w-none">
+                <p>
+                  The quality of your prompt greatly influences the quality of your generated book. 
+                  Here are some examples of effective prompts for different genres:
+                </p>
+
+                <div className="space-y-6 mt-6">
+                  {promptExamples.map((example) => (
+                    <div key={example.id} className="bg-white rounded-lg shadow-md p-6">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-xl font-semibold text-gray-900">{example.title}</h3>
+                        <button
+                          onClick={() => copyToClipboard(example.prompt, example.id)}
+                          className="flex items-center text-sm text-brand-primary hover:text-brand-primary/80"
+                        >
+                          {copiedExample === example.id ? (
+                            <>
+                              <Check className="w-4 h-4 mr-1" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-4 h-4 mr-1" />
+                              Copy
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-md mb-4">
+                        <p className="text-gray-700 italic">{example.prompt}</p>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <strong>Why this works:</strong> {example.explanation}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                    <Zap className="w-5 h-5 mr-2" />
+                    Pro Tips for Effective Prompts
+                  </h3>
+                  <ul className="text-blue-800 space-y-2">
+                    <li>• <strong>Be specific</strong> about your main character, setting, and central conflict</li>
+                    <li>• <strong>Include tone and style</strong> preferences (e.g., humorous, dark, lyrical)</li>
+                    <li>• <strong>Mention your target audience</strong> (e.g., middle grade, young adult, adult)</li>
+                    <li>• <strong>Reference similar authors or books</strong> if you want a particular style</li>
+                    <li>• <strong>Specify the title</strong> if you have a particular one in mind</li>
+                    <li>• <strong>Describe key themes</strong> you want to explore in your story</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* AI Settings Guide */}
+            <section id="ai-settings" className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <Settings className="w-8 h-8 text-brand-primary mr-4" />
+                AI Settings Guide
+              </h2>
+              
+              <div className="prose prose-lg max-w-none">
+                <p>
+                  ProsePilot offers advanced AI settings to fine-tune your book generation. 
+                  Understanding these options will help you achieve the exact style and tone you're looking for:
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Narrator Perspective</h3>
+                    <ul className="space-y-3">
+                      <li>
+                        <strong>First Person:</strong>
+                        <p className="text-sm text-gray-600">Narrated from the "I" perspective. Creates intimacy and immediacy.</p>
+                      </li>
+                      <li>
+                        <strong>Third Person Limited:</strong>
+                        <p className="text-sm text-gray-600">Follows one character closely. Most versatile option.</p>
+                      </li>
+                      <li>
+                        <strong>Third Person Omniscient:</strong>
+                        <p className="text-sm text-gray-600">All-knowing narrator who can access any character's thoughts.</p>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Literature Style</h3>
+                    <ul className="space-y-3">
+                      <li>
+                        <strong>Literary:</strong>
+                        <p className="text-sm text-gray-600">Emphasis on artistic quality, complex themes, and sophisticated prose.</p>
+                      </li>
+                      <li>
+                        <strong>Commercial:</strong>
+                        <p className="text-sm text-gray-600">Accessible, plot-driven, and designed for broad appeal.</p>
+                      </li>
+                      <li>
+                        <strong>Genre-Specific:</strong>
+                        <p className="text-sm text-gray-600">Follows conventions of specific genres (mystery, romance, etc.).</p>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Writing Tone</h3>
+                    <ul className="space-y-3">
+                      <li>
+                        <strong>Serious:</strong>
+                        <p className="text-sm text-gray-600">Formal, weighty, minimal humor.</p>
+                      </li>
+                      <li>
+                        <strong>Humorous:</strong>
+                        <p className="text-sm text-gray-600">Light, witty, with comedic elements.</p>
+                      </li>
+                      <li>
+                        <strong>Dramatic:</strong>
+                        <p className="text-sm text-gray-600">Heightened emotions, tension, vivid descriptions.</p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-yellow-900 mb-3">
+                    Recommended Combinations
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-medium text-yellow-900">For Thrillers:</h4>
+                      <p className="text-yellow-800 text-sm">Third Person Limited + Commercial Style + Dramatic Tone</p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-yellow-900">For Romance:</h4>
+                      <p className="text-yellow-800 text-sm">First Person + Genre-Specific Style + Emotional Tone</p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-yellow-900">For Literary Fiction:</h4>
+                      <p className="text-yellow-800 text-sm">Third Person Omniscient + Literary Style + Reflective Tone</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Editing Tools */}
+            <section id="editing-tools" className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <FileText className="w-8 h-8 text-brand-primary mr-4" />
+                Editing Tools
+              </h2>
+              
+              <div className="prose prose-lg max-w-none">
+                <p>
+                  ProsePilot provides a comprehensive set of editing tools to help you refine your generated content.
+                  Here's how to make the most of these features:
+                </p>
+
+                <div className="space-y-8 mt-8">
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Rich Text Editor</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Key Features:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Formatting options (bold, italic, headings, etc.)</li>
+                          <li>• Text alignment controls</li>
+                          <li>• List formatting (bulleted and numbered)</li>
+                          <li>• Blockquote formatting</li>
+                          <li>• Keyboard shortcuts for common actions</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Pro Tips:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Use headings (H1, H2, H3) to structure your chapters</li>
+                          <li>• Maintain consistent formatting throughout</li>
+                          <li>• Use keyboard shortcuts for faster editing</li>
+                          <li>• Save versions regularly to track changes</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Annotations System</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">How to Use:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Select text to add an annotation</li>
+                          <li>• Add comments, questions, or revision notes</li>
+                          <li>• Reply to annotations for collaborative editing</li>
+                          <li>• Mark annotations as resolved when addressed</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Best Practices:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Be specific in your annotation comments</li>
+                          <li>• Use annotations for tracking issues to fix</li>
+                          <li>• Categorize annotations by type (plot, character, etc.)</li>
+                          <li>• Review and resolve annotations systematically</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Version History</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Features:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Automatic version tracking</li>
+                          <li>• Compare different versions</li>
+                          <li>• Restore previous versions</li>
+                          <li>• Version notes and timestamps</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">When to Use:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Before making major revisions</li>
+                          <li>• After completing a draft</li>
+                          <li>• When experimenting with different approaches</li>
+                          <li>• To track progress over time</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-green-900 mb-3 flex items-center">
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Keyboard Shortcuts
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    <div className="bg-white p-3 rounded-md">
+                      <span className="font-medium text-gray-900">Ctrl+B</span>
+                      <span className="text-gray-600 ml-3">Bold text</span>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <span className="font-medium text-gray-900">Ctrl+I</span>
+                      <span className="text-gray-600 ml-3">Italic text</span>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <span className="font-medium text-gray-900">Ctrl+Z</span>
+                      <span className="text-gray-600 ml-3">Undo</span>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <span className="font-medium text-gray-900">Ctrl+Shift+A</span>
+                      <span className="text-gray-600 ml-3">Create annotation</span>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <span className="font-medium text-gray-900">Ctrl+Shift+P</span>
+                      <span className="text-gray-600 ml-3">Toggle annotation panel</span>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <span className="font-medium text-gray-900">Ctrl+S</span>
+                      <span className="text-gray-600 ml-3">Save version</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Team Collaboration */}
+            <section id="team-collaboration" className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <MessageSquare className="w-8 h-8 text-brand-primary mr-4" />
+                Team Collaboration
+              </h2>
+              
+              <div className="prose prose-lg max-w-none">
+                <p>
+                  ProsePilot makes it easy to collaborate with other writers, editors, and beta readers.
+                  Learn how to use our team features effectively:
+                </p>
+
+                <div className="space-y-6 mt-8">
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Team Roles</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-start">
+                        <div className="bg-yellow-100 p-2 rounded-full mr-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">Admin</h4>
+                          <p className="text-gray-700 text-sm">Full access to manage team, invite members, and edit all books.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start">
+                        <div className="bg-blue-100 p-2 rounded-full mr-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">Editor</h4>
+                          <p className="text-gray-700 text-sm">Can create and edit books, but cannot manage team members.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start">
+                        <div className="bg-gray-100 p-2 rounded-full mr-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">Reader</h4>
+                          <p className="text-gray-700 text-sm">View-only access to books with ability to add annotations and comments.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Collaboration Features</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Team Management</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Create teams for different projects</li>
+                          <li>• Invite members via email</li>
+                          <li>• Assign appropriate roles</li>
+                          <li>• Monitor team activity</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Collaborative Editing</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Shared access to team books</li>
+                          <li>• Version history tracking</li>
+                          <li>• Annotations and comments</li>
+                          <li>• Activity logs for transparency</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-purple-900 mb-3">
+                      Best Practices for Team Collaboration
+                    </h3>
+                    <ul className="text-purple-800 space-y-2 text-sm">
+                      <li>• <strong>Establish clear guidelines</strong> for team contributions and feedback</li>
+                      <li>• <strong>Use annotations</strong> to provide specific, actionable feedback</li>
+                      <li>• <strong>Maintain regular communication</strong> about project goals and progress</li>
+                      <li>• <strong>Assign clear responsibilities</strong> to team members based on their strengths</li>
+                      <li>• <strong>Set realistic deadlines</strong> and track progress through the platform</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <p className="mt-8">
+                  For more detailed information on team collaboration, check out our <Link to="/help/team-collaboration" className="text-brand-primary hover:underline">Team Collaboration Guide</Link>.
+                </p>
+              </div>
+            </section>
+
+            {/* FAQ */}
+            <section id="faq" className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <Code className="w-8 h-8 text-brand-primary mr-4" />
+                Frequently Asked Questions
+              </h2>
+              
+              <div className="space-y-6">
+                {[
+                  {
+                    question: "How many books can I create?",
+                    answer: "The number of books you can create depends on your subscription plan. The Starter plan includes 5 credits (1 book), Pro Author includes 25 credits (5 books), and Studio includes 75 credits (15 books). Each book requires 5 credits to generate."
+                  },
+                  {
+                    question: "Can I edit my book after it's generated?",
+                    answer: "Yes! You have full editing capabilities for all generated books. You can modify content, add new chapters, reorganize sections, and make any other changes you'd like using our built-in editor."
+                  },
+                  {
+                    question: "What happens if I'm not satisfied with the generated book?",
+                    answer: "If you're not satisfied with the results, you can regenerate specific chapters or try again with a more detailed prompt. While we don't offer credit refunds for generations you don't like, we provide extensive editing tools to help you refine the content."
+                  },
+                  {
+                    question: "Can I publish books created with ProsePilot?",
+                    answer: "Absolutely! You own all rights to the content generated for you. You can publish your books on any platform, including Amazon KDP, Barnes & Noble Press, and other self-publishing services."
+                  },
+                  {
+                    question: "How do I export my book?",
+                    answer: "From your book's detail page, click the 'Export' button. You can choose from multiple formats including PDF, EPUB, and DOCX, making it easy to publish or share your work."
+                  },
+                  {
+                    question: "Can I collaborate with others on my book?",
+                    answer: "Yes! Our team features allow you to invite collaborators with different permission levels. Team members can view, comment on, or edit your books depending on the role you assign them."
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="bg-white rounded-lg shadow-md p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                    <p className="text-gray-700">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Help Articles */}
+            <section className="border-t pt-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Detailed Help Articles</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Link to="/help/create-first-book" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+                  <h4 className="font-semibold text-gray-900 mb-2">How to create your first book with AI</h4>
+                  <p className="text-gray-600 text-sm mb-3">Step-by-step guide to generating your first book using ProsePilot.</p>
+                  <div className="flex items-center text-brand-primary text-sm">
+                    <span>Read article</span>
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                </Link>
+                
+                <Link to="/help/credit-system" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+                  <h4 className="font-semibold text-gray-900 mb-2">Understanding the credit system</h4>
+                  <p className="text-gray-600 text-sm mb-3">Learn how credits work and how to manage your usage effectively.</p>
+                  <div className="flex items-center text-brand-primary text-sm">
+                    <span>Read article</span>
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                </Link>
+                
+                <Link to="/help/ai-best-practices" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+                  <h4 className="font-semibold text-gray-900 mb-2">Best practices for AI-generated content</h4>
+                  <p className="text-gray-600 text-sm mb-3">Tips and techniques for getting the best results from our AI.</p>
+                  <div className="flex items-center text-brand-primary text-sm">
+                    <span>Read article</span>
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                </Link>
+                
+                <Link to="/help/team-collaboration" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+                  <h4 className="font-semibold text-gray-900 mb-2">Setting up team collaboration</h4>
+                  <p className="text-gray-600 text-sm mb-3">Learn how to work with others on your writing projects.</p>
+                  <div className="flex items-center text-brand-primary text-sm">
+                    <span>Read article</span>
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                </Link>
+              </div>
+            </section>
           </div>
         </div>
       </div>
+
       {/* Footer */}
       <Footer />
-    </>
+    </div>
   );
 }
