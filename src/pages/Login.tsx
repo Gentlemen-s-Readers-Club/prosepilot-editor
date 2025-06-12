@@ -68,7 +68,6 @@ export function Login() {
               Sign in to ProsePilot
             </h2>
           </div>
-          -brand-accent
           <div className="flex flex-col gap-4">
             <Button
               variant="outline"

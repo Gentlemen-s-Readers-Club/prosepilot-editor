@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { useToast } from '../hooks/use-toast';
-import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, Mail, Unlink } from 'lucide-react';
+import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, Mail } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -294,20 +294,10 @@ export function EditProfile() {
         return;
       }
       
-      // Get the current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('No authenticated user found');
-      }
-
-      // Find the identity to unlink
-      const identity = user.identities?.find(id => id.provider === provider);
-      if (!identity) {
-        throw new Error(`No ${provider} identity found`);
-      }
-
-      // Call the Supabase Auth API to unlink the identity
-      const { error } = await supabase.auth.unlinkIdentity(identity);
+      // Call the unlink endpoint
+      const { error } = await supabase.functions.invoke('unlink-provider', {
+        body: { provider }
+      });
 
       if (error) throw error;
 
@@ -477,10 +467,9 @@ export function EditProfile() {
                       <Button
                         variant="outline"
                         onClick={() => setShowUnlinkDialog('google')}
-                        className="text-red-600 border-red-200 hover:bg-red-50"
+                        className="text-state-error border-state-error hover:bg-state-error"
                       >
-                        <Unlink className="w-4 h-4 mr-2" />
-                        Unlink
+                        Connected
                       </Button>
                     ) : (
                       <Button
@@ -502,10 +491,9 @@ export function EditProfile() {
                       <Button
                         variant="outline"
                         onClick={() => setShowUnlinkDialog('facebook')}
-                        className="text-red-600 border-red-200 hover:bg-red-50"
+                        className="text-state-error border-state-error hover:bg-state-error"
                       >
-                        <Unlink className="w-4 h-4 mr-2" />
-                        Unlink
+                        Connected
                       </Button>
                     ) : (
                       <Button
