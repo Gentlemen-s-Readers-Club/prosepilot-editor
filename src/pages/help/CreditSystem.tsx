@@ -2,10 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navigation } from '../../components/Navigation';
 import { Button } from '../../components/ui/button';
-import { Checkbox } from '../../components/ui/checkbox';
 import { 
   ArrowLeft,
-  CreditCard,
   Clock,
   Users,
   Eye,
@@ -15,10 +13,10 @@ import {
   AlertCircle,
   CheckCircle,
   DollarSign,
-  Calendar,
   TrendingUp,
   Package
 } from 'lucide-react';
+import Footer from '../../components/Footer';
 
 export function CreditSystem() {
   return (
@@ -28,48 +26,47 @@ export function CreditSystem() {
       {/* Header */}
       <div className="bg-white pt-16 border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center mb-6">
+          <div className="mb-6">
             <Link to="/docs" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Documentation
             </Link>
-            <span className="text-sm text-gray-500">Billing & Subscriptions</span>
           </div>
           
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-base-heading mb-4">
                 Understanding the credit system
               </h1>
-              <div className="flex items-center text-sm text-gray-500 space-x-4 mb-6">
+              <div className="flex items-center text-sm text-base-paragraph space-x-4 mb-6">
                 <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-1" />
+                  <Clock className="w-4 h-4 mr-1 text-brand-accent" />
                   3 min read
                 </div>
                 <div className="flex items-center">
-                  <Eye className="w-4 h-4 mr-1" />
+                  <Eye className="w-4 h-4 mr-1 text-brand-accent" />
                   8.2k views
                 </div>
                 <div className="flex items-center">
-                  <Users className="w-4 h-4 mr-1" />
+                  <Users className="w-4 h-4 mr-1 text-brand-accent" />
                   Billing & Subscriptions
                 </div>
               </div>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-base-paragraph leading-relaxed">
                 Learn how ProsePilot's credit system works, how to track your usage, and tips for maximizing 
                 your credits to get the most value from your subscription.
               </p>
             </div>
             <div className="ml-8 hidden lg:block">
               <div className="bg-gray-50 rounded-lg p-6 w-64">
-                <h3 className="font-semibold text-gray-900 mb-4">In this article</h3>
+                <h3 className="font-semibold text-base-heading mb-4">In this article</h3>
                 <nav className="space-y-2 text-sm">
-                  <a href="#what-are-credits" className="block text-gray-600 hover:text-base-heading">What are credits?</a>
-                  <a href="#how-credits-work" className="block text-gray-600 hover:text-base-heading">How credits work</a>
-                  <a href="#credit-costs" className="block text-gray-600 hover:text-base-heading">Credit costs by plan</a>
-                  <a href="#tracking-usage" className="block text-gray-600 hover:text-base-heading">Tracking your usage</a>
-                  <a href="#buying-credits" className="block text-gray-600 hover:text-base-heading">Buying additional credits</a>
-                  <a href="#tips" className="block text-gray-600 hover:text-base-heading">Tips for maximizing credits</a>
+                  <a href="#what-are-credits" className="block text-base-paragraph hover:text-base-heading">What are credits?</a>
+                  <a href="#how-credits-work" className="block text-base-paragraph hover:text-base-heading">How credits work</a>
+                  <a href="#credit-costs" className="block text-base-paragraph hover:text-base-heading">Credit costs by plan</a>
+                  <a href="#tracking-usage" className="block text-base-paragraph hover:text-base-heading">Tracking your usage</a>
+                  <a href="#buying-credits" className="block text-base-paragraph hover:text-base-heading">Buying additional credits</a>
+                  <a href="#tips" className="block text-base-paragraph hover:text-base-heading">Tips for maximizing credits</a>
                 </nav>
               </div>
             </div>
@@ -83,8 +80,8 @@ export function CreditSystem() {
           
           {/* What are credits */}
           <section id="what-are-credits" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Zap className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Zap className="w-8 h-8 mr-4 text-brand-accent" />
               What are credits?
             </h2>
             
@@ -127,8 +124,8 @@ export function CreditSystem() {
 
           {/* How credits work */}
           <section id="how-credits-work" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <RefreshCw className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <RefreshCw className="w-8 h-8 mr-4 text-brand-accent" />
               How credits work
             </h2>
 
@@ -138,11 +135,11 @@ export function CreditSystem() {
             </p>
 
             <div className="space-y-6">
-              <div className="border rounded-lg p-6">
-                <h4 className="font-semibold text-gray-900 mb-3">What's included in each book generation:</h4>
+              <div className="border rounded-lg p-6 bg-white">
+                <h4 className="font-semibold text-base-heading mb-3">What's included in each book generation:</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h5 className="font-medium text-gray-900 mb-2">Content Creation</h5>
+                    <h5 className="font-medium text-base-heading mb-2">Content Creation</h5>
                     <ul className="text-gray-700 space-y-1 text-sm">
                       <li>• Complete story outline</li>
                       <li>• Character development</li>
@@ -151,7 +148,7 @@ export function CreditSystem() {
                     </ul>
                   </div>
                   <div>
-                    <h5 className="font-medium text-gray-900 mb-2">Quality Assurance</h5>
+                    <h5 className="font-medium text-base-heading mb-2">Quality Assurance</h5>
                     <ul className="text-gray-700 space-y-1 text-sm">
                       <li>• Plot consistency checking</li>
                       <li>• Character continuity</li>
@@ -181,8 +178,8 @@ export function CreditSystem() {
 
           {/* Credit costs by plan */}
           <section id="credit-costs" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Package className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Package className="w-8 h-8 mr-4 text-brand-accent" />
               Credit allocation by plan
             </h2>
 
@@ -190,41 +187,32 @@ export function CreditSystem() {
               Each subscription plan includes a different number of monthly credits. Here's what you get with each plan:
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="border rounded-lg p-6 text-center">
-                <h4 className="font-semibold text-gray-900 mb-2">Starter</h4>
-                <div className="text-3xl font-bold text-base-heading mb-2">5</div>
-                <div className="text-sm text-gray-600 mb-3">credits/month</div>
-                <div className="text-sm text-gray-500">= 1 book/month</div>
-                <div className="text-lg font-semibold text-gray-900 mt-2">$9/month</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="border rounded-lg p-6 text-center bg-white">
+                <h4 className="font-semibold text-base-heading mb-2">Starter</h4>
+                <div className="text-3xl font-bold text-brand-accent mb-2">5</div>
+                <div className="text-sm text-base-paragraph mb-3">credits/month</div>
+                <div className="text-sm text-base-paragraph">= 1 book/month</div>
+                <div className="text-lg font-semibold text-base-heading mt-2">$9/month</div>
               </div>
 
-              <div className="border-2 border-base-border rounded-lg p-6 text-center relative">
+              <div className="border-2 border-base-border rounded-lg p-6 text-center relative bg-white">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-medium">
                   Most Popular
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Pro Author</h4>
-                <div className="text-3xl font-bold text-base-heading mb-2">25</div>
-                <div className="text-sm text-gray-600 mb-3">credits/month</div>
-                <div className="text-sm text-gray-500">= 5 books/month</div>
-                <div className="text-lg font-semibold text-gray-900 mt-2">$29/month</div>
+                <h4 className="font-semibold text-base-heading mb-2">Author</h4>
+                <div className="text-3xl font-bold text-brand-accent mb-2">25</div>
+                <div className="text-sm text-base-paragraph mb-3">credits/month</div>
+                <div className="text-sm text-base-paragraph">= 5 books/month</div>
+                <div className="text-lg font-semibold text-base-heading mt-2">$29/month</div>
               </div>
 
-              <div className="border rounded-lg p-6 text-center opacity-75">
-                <h4 className="font-semibold text-gray-900 mb-2">Studio</h4>
-                <div className="text-3xl font-bold text-base-heading mb-2">75</div>
-                <div className="text-sm text-gray-600 mb-3">credits/month</div>
-                <div className="text-sm text-gray-500">= 15 books/month</div>
-                <div className="text-lg font-semibold text-gray-900 mt-2">$79/month</div>
-                <div className="text-xs text-blue-600 mt-2">Coming Soon</div>
-              </div>
-
-              <div className="border rounded-lg p-6 text-center opacity-75">
-                <h4 className="font-semibold text-gray-900 mb-2">Enterprise</h4>
-                <div className="text-3xl font-bold text-base-heading mb-2">∞</div>
-                <div className="text-sm text-gray-600 mb-3">unlimited</div>
-                <div className="text-sm text-gray-500">= unlimited books</div>
-                <div className="text-lg font-semibold text-gray-900 mt-2">$199/month</div>
+              <div className="border rounded-lg p-6 text-center opacity-75 bg-white">
+                <h4 className="font-semibold text-base-heading mb-2">Studio</h4>
+                <div className="text-3xl font-bold text-brand-accent mb-2">75</div>
+                <div className="text-sm text-base-paragraph mb-3">credits/month</div>
+                <div className="text-sm text-base-paragraph">= 15 books/month</div>
+                <div className="text-lg font-semibold text-base-heading mt-2">$79/month</div>
                 <div className="text-xs text-blue-600 mt-2">Coming Soon</div>
               </div>
             </div>
@@ -241,8 +229,8 @@ export function CreditSystem() {
 
           {/* Tracking usage */}
           <section id="tracking-usage" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <TrendingUp className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <TrendingUp className="w-8 h-8 mr-4 text-brand-accent" />
               Tracking your usage
             </h2>
 
@@ -251,27 +239,27 @@ export function CreditSystem() {
             </p>
 
             <div className="space-y-6">
-              <div className="border rounded-lg p-6">
-                <h4 className="font-semibold text-gray-900 mb-3">Where to check your credits:</h4>
+              <div className="border rounded-lg p-6 bg-white">
+                <h4 className="font-semibold text-base-heading mb-3">Where to check your credits:</h4>
                 <div className="space-y-4">
                   <div className="flex items-start">
-                    <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</div>
+                    <div className="bg-brand-accent/15 text-brand-accent rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</div>
                     <div>
-                      <h5 className="font-medium text-gray-900">Dashboard</h5>
+                      <h5 className="font-medium text-base-heading">Dashboard</h5>
                       <p className="text-gray-700 text-sm">Your credit balance is displayed in the top navigation bar</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">2</div>
+                    <div className="bg-brand-accent/15 text-brand-accent rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">2</div>
                     <div>
-                      <h5 className="font-medium text-gray-900">Subscription page</h5>
+                      <h5 className="font-medium text-base-heading">Subscription page</h5>
                       <p className="text-gray-700 text-sm">Detailed usage breakdown with monthly progress bar</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">3</div>
+                    <div className="bg-brand-accent/15 text-brand-accent rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">3</div>
                     <div>
-                      <h5 className="font-medium text-gray-900">Book creation modal</h5>
+                      <h5 className="font-medium text-base-heading">Book creation modal</h5>
                       <p className="text-gray-700 text-sm">Shows current balance before you create a new book</p>
                     </div>
                   </div>
@@ -279,7 +267,7 @@ export function CreditSystem() {
               </div>
 
               <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="font-semibold text-gray-900 mb-3">Understanding your usage display:</h4>
+                <h4 className="font-semibold text-base-heading mb-3">Understanding your usage display:</h4>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">Monthly credits used:</span>
@@ -288,7 +276,7 @@ export function CreditSystem() {
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div className="bg-brand-primary h-2 rounded-full" style={{width: '60%'}}></div>
                   </div>
-                  <div className="flex justify-between text-gray-600">
+                  <div className="flex justify-between text-base-paragraph">
                     <span>Remaining: 10 credits</span>
                     <span>Resets: Jan 15, 2025</span>
                   </div>
@@ -299,8 +287,8 @@ export function CreditSystem() {
 
           {/* Buying additional credits */}
           <section id="buying-credits" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <DollarSign className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <DollarSign className="w-8 h-8 mr-4 text-brand-accent" />
               Buying additional credits
             </h2>
 
@@ -310,33 +298,33 @@ export function CreditSystem() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="border rounded-lg p-6 text-center">
-                <h4 className="font-semibold text-gray-900 mb-2">Small Pack</h4>
-                <div className="text-2xl font-bold text-base-heading mb-2">10 credits</div>
-                <div className="text-lg font-semibold text-gray-900 mb-3">$20</div>
-                <div className="text-sm text-gray-600 mb-4">$2.00 per credit</div>
-                <div className="text-sm text-gray-500">= 2 additional books</div>
+              <div className="border rounded-lg p-6 text-center bg-white">
+                <h4 className="font-semibold text-base-heading mb-2">Small Pack</h4>
+                <div className="text-2xl font-bold text-brand-accent mb-2">10 credits</div>
+                <div className="text-lg font-semibold text-base-heading mb-3">$20</div>
+                <div className="text-sm text-base-paragraph mb-4">$2.00 per credit</div>
+                <div className="text-sm text-base-paragraph">= 2 additional books</div>
               </div>
 
-              <div className="border-2 border-green-500 rounded-lg p-6 text-center relative">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+              <div className="border-2 border-brand-accent rounded-lg p-6 text-center relative bg-white">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-medium">
                   Best Value
                 </div>
-                <h4 className="font-semibold text-gray-900 mb-2">Medium Pack</h4>
-                <div className="text-2xl font-bold text-base-heading mb-2">25 credits</div>
-                <div className="text-lg font-semibold text-gray-900 mb-3">$45</div>
-                <div className="text-sm text-gray-600 mb-4">$1.80 per credit</div>
-                <div className="text-sm text-gray-500">= 5 additional books</div>
-                <div className="text-xs text-green-600 mt-2">Save 10%</div>
+                <h4 className="font-semibold text-base-heading mb-2">Medium Pack</h4>
+                <div className="text-2xl font-bold text-brand-accent mb-2">25 credits</div>
+                <div className="text-lg font-semibold text-base-heading mb-3">$45</div>
+                <div className="text-sm text-base-paragraph mb-4">$1.80 per credit</div>
+                <div className="text-sm text-base-paragraph">= 5 additional books</div>
+                <div className="text-xs text-state-success mt-2">Save 10%</div>
               </div>
 
-              <div className="border rounded-lg p-6 text-center">
-                <h4 className="font-semibold text-gray-900 mb-2">Large Pack</h4>
-                <div className="text-2xl font-bold text-base-heading mb-2">50 credits</div>
-                <div className="text-lg font-semibold text-gray-900 mb-3">$80</div>
-                <div className="text-sm text-gray-600 mb-4">$1.60 per credit</div>
-                <div className="text-sm text-gray-500">= 10 additional books</div>
-                <div className="text-xs text-green-600 mt-2">Save 20%</div>
+              <div className="border rounded-lg p-6 text-center bg-white">
+                <h4 className="font-semibold text-base-heading mb-2">Large Pack</h4>
+                <div className="text-2xl font-bold text-brand-accent mb-2">50 credits</div>
+                <div className="text-lg font-semibold text-base-heading mb-3">$80</div>
+                <div className="text-sm text-base-paragraph mb-4">$1.60 per credit</div>
+                <div className="text-sm text-base-paragraph">= 10 additional books</div>
+                <div className="text-xs text-state-success mt-2">Save 20%</div>
               </div>
             </div>
 
@@ -353,8 +341,8 @@ export function CreditSystem() {
 
           {/* Tips for maximizing credits */}
           <section id="tips" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Zap className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Zap className="w-8 h-8 mr-4 text-brand-accent" />
               Tips for maximizing your credits
             </h2>
 
@@ -363,12 +351,12 @@ export function CreditSystem() {
             </p>
 
             <div className="space-y-6">
-              <div className="border rounded-lg p-6">
-                <h4 className="font-semibold text-gray-900 mb-4">Smart usage strategies:</h4>
+              <div className="border rounded-lg p-6 bg-white">
+                <h4 className="font-semibold text-base-heading mb-4">Smart usage strategies:</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h5 className="font-medium text-gray-900 mb-3 flex items-center">
-                      <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                    <h5 className="font-medium text-base-heading mb-3 flex items-center">
+                      <CheckCircle className="w-5 h-5 text-state-success mr-2" />
                       Plan your books
                     </h5>
                     <ul className="text-gray-700 space-y-1 text-sm ml-7">
@@ -378,8 +366,8 @@ export function CreditSystem() {
                     </ul>
                   </div>
                   <div>
-                    <h5 className="font-medium text-gray-900 mb-3 flex items-center">
-                      <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                    <h5 className="font-medium text-base-heading mb-3 flex items-center">
+                      <CheckCircle className="w-5 h-5 text-state-success mr-2" />
                       Time your usage
                     </h5>
                     <ul className="text-gray-700 space-y-1 text-sm ml-7">
@@ -405,21 +393,21 @@ export function CreditSystem() {
 
           {/* Related Articles */}
           <section className="border-t pt-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Related Articles</h3>
+            <h3 className="text-2xl font-bold text-base-heading mb-6">Related Articles</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Link to="/help/create-first-book" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                <h4 className="font-semibold text-gray-900 mb-2">How to create your first book with AI</h4>
-                <p className="text-gray-600 text-sm mb-3">Step-by-step guide to generating your first book using ProsePilot.</p>
-                <div className="flex items-center text-base-heading text-sm">
+              <Link to="/help/create-first-book" className="block bg-white shadow-md rounded-lg p-6 hover:bg-gray-100 transition-colors">
+                <h4 className="font-semibold text-base-heading mb-2">How to create your first book with AI</h4>
+                <p className="text-base-paragraph text-sm mb-3">Step-by-step guide to generating your first book using ProsePilot.</p>
+                <div className="flex items-center text-brand-accent text-sm">
                   <span>Read article</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
               </Link>
               
-              <Link to="/pricing" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                <h4 className="font-semibold text-gray-900 mb-2">Compare subscription plans</h4>
-                <p className="text-gray-600 text-sm mb-3">Find the right plan for your writing goals and budget.</p>
-                <div className="flex items-center text-base-heading text-sm">
+              <Link to="/pricing" className="block bg-white shadow-md rounded-lg p-6 hover:bg-gray-100 transition-colors">
+                <h4 className="font-semibold text-base-heading mb-2">Compare subscription plans</h4>
+                <p className="text-base-paragraph text-sm mb-3">Find the right plan for your writing goals and budget.</p>
+                <div className="flex items-center text-brand-accent text-sm">
                   <span>View pricing</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
@@ -449,6 +437,7 @@ export function CreditSystem() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

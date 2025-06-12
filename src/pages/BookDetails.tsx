@@ -625,7 +625,7 @@ export function BookDetails() {
         <div className="flex items-center">
           <button
             onClick={() => navigate('/app')}
-            className="flex items-center text-base-heading hover:text-brand-accent transition-colors mr-4"
+            className="flex items-center text-base-heading hover:text-base-heading/80 transition-colors mr-4"
           >
             <ArrowLeft className="mr-2" size={20} />
             <span className="font-medium">Back to Books</span>

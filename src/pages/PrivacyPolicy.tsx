@@ -30,10 +30,10 @@ export function PrivacyPolicy() {
           
           <div className="flex items-start">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-base-heading mb-4">
                 Privacy Policy
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-base-paragraph leading-relaxed">
                 Last Updated: June 15, 2025
               </p>
             </div>
@@ -42,7 +42,7 @@ export function PrivacyPolicy() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-base-paragraph">
         <div>
           
           {/* Introduction */}
@@ -63,34 +63,34 @@ export function PrivacyPolicy() {
 
           {/* Table of Contents */}
           <div className="bg-gray-50 rounded-lg p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Table of Contents</h3>
+            <h3 className="text-lg font-semibold text-base-heading mb-4">Table of Contents</h3>
             <nav className="space-y-1">
-              <a href="#information-we-collect" className="block text-brand-primary hover:underline py-1">1. Information We Collect</a>
-              <a href="#how-we-use" className="block text-brand-primary hover:underline py-1">2. How We Use Your Information</a>
-              <a href="#legal-basis" className="block text-brand-primary hover:underline py-1">3. Legal Basis for Processing</a>
-              <a href="#sharing-information" className="block text-brand-primary hover:underline py-1">4. Sharing Your Information</a>
-              <a href="#cookies" className="block text-brand-primary hover:underline py-1">5. Cookies and Tracking Technologies</a>
-              <a href="#data-retention" className="block text-brand-primary hover:underline py-1">6. Data Retention</a>
-              <a href="#data-security" className="block text-brand-primary hover:underline py-1">7. Data Security</a>
-              <a href="#your-rights" className="block text-brand-primary hover:underline py-1">8. Your Rights and Choices</a>
-              <a href="#international-transfers" className="block text-brand-primary hover:underline py-1">9. International Data Transfers</a>
-              <a href="#children" className="block text-brand-primary hover:underline py-1">10. Children's Privacy</a>
-              <a href="#changes" className="block text-brand-primary hover:underline py-1">11. Changes to This Privacy Policy</a>
-              <a href="#contact" className="block text-brand-primary hover:underline py-1">12. Contact Us</a>
+              <a href="#information-we-collect" className="block text-base-paragraph hover:underline py-1">1. Information We Collect</a>
+              <a href="#how-we-use" className="block text-base-paragraph hover:underline py-1">2. How We Use Your Information</a>
+              <a href="#legal-basis" className="block text-base-paragraph hover:underline py-1">3. Legal Basis for Processing</a>
+              <a href="#sharing-information" className="block text-base-paragraph hover:underline py-1">4. Sharing Your Information</a>
+              <a href="#cookies" className="block text-base-paragraph hover:underline py-1">5. Cookies and Tracking Technologies</a>
+              <a href="#data-retention" className="block text-base-paragraph hover:underline py-1">6. Data Retention</a>
+              <a href="#data-security" className="block text-base-paragraph hover:underline py-1">7. Data Security</a>
+              <a href="#your-rights" className="block text-base-paragraph hover:underline py-1">8. Your Rights and Choices</a>
+              <a href="#international-transfers" className="block text-base-paragraph hover:underline py-1">9. International Data Transfers</a>
+              <a href="#children" className="block text-base-paragraph hover:underline py-1">10. Children's Privacy</a>
+              <a href="#changes" className="block text-base-paragraph hover:underline py-1">11. Changes to This Privacy Policy</a>
+              <a href="#contact" className="block text-base-paragraph hover:underline py-1">12. Contact Us</a>
             </nav>
           </div>
 
           {/* 1. Information We Collect */}
           <section id="information-we-collect" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Database className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Database className="w-8 h-8 mr-4 text-brand-accent" />
               1. Information We Collect
             </h2>
             
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Information You Provide to Us</h3>
-                <ul className="list-disc pl-6 space-y-2">
+                <h3 className="text-xl font-semibold text-base-heading mb-3">Information You Provide to Us</h3>
+                <ul className="list-disc pl-6 space-y-2 text-base-paragraph">
                   <li><strong>Account Information:</strong> When you register for an account, we collect your name, email address, and password.</li>
                   <li><strong>Profile Information:</strong> Information you provide in your user profile, such as a profile picture, biography, or professional information.</li>
                   <li><strong>Content:</strong> The content you create, upload, or generate using our Services, including book outlines, manuscripts, and other written materials.</li>
@@ -100,7 +100,7 @@ export function PrivacyPolicy() {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Information We Collect Automatically</h3>
+                <h3 className="text-xl font-semibold text-base-heading mb-3">Information We Collect Automatically</h3>
                 <ul className="list-disc pl-6 space-y-2">
                   <li><strong>Usage Information:</strong> Information about how you use our Services, including the features you use, the time spent on the Services, and the pages you visit.</li>
                   <li><strong>Device Information:</strong> Information about the device you use to access our Services, including hardware model, operating system, unique device identifiers, and mobile network information.</li>
@@ -110,7 +110,7 @@ export function PrivacyPolicy() {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Information from Third Parties</h3>
+                <h3 className="text-xl font-semibold text-base-heading mb-3">Information from Third Parties</h3>
                 <ul className="list-disc pl-6 space-y-2">
                   <li><strong>Social Media:</strong> If you choose to link your account with a social media platform, we may receive information from that platform, such as your profile information.</li>
                   <li><strong>Service Providers:</strong> We may receive information about you from our service providers, such as payment processors, analytics providers, and advertising partners.</li>
@@ -130,8 +130,8 @@ export function PrivacyPolicy() {
 
           {/* 2. How We Use Your Information */}
           <section id="how-we-use" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <FileText className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <FileText className="w-8 h-8 mr-4 text-brand-accent" />
               2. How We Use Your Information
             </h2>
             
@@ -140,7 +140,7 @@ export function PrivacyPolicy() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Service Provision</h3>
+                  <h3 className="text-lg font-semibold text-base-heading mb-3">Service Provision</h3>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     <li>Providing and maintaining our Services</li>
                     <li>Processing transactions and managing your account</li>
@@ -151,7 +151,7 @@ export function PrivacyPolicy() {
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Service Improvement</h3>
+                  <h3 className="text-lg font-semibold text-base-heading mb-3">Service Improvement</h3>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     <li>Improving and personalizing our Services</li>
                     <li>Developing new features and functionality</li>
@@ -162,7 +162,7 @@ export function PrivacyPolicy() {
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Communication</h3>
+                  <h3 className="text-lg font-semibold text-base-heading mb-3">Communication</h3>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     <li>Sending administrative messages</li>
                     <li>Providing information about new features</li>
@@ -173,7 +173,7 @@ export function PrivacyPolicy() {
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Security and Compliance</h3>
+                  <h3 className="text-lg font-semibold text-base-heading mb-3">Security and Compliance</h3>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     <li>Protecting against fraud and unauthorized access</li>
                     <li>Enforcing our Terms of Service</li>
@@ -188,8 +188,8 @@ export function PrivacyPolicy() {
 
           {/* 3. Legal Basis for Processing */}
           <section id="legal-basis" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Lock className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Lock className="w-8 h-8 mr-4 text-brand-accent" />
               3. Legal Basis for Processing
             </h2>
             
@@ -200,29 +200,29 @@ export function PrivacyPolicy() {
               
               <div className="space-y-4">
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Consent</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-lg font-semibold text-base-heading mb-2">Consent</h3>
+                  <p className="text-base-paragraph">
                     You have given us permission to process your personal data for a specific purpose, such as sending you marketing communications or processing certain types of sensitive data.
                   </p>
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Performance of a Contract</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-lg font-semibold text-base-heading mb-2">Performance of a Contract</h3>
+                  <p className="text-base-paragraph">
                     Processing your data is necessary to provide the Services you have signed up for, or to take steps at your request prior to providing those Services.
                   </p>
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Legitimate Interests</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-lg font-semibold text-base-heading mb-2">Legitimate Interests</h3>
+                  <p className="text-base-paragraph">
                     Processing your data is necessary for our legitimate interests or the legitimate interests of a third party, provided those interests are not outweighed by your rights and interests.
                   </p>
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Legal Obligation</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-lg font-semibold text-base-heading mb-2">Legal Obligation</h3>
+                  <p className="text-base-paragraph">
                     Processing your data is necessary to comply with a legal obligation, such as retaining information for tax, legal reporting, and auditing obligations.
                   </p>
                 </div>
@@ -236,8 +236,8 @@ export function PrivacyPolicy() {
 
           {/* 4. Sharing Your Information */}
           <section id="sharing-information" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Users className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Users className="w-8 h-8 mr-4 text-brand-accent" />
               4. Sharing Your Information
             </h2>
             
@@ -248,8 +248,8 @@ export function PrivacyPolicy() {
               
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Service Providers</h3>
-                  <p className="text-gray-700 mb-2">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3">Service Providers</h3>
+                  <p className="text-base-paragraph mb-2">
                     We share information with third-party vendors, consultants, and other service providers who perform services on our behalf, including:
                   </p>
                   <ul className="list-disc pl-6 space-y-1">
@@ -262,22 +262,22 @@ export function PrivacyPolicy() {
                 </div>
                 
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Business Transfers</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3">Business Transfers</h3>
+                  <p className="text-base-paragraph">
                     If we are involved in a merger, acquisition, financing, reorganization, bankruptcy, or sale of our assets, your information may be transferred as part of that transaction. We will notify you of any such change in ownership or control of your personal information.
                   </p>
                 </div>
                 
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Legal Requirements</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3">Legal Requirements</h3>
+                  <p className="text-base-paragraph">
                     We may disclose your information where required to do so by law or subpoena or if we reasonably believe that such action is necessary to (a) comply with the law and the reasonable requests of law enforcement; (b) protect the security or integrity of our Services; and/or (c) exercise or protect the rights, property, or personal safety of ProsePilot, our users, or others.
                   </p>
                 </div>
                 
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">With Your Consent</h3>
-                  <p className="text-gray-700">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3">With Your Consent</h3>
+                  <p className="text-base-paragraph">
                     We may share your information with third parties when you explicitly consent to such sharing.
                   </p>
                 </div>
@@ -303,8 +303,8 @@ export function PrivacyPolicy() {
 
           {/* 5. Cookies and Tracking Technologies */}
           <section id="cookies" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Eye className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Eye className="w-8 h-8 mr-4 text-brand-accent" />
               5. Cookies and Tracking Technologies
             </h2>
             
@@ -314,32 +314,32 @@ export function PrivacyPolicy() {
               </p>
               
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Types of Cookies We Use</h3>
+                <h3 className="text-xl font-semibold text-base-heading mb-3">Types of Cookies We Use</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="font-medium text-gray-900 mb-2">Essential Cookies</h4>
-                    <p className="text-sm text-gray-700">
+                    <h4 className="font-medium text-base-heading mb-2">Essential Cookies</h4>
+                    <p className="text-sm text-base-paragraph">
                       These cookies are necessary for the website to function properly and cannot be switched off in our systems. They are usually set in response to actions made by you, such as setting your privacy preferences, logging in, or filling in forms.
                     </p>
                   </div>
                   
                   <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="font-medium text-gray-900 mb-2">Performance Cookies</h4>
-                    <p className="text-sm text-gray-700">
+                    <h4 className="font-medium text-base-heading mb-2">Performance Cookies</h4>
+                    <p className="text-sm text-base-paragraph">
                       These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our site. They help us to know which pages are the most and least popular and see how visitors move around the site.
                     </p>
                   </div>
                   
                   <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="font-medium text-gray-900 mb-2">Functional Cookies</h4>
-                    <p className="text-sm text-gray-700">
+                    <h4 className="font-medium text-base-heading mb-2">Functional Cookies</h4>
+                    <p className="text-sm text-base-paragraph">
                       These cookies enable the website to provide enhanced functionality and personalization. They may be set by us or by third-party providers whose services we have added to our pages.
                     </p>
                   </div>
                   
                   <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="font-medium text-gray-900 mb-2">Targeting Cookies</h4>
-                    <p className="text-sm text-gray-700">
+                    <h4 className="font-medium text-base-heading mb-2">Targeting Cookies</h4>
+                    <p className="text-sm text-base-paragraph">
                       These cookies may be set through our site by our advertising partners. They may be used by those companies to build a profile of your interests and show you relevant advertisements on other sites.
                     </p>
                   </div>
@@ -347,11 +347,11 @@ export function PrivacyPolicy() {
               </div>
               
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Your Cookie Choices</h3>
-                <p className="text-gray-700 mb-4">
+                <h3 className="text-xl font-semibold text-base-heading mb-3">Your Cookie Choices</h3>
+                <p className="text-base-paragraph mb-4">
                   Most web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove or reject cookies. Please note that if you choose to remove or reject cookies, this could affect the availability and functionality of our Services.
                 </p>
-                <p className="text-gray-700">
+                <p className="text-base-paragraph">
                   In addition to browser controls, we provide a cookie preference center that allows you to manage your cookie preferences on our website. You can access this by clicking on "Cookie Preferences" in the footer of our website.
                 </p>
               </div>
@@ -367,8 +367,8 @@ export function PrivacyPolicy() {
 
           {/* 6. Data Retention */}
           <section id="data-retention" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Clock className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Clock className="w-8 h-8 mr-4 text-brand-accent" />
               6. Data Retention
             </h2>
             
@@ -378,7 +378,7 @@ export function PrivacyPolicy() {
               </p>
               
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Retention Periods</h3>
+                <h3 className="text-lg font-semibold text-base-heading mb-3">Retention Periods</h3>
                 <ul className="list-disc pl-6 space-y-2">
                   <li><strong>Account Information:</strong> We retain your account information for as long as your account is active and for a reasonable period thereafter in case you decide to reactivate the Services.</li>
                   <li><strong>Content:</strong> We retain the content you create or upload for as long as you maintain your account. If you delete specific content, we will remove it from our active systems, but it may remain in our backup systems for a limited period.</li>
@@ -391,9 +391,9 @@ export function PrivacyPolicy() {
                 When we no longer need to process your information for the purposes for which it was collected, we will either delete or anonymize such information, unless we are legally required to retain it for a longer period.
               </p>
               
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Account Deletion</h3>
-                <p className="text-gray-700 text-sm">
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-base-heading mb-3">Account Deletion</h3>
+                <p className="text-base-paragraph text-sm">
                   If you delete your account, we will delete or anonymize your account information and content within 30 days, except for information that we are required to retain for legal or legitimate business purposes. Please note that content you have shared with others or that others have copied may remain visible after you have deleted your account.
                 </p>
               </div>
@@ -402,8 +402,8 @@ export function PrivacyPolicy() {
 
           {/* 7. Data Security */}
           <section id="data-security" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Lock className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Lock className="w-8 h-8 mr-4 text-brand-accent" />
               7. Data Security
             </h2>
             
@@ -414,7 +414,7 @@ export function PrivacyPolicy() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Security Measures</h3>
+                  <h3 className="text-lg font-semibold text-base-heading mb-3">Security Measures</h3>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     <li>Encryption of sensitive data in transit and at rest</li>
                     <li>Regular security assessments and penetration testing</li>
@@ -425,7 +425,7 @@ export function PrivacyPolicy() {
                 </div>
                 
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Data Breach Procedures</h3>
+                  <h3 className="text-lg font-semibold text-base-heading mb-3">Data Breach Procedures</h3>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     <li>Incident response plan for potential breaches</li>
                     <li>Notification procedures in accordance with applicable laws</li>
@@ -446,8 +446,8 @@ export function PrivacyPolicy() {
 
           {/* 8. Your Rights and Choices */}
           <section id="your-rights" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Shield className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Shield className="w-8 h-8 mr-4 text-brand-accent" />
               8. Your Rights and Choices
             </h2>
             
@@ -457,7 +457,7 @@ export function PrivacyPolicy() {
               </p>
               
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Your Rights</h3>
+                <h3 className="text-lg font-semibold text-base-heading mb-3">Your Rights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <ul className="list-disc pl-6 space-y-1">
@@ -493,8 +493,8 @@ export function PrivacyPolicy() {
               </div>
               
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">How to Exercise Your Rights</h3>
-                <p className="text-gray-700 mb-3">
+                <h3 className="text-xl font-semibold text-base-heading mb-3">How to Exercise Your Rights</h3>
+                <p className="text-base-paragraph mb-3">
                   You can exercise your rights by:
                 </p>
                 <ul className="list-disc pl-6 space-y-1">
@@ -508,8 +508,8 @@ export function PrivacyPolicy() {
 
           {/* 9. International Data Transfers */}
           <section id="international-transfers" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Globe className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Globe className="w-8 h-8 mr-4 text-brand-accent" />
               9. International Data Transfers
             </h2>
             
@@ -519,8 +519,8 @@ export function PrivacyPolicy() {
               </p>
               
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Safeguards for International Transfers</h3>
-                <p className="text-gray-700 mb-3">
+                <h3 className="text-lg font-semibold text-base-heading mb-3">Safeguards for International Transfers</h3>
+                <p className="text-base-paragraph mb-3">
                   When we transfer personal information outside of the EEA, UK, or Switzerland, we ensure that appropriate safeguards are in place to protect your personal information, including:
                 </p>
                 <ul className="list-disc pl-6 space-y-1">
@@ -539,8 +539,8 @@ export function PrivacyPolicy() {
 
           {/* 10. Children's Privacy */}
           <section id="children" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <AlertTriangle className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <AlertTriangle className="w-8 h-8 mr-4 text-brand-accent" />
               10. Children's Privacy
             </h2>
             
@@ -560,8 +560,8 @@ export function PrivacyPolicy() {
 
           {/* 11. Changes to This Privacy Policy */}
           <section id="changes" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <FileText className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <FileText className="w-8 h-8 mr-4 text-brand-accent" />
               11. Changes to This Privacy Policy
             </h2>
             
@@ -584,8 +584,8 @@ export function PrivacyPolicy() {
 
           {/* 12. Contact Us */}
           <section id="contact" className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-              <Mail className="w-8 h-8 text-base-heading mr-4" />
+            <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <Mail className="w-8 h-8 mr-4 text-brand-accent" />
               12. Contact Us
             </h2>
             
@@ -595,7 +595,7 @@ export function PrivacyPolicy() {
               </p>
               
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Contact Information</h3>
+                <h3 className="text-lg font-semibold text-base-heading mb-3">Contact Information</h3>
                 <div className="space-y-2">
                   <p><strong>Email:</strong> privacy@prosepilot.com</p>
                   {/* <p><strong>Postal Address:</strong> ProsePilot Inc., 123 Writer's Lane, Suite 456, San Francisco, CA 94107, USA</p> */}

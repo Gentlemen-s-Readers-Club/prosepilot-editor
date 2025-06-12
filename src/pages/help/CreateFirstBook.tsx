@@ -13,6 +13,7 @@ import {
   FileText,
   Eye
 } from 'lucide-react';
+import Footer from '../../components/Footer';
 
 export function CreateFirstBook() {
   return (
@@ -34,7 +35,7 @@ export function CreateFirstBook() {
               <h1 className="text-4xl font-bold text-base-heading mb-4">
                 How to create your first book with AI
               </h1>
-              <div className="flex items-center text-sm text-gray-500 space-x-4 mb-6">
+              <div className="flex items-center text-sm text-base-paragraph space-x-4 mb-6">
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-1 text-brand-accent" />
                   5 min read
@@ -54,7 +55,7 @@ export function CreateFirstBook() {
               </p>
             </div>
             <div className="ml-8 hidden lg:block">
-              <div className="bg-gray-50 rounded-lg p-6 w-64">
+              <div className="bg-base-background rounded-lg p-6 w-64">
                 <h3 className="font-semibold text-base-heading mb-4">In this article</h3>
                 <nav className="space-y-2 text-sm">
                   <a href="#step-1" className="block text-base-paragraph hover:text-base-heading">1. Preparing your story idea</a>
@@ -77,7 +78,7 @@ export function CreateFirstBook() {
           {/* Introduction */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
             <div className="flex items-start">
-              <Sparkles className="w-6 h-6 text-brand-accent mt-1 mr-3" />
+              <Sparkles className="w-6 h-6 text-blue-600 mt-1 mr-3" />
               <div>
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">What you'll learn</h3>
                 <ul className="text-blue-800 space-y-1 text-sm">
@@ -434,6 +435,7 @@ export function CreateFirstBook() {
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
