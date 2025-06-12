@@ -663,7 +663,17 @@ export function EditProfile() {
           <div className="space-y-4">
             <div className="bg-red-50 rounded-lg p-4">
               <p className="text-sm text-red-700">
-                Once you delete your account, there is no going back. Please be certain.
+                <strong>Warning:</strong> Once you delete your account, there is no going back. This action will permanently delete:
+              </p>
+              <ul className="text-sm text-red-700 mt-2 ml-4 list-disc space-y-1">
+                <li>All your books and chapters</li>
+                <li>Your writing progress and drafts</li>
+                <li>Account settings and preferences</li>
+                <li>Subscription and billing information</li>
+                <li>All associated data and files</li>
+              </ul>
+              <p className="text-sm text-red-700 mt-2">
+                This action cannot be undone. Please be absolutely certain before proceeding.
               </p>
             </div>
             <Button
