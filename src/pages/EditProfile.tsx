@@ -294,10 +294,20 @@ export function EditProfile() {
         return;
       }
       
-      // Call the unlink endpoint
-      const { error } = await supabase.functions.invoke('unlink-provider', {
-        body: { provider }
-      });
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('No authenticated user found');
+      }
+
+      // Find the identity to unlink
+      const identity = user.identities?.find(id => id.provider === provider);
+      if (!identity) {
+        throw new Error(`No ${provider} identity found`);
+      }
+
+      // Call the Supabase Auth API to unlink the identity
+      const { error } = await supabase.auth.unlinkIdentity(identity);
 
       if (error) throw error;
 
