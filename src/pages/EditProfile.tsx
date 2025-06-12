@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import { useToast } from '../hooks/use-toast';
-import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, Mail } from 'lucide-react';
+import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, Mail, Unlink } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,7 @@ export function EditProfile() {
   const [loading, setLoading] = useState(false);
   const [isFileLoading, setIsFileLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showUnlinkDialog, setShowUnlinkDialog] = useState<string | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -279,6 +280,48 @@ export function EditProfile() {
     }
   }
 
+  async function handleSocialUnlink(provider: string) {
+    try {
+      setLoading(true);
+      
+      // Check if this is the only auth method
+      if (connectedProviders.length <= 1) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "You must have at least one login method. Add another method before removing this one.",
+        });
+        return;
+      }
+      
+      // Call the unlink endpoint
+      const { error } = await supabase.functions.invoke('unlink-provider', {
+        body: { provider }
+      });
+
+      if (error) throw error;
+
+      // Update the UI
+      setConnectedProviders(connectedProviders.filter(p => p !== provider));
+      
+      toast({
+        title: "Success",
+        description: `Successfully unlinked ${provider} account`,
+      });
+      
+      setShowUnlinkDialog(null);
+    } catch (error) {
+      console.error('Error unlinking provider:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : 'Failed to unlink account',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleDeleteAccount() {
     if (deleteConfirmation !== profile?.email) {
       toast({
@@ -419,26 +462,50 @@ export function EditProfile() {
                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
                     <span className="text-base-heading">Google</span>
                   </div>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleSocialConnect('google')}
-                    disabled={connectedProviders.includes('google')}
-                  >
-                    {connectedProviders.includes('google') ? 'Connected' : 'Connect'}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    {connectedProviders.includes('google') ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowUnlinkDialog('google')}
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                      >
+                        <Unlink className="w-4 h-4 mr-2" />
+                        Unlink
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => handleSocialConnect('google')}
+                      >
+                        Connect
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Facebook className="w-6 h-6 text-[#1877F2]" />
                     <span className="text-base-heading">Facebook</span>
                   </div>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleSocialConnect('facebook')}
-                    disabled={connectedProviders.includes('facebook')}
-                  >
-                    {connectedProviders.includes('facebook') ? 'Connected' : 'Connect'}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    {connectedProviders.includes('facebook') ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowUnlinkDialog('facebook')}
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                      >
+                        <Unlink className="w-4 h-4 mr-2" />
+                        Unlink
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => handleSocialConnect('facebook')}
+                      >
+                        Connect
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 
                 {/* Email provider is always connected since it's the primary auth method */}
@@ -619,10 +686,10 @@ export function EditProfile() {
   return (
     <>
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
-          <div className="w-64 shrink-0">
-            <div className="sticky top-8">
+          <div className="w-full md:w-64 shrink-0">
+            <div className="md:sticky md:top-8">
               <h2 className="text-2xl font-semibold text-base-heading mb-4">Settings</h2>
               <nav className="flex flex-col gap-1">
                 {sections.map(({ id, label, icon }) => (
@@ -713,6 +780,53 @@ export function EditProfile() {
               disabled={deleteConfirmation !== profile?.email || loading}
             >
               Delete Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unlink Provider Dialog */}
+      <Dialog open={!!showUnlinkDialog} onOpenChange={() => setShowUnlinkDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Unlink {showUnlinkDialog?.charAt(0).toUpperCase()}{showUnlinkDialog?.slice(1)} Account</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to unlink your {showUnlinkDialog} account? You will no longer be able to sign in using this method.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="flex">
+                <div className="shrink-0">
+                  <AlertCircle className="h-5 w-5 text-yellow-400" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-yellow-800">
+                    Important
+                  </h3>
+                  <div className="mt-2 text-sm text-yellow-700">
+                    <p>Make sure you have at least one other way to sign in to your account.</p>
+                    {connectedProviders.length <= 1 && (
+                      <p className="mt-1 font-semibold">You currently have only one sign-in method. You must add another method before you can remove this one.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowUnlinkDialog(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => showUnlinkDialog && handleSocialUnlink(showUnlinkDialog)}
+              disabled={loading || connectedProviders.length <= 1}
+            >
+              {loading ? 'Unlinking...' : 'Unlink Account'}
             </Button>
           </DialogFooter>
         </DialogContent>
