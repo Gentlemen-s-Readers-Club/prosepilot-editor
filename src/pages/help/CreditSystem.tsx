@@ -29,9 +29,9 @@ export function CreditSystem() {
       <div className="bg-white pt-16 border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center mb-6">
-            <Link to="/support" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
+            <Link to="/docs" className="flex items-center text-base-heading hover:text-base-heading/80 mr-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Support
+              Back to Documentation
             </Link>
             <span className="text-sm text-gray-500">Billing & Subscriptions</span>
           </div>

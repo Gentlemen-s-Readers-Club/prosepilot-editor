@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { Checkbox } from '../components/ui/checkbox';
 import { 
   ArrowLeft, 
   BookOpen, 
@@ -15,7 +13,6 @@ import {
   Zap,
   MessageSquare,
   Settings,
-  Globe,
   BookText,
   Palette,
   VolumeX
@@ -67,42 +64,58 @@ export function Documentation() {
     setTimeout(() => setCopiedExample(null), 2000);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   const promptExamples = [
     {
-      id: 'fantasy',
-      title: 'Fantasy Adventure',
-      prompt: 'A young orphan discovers they have magical abilities and must attend a secret school to learn to control their powers. Along the way, they uncover a plot by a dark wizard to take over the magical world. The story should be suitable for young adults, with themes of friendship, courage, and finding one\'s identity.',
-      explanation: 'This prompt clearly defines the genre (fantasy), target audience (young adults), main character, central conflict, and key themes.'
+      id: 'basic-plot',
+      title: 'Basic Plot',
+      prompt: 'Write a story about a person who finds a mysterious object and discovers it has special powers.',
+      explanation: 'This is a very basic plot outline that provides minimal details. It works but will likely produce generic results.'
     },
     {
-      id: 'mystery',
-      title: 'Murder Mystery',
-      prompt: 'A brilliant but socially awkward detective is called to a remote island mansion when a wealthy patriarch is found dead after a family gathering. What initially appears to be natural causes soon reveals itself as murder, and everyone in the family has a motive. Set in the 1930s with an Agatha Christie-inspired style and a focus on clever clues and psychological insights.',
-      explanation: 'This prompt establishes the genre (murder mystery), setting (1930s, remote mansion), main character, plot setup, and stylistic reference.'
+      id: 'detailed-plot',
+      title: 'Detailed Plot',
+      prompt: 'Write a story about a struggling artist who discovers an antique paintbrush in their grandmother\'s attic. When they use it to paint, their artwork comes to life. However, they soon realize that each painting they create takes a piece of their own life force, forcing them to choose between their artistic dreams and their own survival.',
+      explanation: 'This prompt expands the basic plot with specific character details, clear conflict, and consequences that drive the story forward.'
     },
     {
-      id: 'romance',
-      title: 'Contemporary Romance',
-      prompt: 'Two rival chefs who despise each other are forced to collaborate on a cooking show. Despite their initial animosity, they begin to appreciate each other\'s culinary skills and eventually fall in love. The story should have a lighthearted, humorous tone with a focus on character growth and the slow-burn romance.',
-      explanation: 'This prompt outlines the romance trope (enemies to lovers), the specific setting (cooking show), character dynamics, and desired tone.'
+      id: 'descriptive-ambience',
+      title: 'Descriptive Ambience & Setting',
+      prompt: 'Write a story set in a fog-shrouded coastal town where the salty air carries whispers of old secrets. The protagonist, a lighthouse keeper\'s daughter, discovers that the fog isn\'t just weather—it\'s a living entity that reveals hidden truths to those brave enough to listen. The atmosphere should feel both magical and slightly menacing, with the constant sound of waves crashing against rocky cliffs and seagulls crying overhead.',
+      explanation: 'This prompt focuses heavily on creating a specific atmosphere and mood through detailed sensory descriptions and environmental elements.'
     },
     {
-      id: 'sci-fi',
-      title: 'Science Fiction',
-      prompt: 'In the year 2150, a team of scientists discovers a way to communicate with parallel universes. When they make contact with a version of Earth that has solved climate change and eliminated poverty, they attempt to bring this knowledge back. However, they soon discover that this utopian world harbors a dark secret. The story should explore ethical dilemmas and the unintended consequences of technological advancement.',
-      explanation: 'This prompt specifies the time period, scientific concept, plot twist, and philosophical themes to explore.'
+      id: 'character-specification',
+      title: 'Character Specification',
+      prompt: 'Write a story about Dr. Elena Vasquez, a 34-year-old neuroscientist who is brilliant but socially awkward due to her intense focus on her research. She has a photographic memory, speaks five languages, and has a habit of solving complex equations in her head when stressed. When her latest experiment goes wrong, she must rely on her analytical mind and the help of her only friend—a janitor named Marcus who has an uncanny ability to read people\'s emotions.',
+      explanation: 'This prompt provides detailed character backgrounds, personality traits, specific skills, and relationship dynamics that will shape the story.'
     },
     {
       id: 'title-specific',
-      title: 'Title-Specific Historical Fiction',
-      prompt: 'Write a historical fiction novel titled "The Clockmaker\'s Daughter" set in Victorian London. The story follows a young woman who disguises herself as a man to become an apprentice to a renowned clockmaker, while secretly investigating her father\'s mysterious death which she believes is connected to a revolutionary clockwork invention that was stolen. The narrative should alternate between the Victorian era and present day, where a historian discovers the woman\'s diary and becomes obsessed with uncovering the truth.',
-      explanation: 'This prompt specifies the exact title, time period, dual timeline structure, protagonist, and central mystery, giving the AI clear parameters for the book.'
+      title: 'Title-Specific Story',
+      prompt: 'Write a novel titled "The Last Bookstore on Earth" about a woman named Sarah who inherits a mysterious bookstore that only appears to people who truly need it. Each book in the store contains a story that somehow helps the reader solve their most pressing problem. However, Sarah discovers that every time someone finds their solution, a book disappears from the store, and she must decide whether to keep helping people or preserve the magical collection.',
+      explanation: 'This prompt specifies the exact title and builds the entire concept around it, creating a cohesive premise that ties the title to the plot.'
     },
     {
-      id: 'advanced-style',
-      title: 'Advanced Style & Narrator Specification',
-      prompt: 'Write a Gothic horror novel set in a decaying New England mansion in the 1920s. The protagonist is a young architect hired to restore the property who begins experiencing strange phenomena. Use an unreliable narrator perspective to create ambiguity about whether the supernatural events are real or manifestations of the protagonist\'s deteriorating mental state. The writing style should blend Gothic and Modernism with a melancholic tone that gradually shifts to suspenseful as the story progresses.',
-      explanation: 'This prompt combines specific narrator choice (unreliable narrator), literature style (Gothic/Modernism), and tone progression (melancholic to suspenseful) to create a sophisticated stylistic framework.'
+      id: 'narrative-technique',
+      title: 'Narrative Technique Specification',
+      prompt: 'Write a story about a detective investigating a series of disappearances in a small town, but tell it through three different perspectives: the detective\'s official case notes, the diary entries of a local teenager who suspects they know what\'s happening, and anonymous letters sent to the town newspaper. Each perspective should reveal different pieces of the mystery, and the reader should be able to piece together the truth by reading between the lines of all three narratives.',
+      explanation: 'This prompt focuses on narrative structure and technique, specifying how the story should be told rather than just what happens.'
+    },
+    {
+      id: 'thematic-exploration',
+      title: 'Thematic Exploration',
+      prompt: 'Write a story that explores the theme of "the price of knowledge" through a protagonist who discovers they can see the future, but each vision they have ages them by one year. The story should examine questions about whether some knowledge is worth the cost, the responsibility that comes with foresight, and whether ignorance can truly be bliss. Include moments where the protagonist must choose between using their gift to help others or preserving their own life.',
+      explanation: 'This prompt centers around exploring specific themes and philosophical questions, using the plot as a vehicle for deeper meaning.'
     }
   ];
 
@@ -146,10 +159,10 @@ export function Documentation() {
           
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-base-heading mb-4">
                 Documentation
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-base-paragraph leading-relaxed">
                 Learn how to use ProsePilot effectively with our comprehensive guides and examples.
               </p>
             </div>
@@ -162,68 +175,68 @@ export function Documentation() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Navigation */}
           <div className="lg:w-64 shrink-0">
-            <div className="sticky top-8">
+            <div className="sticky top-24">
               <nav className="space-y-1">
-                <a 
-                  href="#getting-started" 
-                  className={`block px-3 py-2 rounded-md ${
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
                     activeSection === 'getting-started' 
                       ? 'bg-brand-primary text-white' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  onClick={() => scrollToSection('getting-started')}
                 >
                   Getting Started
-                </a>
-                <a 
-                  href="#prompt-examples" 
-                  className={`block px-3 py-2 rounded-md ${
+                </button>
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
                     activeSection === 'prompt-examples' 
                       ? 'bg-brand-primary text-white' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  onClick={() => scrollToSection('prompt-examples')}
                 >
                   Prompt Examples
-                </a>
-                <a 
-                  href="#ai-settings" 
-                  className={`block px-3 py-2 rounded-md ${
+                </button>
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
                     activeSection === 'ai-settings' 
                       ? 'bg-brand-primary text-white' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  onClick={() => scrollToSection('ai-settings')}
                 >
                   AI Settings Guide
-                </a>
-                <a 
-                  href="#editing-tools" 
-                  className={`block px-3 py-2 rounded-md ${
+                </button>
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
                     activeSection === 'editing-tools' 
                       ? 'bg-brand-primary text-white' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  onClick={() => scrollToSection('editing-tools')}
                 >
                   Editing Tools
-                </a>
-                <a 
-                  href="#team-collaboration" 
-                  className={`block px-3 py-2 rounded-md ${
+                </button>
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
                     activeSection === 'team-collaboration' 
                       ? 'bg-brand-primary text-white' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  onClick={() => scrollToSection('team-collaboration')}
                 >
                   Team Collaboration
-                </a>
-                <a 
-                  href="#faq" 
-                  className={`block px-3 py-2 rounded-md ${
+                </button>
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
                     activeSection === 'faq' 
                       ? 'bg-brand-primary text-white' 
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  onClick={() => scrollToSection('faq')}
                 >
                   FAQ
-                </a>
+                </button>
               </nav>
             </div>
           </div>
@@ -232,44 +245,44 @@ export function Documentation() {
           <div className="flex-1">
             {/* Getting Started */}
             <section id="getting-started" className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <BookOpen className="w-8 h-8 text-brand-primary mr-4" />
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <BookOpen className="w-8 h-8 text-brand-accent mr-4" />
                 Getting Started
               </h2>
               
               <div>
-                <p>
+                <p className="text-base-paragraph">
                   Welcome to ProsePilot! This guide will help you get started with our AI-powered writing platform.
                   Follow these simple steps to create your first book:
                 </p>
 
                 <div className="bg-white rounded-lg shadow-md p-6 my-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Start Guide</h3>
+                  <h3 className="text-xl font-semibold text-base-heading mb-4">Quick Start Guide</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-center">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</div>
-                      <span className="text-gray-700">Create an account if you haven't already</span>
+                      <div className="bg-brand-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</div>
+                      <span className="text-base-paragraph">Create an account if you haven't already</span>
                     </div>
                     
                     <div className="flex items-center">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</div>
-                      <span className="text-gray-700">From your dashboard, click "Create New Book"</span>
+                      <div className="bg-brand-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</div>
+                      <span className="text-base-paragraph">From your dashboard, click "Create New Book"</span>
                     </div>
                     
                     <div className="flex items-center">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</div>
-                      <span className="text-gray-700">Enter your story idea or outline</span>
+                      <div className="bg-brand-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</div>
+                      <span className="text-base-paragraph">Enter your story idea or outline</span>
                     </div>
                     
                     <div className="flex items-center">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</div>
-                      <span className="text-gray-700">Choose categories, language, and optional advanced settings</span>
+                      <div className="bg-brand-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</div>
+                      <span className="text-base-paragraph">Choose categories, language, and optional advanced settings</span>
                     </div>
                     
                     <div className="flex items-center">
-                      <div className="bg-brand-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</div>
-                      <span className="text-gray-700">Click "Create Book" and wait while our AI generates your content</span>
+                      <div className="bg-brand-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</div>
+                      <span className="text-base-paragraph">Click "Create Book" and wait while our AI generates your content</span>
                     </div>
                   </div>
                 </div>
@@ -282,13 +295,13 @@ export function Documentation() {
 
             {/* Prompt Examples */}
             <section id="prompt-examples" className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <Lightbulb className="w-8 h-8 text-brand-primary mr-4" />
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <Lightbulb className="w-8 h-8 text-brand-accent mr-4" />
                 Prompt Examples
               </h2>
               
               <div>
-                <p>
+                <p className="text-base-paragraph">
                   The quality of your prompt greatly influences the quality of your generated book. 
                   Here are some examples of effective prompts for different genres:
                 </p>
@@ -297,7 +310,7 @@ export function Documentation() {
                   {promptExamples.map((example) => (
                     <div key={example.id} className="bg-white rounded-lg shadow-md p-6">
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-xl font-semibold text-gray-900">{example.title}</h3>
+                        <h3 className="text-xl font-semibold text-base-heading">{example.title}</h3>
                         <button
                           onClick={() => copyToClipboard(example.prompt, example.id)}
                           className="flex items-center text-sm text-brand-primary hover:text-brand-primary/80"
@@ -318,7 +331,7 @@ export function Documentation() {
                       <div className="bg-gray-50 p-4 rounded-md mb-4">
                         <p className="text-gray-700 italic">{example.prompt}</p>
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-base-paragraph">
                         <strong>Why this works:</strong> {example.explanation}
                       </div>
                     </div>
@@ -332,11 +345,13 @@ export function Documentation() {
                   </h3>
                   <ul className="text-blue-800 space-y-2">
                     <li>• <strong>Be specific</strong> about your main character, setting, and central conflict</li>
-                    <li>• <strong>Include tone and style</strong> preferences (e.g., humorous, dark, lyrical)</li>
                     <li>• <strong>Mention your target audience</strong> (e.g., middle grade, young adult, adult)</li>
                     <li>• <strong>Reference similar authors or books</strong> if you want a particular style</li>
                     <li>• <strong>Specify the title</strong> if you have a particular one in mind</li>
                     <li>• <strong>Describe key themes</strong> you want to explore in your story</li>
+                    <li>• <strong>Include character motivations</strong> and what drives their actions</li>
+                    <li>• <strong>Mention the time period</strong> and historical context if relevant</li>
+                    <li>• <strong>Specify the location</strong> - real or imaginary city, country, or specific setting details</li>
                   </ul>
                 </div>
               </div>
@@ -344,13 +359,13 @@ export function Documentation() {
 
             {/* AI Settings Guide */}
             <section id="ai-settings" className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <Settings className="w-8 h-8 text-brand-primary mr-4" />
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <Settings className="w-8 h-8 text-brand-accent mr-4" />
                 AI Settings Guide
               </h2>
               
               <div>
-                <p className="mb-6">
+                <p className="mb-6 text-base-paragraph">
                   ProsePilot offers advanced AI settings to fine-tune your book generation. 
                   Understanding these options will help you achieve the exact style and tone you're looking for:
                 </p>
@@ -359,12 +374,12 @@ export function Documentation() {
                   {/* Narrator Perspective */}
                   <div className="bg-white rounded-lg shadow-md p-6">
                     <div className="flex items-start mb-4">
-                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
-                        <BookText className="w-6 h-6 text-brand-primary" />
+                      <div className="bg-brand-secondary/60 p-3 rounded-lg mr-4">
+                        <BookText className="w-6 h-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900">Narrator Perspective</h3>
-                        <p className="text-gray-600 text-sm">Choose the viewpoint from which your story is told</p>
+                        <h3 className="text-xl font-semibold text-base-heading">Narrator Perspective</h3>
+                        <p className="text-base-paragraph text-sm">Choose the viewpoint from which your story is told</p>
                       </div>
                     </div>
                     
@@ -373,7 +388,7 @@ export function Documentation() {
                         {narratorOptions.slice(0, Math.ceil(narratorOptions.length/2)).map((option, index) => (
                           <div key={index} className="bg-gray-50 p-4 rounded-lg">
                             <h4 className="font-medium text-gray-900 mb-1">{option}</h4>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-base-paragraph">
                               {option === 'First-person' && 'Narrated from the "I" perspective. Creates intimacy and immediacy.'}
                               {option === 'Second-person' && 'Addresses the reader as "you." Creates an immersive, interactive feel.'}
                               {option === 'Third-person limited' && 'Follows one character closely. Most versatile option.'}
@@ -386,7 +401,7 @@ export function Documentation() {
                         {narratorOptions.slice(Math.ceil(narratorOptions.length/2)).map((option, index) => (
                           <div key={index} className="bg-gray-50 p-4 rounded-lg">
                             <h4 className="font-medium text-gray-900 mb-1">{option}</h4>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-base-paragraph">
                               {option === 'Third-person objective' && 'Reports only what can be seen and heard, without access to characters\' thoughts.'}
                               {option === 'Stream of consciousness' && 'Presents character thoughts as they occur, often in a flowing, non-linear style.'}
                               {option === 'Unreliable narrator' && 'A narrator whose credibility is compromised, creating ambiguity and tension.'}
@@ -401,12 +416,12 @@ export function Documentation() {
                   {/* Literature Style */}
                   <div className="bg-white rounded-lg shadow-md p-6">
                     <div className="flex items-start mb-4">
-                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
-                        <Palette className="w-6 h-6 text-brand-primary" />
+                      <div className="bg-brand-secondary/60 p-3 rounded-lg mr-4">
+                        <Palette className="w-6 h-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900">Literature Style</h3>
-                        <p className="text-gray-600 text-sm">Define the artistic approach and aesthetic of your writing</p>
+                        <h3 className="text-xl font-semibold text-base-heading">Literature Style</h3>
+                        <p className="text-base-paragraph text-sm">Define the artistic approach and aesthetic of your writing</p>
                       </div>
                     </div>
                     
@@ -435,12 +450,12 @@ export function Documentation() {
                   {/* Writing Tone */}
                   <div className="bg-white rounded-lg shadow-md p-6">
                     <div className="flex items-start mb-4">
-                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
-                        <VolumeX className="w-6 h-6 text-brand-primary" />
+                      <div className="bg-brand-secondary/60 p-3 rounded-lg mr-4">
+                        <VolumeX className="w-6 h-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900">Writing Tone</h3>
-                        <p className="text-gray-600 text-sm">Set the emotional quality and attitude of your narrative</p>
+                        <h3 className="text-xl font-semibold text-base-heading">Writing Tone</h3>
+                        <p className="text-base-paragraph text-sm">Set the emotional quality and attitude of your narrative</p>
                       </div>
                     </div>
                     
@@ -521,23 +536,23 @@ export function Documentation() {
 
             {/* Editing Tools */}
             <section id="editing-tools" className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <FileText className="w-8 h-8 text-brand-primary mr-4" />
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <FileText className="w-8 h-8 text-brand-accent mr-4" />
                 Editing Tools
               </h2>
               
               <div>
-                <p>
+                <p className="text-base-paragraph">
                   ProsePilot provides a comprehensive set of editing tools to help you refine your generated content.
                   Here's how to make the most of these features:
                 </p>
 
                 <div className="space-y-8 mt-8">
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Rich Text Editor</h3>
+                    <h3 className="text-xl font-semibold text-base-heading mb-4">Rich Text Editor</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Key Features:</h4>
+                        <h4 className="font-medium text-base-heading mb-2">Key Features:</h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
                           <li>• Formatting options (bold, italic, headings, etc.)</li>
                           <li>• Text alignment controls</li>
@@ -547,7 +562,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Pro Tips:</h4>
+                        <h4 className="font-medium text-base-heading mb-2">Pro Tips:</h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
                           <li>• Use headings (H1, H2, H3) to structure your chapters</li>
                           <li>• Maintain consistent formatting throughout</li>
@@ -559,10 +574,10 @@ export function Documentation() {
                   </div>
 
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Annotations System</h3>
+                    <h3 className="text-xl font-semibold text-base-heading mb-4">Annotations System</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">How to Use:</h4>
+                        <h4 className="font-medium text-base-heading mb-2">How to Use:</h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
                           <li>• Select text to add an annotation</li>
                           <li>• Add comments, questions, or revision notes</li>
@@ -571,7 +586,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Best Practices:</h4>
+                        <h4 className="font-medium text-base-heading mb-2">Best Practices:</h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
                           <li>• Be specific in your annotation comments</li>
                           <li>• Use annotations for tracking issues to fix</li>
@@ -583,10 +598,10 @@ export function Documentation() {
                   </div>
 
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Version History</h3>
+                    <h3 className="text-xl font-semibold text-base-heading mb-4">Version History</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Features:</h4>
+                        <h4 className="font-medium text-base-heading mb-2">Features:</h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
                           <li>• Automatic version tracking</li>
                           <li>• Compare different versions</li>
@@ -595,7 +610,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">When to Use:</h4>
+                        <h4 className="font-medium text-base-heading mb-2">When to Use:</h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
                           <li>• Before making major revisions</li>
                           <li>• After completing a draft</li>
@@ -614,28 +629,28 @@ export function Documentation() {
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                     <div className="bg-white p-3 rounded-md">
-                      <span className="font-medium text-gray-900">Ctrl+B</span>
-                      <span className="text-gray-600 ml-3">Bold text</span>
+                      <span className="font-medium text-base-heading">Ctrl+B</span>
+                      <span className="text-base-paragraph ml-3">Bold text</span>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <span className="font-medium text-gray-900">Ctrl+I</span>
-                      <span className="text-gray-600 ml-3">Italic text</span>
+                      <span className="font-medium text-base-heading">Ctrl+I</span>
+                      <span className="text-base-paragraph ml-3">Italic text</span>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <span className="font-medium text-gray-900">Ctrl+Z</span>
-                      <span className="text-gray-600 ml-3">Undo</span>
+                      <span className="font-medium text-base-heading">Ctrl+Z</span>
+                      <span className="text-base-paragraph ml-3">Undo</span>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <span className="font-medium text-gray-900">Ctrl+Shift+A</span>
-                      <span className="text-gray-600 ml-3">Create annotation</span>
+                      <span className="font-medium text-base-heading">Ctrl+Shift+A</span>
+                      <span className="text-base-paragraph ml-3">Create annotation</span>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <span className="font-medium text-gray-900">Ctrl+Shift+P</span>
-                      <span className="text-gray-600 ml-3">Toggle annotation panel</span>
+                      <span className="font-medium text-base-heading">Ctrl+Shift+P</span>
+                      <span className="text-base-paragraph ml-3">Toggle annotation panel</span>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <span className="font-medium text-gray-900">Ctrl+S</span>
-                      <span className="text-gray-600 ml-3">Save version</span>
+                      <span className="font-medium text-base-heading">Ctrl+S</span>
+                      <span className="text-base-paragraph ml-3">Save version</span>
                     </div>
                   </div>
                 </div>
@@ -644,20 +659,20 @@ export function Documentation() {
 
             {/* Team Collaboration */}
             <section id="team-collaboration" className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <MessageSquare className="w-8 h-8 text-brand-primary mr-4" />
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <MessageSquare className="w-8 h-8 text-brand-accent mr-4" />
                 Team Collaboration
               </h2>
               
               <div>
-                <p>
+                <p className="text-base-paragraph">
                   ProsePilot makes it easy to collaborate with other writers, editors, and beta readers.
                   Learn how to use our team features effectively:
                 </p>
 
                 <div className="space-y-6 mt-8">
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Team Roles</h3>
+                    <h3 className="text-xl font-semibold text-base-heading mb-4">Team Roles</h3>
                     <div className="space-y-4">
                       <div className="flex items-start">
                         <div className="bg-yellow-100 p-2 rounded-full mr-3">
@@ -666,8 +681,8 @@ export function Documentation() {
                           </svg>
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900">Admin</h4>
-                          <p className="text-gray-700 text-sm">Full access to manage team, invite members, and edit all books.</p>
+                          <h4 className="font-medium text-base-heading">Admin</h4>
+                          <p className="text-base-paragraph text-sm">Full access to manage team, invite members, and edit all books.</p>
                         </div>
                       </div>
                       
@@ -678,32 +693,32 @@ export function Documentation() {
                           </svg>
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900">Editor</h4>
-                          <p className="text-gray-700 text-sm">Can create and edit books, but cannot manage team members.</p>
+                          <h4 className="font-medium text-base-heading">Editor</h4>
+                          <p className="text-base-paragraph text-sm">Can create and edit books, but cannot manage team members.</p>
                         </div>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="bg-gray-100 p-2 rounded-full mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-base-paragraph" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                             <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                           </svg>
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900">Reader</h4>
-                          <p className="text-gray-700 text-sm">View-only access to books with ability to add annotations and comments.</p>
+                          <h4 className="font-medium text-base-heading">Reader</h4>
+                          <p className="text-base-paragraph text-sm">View-only access to books with ability to add annotations and comments.</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Collaboration Features</h3>
+                    <h3 className="text-xl font-semibold text-base-heading mb-4">Collaboration Features</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Team Management</h4>
-                        <ul className="text-gray-700 space-y-1 text-sm">
+                        <h4 className="font-medium text-base-heading mb-2">Team Management</h4>
+                        <ul className="text-base-paragraph space-y-1 text-sm">
                           <li>• Create teams for different projects</li>
                           <li>• Invite members via email</li>
                           <li>• Assign appropriate roles</li>
@@ -711,8 +726,8 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Collaborative Editing</h4>
-                        <ul className="text-gray-700 space-y-1 text-sm">
+                        <h4 className="font-medium text-base-heading mb-2">Collaborative Editing</h4>
+                        <ul className="text-base-paragraph space-y-1 text-sm">
                           <li>• Shared access to team books</li>
                           <li>• Version history tracking</li>
                           <li>• Annotations and comments</li>
@@ -744,8 +759,8 @@ export function Documentation() {
 
             {/* FAQ */}
             <section id="faq" className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-                <Code className="w-8 h-8 text-brand-primary mr-4" />
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <Code className="w-8 h-8 text-brand-accent mr-4" />
                 Frequently Asked Questions
               </h2>
               
@@ -777,8 +792,8 @@ export function Documentation() {
                   }
                 ].map((faq, index) => (
                   <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{faq.question}</h3>
-                    <p className="text-gray-700">{faq.answer}</p>
+                    <h3 className="text-xl font-semibold text-base-heading mb-3">{faq.question}</h3>
+                    <p className="text-base-paragraph">{faq.answer}</p>
                   </div>
                 ))}
               </div>
@@ -786,39 +801,39 @@ export function Documentation() {
 
             {/* Help Articles */}
             <section className="border-t pt-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Detailed Help Articles</h3>
+              <h3 className="text-2xl font-bold text-base-heading mb-6">Detailed Help Articles</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Link to="/help/create-first-book" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                  <h4 className="font-semibold text-gray-900 mb-2">How to create your first book with AI</h4>
-                  <p className="text-gray-600 text-sm mb-3">Step-by-step guide to generating your first book using ProsePilot.</p>
-                  <div className="flex items-center text-brand-primary text-sm">
+                <Link to="/help/create-first-book" className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors">
+                  <h4 className="font-semibold text-base-heading mb-2">How to create your first book with AI</h4>
+                  <p className="text-base-paragraph text-sm mb-3">Step-by-step guide to generating your first book using ProsePilot.</p>
+                  <div className="flex items-center text-brand-accent text-sm">
                     <span>Read article</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </div>
                 </Link>
                 
-                <Link to="/help/credit-system" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                  <h4 className="font-semibold text-gray-900 mb-2">Understanding the credit system</h4>
-                  <p className="text-gray-600 text-sm mb-3">Learn how credits work and how to manage your usage effectively.</p>
-                  <div className="flex items-center text-brand-primary text-sm">
+                <Link to="/help/credit-system" className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors">
+                  <h4 className="font-semibold text-base-heading mb-2">Understanding the credit system</h4>
+                  <p className="text-base-paragraph text-sm mb-3">Learn how credits work and how to manage your usage effectively.</p>
+                  <div className="flex items-center text-brand-accent text-sm">
                     <span>Read article</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </div>
                 </Link>
                 
-                <Link to="/help/ai-best-practices" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                  <h4 className="font-semibold text-gray-900 mb-2">Best practices for AI-generated content</h4>
-                  <p className="text-gray-600 text-sm mb-3">Tips and techniques for getting the best results from our AI.</p>
-                  <div className="flex items-center text-brand-primary text-sm">
+                <Link to="/help/ai-best-practices" className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors">
+                  <h4 className="font-semibold text-base-heading mb-2">Best practices for AI-generated content</h4>
+                  <p className="text-base-paragraph text-sm mb-3">Tips and techniques for getting the best results from our AI.</p>
+                  <div className="flex items-center text-brand-accent text-sm">
                     <span>Read article</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </div>
                 </Link>
                 
-                <Link to="/help/team-collaboration" className="block bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                  <h4 className="font-semibold text-gray-900 mb-2">Setting up team collaboration</h4>
-                  <p className="text-gray-600 text-sm mb-3">Learn how to work with others on your writing projects.</p>
-                  <div className="flex items-center text-brand-primary text-sm">
+                <Link to="/help/team-collaboration" className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors">
+                  <h4 className="font-semibold text-base-heading mb-2">Setting up team collaboration</h4>
+                  <p className="text-base-paragraph text-sm mb-3">Learn how to work with others on your writing projects.</p>
+                  <div className="flex items-center text-brand-accent text-sm">
                     <span>Read article</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </div>

@@ -232,7 +232,7 @@ function ChapterEditorContent() {
             <div className="flex items-center justify-between mb-6">
               <button
                 onClick={() => navigate(`/app/book/${book?.id}`)}
-                className="flex items-center text-base-heading hover:text-brand-accent"
+                className="flex items-center text-base-heading hover:text-base-heading/80"
               >
                 <ArrowLeft className="mr-2" size={20} />
                 Back to Book Details

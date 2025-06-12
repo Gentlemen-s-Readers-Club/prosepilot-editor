@@ -16,7 +16,7 @@ export default {
         base: {
           background: '#F8F9FA',  // very soft off-white – sophisticated canvas
           heading: '#3E4C59',     // near-black – clear and classic
-          paragraph: '#5F6C7B',   // elegant gray-blue – excellent for reading
+          paragraph: '#4A5568',   // elegant gray-blue – excellent for reading
           border: '#E3E7ED',      // refined light border tone
         },
         state: {
