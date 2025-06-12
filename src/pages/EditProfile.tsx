@@ -282,10 +282,12 @@ export function EditProfile() {
 
   async function handleSocialUnlink(provider: string) {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+
       setLoading(true);
       
       // Check if this is the only auth method
-      if (connectedProviders.length <= 1) {
+      if (!user?.identities?.length) {
         toast({
           variant: "destructive",
           title: "Error",
@@ -293,11 +295,18 @@ export function EditProfile() {
         });
         return;
       }
+
+      // find the identity
+      const identity = user?.identities?.find(
+        identity => identity.provider === provider
+      )
+
+      if(!identity) {
+        throw new Error('Identity not found');
+      }
       
       // Call the unlink endpoint
-      const { error } = await supabase.functions.invoke('unlink-provider', {
-        body: { provider }
-      });
+      const { error } = await supabase.auth.unlinkIdentity(identity);
 
       if (error) throw error;
 
