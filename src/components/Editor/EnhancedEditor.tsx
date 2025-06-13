@@ -10,7 +10,8 @@ import { CreateAnnotationModal } from '../annotations/CreateAnnotationModal';
 import { useAnnotations } from '../../hooks/useAnnotations';
 import { 
   getTextSelection,
-  setupAnnotationKeyboardShortcuts
+  setupAnnotationKeyboardShortcuts,
+  highlightAnnotatedText
 } from '../../lib/utils/annotation';
 import { Annotation } from '../../types/annotations';
 
@@ -20,6 +21,8 @@ interface EnhancedEditorProps {
   initialContent?: string;
   onChange?: (content: string) => void;
   readOnly?: boolean;
+  mode?: 'edit' | 'comments';
+  allowAnnotations?: boolean;
 }
 
 const editorStyles = `
@@ -167,13 +170,36 @@ const editorStyles = `
     background-color: #fef3c7 !important;
     border-bottom-color: #d97706 !important;
   }
+  
+  .annotation-gutter-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 4px;
+    cursor: pointer;
+  }
+  
+  .annotation-gutter-marker.open {
+    background-color: #f59e0b;
+  }
+  
+  .annotation-gutter-marker.resolved {
+    background-color: #10b981;
+  }
+  
+  .comments-mode .ProseMirror {
+    cursor: default;
+    background-color: #fafafa;
+  }
 `;
 
 export function EnhancedEditor({ 
   chapterId,
   initialContent = '', 
   onChange, 
-  readOnly = false 
+  readOnly = false,
+  mode = 'edit',
+  allowAnnotations = false
 }: EnhancedEditorProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const editorRef = useRef<HTMLDivElement | null>(null);
@@ -185,11 +211,13 @@ export function EnhancedEditor({
     startOffset: number;
     endOffset: number;
   } | null>(null);
+  const [showAnnotations, setShowAnnotations] = useState(true);
 
   const { 
     annotations, 
     createAnnotation, 
-    getAnnotationStats 
+    getAnnotationStats,
+    refetch: refetchAnnotations
   } = useAnnotations(chapterId);
 
   const editor = useEditor({
@@ -204,39 +232,34 @@ export function EnhancedEditor({
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange?.(html);
-      
-      // Re-highlight annotations after content changes
-      // setTimeout(() => {
-      //   updateAnnotationHighlights();
-      // }, 100);
     },
-    editable: !readOnly,
+    editable: !readOnly && mode === 'edit',
   });
 
   const stats = getAnnotationStats();
 
   // Function to update annotation highlights
-  // const updateAnnotationHighlights = useCallback(() => {
-  //   const iframe = iframeRef.current;
-  //   if (iframe && iframe.contentDocument) {
-  //     const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
-  //     if (editorElement) {
-  //       highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, showAnnotations);
-  //     }
-  //   }
-  // }, [annotations, showAnnotations]);
+  const updateAnnotationHighlights = useCallback(() => {
+    const iframe = iframeRef.current;
+    if (iframe && iframe.contentDocument) {
+      const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+      if (editorElement) {
+        highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, showAnnotations);
+      }
+    }
+  }, [annotations, showAnnotations]);
 
   // Handle annotation highlighting when annotations or visibility changes
-  // useEffect(() => {
-  //   if (!editor) return;
+  useEffect(() => {
+    if (!editor) return;
     
-  //   // Add a small delay to ensure the iframe content is ready
-  //   const timer = setTimeout(() => {
-  //     updateAnnotationHighlights();
-  //   }, 200);
+    // Add a small delay to ensure the iframe content is ready
+    const timer = setTimeout(() => {
+      updateAnnotationHighlights();
+    }, 200);
 
-  //   return () => clearTimeout(timer);
-  // }, [editor, annotations, showAnnotations, updateAnnotationHighlights]);
+    return () => clearTimeout(timer);
+  }, [editor, annotations, showAnnotations, updateAnnotationHighlights, mode]);
 
   // Set up iframe and editor
   useEffect(() => {
@@ -258,6 +281,13 @@ export function EnhancedEditor({
     style.textContent = editorStyles;
     iframeDocument.head.appendChild(style);
 
+    // Add class to body for comments mode
+    if (mode === 'comments') {
+      iframeDocument.body.classList.add('comments-mode');
+    } else {
+      iframeDocument.body.classList.remove('comments-mode');
+    }
+
     // Mount editor
     const editorElement = editor.options.element;
     if (editorElement) {
@@ -265,9 +295,9 @@ export function EnhancedEditor({
     }
     
     // Update highlights after editor is mounted
-    // setTimeout(() => {
-    //   updateAnnotationHighlights();
-    // }, 100);
+    setTimeout(() => {
+      updateAnnotationHighlights();
+    }, 100);
     
     return () => {
       if (editorRef.current) {
@@ -275,16 +305,15 @@ export function EnhancedEditor({
         editorRef.current = null;
       }
     };
-  }, [editor, iframeRef]);
+  }, [editor, iframeRef, updateAnnotationHighlights, mode]);
 
-
-  // const handleAnnotationClick = useCallback((annotation: Annotation) => {
-  //   setSelectedAnnotation(annotation);
-  //   setShowAnnotationPanel(true);
-  // }, []);
+  const handleAnnotationClick = useCallback((annotation: Annotation) => {
+    setSelectedAnnotation(annotation);
+    setShowAnnotationPanel(true);
+  }, []);
 
   const handleCreateAnnotation = useCallback(() => {
-    if (readOnly) return;
+    if (!allowAnnotations) return;
 
     const selection = getTextSelection();
     if (!selection || !selection.text) {
@@ -298,7 +327,7 @@ export function EnhancedEditor({
       endOffset: selection.endOffset
     });
     setShowCreateModal(true);
-  }, [readOnly]);
+  }, [allowAnnotations]);
 
   const handleSubmitAnnotation = async (data: any) => {
     const newAnnotation = await createAnnotation(data);
@@ -306,39 +335,40 @@ export function EnhancedEditor({
       setSelectedAnnotation(newAnnotation);
       setShowAnnotationPanel(true);
       // Update highlights after creating annotation
-      // setTimeout(() => {
-      //   updateAnnotationHighlights();
-      // }, 100);
+      setTimeout(() => {
+        updateAnnotationHighlights();
+      }, 100);
     }
   };
 
-  // const handleToggleAnnotations = useCallback(() => {
-  //   setShowAnnotations(prev => {
-  //     const newValue = !prev;
-  //     // Update highlights immediately when toggling
-  //     setTimeout(() => {
-  //       const iframe = iframeRef.current;
-  //       if (iframe && iframe.contentDocument) {
-  //         const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
-  //         if (editorElement) {
-  //           highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, newValue);
-  //         }
-  //       }
-  //     }, 50);
-  //     return newValue;
-  //   });
-  // }, [annotations, handleAnnotationClick]);
-
+  const handleToggleAnnotations = useCallback(() => {
+    setShowAnnotations(prev => {
+      const newValue = !prev;
+      // Update highlights immediately when toggling
+      setTimeout(() => {
+        const iframe = iframeRef.current;
+        if (iframe && iframe.contentDocument) {
+          const editorElement = iframe.contentDocument.querySelector('.ProseMirror');
+          if (editorElement) {
+            highlightAnnotatedText(editorElement, annotations, handleAnnotationClick, newValue);
+          }
+        }
+      }, 50);
+      return newValue;
+    });
+  }, [annotations, handleAnnotationClick]);
 
   // Set up keyboard shortcuts
   useEffect(() => {
+    if (mode !== 'comments' || !allowAnnotations) return;
+    
     const cleanup = setupAnnotationKeyboardShortcuts(
       handleCreateAnnotation,
       () => setShowAnnotationPanel(!showAnnotationPanel)
     );
 
     return cleanup;
-  }, [showAnnotationPanel, annotations, selectedAnnotation, handleCreateAnnotation]);
+  }, [showAnnotationPanel, annotations, selectedAnnotation, handleCreateAnnotation, allowAnnotations, mode]);
 
   if (!editor) {
     return null;
@@ -346,17 +376,19 @@ export function EnhancedEditor({
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      {!readOnly && <EditorToolbar editor={editor} />}
+      {mode === 'edit' && !readOnly && <EditorToolbar editor={editor} />}
       
-      <AnnotationToolbar
-        annotationCount={stats.total}
-        openCount={stats.open}
-        // showAnnotations={showAnnotations}
-        // onToggleAnnotations={handleToggleAnnotations}
-        onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
-        onCreateAnnotation={handleCreateAnnotation}
-        isReadOnly={readOnly}
-      />
+      {mode === 'comments' && (
+        <AnnotationToolbar
+          annotationCount={stats.total}
+          openCount={stats.open}
+          showAnnotations={showAnnotations}
+          onToggleAnnotations={handleToggleAnnotations}
+          onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
+          onCreateAnnotation={handleCreateAnnotation}
+          isReadOnly={readOnly}
+        />
+      )}
       
       <div className="border rounded-lg bg-white flex-1 relative">
         <iframe
@@ -365,7 +397,7 @@ export function EnhancedEditor({
           style={{ minHeight: 'calc(100vh - 350px)' }}
         />
         
-        {showAnnotationPanel && (
+        {mode === 'comments' && showAnnotationPanel && (
           <AnnotationPanel
             chapterId={chapterId}
             isOpen={showAnnotationPanel}
@@ -376,7 +408,7 @@ export function EnhancedEditor({
         )}
       </div>
 
-      {showCreateModal && selectionData && (
+      {mode === 'comments' && showCreateModal && selectionData && allowAnnotations && (
         <CreateAnnotationModal
           isOpen={showCreateModal}
           onClose={() => {

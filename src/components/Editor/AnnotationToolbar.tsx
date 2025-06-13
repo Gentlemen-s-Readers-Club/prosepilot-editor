@@ -1,10 +1,12 @@
 import React from 'react';
-import { MessageSquare, Filter, Plus } from 'lucide-react';
+import { MessageSquare, Filter, Plus, Eye, EyeOff } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface AnnotationToolbarProps {
   annotationCount: number;
   openCount: number;
+  showAnnotations: boolean;
+  onToggleAnnotations: () => void;
   onTogglePanel: () => void;
   onCreateAnnotation: () => void;
   isReadOnly?: boolean;
@@ -12,6 +14,9 @@ interface AnnotationToolbarProps {
 
 export function AnnotationToolbar({
   annotationCount,
+  openCount,
+  showAnnotations,
+  onToggleAnnotations,
   onTogglePanel,
   onCreateAnnotation,
   isReadOnly = false
@@ -31,6 +36,20 @@ export function AnnotationToolbar({
       <div className="flex-1" />
       
       <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onToggleAnnotations}
+          className="text-gray-600 hover:text-gray-900"
+          title={showAnnotations ? "Hide annotations" : "Show annotations"}
+        >
+          {showAnnotations ? (
+            <EyeOff className="w-4 h-4" />
+          ) : (
+            <Eye className="w-4 h-4" />
+          )}
+        </Button>
+        
         {!isReadOnly && (
           <Button
             variant="ghost"

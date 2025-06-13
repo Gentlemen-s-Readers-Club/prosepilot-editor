@@ -4,7 +4,7 @@ import { EnhancedEditor } from '../components/Editor/EnhancedEditor';
 import { EditorSidebar } from '../components/Editor/EditorSidebar';
 import { ChapterToolbar } from '../components/Editor/ChapterToolbar';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle, MessageSquare, Edit } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { supabase } from '../lib/supabase';
 import { ChapterProvider } from '../contexts/ChapterContext';
@@ -25,6 +25,8 @@ interface Version {
   isCurrent?: boolean;
 }
 
+type EditorMode = 'edit' | 'comments';
+
 function ChapterEditorContent() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ function ChapterEditorContent() {
   const [versions, setVersions] = useState<Version[]>([]);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+  const [editorMode, setEditorMode] = useState<EditorMode>('edit');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +52,7 @@ function ChapterEditorContent() {
           .select('*, books!inner(*)')
           .eq('id', id)
           .single();
-
+  
         if (chapterError) throw chapterError;
         if (!chapter) throw new Error('Chapter not found');
 
@@ -105,7 +108,7 @@ function ChapterEditorContent() {
     };
 
     fetchData();
-  }, [id, toast]);
+  }, [id, navigate, toast]);
 
   const handleTitleChange = async (newTitle: string) => {
     if (!id || isPublished) return;
@@ -213,6 +216,11 @@ function ChapterEditorContent() {
     }
   };
 
+  const toggleEditorMode = () => {
+    if (isPublished) return;
+    setEditorMode(prev => prev === 'edit' ? 'comments' : 'edit');
+  };
+
   return (
     <div className="h-[calc(100vh-64px)]">
       <div className="flex flex-1 h-full">
@@ -237,9 +245,33 @@ function ChapterEditorContent() {
                 <ArrowLeft className="mr-2" size={20} />
                 Back to Book Details
               </button>
-              {!isPublished && (
-                <Button onClick={handleSave}>Save Changes</Button>
-              )}
+              <div className="flex items-center gap-3">
+                {!isPublished && (
+                  <div className="flex bg-gray-100 rounded-lg p-1">
+                    <Button
+                      variant={editorMode === 'edit' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setEditorMode('edit')}
+                      className="flex items-center gap-2"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant={editorMode === 'comments' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setEditorMode('comments')}
+                      className="flex items-center gap-2"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      Comments
+                    </Button>
+                  </div>
+                )}
+                {!isPublished && editorMode === 'edit' && (
+                  <Button onClick={handleSave}>Save Changes</Button>
+                )}
+              </div>
             </div>
 
             {isPublished && (
@@ -284,7 +316,9 @@ function ChapterEditorContent() {
                     chapterTitle={chapterTitle}
                     initialContent={content}
                     onChange={setContent}
-                    readOnly={isPublished}
+                    readOnly={isPublished || editorMode === 'comments'}
+                    mode={editorMode}
+                    allowAnnotations={!isPublished && editorMode === 'comments'}
                   />
                 </div>
               </div>

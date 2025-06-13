@@ -81,6 +81,9 @@ export function highlightAnnotatedText(
   sortedAnnotations.forEach(annotation => {
     highlightAnnotation(editorElement, annotation, onAnnotationClick);
   });
+  
+  // Add annotation markers to the gutter
+  addAnnotationGutterMarkers(editorElement, sortedAnnotations, onAnnotationClick);
 }
 
 function removeExistingHighlights(editorElement: Element): void {
@@ -94,6 +97,10 @@ function removeExistingHighlights(editorElement: Element): void {
       parent.normalize();
     }
   });
+  
+  // Remove gutter markers
+  const gutterMarkers = editorElement.querySelectorAll('.annotation-gutter-marker');
+  gutterMarkers.forEach(marker => marker.remove());
 }
 
 function highlightAnnotation(
@@ -214,6 +221,97 @@ function highlightAnnotation(
       console.warn('Could not highlight annotation:', annotation.id, error);
     }
   }
+}
+
+function addAnnotationGutterMarkers(
+  editorElement: Element,
+  annotations: Annotation[],
+  onAnnotationClick: (annotation: Annotation) => void
+): void {
+  const doc = editorElement.ownerDocument;
+  
+  // Group annotations by line
+  const lineMap = new Map<number, Annotation[]>();
+  
+  annotations.forEach(annotation => {
+    // Find the line number for this annotation
+    const lineNumber = findLineNumberForOffset(editorElement, annotation.start_offset);
+    
+    if (lineNumber !== null) {
+      if (!lineMap.has(lineNumber)) {
+        lineMap.set(lineNumber, []);
+      }
+      lineMap.get(lineNumber)?.push(annotation);
+    }
+  });
+  
+  // Add gutter markers for each line with annotations
+  lineMap.forEach((lineAnnotations, lineNumber) => {
+    const lineElement = findLineElementByNumber(editorElement, lineNumber);
+    if (!lineElement) return;
+    
+    // Create a gutter marker container if it doesn't exist
+    let gutterContainer = lineElement.querySelector('.annotation-gutter-container');
+    if (!gutterContainer) {
+      gutterContainer = doc.createElement('div');
+      gutterContainer.className = 'annotation-gutter-container';
+      gutterContainer.style.cssText = `
+        position: absolute;
+        left: -20px;
+        top: 0;
+        bottom: 0;
+        width: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      `;
+      lineElement.style.position = 'relative';
+      lineElement.appendChild(gutterContainer);
+    }
+    
+    // Add a marker for each annotation on this line
+    lineAnnotations.forEach(annotation => {
+      const marker = doc.createElement('div');
+      marker.className = `annotation-gutter-marker ${annotation.status}`;
+      marker.title = annotation.content;
+      marker.style.cssText = `
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin: 2px 0;
+        cursor: pointer;
+        background-color: ${annotation.status === 'resolved' ? '#10b981' : '#f59e0b'};
+      `;
+      
+      marker.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onAnnotationClick(annotation);
+      });
+      
+      gutterContainer.appendChild(marker);
+    });
+  });
+}
+
+function findLineNumberForOffset(editorElement: Element, offset: number): number | null {
+  const textContent = editorElement.textContent || '';
+  if (offset >= textContent.length) return null;
+  
+  // Split content by newlines and calculate line number
+  const textBeforeOffset = textContent.substring(0, offset);
+  return textBeforeOffset.split('\n').length - 1;
+}
+
+function findLineElementByNumber(editorElement: Element, lineNumber: number): Element | null {
+  // This is a simplified approach - in a real implementation, you'd need to find the actual DOM element
+  // that corresponds to the line number, which depends on your editor's structure
+  const paragraphs = editorElement.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li');
+  if (lineNumber < paragraphs.length) {
+    return paragraphs[lineNumber];
+  }
+  return null;
 }
 
 // Keyboard shortcuts

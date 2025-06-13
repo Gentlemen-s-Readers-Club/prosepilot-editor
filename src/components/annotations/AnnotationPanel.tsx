@@ -43,6 +43,12 @@ export function AnnotationPanel({
   const stats = getAnnotationStats();
 
   const filteredAnnotations = annotations.filter(annotation => {
+    // Apply status filter
+    if (filters.status !== 'all' && annotation.status !== filters.status) {
+      return false;
+    }
+    
+    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       return (
@@ -51,6 +57,7 @@ export function AnnotationPanel({
         annotation.user?.full_name.toLowerCase().includes(query)
       );
     }
+    
     return true;
   });
 
