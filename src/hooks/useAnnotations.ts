@@ -53,7 +53,7 @@ export function useAnnotations(chapterId: string) {
       // Sort replies by creation date
       const annotationsWithSortedReplies = data?.map(annotation => ({
         ...annotation,
-        replies: annotation.replies?.sort((a, b) => 
+        replies: annotation.replies?.sort((a: AnnotationReply, b: AnnotationReply) => 
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         ) || []
       })) || [];

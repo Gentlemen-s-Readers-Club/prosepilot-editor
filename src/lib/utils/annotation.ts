@@ -1,4 +1,4 @@
-import { Annotation, AnnotationExportData } from '../../types/annotations';
+import { Annotation } from '../../types/annotations';
 
 export function getTextSelection(): { 
   text: string; 
@@ -255,7 +255,7 @@ function addAnnotationGutterMarkers(
     if (!gutterContainer) {
       gutterContainer = doc.createElement('div');
       gutterContainer.className = 'annotation-gutter-container';
-      gutterContainer.style.cssText = `
+      (gutterContainer as HTMLElement).style.cssText = `
         position: absolute;
         left: -20px;
         top: 0;
@@ -266,7 +266,7 @@ function addAnnotationGutterMarkers(
         align-items: center;
         justify-content: center;
       `;
-      lineElement.style.position = 'relative';
+      (lineElement as HTMLElement).style.position = 'relative';
       lineElement.appendChild(gutterContainer);
     }
     

@@ -1,77 +1,86 @@
 import React from 'react';
-import { MessageSquare, Filter, Plus, Eye, EyeOff } from 'lucide-react';
+import { MessageSquare, Filter, Plus, Eye, Edit } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface AnnotationToolbarProps {
+  mode: 'edit' | 'comments';
   annotationCount: number;
   openCount: number;
-  showAnnotations: boolean;
-  onToggleAnnotations: () => void;
+  onModeChange: (mode: 'edit' | 'comments') => void;
   onTogglePanel: () => void;
   onCreateAnnotation: () => void;
   isReadOnly?: boolean;
 }
 
 export function AnnotationToolbar({
+  mode,
   annotationCount,
-  openCount,
-  showAnnotations,
-  onToggleAnnotations,
+  onModeChange,
   onTogglePanel,
   onCreateAnnotation,
   isReadOnly = false
 }: AnnotationToolbarProps) {
   return (
-    <div className="flex items-center gap-2 p-2 bg-gray-50 border rounded-lg">
-      <div className="flex items-center gap-2">
-        <MessageSquare className="w-4 h-4 text-base-heading" />
-        <span className="text-sm font-medium text-gray-700">Annotations</span>
-        {annotationCount > 0 && (
-          <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-xs aspect-square">
-            {annotationCount}
-          </span>
-        )}
-      </div>
-      
-      <div className="flex-1" />
-      
-      <div className="flex items-center gap-1">
+    <div className="flex items-center gap-2 border rounded-lg justify-between">
+      <div className="flex">
         <Button
-          variant="ghost"
+          variant={mode === 'edit' ? 'default' : 'ghost'}
           size="sm"
-          onClick={onToggleAnnotations}
-          className="text-gray-600 hover:text-gray-900"
-          title={showAnnotations ? "Hide annotations" : "Show annotations"}
+          onClick={() => onModeChange('edit')}
+          className="flex items-center gap-2 rounded-r-none"
         >
-          {showAnnotations ? (
-            <EyeOff className="w-4 h-4" />
+          {isReadOnly ? (
+            <>
+              <Eye className="w-4 h-4" />
+              View
+            </>
           ) : (
-            <Eye className="w-4 h-4" />
+            <>
+              <Edit className="w-4 h-4" />
+              Edit
+            </>
           )}
         </Button>
-        
-        {!isReadOnly && (
+        <Button
+          variant={mode === 'comments' ? 'default' : 'ghost'}
+          size="sm"
+          onClick={() => onModeChange('comments')}
+          className="flex items-center gap-2 rounded-none"
+        >
+          <MessageSquare className="w-4 h-4" />
+          Annotations
+          {annotationCount > 0 && (
+            <span className="bg-gray-200 text-gray-600 px-2 rounded-full text-xs aspect-square flex items-center justify-center">
+              {annotationCount}
+            </span>
+          )}
+        </Button>
+      </div>
+      {mode === 'comments' && (
+        <div className="flex items-center gap-1">
+          {!isReadOnly && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onCreateAnnotation}
+              className="text-gray-600 hover:text-gray-900"
+              title="Create annotation (Ctrl+Shift+A)"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          )}
+          
           <Button
             variant="ghost"
             size="sm"
-            onClick={onCreateAnnotation}
+            onClick={onTogglePanel}
             className="text-gray-600 hover:text-gray-900"
-            title="Create annotation (Ctrl+Shift+A)"
+            title="Toggle annotation panel (Ctrl+Shift+P)"
           >
-            <Plus className="w-4 h-4" />
+            <Filter className="w-4 h-4" />
           </Button>
-        )}
-        
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onTogglePanel}
-          className="text-gray-600 hover:text-gray-900"
-          title="Toggle annotation panel (Ctrl+Shift+P)"
-        >
-          <Filter className="w-4 h-4" />
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
