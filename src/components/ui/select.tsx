@@ -1,5 +1,5 @@
 import React from 'react';
-import Select, { GroupBase, Props as ReactSelectProps, StylesConfig, Theme } from 'react-select';
+import Select, { GroupBase, Props as ReactSelectProps, StylesConfig } from 'react-select';
 
 export interface SelectOption {
   value: string;
@@ -12,13 +12,13 @@ interface CustomSelectProps extends Omit<ReactSelectProps<SelectOption, boolean,
   error?: string;
 }
 
-const customStyles: StylesConfig = {
+const customStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>> = {
   control: (styles) => ({ 
     ...styles, 
     backgroundColor: 'white',
-    borderColor: '#E0E0E0',
+    borderColor: '#E3E7ED',
     '&:hover': {
-      borderColor: '#2D5F6E'
+      borderColor: '#3E4C59'
     }
   }),
   option: (styles, { isDisabled, isFocused, isSelected }) => {
@@ -27,33 +27,33 @@ const customStyles: StylesConfig = {
       backgroundColor: isDisabled
         ? undefined
         : isSelected
-        ? '#2D5F6E'
+        ? '#3E4C59'
         : isFocused
-        ? '#E3F5F9'
+        ? '#DCE2E9'
         : undefined,
       color: isDisabled
-        ? '#4E4E4E'
+        ? '#4A5568'
         : isSelected
         ? 'white'
-        : '#4E4E4E',
+        : '#4A5568',
       cursor: isDisabled ? 'not-allowed' : 'default',
 
       ':active': {
         ...styles[':active'],
         backgroundColor: !isDisabled
           ? isSelected
-            ? '#2D5F6E'
-            : '#2D5F6E'
+            ? '#3E4C59'
+            : '#3E4C59'
           : undefined,
         color: isDisabled
-          ? '#4E4E4E'
+          ? '#4A5568'
           : 'white'
       },
     };
   },
   multiValue: (styles) => ({
     ...styles,
-    backgroundColor: '#4F9EBC',
+    backgroundColor: '#3E4C59',
   }),
   multiValueLabel: (styles) => ({
     ...styles,
@@ -61,13 +61,13 @@ const customStyles: StylesConfig = {
   }),
   multiValueRemove: (styles) => ({
     ...styles,
-    color: '#2D5F6E',
+    color: '#FFFFFF',
     ':hover': {
-      backgroundColor: '#2D5F6E',
+      backgroundColor: '#C53030',
       color: '#FFFFFF',
     },
   }),
-};
+} as StylesConfig<SelectOption, boolean, GroupBase<SelectOption>>;
 
 export function CustomSelect({ 
   options,

@@ -34,7 +34,7 @@ export function SubscriptionGuard({
   if (error) {
     return (
       <div className="text-center p-4">
-        <p className="text-red-500">Error checking subscription status</p>
+        <p className="text-state-error">Error checking subscription status</p>
         <p className="text-sm text-muted-foreground">{error}</p>
       </div>
     );

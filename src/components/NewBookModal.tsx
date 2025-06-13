@@ -387,7 +387,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                         <div className="space-y-2">
                           <Label htmlFor="owner" className="text-gray-700 flex items-center gap-1">
                             Book Owner
-                            <span className="text-red-500">*</span>
+                            <span className="text-state-error">*</span>
                           </Label>
                           <CustomSelect
                             id="owner"
@@ -415,7 +415,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                       <div className="space-y-2">
                         <Label htmlFor="categories" className="text-gray-700 flex items-center gap-1">
                           Categories
-                          <span className="text-red-500">*</span>
+                          <span className="text-state-error">*</span>
                         </Label>
                         <CustomSelect
                           id="categories"
@@ -440,7 +440,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                       <div className="space-y-2">
                         <Label htmlFor="language" className="text-gray-700 flex items-center gap-1">
                           Language
-                          <span className="text-red-500">*</span>
+                          <span className="text-state-error">*</span>
                         </Label>
                         <CustomSelect
                           id="language"

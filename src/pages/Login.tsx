@@ -61,7 +61,7 @@ export function Login() {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-64px)]">
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
         <div className="max-w-md w-full space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">
@@ -72,12 +72,12 @@ export function Login() {
             <Button
               variant="outline"
               onClick={() => handleSocialLogin("google")}
-              className="w-full flex items-center justify-center gap-3"
+              className="w-full flex items-center justify-center gap-3 group"
             >
               <img
                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
                 alt="Google"
-                className="w-5 h-5"
+                className="w-5 h-5 group-hover:brightness-0 group-hover:invert transition-all"
               />
               Continue with Google
             </Button>
@@ -85,9 +85,9 @@ export function Login() {
             <Button
               variant="outline"
               onClick={() => handleSocialLogin("facebook")}
-              className="w-full flex items-center justify-center gap-3"
+              className="group w-full flex items-center justify-center gap-3"
             >
-              <Facebook className="w-5 h-5 text-[#1877F2]" />
+              <Facebook className="w-5 h-5 text-[#1877F2] group-hover:text-white transition-colors" />
               Continue with Facebook
             </Button>
 

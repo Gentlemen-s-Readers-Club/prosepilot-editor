@@ -82,7 +82,7 @@ export function CreateAnnotationModal({
             <div>
               <Label htmlFor="content" className="flex items-center gap-1 text-base-heading">
                 Your Comment
-                <span className="text-red-500">*</span>
+                <span className="text-state-error">*</span>
               </Label>
               <textarea
                 id="content"

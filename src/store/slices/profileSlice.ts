@@ -32,8 +32,6 @@ export const fetchProfile = createAsyncThunk(
     if (!session?.user) {
       throw new Error('No authenticated user');
     }
-
-    console.log('Fetching profile for user:', session.user.id);
     
     const { data, error } = await supabase
       .from('profiles')
@@ -43,7 +41,6 @@ export const fetchProfile = createAsyncThunk(
 
     // If no profile exists, create a fallback profile from auth user
     if (error && error.code === 'PGRST116') {
-      console.log('No profile found, creating fallback from auth user');
       const fallbackProfile = {
         id: session.user.id,
         email: session.user.email,

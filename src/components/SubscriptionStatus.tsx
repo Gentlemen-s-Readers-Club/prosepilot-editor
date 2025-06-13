@@ -53,8 +53,8 @@ export function SubscriptionStatus({
   if (error) {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
-        <XCircle className="h-4 w-4 text-red-500" />
-        <span className="text-sm text-red-500">Error loading subscription</span>
+        <XCircle className="h-4 w-4 text-state-error" />
+        <span className="text-sm text-state-error">Error loading subscription</span>
       </div>
     );
   }

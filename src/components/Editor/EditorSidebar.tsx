@@ -7,6 +7,7 @@ import { NewContentModal } from '../NewContentModal';
 import { useToast } from '../../hooks/use-toast';
 import { supabase } from '../../lib/supabase';
 import { Book } from '../../store/types';
+import { getCoverUrl } from '../../lib/utils/covers';
 
 interface EditorSidebarProps {
   book: Book;
@@ -82,7 +83,7 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
             <div className="aspect-[10/16] rounded-lg overflow-hidden shadow-md mb-4 max-w-44 mx-auto">
               {book.cover_url ? (
                 <img
-                  src={book.cover_url}
+                  src={getCoverUrl({ src: book.cover_url })}
                   alt={book.title}
                   className="w-full h-full object-cover"
                 />

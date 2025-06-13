@@ -151,7 +151,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
             <div>
               <Label className="flex items-center gap-1 text-base-heading">
                 Email Addresses
-                <span className="text-red-500">*</span>
+                <span className="text-state-error">*</span>
               </Label>
               <div className="mt-2 space-y-3">
                 {emails.map((email, index) => (

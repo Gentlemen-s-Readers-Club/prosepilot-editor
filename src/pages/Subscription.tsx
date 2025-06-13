@@ -181,7 +181,7 @@ export function Subscription() {
     return (
       <div className="min-h-screen bg-base-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-500 mb-4">
+          <h2 className="text-2xl font-bold text-state-error mb-4">
             Failed to load subscription system
           </h2>
           <p className="text-muted-foreground">

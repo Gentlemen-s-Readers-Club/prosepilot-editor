@@ -181,7 +181,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
             <div>
               <Label htmlFor="teamName" className="flex items-center gap-1 text-base-heading">
                 Team Name
-                <span className="text-red-500">*</span>
+                <span className="text-state-error">*</span>
               </Label>
               <Input
                 id="teamName"
