@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Filter, Plus, Eye, Edit } from 'lucide-react';
+import { MessageSquare, Eye, Edit, Sidebar } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface AnnotationToolbarProps {
@@ -8,7 +8,6 @@ interface AnnotationToolbarProps {
   openCount: number;
   onModeChange: (mode: 'edit' | 'comments') => void;
   onTogglePanel: () => void;
-  onCreateAnnotation: () => void;
   isReadOnly?: boolean;
 }
 
@@ -17,7 +16,6 @@ export function AnnotationToolbar({
   annotationCount,
   onModeChange,
   onTogglePanel,
-  onCreateAnnotation,
   isReadOnly = false
 }: AnnotationToolbarProps) {
   return (
@@ -58,26 +56,14 @@ export function AnnotationToolbar({
       </div>
       {mode === 'comments' && (
         <div className="flex items-center gap-1">
-          {!isReadOnly && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onCreateAnnotation}
-              className="text-gray-600 hover:text-gray-900"
-              title="Create annotation (Ctrl+Shift+A)"
-            >
-              <Plus className="w-4 h-4" />
-            </Button>
-          )}
-          
           <Button
             variant="ghost"
             size="sm"
             onClick={onTogglePanel}
-            className="text-gray-600 hover:text-gray-900"
-            title="Toggle annotation panel (Ctrl+Shift+P)"
+            className="text-gray-600 hover:text-gray-900 rounded-l-none"
+            title={`Toggle annotation panel (${navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? '⌘' : 'Ctrl'}+Shift+P)`}
           >
-            <Filter className="w-4 h-4" />
+            <Sidebar className="w-4 h-4" />
           </Button>
         </div>
       )}

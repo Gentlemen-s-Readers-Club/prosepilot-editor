@@ -37,6 +37,11 @@ export function EnhancedEditor({
     startOffset: number;
     endOffset: number;
   } | null>(null);
+  const [floatingButtonPosition, setFloatingButtonPosition] = useState<{
+    x: number;
+    y: number;
+    visible: boolean;
+  }>({ x: 0, y: 0, visible: false });
 
   const { 
     annotations, 
@@ -243,6 +248,101 @@ export function EnhancedEditor({
     }
   }, [annotations, highlightAnnotations, mode]);
 
+  // Function to handle text selection and show floating button
+  const handleTextSelection = useCallback(() => {
+    if (mode !== 'comments' || readOnly) {
+      setFloatingButtonPosition({ x: 0, y: 0, visible: false });
+      return;
+    }
+
+    const selection = getTextSelection();
+    if (!selection || !selection.text) {
+      setFloatingButtonPosition({ x: 0, y: 0, visible: false });
+      return;
+    }
+
+    // Get the selection range to position the button
+    const windowSelection = window.getSelection();
+    if (!windowSelection || windowSelection.rangeCount === 0) {
+      setFloatingButtonPosition({ x: 0, y: 0, visible: false });
+      return;
+    }
+
+    const range = windowSelection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    
+    // Only show button if the selection is within the content area
+    const contentElement = contentRef.current;
+    if (contentElement) {
+      const contentRect = contentElement.getBoundingClientRect();
+      if (rect.top >= contentRect.top && rect.bottom <= contentRect.bottom) {
+        // Position the button above the selection
+        setFloatingButtonPosition({
+          x: rect.left + rect.width / 2,
+          y: rect.top - 10,
+          visible: true
+        });
+        return;
+      }
+    }
+    
+    setFloatingButtonPosition({ x: 0, y: 0, visible: false });
+  }, [mode, readOnly, getTextSelection]);
+
+  // Set up selection change listeners
+  useEffect(() => {
+    if (mode !== 'comments') return;
+
+    const handleSelectionChange = () => {
+      // Use a shorter debounce to be more responsive
+      setTimeout(handleTextSelection, 50);
+    };
+
+    const handleMouseUp = () => {
+      // Check selection after mouse up to ensure we catch the final selection
+      setTimeout(handleTextSelection, 10);
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    document.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [mode, handleTextSelection]);
+
+  // Hide floating button when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Don't hide if clicking on the floating button itself
+      if (target.closest('.floating-annotation-button')) {
+        return;
+      }
+      
+      // Don't hide if clicking on annotation highlights
+      if (target.closest('.annotation-highlight')) {
+        return;
+      }
+      
+      // Check if there's still a text selection
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0 || !selection.toString().trim()) {
+        setFloatingButtonPosition({ x: 0, y: 0, visible: false });
+      }
+    };
+
+    if (mode === 'comments') {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [mode]);
+
   const handleCreateAnnotation = useCallback(() => {
     if (readOnly) return;
 
@@ -254,6 +354,7 @@ export function EnhancedEditor({
 
     setSelectionData(selection);
     setShowCreateModal(true);
+    setFloatingButtonPosition({ x: 0, y: 0, visible: false });
   }, [readOnly, getTextSelection]);
 
   const handleSubmitAnnotation = async (data: CreateAnnotationData) => {
@@ -272,15 +373,19 @@ export function EnhancedEditor({
   useEffect(() => {
     if (mode !== 'comments' || readOnly) return;
     
+    // Detect if user is on Mac
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const modifierKey = isMac ? 'metaKey' : 'ctrlKey';
+    
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl+Shift+A - Create annotation
-      if (e.ctrlKey && e.shiftKey && e.key === 'a') {
+      // Cmd+Shift+A (Mac) or Ctrl+Shift+A (Windows/Linux) - Create annotation
+      if (e[modifierKey as keyof KeyboardEvent] && e.shiftKey && e.key === 'a') {
         e.preventDefault();
         handleCreateAnnotation();
       }
       
-      // Ctrl+Shift+P - Toggle panel
-      if (e.ctrlKey && e.shiftKey && e.key === 'p') {
+      // Cmd+Shift+P (Mac) or Ctrl+Shift+P (Windows/Linux) - Toggle panel
+      if (e[modifierKey as keyof KeyboardEvent] && e.shiftKey && e.key === 'p') {
         e.preventDefault();
         setShowAnnotationPanel(!showAnnotationPanel);
       }
@@ -302,7 +407,6 @@ export function EnhancedEditor({
         openCount={stats.open}
         onModeChange={setMode}
         onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
-        onCreateAnnotation={handleCreateAnnotation}
         isReadOnly={readOnly}
       />
 
@@ -324,6 +428,28 @@ export function EnhancedEditor({
             />
           ) : null}
         </div>
+        
+        {/* Floating annotation button */}
+        {mode === 'comments' && !readOnly && floatingButtonPosition.visible && (
+          <div
+            className="floating-annotation-button fixed z-50 pointer-events-auto"
+            style={{
+              left: `${floatingButtonPosition.x}px`,
+              top: `${floatingButtonPosition.y}px`,
+              transform: 'translateX(-50%)'
+            }}
+          >
+            <button
+              onClick={handleCreateAnnotation}
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              title={`Add annotation (${navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? '⌘' : 'Ctrl'}+Shift+A)`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+        )}
         
         {mode === 'comments' && showAnnotationPanel && (
           <AnnotationPanel
