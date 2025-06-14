@@ -5,8 +5,7 @@ import {
   Check, 
   FileText, 
   Crown, 
-  Users, 
-  Zap,
+  Users,
   ArrowRight,
   CreditCard,
   HelpCircle,
@@ -38,11 +37,10 @@ const plans: Plan[] = [
     description: 'Perfect for hobbyists and first-time authors',
     features: [
       '5 credits/month (1 book)',
-      'Max 15,000 words/book',
       'Basic genre selection',
       'AI-generated outline + simple chapter flow',
       'Plot and character consistency checker',
-      'Export to watermarked PDF and ePub',
+      'Export to ePub',
       'Community support'
     ]
   },
@@ -52,16 +50,14 @@ const plans: Plan[] = [
     price: 29,
     credits: 25, // 5 books
     icon: <Crown className="w-6 h-6" />,
-    color: 'bg-blue-500',
+    color: 'bg-state-info',
     description: 'For aspiring writers ready to go deeper',
     features: [
       '25 credits/month (5 books)',
-      'Max 60,000 words/book',
+      'All Starter features',
       'Unlock more genres',
-      'Advanced book properties (narrator, tone, style)',
-      'Cover generation (non-watermarked)',
-      'Export to clean PDF, ePub, and Kindle formats',
-      'AI-generated blurbs & summaries',
+      'Advanced book properties: narrator, tone, style',
+      'Export to PDF, ePub, and Docx formats',
       'Priority email support'
     ],
     isPopular: true
@@ -72,38 +68,16 @@ const plans: Plan[] = [
     price: 79,
     credits: 75, // 15 books
     icon: <Users className="w-6 h-6" />,
-    color: 'bg-orange-500',
+    color: 'bg-state-warning',
     description: 'For professionals and small studios',
     features: [
       '75 credits/month (15 books)',
-      'Max 100,000 words/book',
       'All Pro features',
       'AI-generated illustrations (50 credits/month)',
-      'Cover designer with AI title/tagline generator',
+      'Cover generation',
       'Metadata & ISBN generation',
-      'Publish-ready formatting',
       'Team access (up to 3 users)',
       'Priority live chat support'
-    ],
-    comingSoon: true
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: 199,
-    credits: -1, // Unlimited
-    icon: <Zap className="w-6 h-6" />,
-    color: 'bg-red-500',
-    description: 'For publishers, agencies, and heavy users',
-    features: [
-      'Unlimited credits',
-      'Unlimited users per team',
-      'All Studio features',
-      'API access',
-      'Bulk book/series generation',
-      'Custom AI model tuning',
-      'Dedicated onboarding & success manager',
-      'SLA-based priority support'
     ],
     comingSoon: true
   }
@@ -148,12 +122,12 @@ export function Pricing() {
             
             {/* Trust Indicators */}
             <div className="mt-8 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-blue-500" />
+              <div className="flex items-center text-base-paragraph">
+                <CheckCircle className="w-4 h-4 mr-2 text-brand-accent" />
                 Cancel anytime
               </div>
-              <div className="flex items-center">
-                <CreditCard className="w-4 h-4 mr-2 text-purple-500" />
+              <div className="flex items-center text-base-paragraph">
+                <CreditCard className="w-4 h-4 mr-2 text-brand-accent" />
                 Start from just $9/month
               </div>
             </div>
@@ -163,28 +137,29 @@ export function Pricing() {
 
       {/* Pricing Plans */}
       <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {plans.map((plan) => (
               <div
                 key={plan.id}
                 className={`relative bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-105 ${
-                  plan.isPopular ? 'ring-2 ring-brand-primary scale-105' : ''
+                  plan.isPopular ? 'ring-2 ring-brand-accent scale-105' : ''
                 } ${plan.comingSoon ? 'opacity-75' : ''}`}
               >
                 {plan.isPopular && (
-                  <div className="absolute top-0 right-0 bg-brand-primary text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                  <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
                     Most Popular
                   </div>
                 )}
                 {plan.comingSoon && (
-                  <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                  <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
                     Coming Soon
                   </div>
                 )}
                 
-                <div className="p-8">
-                  {/* Plan Header */}
+                <div className="p-8 flex flex-col h-full">
+                  <div className="flex-1">
+                    {/* Plan Header */}
                   <div className="text-center mb-8">
                     <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
                       {plan.icon}
@@ -213,16 +188,14 @@ export function Pricing() {
                       </li>
                     ))}
                   </ul>
+                  </div>
 
                   {/* CTA Button */}
                   <Link to="/app/signup">
                     <Button
-                      className={`w-full ${
-                        plan.isPopular 
-                          ? 'bg-brand-primary hover:bg-brand-primary/90' 
-                          : 'bg-base-heading hover:bg-gray-800'
-                      }`}
+                      className={`w-full ${plan.isPopular && 'bg-brand-accent border-brand-accent text-white hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white'}`}
                       disabled={plan.comingSoon}
+                      variant={plan.isPopular ? 'default' : 'outline'}
                     >
                       {plan.comingSoon ? 'Coming Soon' : 'Get Started'}
                       {!plan.comingSoon && <ArrowRight className="ml-2 h-4 w-4" />}
@@ -239,10 +212,10 @@ export function Pricing() {
               All plans include our core AI writing features and export capabilities
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-              <span>✓ AI story generation</span>
-              <span>✓ Character development</span>
-              <span>✓ Plot consistency checking</span>
-              <span>✓ Multiple export formats</span>
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> AI story generation</p>
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Character development</p>
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Plot consistency checking</p>
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Multiple export formats</p>
             </div>
           </div>
         </div>
@@ -266,12 +239,12 @@ export function Pricing() {
             ].map((pack, index) => (
               <div
                 key={index}
-                className={`bg-gray-50 rounded-lg p-6 text-center ${
-                  pack.popular ? 'ring-2 ring-brand-primary' : ''
+                className={`bg-base-background rounded-lg p-6 text-center flex flex-col justify-center items-center ${
+                  pack.popular ? 'ring-2 ring-brand-accent' : ''
                 }`}
               >
                 {pack.popular && (
-                  <div className="bg-brand-primary text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
+                  <div className="bg-brand-accent text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
                     Best Value
                   </div>
                 )}
@@ -286,11 +259,11 @@ export function Pricing() {
                     Save {pack.savings}%
                   </div>
                 )}
-                <div className="text-sm text-gray-500 mb-6">
+                <div className="text-sm text-base-paragraph mb-6">
                   Create {Math.floor(pack.credits / 5)} books
                 </div>
                 <Link to="/app/signup">
-                  <Button variant="outline" className="w-full">
+                  <Button className={`w-full ${pack.popular ? 'bg-brand-accent border-brand-accent hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white' : ''}`}>
                     Purchase Credits
                   </Button>
                 </Link>
