@@ -11,8 +11,6 @@ import {
   ArrowRight,
   Quote,
   Zap,
-  Users,
-  BookOpen,
   Award,
   Target,
   Rocket
@@ -343,8 +341,8 @@ export function Landing() {
           </p>
           
           <div className="mt-8">
-            <Link to="/pricing">
-              <Button variant="secondaryOutline">
+            <Link to="/pricing">  
+              <Button variant="secondaryOutline" className="px-8 py-4 text-lg font-semibold border-2">
                 View All Plans
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -411,13 +409,13 @@ export function Landing() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Link to="/app/signup">
-              <Button className="px-8 py-4 text-lg font-semibold bg-brand-primary hover:bg-brand-primary/90 text-white shadow-lg hover:shadow-xl transition-all">
+              <Button className="px-8 py-4 text-lg font-semibold border-2 transition-all">
                 Start Your Writing Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link to="/pricing">
-              <Button variant="outline" className="px-8 py-4 text-lg font-semibold border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white transition-all">
+              <Button variant="outline" className="px-8 py-4 text-lg font-semibold border-2 transition-all">
                 View Pricing Plans
               </Button>
             </Link>

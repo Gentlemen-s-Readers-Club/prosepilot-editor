@@ -107,8 +107,8 @@ export function SubscribeForm({
         <Button 
           type="submit" 
           disabled={isSubmitting || !email}
-          variant="secondary"
-          className="w-full"
+          variant="secondaryOutline"
+          className="w-full border-2 font-semibold text-md"
         >
           {isSubmitting ? 'Subscribing...' : buttonText}
         </Button>
