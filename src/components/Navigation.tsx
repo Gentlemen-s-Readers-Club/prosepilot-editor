@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LogOut, User, CreditCard, BookOpen, Users, MessageCircle, Menu, X } from 'lucide-react';
+import { LogOut, User, CreditCard, BookOpen, Users, MessageCircle, Menu, X, LayoutDashboard } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,7 +43,7 @@ export function Navigation() {
         <div className="flex justify-between h-16">
           {/* Logo and Brand */}
           <div className="flex items-center">
-            <div className="flex items-center gap-1 cursor-pointer" onClick={() => { session ? navigate('/app') : navigate('/'); closeMobileMenu(); }}>
+            <div className="flex items-center gap-1 cursor-pointer" onClick={() => { navigate('/'); closeMobileMenu(); }}>
               <img src="/logo.png" alt="ProsePilot Logo" className="h-10 w-10" />
               <span className="ml-2 text-xl font-bold text-base-heading hidden sm:block">ProsePilot</span>
             </div>
@@ -51,21 +51,22 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
-            <button
-              onClick={() => navigate('/support')}
-              className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              <MessageCircle className="h-4 w-4 text-brand-accent" />
-              <span>Support</span>
-            </button>
 
-            {!loading && !session && (
+            {!loading && !session ? (
               <button
                 onClick={() => navigate('/pricing')}
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <CreditCard className="h-4 w-4 text-brand-accent" />
                 <span>Pricing</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/app')}
+                className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                <LayoutDashboard className="h-4 w-4 text-brand-accent" />
+                <span>Dashboard</span>
               </button>
             )}
 
@@ -76,8 +77,16 @@ export function Navigation() {
               <BookOpen className="h-4 w-4 text-brand-accent" />
               <span>Documentation</span>
             </button>
+
+            <button
+              onClick={() => navigate('/support')}
+              className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              <MessageCircle className="h-4 w-4 text-brand-accent" />
+              <span>Support</span>
+            </button>
             
-            {!loading && !session ? (
+            {!loading && !session && (
               <>
                 <button
                   onClick={() => navigate('/app/login')}
@@ -90,14 +99,6 @@ export function Navigation() {
                   <Button className="bg-brand-primary hover:bg-brand-primary/90">Get Started</Button>
                 </Link>
               </>
-            ) : !loading && session && (
-              <button
-                onClick={() => navigate('/app/teams')}
-                className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                <Users className="h-4 w-4 text-brand-accent" />
-                <span>Teams</span>
-              </button>
             )}
 
             {profile && (
@@ -128,6 +129,10 @@ export function Navigation() {
                   <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/subscription')}>
                     <CreditCard className="mr-2 h-4 w-4 text-brand-accent" />
                     <span className="text-base-paragraph">Manage Subscription</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/teams')}>
+                    <Users className="mr-2 h-4 w-4 text-brand-accent" />
+                    <span className="text-base-paragraph">Manage Teams</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
