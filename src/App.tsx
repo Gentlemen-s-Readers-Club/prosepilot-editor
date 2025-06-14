@@ -21,6 +21,7 @@ import { Pricing } from "./pages/Pricing";
 import { Support } from "./pages/Support";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { Toaster } from "./components/Toaster";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { useAuth } from "./hooks/useAuth";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,6 +58,7 @@ function App() {
     <div className="bg-base-background pt-16 min-h-screen">
       <PaddleProvider>
         <Router>
+          <ScrollToTop />
           <Navigation />
           <Routes>
             <Route path="/" element={<Landing />} />
