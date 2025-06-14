@@ -38,8 +38,8 @@ export function Signup() {
       case 1: return 'bg-state-error';
       case 2: return 'bg-orange-500';
       case 3: return 'bg-yellow-500';
-      case 4: return 'bg-green-500';
-      case 5: return 'bg-green-600';
+      case 4: return 'bg-state-success';
+      case 5: return 'bg-state-success';
       default: return 'bg-gray-200';
     }
   };
@@ -224,11 +224,11 @@ export function Signup() {
                       />
                     </div>
                     <ul className="mt-2 text-sm text-gray-500 space-y-1">
-                      <li className={password.length >= 8 ? "text-green-600" : ""}>• At least 8 characters</li>
-                      <li className={password.match(/[A-Z]/) ? "text-green-600" : ""}>• At least one uppercase letter</li>
-                      <li className={password.match(/[a-z]/) ? "text-green-600" : ""}>• At least one lowercase letter</li>
-                      <li className={password.match(/[0-9]/) ? "text-green-600" : ""}>• At least one number</li>
-                      <li className={password.match(/[^A-Za-z0-9]/) ? "text-green-600" : ""}>• At least one special character</li>
+                      <li className={password.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
+                      <li className={password.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
+                      <li className={password.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
+                      <li className={password.match(/[0-9]/) ? "text-state-success" : ""}>• At least one number</li>
+                      <li className={password.match(/[^A-Za-z0-9]/) ? "text-state-success" : ""}>• At least one special character</li>
                     </ul>
                   </div>
                 )}

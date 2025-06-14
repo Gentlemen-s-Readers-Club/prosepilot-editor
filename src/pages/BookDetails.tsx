@@ -761,7 +761,7 @@ export function BookDetails() {
                   <Button
                     onClick={() => setShowPublishDialog(true)}
                     variant="outline"
-                    className="w-full flex items-center justify-center gap-2 bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-700 border-green-200"
+                    className="w-full flex items-center justify-center gap-2 bg-state-success-light text-state-success hover:bg-state-success-light hover:text-state-success border-state-success"
                   >
                     <BookOpen className="w-4 h-4" />
                     Publish Book
@@ -1151,7 +1151,7 @@ export function BookDetails() {
             </Button>
             <Button
               onClick={handlePublishBook}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-state-success hover:bg-state-success-light text-white"
             >
               Publish Book
             </Button>

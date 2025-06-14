@@ -16,7 +16,6 @@ import {
   BookText,
   Palette,
   VolumeX,
-  WindIcon,
   Grid2X2
 } from 'lucide-react';
 import Footer from '../components/Footer';
@@ -340,12 +339,12 @@ export function Documentation() {
                   ))}
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                <div className="bg-state-info-light border border-state-info rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-state-info mb-3 flex items-center">
                     <Zap className="w-5 h-5 mr-2" />
                     Pro Tips for Effective Prompts
                   </h3>
-                  <ul className="text-blue-800 space-y-2">
+                  <ul className="text-state-info space-y-2">
                     <li>• <strong>Be specific</strong> about your main character, setting, and central conflict</li>
                     <li>• <strong>Mention your target audience</strong> (e.g., middle grade, young adult, adult)</li>
                     <li>• <strong>Reference similar authors or books</strong> if you want a particular style</li>
@@ -436,9 +435,9 @@ export function Documentation() {
                     </div>
                     
                     <div className="mt-6 space-y-4">
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h4 className="font-medium text-blue-900 mb-2">Popular Styles Explained:</h4>
-                        <div className="space-y-2 text-sm text-blue-800">
+                      <div className="bg-state-info-light p-4 rounded-lg">
+                        <h4 className="font-medium text-state-info mb-2">Popular Styles Explained:</h4>
+                        <div className="space-y-2 text-sm text-state-info">
                           <p><strong>Realism:</strong> Depicts everyday life and social issues with accuracy and detail.</p>
                           <p><strong>Magical Realism:</strong> Blends realistic elements with magical or fantastical components.</p>
                           <p><strong>Gothic:</strong> Features dark, mysterious settings, supernatural elements, and emotional intensity.</p>
@@ -471,9 +470,9 @@ export function Documentation() {
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-3">💡 Setting selection tips:</h3>
-                  <ul className="text-blue-800 space-y-2 text-sm">
+                <div className="bg-state-info-light border border-state-info rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-state-info mb-3">💡 Setting selection tips:</h3>
+                  <ul className="text-state-info space-y-2 text-sm">
                     <li>• <strong>Match your genre:</strong> Thriller works well with third person limited and dramatic tone</li>
                     <li>• <strong>Consider your audience:</strong> YA books often benefit from first person and conversational tone</li>
                     <li>• <strong>Experiment:</strong> Try generating the same story with different settings to see what works best</li>
@@ -481,53 +480,53 @@ export function Documentation() {
                   </ul>
                 </div>
 
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-yellow-900 mb-3">Recommended Combinations</h3>
+                <div className="bg-state-warning-light border border-state-warning rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-state-warning mb-3">Recommended Combinations</h3>
                   <div className="space-y-3">
                     <div>
-                      <h4 className="font-medium text-yellow-900">For Thrillers:</h4>
-                      <p className="text-yellow-800 text-sm">Third Person Limited + Suspenseful Tone + Realism or Gothic Style</p>
+                      <h4 className="font-medium text-state-warning">For Thrillers:</h4>
+                      <p className="text-state-warning text-sm">Third Person Limited + Suspenseful Tone + Realism or Gothic Style</p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-yellow-900">For Romance:</h4>
-                      <p className="text-yellow-800 text-sm">First Person or Alternating Narrators + Affectionate or Nostalgic Tone + Romanticism Style</p>
+                      <h4 className="font-medium text-state-warning">For Romance:</h4>
+                      <p className="text-state-warning text-sm">First Person or Alternating Narrators + Affectionate or Nostalgic Tone + Romanticism Style</p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-yellow-900">For Literary Fiction:</h4>
-                      <p className="text-yellow-800 text-sm">Stream of Consciousness + Reflective Tone + Modernism or Postmodernism Style</p>
+                      <h4 className="font-medium text-state-warning">For Literary Fiction:</h4>
+                      <p className="text-state-warning text-sm">Stream of Consciousness + Reflective Tone + Modernism or Postmodernism Style</p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-yellow-900">For Science Fiction:</h4>
-                      <p className="text-yellow-800 text-sm">Third Person Omniscient + Serious or Dramatic Tone + Futurism Style</p>
+                      <h4 className="font-medium text-state-warning">For Science Fiction:</h4>
+                      <p className="text-state-warning text-sm">Third Person Omniscient + Serious or Dramatic Tone + Futurism Style</p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-yellow-900">For Magical Realism:</h4>
-                      <p className="text-yellow-800 text-sm">Third Person Limited + Nostalgic Tone + Magical Realism or Surrealism Style</p>
+                      <h4 className="font-medium text-state-warning">For Magical Realism:</h4>
+                      <p className="text-state-warning text-sm">Third Person Limited + Nostalgic Tone + Magical Realism or Surrealism Style</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-green-900 mb-3 flex items-center">
+                <div className="bg-state-success-light border border-state-success rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-state-success mb-3 flex items-center">
                     <Sparkles className="w-5 h-5 mr-2" />
                     Advanced Setting Combinations
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-medium text-green-900">Experimental Fiction:</h4>
-                      <p className="text-green-800 text-sm">
+                      <h4 className="font-medium text-state-success">Experimental Fiction:</h4>
+                      <p className="text-state-success text-sm">
                         <strong>Prompt:</strong> "Write a story about a person who discovers they can hear the thoughts of inanimate objects. Use a second-person perspective with a stream of consciousness style and an ironic tone that gradually shifts to melancholic as the protagonist realizes the loneliness of being the only one with this ability."
                       </p>
-                      <p className="text-green-800 text-sm mt-1">
+                      <p className="text-state-success text-sm mt-1">
                         <strong>Settings:</strong> Second-person + Stream of consciousness + Ironic/Melancholic tone
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-green-900">Psychological Horror:</h4>
-                      <p className="text-green-800 text-sm">
+                      <h4 className="font-medium text-state-success">Psychological Horror:</h4>
+                      <p className="text-state-success text-sm">
                         <strong>Prompt:</strong> "Create a psychological horror story about a lighthouse keeper who begins to question their sanity during a violent winter storm. Use an unreliable narrator with Gothic style and a suspenseful tone that creates ambiguity about whether supernatural events are occurring or if it's all in the protagonist's mind."
                       </p>
-                      <p className="text-green-800 text-sm mt-1">
+                      <p className="text-state-success text-sm mt-1">
                         <strong>Settings:</strong> Unreliable narrator + Gothic style + Suspenseful tone
                       </p>
                     </div>
@@ -624,15 +623,15 @@ export function Documentation() {
                   </div>
                 </div>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-green-900 mb-3 flex items-center">
+                <div className="bg-state-success-light border border-state-success rounded-lg p-6 mt-8">
+                  <h3 className="text-lg font-semibold text-state-success mb-3 flex items-center">
                     <Sparkles className="w-5 h-5 mr-2" />
                     Keyboard Shortcuts
                   </h3>
                   
                   {/* Windows/Linux Shortcuts */}
                   <div className="mb-6">
-                    <h4 className="font-medium text-green-900 mb-3 flex items-center">
+                    <h4 className="font-medium text-state-success mb-3 flex items-center">
                       <Grid2X2 className="w-4 h-4 mr-2" />
                       Windows & Linux
                     </h4>
@@ -690,7 +689,7 @@ export function Documentation() {
 
                   {/* Mac Shortcuts */}
                   <div>
-                    <h4 className="font-medium text-green-900 mb-3 flex items-center">
+                    <h4 className="font-medium text-state-success mb-3 flex items-center">
                       <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                       </svg>
@@ -831,11 +830,11 @@ export function Documentation() {
                     </div>
                   </div>
 
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-purple-900 mb-3">
+                  <div className="bg-state-info-light border border-state-info rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-state-info mb-3">
                       Best Practices for Team Collaboration
                     </h3>
-                    <ul className="text-purple-800 space-y-2 text-sm">
+                    <ul className="text-state-info space-y-2 text-sm">
                       <li>• <strong>Establish clear guidelines</strong> for team contributions and feedback</li>
                       <li>• <strong>Use annotations</strong> to provide specific, actionable feedback</li>
                       <li>• <strong>Maintain regular communication</strong> about project goals and progress</li>

@@ -83,12 +83,12 @@ export function AIBestPractices() {
         <div>
           
           {/* Introduction */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <div className="bg-state-info-light border border-state-info rounded-lg p-6 mb-8">
             <div className="flex items-start">
-              <Brain className="w-6 h-6 text-blue-600 mt-1 mr-3 flex-shrink-0" />
+              <Brain className="w-6 h-6 text-state-info mt-1 mr-3 flex-shrink-0" />
               <div>
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">Why these practices matter</h3>
-                <p className="text-blue-800 text-sm">
+                <h3 className="text-lg font-semibold text-state-info mb-2">Why these practices matter</h3>
+                <p className="text-state-info text-sm">
                   AI is a powerful tool, but like any tool, the quality of your results depends on how you use it. 
                   These best practices will help you consistently generate high-quality content that requires minimal editing 
                   and truly reflects your creative vision.
@@ -140,10 +140,10 @@ export function AIBestPractices() {
                 </div>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h4 className="font-semibold text-green-900 mb-3">✅ Example of a strong prompt:</h4>
+              <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+                <h4 className="font-semibold text-state-success mb-3">✅ Example of a strong prompt:</h4>
                 <div className="bg-white rounded-lg p-4 border">
-                  <p className="text-gray-800 text-sm italic">
+                  <p className="text-state-success text-sm italic">
                     "A psychological thriller set in modern-day Seattle about Dr. Sarah Chen, a 35-year-old forensic psychologist 
                     who begins experiencing the same recurring nightmares as the serial killer she's profiling. As the line between 
                     her dreams and reality blurs, she must uncover the connection before she becomes the next victim. 
@@ -153,14 +153,14 @@ export function AIBestPractices() {
                 </div>
               </div>
 
-              <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                <h4 className="font-semibold text-red-900 mb-3">❌ Example of a weak prompt:</h4>
+              <div className="bg-state-error-light border border-state-error rounded-lg p-6">
+                <h4 className="font-semibold text-state-error mb-3">❌ Example of a weak prompt:</h4>
                 <div className="bg-white rounded-lg p-4 border">
-                  <p className="text-gray-800 text-sm italic">
+                  <p className="text-state-error text-sm italic">
                     "A thriller about a psychologist who has nightmares."
                   </p>
                 </div>
-                <p className="text-red-800 text-sm mt-3">
+                  <p className="text-state-error text-sm mt-3"> 
                   <strong>Why this doesn't work:</strong> Too vague, lacks character details, setting, specific conflict, 
                   and gives no guidance on tone or style.
                 </p>
@@ -184,7 +184,7 @@ export function AIBestPractices() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="border rounded-lg p-6 bg-white">
                   <h4 className="font-semibold text-base-heading mb-3 flex items-center">
-                    <Eye className="w-5 h-5 text-blue-500 mr-2" />
+                    <Eye className="w-5 h-5 text-state-info mr-2" />
                     Narrator Perspective
                   </h4>
                   <div className="space-y-3 text-sm">
@@ -246,9 +246,9 @@ export function AIBestPractices() {
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h4 className="font-semibold text-blue-900 mb-3">💡 Setting selection tips:</h4>
-                <ul className="text-blue-800 space-y-2 text-sm">
+              <div className="bg-state-info-light border border-state-info rounded-lg p-6">
+                <h4 className="font-semibold text-state-info mb-3">💡 Setting selection tips:</h4>
+                <ul className="text-state-info space-y-2 text-sm">
                   <li>• <strong>Match your genre:</strong> Thriller works well with third person limited and dramatic tone</li>
                   <li>• <strong>Consider your audience:</strong> YA books often benefit from first person and conversational tone</li>
                   <li>• <strong>Experiment:</strong> Try generating the same story with different settings to see what works best</li>
@@ -314,9 +314,9 @@ export function AIBestPractices() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                  <h4 className="font-semibold text-green-900 mb-3">✅ Do this:</h4>
-                  <ul className="text-green-800 space-y-2 text-sm">
+                <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+                  <h4 className="font-semibold text-state-success mb-3">✅ Do this:</h4>
+                  <ul className="text-state-success space-y-2 text-sm">
                     <li>• Provide rich, specific details in your prompt</li>
                     <li>• Use the advanced settings to match your vision</li>
                     <li>• Include character motivations and backstory</li>
@@ -325,9 +325,9 @@ export function AIBestPractices() {
                   </ul>
                 </div>
 
-                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                  <h4 className="font-semibold text-red-900 mb-3">❌ Avoid this:</h4>
-                  <ul className="text-red-800 space-y-2 text-sm">
+                <div className="bg-state-error-light border border-state-error rounded-lg p-6">
+                  <h4 className="font-semibold text-state-error mb-3">❌ Avoid this:</h4>
+                  <ul className="text-state-error space-y-2 text-sm">
                     <li>• Vague or overly broad prompts</li>
                     <li>• Conflicting genre or style instructions</li>
                     <li>• Too many complex subplots in one prompt</li>
@@ -386,9 +386,9 @@ export function AIBestPractices() {
                 </div>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <h4 className="font-semibold text-yellow-900 mb-3">⚡ Quick editing tips:</h4>
-                <ul className="text-yellow-800 space-y-2 text-sm">
+              <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
+                <h4 className="font-semibold text-state-warning mb-3">⚡ Quick editing tips:</h4>
+                <ul className="text-state-warning space-y-2 text-sm">
                   <li>• <strong>Focus on your voice:</strong> Add personal touches that make the story uniquely yours</li>
                   <li>• <strong>Strengthen dialogue:</strong> AI dialogue can be formal - make it more natural and character-specific</li>
                   <li>• <strong>Enhance descriptions:</strong> Add sensory details and specific imagery</li>
@@ -412,44 +412,44 @@ export function AIBestPractices() {
 
             <div className="space-y-6">
               <div className="border rounded-lg p-6 bg-white">
-                <h4 className="font-semibold text-red-900 mb-4">Top mistakes and how to fix them:</h4>
+                <h4 className="font-semibold text-state-error mb-4">Top mistakes and how to fix them:</h4>
                 <div className="space-y-6">
                   <div>
-                    <h5 className="font-medium text-red-900 mb-2">❌ Mistake: Using the generated content without any editing</h5>
-                    <p className="text-red-800 text-sm mb-2">
+                    <h5 className="font-medium text-state-error mb-2">❌ Mistake: Using the generated content without any editing</h5>
+                    <p className="text-state-error text-sm mb-2">
                       <strong>Why it's a problem:</strong> AI content lacks your unique voice and may have inconsistencies.
                     </p>
-                    <p className="text-green-800 text-sm">
+                    <p className="text-state-success text-sm">
                       <strong>✅ Solution:</strong> Always review and edit the content to add your personal style and fix any issues.
                     </p>
                   </div>
 
                   <div>
-                    <h5 className="font-medium text-red-900 mb-2">❌ Mistake: Providing too little detail in prompts</h5>
-                    <p className="text-red-800 text-sm mb-2">
+                    <h5 className="font-medium text-state-error mb-2">❌ Mistake: Providing too little detail in prompts</h5>
+                    <p className="text-state-error text-sm mb-2">
                       <strong>Why it's a problem:</strong> Vague prompts lead to generic, unfocused content.
                     </p>
-                    <p className="text-green-800 text-sm">
+                    <p className="text-state-success text-sm">
                       <strong>✅ Solution:</strong> Include specific details about characters, setting, conflict, and desired tone.
                     </p>
                   </div>
 
                   <div>
-                    <h5 className="font-medium text-red-900 mb-2">❌ Mistake: Ignoring the advanced settings</h5>
-                    <p className="text-red-800 text-sm mb-2">
+                    <h5 className="font-medium text-state-error mb-2">❌ Mistake: Ignoring the advanced settings</h5>
+                    <p className="text-state-error text-sm mb-2">
                       <strong>Why it's a problem:</strong> Default settings may not match your specific genre or style needs.
                     </p>
-                    <p className="text-green-800 text-sm">
+                    <p className="text-state-success text-sm">
                       <strong>✅ Solution:</strong> Experiment with narrator perspective, literature style, and tone settings.
                     </p>
                   </div>
 
                   <div>
-                    <h5 className="font-medium text-red-900 mb-2">❌ Mistake: Expecting perfection on the first try</h5>
-                    <p className="text-red-800 text-sm mb-2">
+                    <h5 className="font-medium text-state-error mb-2">❌ Mistake: Expecting perfection on the first try</h5>
+                    <p className="text-state-error text-sm mb-2">
                       <strong>Why it's a problem:</strong> Creates unrealistic expectations and disappointment.
                     </p>
-                    <p className="text-green-800 text-sm">
+                    <p className="text-state-success text-sm">
                       <strong>✅ Solution:</strong> View AI generation as a starting point that you'll refine and improve.
                     </p>
                   </div>
@@ -517,9 +517,9 @@ export function AIBestPractices() {
                 </div>
               </div>
 
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                <h4 className="font-semibold text-purple-900 mb-3">🚀 Pro techniques:</h4>
-                <ul className="text-purple-800 space-y-2 text-sm">
+              <div className="bg-state-info-light border border-state-info rounded-lg p-6">
+                <h4 className="font-semibold text-state-info mb-3">🚀 Pro techniques:</h4>
+                <ul className="text-state-info space-y-2 text-sm">
                   <li>• <strong>Series consistency:</strong> When writing sequels, reference previous books in your prompt</li>
                   <li>• <strong>Genre blending:</strong> Specify how you want to combine elements from different genres</li>
                   <li>• <strong>Cultural authenticity:</strong> Include research notes about specific cultures or communities</li>

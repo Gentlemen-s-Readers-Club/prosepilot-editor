@@ -99,10 +99,10 @@ export function SubscriptionStatus({
 
   const getStatusIcon = () => {
     if (status.hasMultipleSubscriptions) {
-      return <AlertTriangle className="h-4 w-4 text-orange-500" />;
+      return <AlertTriangle className="h-4 w-4 text-state-warning" />;
     }
     if (status.isActive) {
-      return <CheckCircle className="h-4 w-4 text-green-500" />;
+      return <CheckCircle className="h-4 w-4 text-state-success" />;
     }
     return <XCircle className="h-4 w-4 text-gray-400" />;
   };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Mail, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, CheckCircle } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
 interface SubscribeFormProps {
@@ -46,6 +46,7 @@ export function SubscribeForm({
         description: "You've been subscribed to our newsletter",
       });
     } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -59,7 +60,7 @@ export function SubscribeForm({
   if (isSubscribed) {
     return (
       <div className={`flex items-center gap-3 ${className}`}>
-        <div className="flex items-center gap-2 text-green-600">
+        <div className="flex items-center gap-2 text-state-success">
           <CheckCircle className="w-5 h-5" />
           <span className="font-medium">Successfully subscribed!</span>
         </div>

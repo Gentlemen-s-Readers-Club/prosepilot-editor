@@ -76,12 +76,12 @@ export function CreateFirstBook() {
         <div>
           
           {/* Introduction */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <div className="bg-state-info-light border border-state-info rounded-lg p-6 mb-8">
             <div className="flex items-start">
-              <Sparkles className="w-6 h-6 text-blue-600 mt-1 mr-3" />
+              <Sparkles className="w-6 h-6 text-state-info mt-1 mr-3" />
               <div>
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">What you'll learn</h3>
-                <ul className="text-blue-800 space-y-1 text-sm">
+                <h3 className="text-lg font-semibold text-state-info mb-2">What you'll learn</h3>
+                <ul className="text-state-info space-y-1 text-sm">
                   <li>• How to prepare and structure your story idea for AI generation</li>
                   <li>• Step-by-step process to create your first book project</li>
                   <li>• Best practices for configuring AI settings for optimal results</li>
@@ -103,7 +103,7 @@ export function CreateFirstBook() {
               you provide detailed, specific prompts that capture the essence of what you want to create.
             </p>
 
-            <div className="bg-gray-50 rounded-lg p-6 mb-6">
+            <div className="bg-white border rounded-lg p-6 mb-6">
               <h4 className="font-semibold text-base-heading mb-3">Essential elements to define:</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -127,9 +127,9 @@ export function CreateFirstBook() {
               </div>
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-              <h4 className="font-semibold text-green-900 mb-2">💡 Pro Tip</h4>
-              <p className="text-green-800 text-sm">
+            <div className="bg-state-success-light border border-state-success rounded-lg p-4 mb-6">
+              <h4 className="font-semibold text-state-success mb-2">💡 Pro Tip</h4>
+              <p className="text-state-success text-sm">
                 Write a 2-3 sentence summary of your story before starting. This will help you stay focused and 
                 provide better prompts to the AI. Think of it as your "elevator pitch" for the book.
               </p>
@@ -172,9 +172,9 @@ export function CreateFirstBook() {
                   In the "Story Idea or Outline" field, paste or type your prepared story concept. Be as detailed as possible 
                   while keeping it concise and focused.
                 </p>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h5 className="font-medium text-yellow-900 mb-2">Example prompt:</h5>
-                  <p className="text-yellow-800 text-sm italic">
+                <div className="bg-state-warning-light border border-state-warning rounded-lg p-4">
+                  <h5 className="font-medium text-state-warning mb-2">Example prompt:</h5>
+                  <p className="text-state-warning text-sm italic">
                     "A young marine biologist discovers an ancient underwater city while researching coral bleaching. 
                     As she explores the ruins, she uncovers evidence that the city's inhabitants had advanced knowledge 
                     of ocean conservation. However, a powerful corporation wants to exploit the discovery for profit, 
@@ -212,27 +212,27 @@ export function CreateFirstBook() {
               these settings can significantly improve the quality and style of your book.
             </p>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-              <h4 className="font-semibold text-blue-900 mb-3">Advanced Settings (Optional)</h4>
+            <div className="bg-state-info-light border border-state-info rounded-lg p-6 mb-6">
+              <h4 className="font-semibold text-state-info mb-3">Advanced Settings (Optional)</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <h5 className="font-medium text-blue-900 mb-2">Narrator Perspective</h5>
-                  <p className="text-blue-800 text-sm">Choose first person, third person limited, or omniscient narration</p>
+                  <h5 className="font-medium text-state-info mb-2">Narrator Perspective</h5>
+                  <p className="text-state-info text-sm">Choose first person, third person limited, or omniscient narration</p>
                 </div>
                 <div>
-                  <h5 className="font-medium text-blue-900 mb-2">Literature Style</h5>
-                  <p className="text-blue-800 text-sm">Select from literary fiction, commercial fiction, or genre-specific styles</p>
+                  <h5 className="font-medium text-state-info mb-2">Literature Style</h5>
+                  <p className="text-state-info text-sm">Select from literary fiction, commercial fiction, or genre-specific styles</p>
                 </div>
                 <div>
-                  <h5 className="font-medium text-blue-900 mb-2">Writing Tone</h5>
-                  <p className="text-blue-800 text-sm">Set the overall mood: serious, humorous, dramatic, or conversational</p>
+                  <h5 className="font-medium text-state-info mb-2">Writing Tone</h5>
+                  <p className="text-state-info text-sm">Set the overall mood: serious, humorous, dramatic, or conversational</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-              <h4 className="font-semibold text-amber-900 mb-2">⚡ Quick Start Tip</h4>
-              <p className="text-amber-800 text-sm">
+            <div className="bg-state-warning-light border border-state-warning rounded-lg p-4 mb-6">
+              <h4 className="font-semibold text-state-warning mb-2">⚡ Quick Start Tip</h4>
+              <p className="text-state-warning text-sm">
                 For your first book, you can skip the advanced settings and use the defaults. You can always create 
                 another version later with different settings to compare results.
               </p>
@@ -343,9 +343,9 @@ export function CreateFirstBook() {
                 </div>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h4 className="font-semibold text-green-900 mb-3">Editing tips:</h4>
-                <ul className="text-green-800 space-y-2 text-sm">
+              <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+                <h4 className="font-semibold text-state-success mb-3">Editing tips:</h4>
+                <ul className="text-state-success space-y-2 text-sm">
                   <li>• Use the chapter editor to refine individual sections</li>
                   <li>• The AI maintains consistency, but personal touches make it uniquely yours</li>
                   <li>• Focus on adding your voice and style to the generated content</li>
@@ -382,12 +382,12 @@ export function CreateFirstBook() {
               </div>
             </div>
 
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-              <h4 className="font-semibold text-purple-900 mb-3">🎉 Congratulations!</h4>
-              <p className="text-purple-800 text-sm mb-3">
+            <div className="bg-state-info-light border border-state-info rounded-lg p-6">
+              <h4 className="font-semibold text-state-info mb-3">🎉 Congratulations!</h4>
+              <p className="text-state-info text-sm mb-3">
                 You've successfully created your first AI-generated book! Here are some next steps to consider:
               </p>
-              <ul className="text-purple-800 space-y-1 text-sm">
+              <ul className="text-state-info space-y-1 text-sm">
                 <li>• Share your book with beta readers for feedback</li>
                 <li>• Consider professional editing for publication</li>
                 <li>• Explore our publishing guides for next steps</li>

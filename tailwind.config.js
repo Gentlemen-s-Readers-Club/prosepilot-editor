@@ -21,12 +21,20 @@ export default {
         },
         state: {
           success: {
-            DEFAULT: '#4A8048',     // forest green – clear, calm and professional
-            light: '#E6F2E6', // light green – clear, calm and professional
+            DEFAULT: '#2D5A2B',     // darker forest green – better contrast for readability
+            light: '#E8F5E8', // lighter green – softer and more subtle
           },
           error: {
             DEFAULT: '#C53030',       // refined burgundy – sophisticated alert tone
             light: '#FEE4E2', // light red – clear, calm and professional
+          },
+          warning: {
+            DEFAULT: '#B45309',       // darker amber – refined and sophisticated
+            light: '#FEF7E0',         // lighter yellow – warm and noticeable
+          },
+          info: {
+            DEFAULT: '#2C5282',       // sophisticated navy blue – refined and elegant
+            light: '#E8F2F8',         // elegant light blue – sophisticated and professional
           },
         },
       }

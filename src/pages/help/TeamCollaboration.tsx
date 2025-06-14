@@ -83,12 +83,12 @@ export function TeamCollaboration() {
         <div>
           
           {/* Introduction */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <div className="bg-state-info-light border border-state-info rounded-lg p-6 mb-8">
             <div className="flex items-start">
-              <Users className="w-6 h-6 text-blue-600 mt-1 mr-3 shrink-0" />
+              <Users className="w-6 h-6 text-state-info mt-1 mr-3 shrink-0" />
               <div>
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">Why use teams?</h3>
-                <p className="text-blue-800 text-sm">
+                <h3 className="text-lg font-semibold text-state-info mb-2">Why use teams?</h3>
+                <p className="text-state-info text-sm">
                   Teams in ProsePilot enable multiple writers to collaborate on books, share resources, and maintain 
                   consistent quality across projects. Whether you're a writing group, publishing house, or content agency, 
                   teams help streamline your collaborative writing process.
@@ -144,9 +144,9 @@ export function TeamCollaboration() {
                 </div>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h4 className="font-semibold text-green-900 mb-3">✅ Team naming best practices:</h4>
-                <ul className="text-green-800 space-y-1 text-sm">
+              <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+                <h4 className="font-semibold text-state-success mb-3">✅ Team naming best practices:</h4>
+                <ul className="text-state-success space-y-1 text-sm">
                   <li>• Use descriptive names that reflect your team's purpose</li>
                   <li>• Keep it professional if working with clients</li>
                   <li>• Avoid special characters or numbers unless necessary</li>
@@ -203,12 +203,12 @@ export function TeamCollaboration() {
                 </div>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+              <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
+                <h4 className="font-semibold text-state-warning mb-3 flex items-center">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   Invitation details
                 </h4>
-                <ul className="text-yellow-800 space-y-2 text-sm">
+                <ul className="text-state-warning space-y-2 text-sm">
                   <li>• <strong>Expiration:</strong> Invitations expire after 7 days</li>
                   <li>• <strong>Resending:</strong> You can resend expired invitations</li>
                   <li>• <strong>Canceling:</strong> Pending invitations can be canceled anytime</li>
@@ -233,28 +233,28 @@ export function TeamCollaboration() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div className="border rounded-lg p-6 bg-white">
                 <div className="flex items-center mb-4">
-                  <Crown className="w-6 h-6 text-yellow-500 mr-3" />
+                  <Crown className="w-6 h-6 text-state-warning mr-3" />
                   <h4 className="font-semibold text-base-heading">Admin</h4>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Full team management access</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Invite and remove members</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Change member roles</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Create and edit all books</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Access team settings</span>
                   </div>
                 </div>
@@ -262,28 +262,28 @@ export function TeamCollaboration() {
 
               <div className="border rounded-lg p-6 bg-white">
                 <div className="flex items-center mb-4">
-                  <Edit3 className="w-6 h-6 text-blue-500 mr-3" />
+                  <Edit3 className="w-6 h-6 text-state-info mr-3" />
                   <h4 className="font-semibold text-base-heading">Editor</h4>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Create new books</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Edit team books</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Add comments and annotations</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Export books</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">View team activity</span>
                   </div>
                 </div>
@@ -291,36 +291,36 @@ export function TeamCollaboration() {
 
               <div className="border rounded-lg p-6 bg-white">
                 <div className="flex items-center mb-4">
-                  <Eye className="w-6 h-6 text-gray-500 mr-3" />
+                  <Eye className="w-6 h-6 text-state-info mr-3" />
                   <h4 className="font-semibold text-base-heading">Reader</h4>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">View team books</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Add comments and annotations</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                    <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">Export books (read-only)</span>
                   </div>
                   <div className="flex items-start">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 mr-2" />
+                      <CheckCircle className="w-4 h-4 text-state-success mt-0.5 mr-2" />
                     <span className="text-base-paragraph">View team activity</span>
                   </div>
-                  <div className="text-gray-500 text-xs mt-3">
+                  <div className="text-state-info text-xs mt-3">
                     Perfect for beta readers, clients, or reviewers
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h4 className="font-semibold text-blue-900 mb-3">💡 Role assignment tips:</h4>
-              <ul className="text-blue-800 space-y-2 text-sm">
+            <div className="bg-state-info-light border border-state-info rounded-lg p-6">
+              <h4 className="font-semibold text-state-info mb-3">💡 Role assignment tips:</h4>
+              <ul className="text-state-info space-y-2 text-sm">
                 <li>• <strong>Start conservative:</strong> You can always promote members later</li>
                 <li>• <strong>Limit admins:</strong> Only give admin access to trusted team leaders</li>
                 <li>• <strong>Use readers for feedback:</strong> Great for beta readers and clients who need view-only access</li>
@@ -453,9 +453,9 @@ export function TeamCollaboration() {
                 </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
-                <h4 className="font-semibold text-amber-900 mb-3">⚠️ Important considerations:</h4>
-                <ul className="text-amber-800 space-y-2 text-sm">
+              <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
+                <h4 className="font-semibold text-state-warning mb-3">⚠️ Important considerations:</h4>
+                <ul className="text-state-warning space-y-2 text-sm">
                   <li>• <strong>Data ownership:</strong> Team books belong to the team, not individual members</li>
                   <li>• <strong>Member removal:</strong> Removed members lose access to all team content</li>
                   <li>• <strong>Team deletion:</strong> Permanently deletes all team books and data</li>
@@ -495,7 +495,7 @@ export function TeamCollaboration() {
 
                   <div>
                     <h5 className="font-medium text-base-heading mb-2 flex items-center">
-                      <FileText className="w-5 h-5 text-green-500 mr-2" />
+                      <FileText className="w-5 h-5 text-state-success mr-2" />
                       Use annotations effectively
                     </h5>
                     <ul className="text-base-paragraph space-y-1 text-sm ml-7">
@@ -521,9 +521,9 @@ export function TeamCollaboration() {
                 </div>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h4 className="font-semibold text-green-900 mb-3">🚀 Pro tips for team success:</h4>
-                <ul className="text-green-800 space-y-2 text-sm">
+              <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+                <h4 className="font-semibold text-state-success mb-3">🚀 Pro tips for team success:</h4>
+                <ul className="text-state-success space-y-2 text-sm">
                   <li>• <strong>Start small:</strong> Begin with a core group and expand gradually</li>
                   <li>• <strong>Document everything:</strong> Keep style guides and processes written down</li>
                   <li>• <strong>Regular backups:</strong> Export important books regularly as backups</li>

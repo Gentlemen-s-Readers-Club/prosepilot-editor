@@ -34,7 +34,7 @@ const plans: Plan[] = [
     price: 9,
     credits: 5, // 1 book
     icon: <FileText className="w-6 h-6" />,
-    color: 'bg-green-500',
+    color: 'bg-state-success',
     description: 'Perfect for hobbyists and first-time authors',
     features: [
       '5 credits/month (1 book)',
@@ -208,7 +208,7 @@ export function Pricing() {
                   <ul className="space-y-4 mb-8">
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
-                        <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                        <Check className="h-5 w-5 text-state-success shrink-0 mt-0.5" />
                         <span className="ml-3 text-gray-700 text-sm">{feature}</span>
                       </li>
                     ))}
@@ -282,7 +282,7 @@ export function Pricing() {
                   ${pack.price}
                 </div>
                 {pack.savings && (
-                  <div className="text-sm text-green-600 font-medium mb-4">
+                  <div className="text-sm text-state-success font-medium mb-4">
                     Save {pack.savings}%
                   </div>
                 )}

@@ -91,29 +91,29 @@ export function CreditSystem() {
               length and complexity.
             </p>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-              <h4 className="font-semibold text-blue-900 mb-3">Key credit concepts:</h4>
-              <div className="space-y-3 text-blue-800">
+            <div className="bg-state-info-light border border-state-info rounded-lg p-6 mb-6">
+              <h4 className="font-semibold text-state-info mb-3">Key credit concepts:</h4>
+              <div className="space-y-3 text-state-info">
                 <div className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3" />
+                  <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
                   <div>
                     <strong>One book = 5 credits</strong> - This is our standard rate regardless of your plan
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3" />
+                  <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
                   <div>
                     <strong>Monthly allocation</strong> - Credits are included with your subscription and reset each month
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3" />
+                  <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
                   <div>
                     <strong>No rollover</strong> - Unused monthly credits don't carry over to the next month
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3" />
+                  <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
                   <div>
                     <strong>Additional purchases</strong> - You can buy extra credits that never expire
                   </div>
@@ -159,16 +159,16 @@ export function CreditSystem() {
                 </div>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+              <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
+                <h4 className="font-semibold text-state-warning mb-3 flex items-center">
                   <AlertCircle className="w-5 h-5 mr-2" />
                   Important: When credits are deducted
                 </h4>
-                <p className="text-yellow-800 text-sm mb-3">
+                <p className="text-state-warning text-sm mb-3">
                   Credits are deducted when you click "Create Book" and the generation process begins. 
                   If generation fails due to a system error, your credits will be automatically refunded.
                 </p>
-                <p className="text-yellow-800 text-sm">
+                <p className="text-state-warning text-sm">
                   <strong>Note:</strong> Credits are not refunded if you're unsatisfied with the generated content, 
                   but you can always edit the book or generate a new version with different settings.
                 </p>
@@ -217,9 +217,9 @@ export function CreditSystem() {
               </div>
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h4 className="font-semibold text-green-900 mb-3">💡 Value comparison</h4>
-              <div className="text-green-800 text-sm space-y-2">
+            <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+              <h4 className="font-semibold text-state-success mb-3">💡 Value comparison</h4>
+              <div className="text-state-success text-sm space-y-2">
                 <p>• <strong>Starter:</strong> $1.80 per book ($9 ÷ 5 credits)</p>
                 <p>• <strong>Pro Author:</strong> $1.16 per book ($29 ÷ 25 credits) - 35% savings!</p>
                 <p>• <strong>Studio:</strong> $1.05 per book ($79 ÷ 75 credits) - 42% savings!</p>
@@ -328,9 +328,9 @@ export function CreditSystem() {
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h4 className="font-semibold text-blue-900 mb-3">How purchased credits work:</h4>
-              <ul className="text-blue-800 space-y-2 text-sm">
+            <div className="bg-state-info-light border border-state-info rounded-lg p-6">
+              <h4 className="font-semibold text-state-info mb-3">How purchased credits work:</h4>
+              <ul className="text-state-info space-y-2 text-sm">
                 <li>• Purchased credits are used first, before monthly credits</li>
                 <li>• They never expire, even if you cancel your subscription</li>
                 <li>• You can buy multiple packs and they stack together</li>
@@ -379,9 +379,9 @@ export function CreditSystem() {
                 </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
-                <h4 className="font-semibold text-amber-900 mb-3">⚡ Pro tips:</h4>
-                <ul className="text-amber-800 space-y-2 text-sm">
+              <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
+                <h4 className="font-semibold text-state-warning mb-3">⚡ Pro tips:</h4>
+                <ul className="text-state-warning space-y-2 text-sm">
                   <li>• <strong>Experiment with settings:</strong> Try different narrator perspectives or tones to find your preferred style</li>
                   <li>• <strong>Edit freely:</strong> The generated content is your starting point - personalize it to make it uniquely yours</li>
                   <li>• <strong>Consider series:</strong> If you're writing a series, maintain consistency by referencing previous books in your prompts</li>

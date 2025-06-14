@@ -88,9 +88,9 @@ export function AnnotationCard({
     <div 
       className={`border rounded-lg p-3 cursor-pointer transition-all ${
         isSelected 
-          ? 'border-blue-500 bg-blue-50' 
+          ? 'border-state-info bg-state-info-light' 
           : isResolved
-          ? 'border-green-200 bg-green-50'
+          ? 'border-state-success bg-state-success-light'
           : 'border-gray-200 bg-white hover:border-gray-300'
       }`}
       onClick={onSelect}
@@ -98,10 +98,10 @@ export function AnnotationCard({
       {/* Header */}
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
-          {isResolved ? (
-            <CheckCircle className="w-4 h-4 text-green-600" />
+          {isResolved ? ( 
+            <CheckCircle className="w-4 h-4 text-state-success" />
           ) : (
-            <Circle className="w-4 h-4 text-yellow-600" />
+            <Circle className="w-4 h-4 text-state-warning" />
           )}
           <div className="flex items-center gap-2 text-sm text-gray-600">
             {annotation.user?.avatar_url ? (
