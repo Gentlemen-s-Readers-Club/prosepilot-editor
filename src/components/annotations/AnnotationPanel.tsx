@@ -1,44 +1,56 @@
 import React, { useState } from 'react';
 import { 
   MessageSquare, 
-  Filter,
   X,
-  CheckCircle,
-  Circle,
 } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Annotation } from '../../types/annotations';
-import { useAnnotations } from '../../hooks/useAnnotations';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
+import { Annotation, CreateReplyData, AnnotationReply, AnnotationFilters } from '../../types/annotations';
 import { AnnotationCard } from './AnnotationCard';
 
 interface AnnotationPanelProps {
-  chapterId: string;
   isOpen: boolean;
   onClose: () => void;
   selectedAnnotation?: Annotation | null;
   onAnnotationSelect: (annotation: Annotation | null) => void;
+  onAnnotationStatusChange?: (annotationId: string) => void;
+  // Annotation data and functions from parent
+  annotations: Annotation[];
+  loading: boolean;
+  filters: AnnotationFilters;
+  setFilters: (filters: AnnotationFilters) => void;
+  toggleAnnotationStatus: (id: string) => Promise<boolean>;
+  deleteAnnotation: (id: string) => Promise<boolean>;
+  createReply: (data: CreateReplyData) => Promise<AnnotationReply | null>;
+  deleteReply: (replyId: string, annotationId: string) => Promise<boolean>;
+  getAnnotationStats: () => { total: number; open: number; resolved: number };
 }
 
 export function AnnotationPanel({ 
-  chapterId, 
   isOpen, 
   onClose, 
   selectedAnnotation,
   onAnnotationSelect,
+  onAnnotationStatusChange,
+  annotations,
+  loading,
+  filters,
+  setFilters,
+  toggleAnnotationStatus,
+  deleteAnnotation,
+  createReply,
+  deleteReply,
+  getAnnotationStats
 }: AnnotationPanelProps) {
-  const { 
-    annotations, 
-    loading, 
-    filters, 
-    setFilters, 
-    toggleAnnotationStatus,
-    deleteAnnotation,
-    getAnnotationStats 
-  } = useAnnotations(chapterId);
-  
-  const [showFilters, setShowFilters] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [annotationToDelete, setAnnotationToDelete] = useState<Annotation | null>(null);
 
   const stats = getAnnotationStats();
 
@@ -48,14 +60,20 @@ export function AnnotationPanel({
       return false;
     }
     
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return (
-        annotation.content.toLowerCase().includes(query) ||
-        annotation.selected_text.toLowerCase().includes(query) ||
-        annotation.user?.full_name.toLowerCase().includes(query)
-      );
+    // Apply user filter
+    if (filters.user_id && annotation.user_id !== filters.user_id) {
+      return false;
+    }
+    
+    // Apply date range filter
+    if (filters.date_range) {
+      const annotationDate = new Date(annotation.created_at);
+      const startDate = new Date(filters.date_range.start);
+      const endDate = new Date(filters.date_range.end);
+      
+      if (annotationDate < startDate || annotationDate > endDate) {
+        return false;
+      }
     }
     
     return true;
@@ -66,16 +84,32 @@ export function AnnotationPanel({
   };
 
   const handleToggleStatus = async (annotation: Annotation) => {
-    await toggleAnnotationStatus(annotation.id);
+    if (onAnnotationStatusChange) {
+      await onAnnotationStatusChange(annotation.id);
+    } else {
+      await toggleAnnotationStatus(annotation.id);
+    }
   };
 
   const handleDeleteAnnotation = async (annotation: Annotation) => {
-    if (window.confirm('Are you sure you want to delete this annotation?')) {
-      const success = await deleteAnnotation(annotation.id);
-      if (success && selectedAnnotation?.id === annotation.id) {
-        onAnnotationSelect(null);
-      }
+    setAnnotationToDelete(annotation);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!annotationToDelete) return;
+    
+    const success = await deleteAnnotation(annotationToDelete.id);
+    if (success && selectedAnnotation?.id === annotationToDelete.id) {
+      onAnnotationSelect(null);
     }
+    setDeleteDialogOpen(false);
+    setAnnotationToDelete(null);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setAnnotationToDelete(null);
   };
 
   if (!isOpen) return null;
@@ -88,18 +122,10 @@ export function AnnotationPanel({
           <MessageSquare className="w-5 h-5 text-base-heading" />
           <h3 className="font-semibold text-base-heading">Annotations</h3>
           <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
-            {stats.total}
+            {stats.open}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowFilters(!showFilters)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <Filter className="w-4 h-4" />
-          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -110,64 +136,34 @@ export function AnnotationPanel({
           </Button>
         </div>
       </div>
-
-      {/* Stats */}
-      <div className="p-4 border-b border-gray-200 bg-gray-50">
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <Circle className="w-3 h-3 text-yellow-600" />
-              <span className="text-gray-600">Open: {stats.open}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <CheckCircle className="w-3 h-3 text-green-600" />
-              <span className="text-gray-600">Resolved: {stats.resolved}</span>
-            </div>
+      
+      {/* Filters */}
+      <div className="p-4 border-b border-gray-200 bg-base-background">
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            {[
+              { value: 'open', label: 'Open' },
+              { value: 'resolved', label: 'Resolved' },
+              { value: 'all', label: 'All' },
+            ].map(({ value, label }) => (
+              <Button
+                key={value}
+                variant={filters.status === value ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleStatusFilter(value as 'all' | 'open' | 'resolved')}
+                className="text-xs flex items-center gap-2"
+              >
+                {label}
+                {stats[value as 'open' | 'resolved'] ? (
+                  <span className="bg-gray-200 text-gray-600 px-1 rounded-full text-xs aspect-square flex shrink-0 items-center justify-center">
+                    {stats[value as 'open' | 'resolved']}
+                  </span>
+                ) : null}
+              </Button>
+            ))}
           </div>
         </div>
       </div>
-
-      {/* Filters */}
-      {showFilters && (
-        <div className="p-4 border-b border-gray-200 bg-gray-50">
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Search
-              </label>
-              <Input
-                type="text"
-                placeholder="Search annotations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
-              <div className="flex gap-2">
-                {[
-                  { value: 'all', label: 'All' },
-                  { value: 'open', label: 'Open' },
-                  { value: 'resolved', label: 'Resolved' }
-                ].map(({ value, label }) => (
-                  <Button
-                    key={value}
-                    variant={filters.status === value ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => handleStatusFilter(value as 'all' | 'open' | 'resolved')}
-                    className="text-xs"
-                  >
-                    {label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Annotations List */}
       <div className="flex-1 overflow-y-auto">
@@ -177,7 +173,7 @@ export function AnnotationPanel({
           </div>
         ) : filteredAnnotations.length === 0 ? (
           <div className="p-4 text-center text-gray-500">
-            {searchQuery ? 'No annotations match your search.' : 'No annotations yet.'}
+            {filters.status !== 'all' ? 'No annotations match your search.' : 'No annotations yet.'}
           </div>
         ) : (
           <div className="p-4 space-y-4">
@@ -189,12 +185,33 @@ export function AnnotationPanel({
                 onSelect={() => onAnnotationSelect(annotation)}
                 onToggleStatus={() => handleToggleStatus(annotation)}
                 onDelete={() => handleDeleteAnnotation(annotation)}
-                chapterId={chapterId}
+                onCreateReply={createReply}
+                onDeleteReply={deleteReply}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={handleCloseDeleteDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this annotation?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button type="reset" variant="outline" onClick={handleCloseDeleteDialog}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="destructive" onClick={handleConfirmDelete}>
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

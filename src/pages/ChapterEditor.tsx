@@ -244,16 +244,16 @@ function ChapterEditorContent() {
             </div>
 
             {isPublished && (
-              <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="mb-6 bg-state-success-light border border-state-success rounded-lg p-4">
                 <div className="flex">
                   <div className="shrink-0">
-                    <AlertCircle className="h-5 w-5 text-yellow-400" />
+                    <AlertCircle className="h-5 w-5 text-state-success" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">
+                    <h3 className="text-sm font-medium text-state-success">
                       Published Book
                     </h3>
-                    <div className="mt-2 text-sm text-yellow-700">
+                    <div className="mt-2 text-sm text-state-success">
                       This chapter is part of a published book and cannot be edited. To make changes, the book needs to be unpublished first.
                     </div>
                   </div>

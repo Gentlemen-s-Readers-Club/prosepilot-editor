@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import { 
-  MessageSquare, 
   CheckCircle, 
   Circle, 
   MoreVertical, 
   Trash2, 
   Reply,
-  User,
-  Calendar
+  User
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Annotation } from '../../types/annotations';
-import { useAnnotations } from '../../hooks/useAnnotations';
+import { Annotation, CreateReplyData, AnnotationReply } from '../../types/annotations';
 import { formatDistanceToNow } from 'date-fns';
 import {
   DropdownMenu,
@@ -20,6 +17,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 
 interface AnnotationCardProps {
   annotation: Annotation;
@@ -27,7 +32,8 @@ interface AnnotationCardProps {
   onSelect: () => void;
   onToggleStatus: () => void;
   onDelete: () => void;
-  chapterId: string;
+  onCreateReply: (data: CreateReplyData) => Promise<AnnotationReply | null>;
+  onDeleteReply: (replyId: string, annotationId: string) => Promise<boolean>;
 }
 
 export function AnnotationCard({ 
@@ -36,22 +42,24 @@ export function AnnotationCard({
   onSelect, 
   onToggleStatus, 
   onDelete,
-  chapterId 
+  onCreateReply,
+  onDeleteReply
 }: AnnotationCardProps) {
-  const { createReply, deleteReply } = useAnnotations(chapterId);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [replyToDelete, setReplyToDelete] = useState<string | null>(null);
 
   const isResolved = annotation.status === 'resolved';
   const replyCount = annotation.replies?.length || 0;
 
   const handleSubmitReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!replyContent.trim()) return;
+    if (!replyContent.trim() || isResolved) return;
 
     setIsSubmittingReply(true);
-    const success = await createReply({
+    const success = await onCreateReply({
       annotation_id: annotation.id,
       content: replyContent.trim()
     });
@@ -64,8 +72,15 @@ export function AnnotationCard({
   };
 
   const handleDeleteReply = async (replyId: string) => {
-    if (window.confirm('Are you sure you want to delete this reply?')) {
-      await deleteReply(replyId, annotation.id);
+    setReplyToDelete(replyId);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDeleteReply = async () => {
+    if (replyToDelete) {
+      await onDeleteReply(replyToDelete, annotation.id);
+      setShowDeleteDialog(false);
+      setReplyToDelete(null);
     }
   };
 
@@ -190,19 +205,25 @@ export function AnnotationCard({
       {/* Reply Form */}
       {showReplyForm ? (
         <form onSubmit={handleSubmitReply} className="space-y-2" onClick={(e) => e.stopPropagation()}>
+          {isResolved && (
+            <div className="text-xs text-red-600 mb-2">
+              Cannot add replies to resolved annotations
+            </div>
+          )}
           <Input
             type="text"
-            placeholder="Add a reply..."
+            placeholder={isResolved ? "Replies disabled for resolved annotations" : "Add a reply..."}
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
-            className="text-sm"
+            className="text-sm bg-white"
             autoFocus
+            disabled={isResolved}
           />
           <div className="flex gap-2">
             <Button 
               type="submit" 
               size="sm" 
-              disabled={!replyContent.trim() || isSubmittingReply}
+              disabled={!replyContent.trim() || isSubmittingReply || isResolved}
             >
               {isSubmittingReply ? 'Sending...' : 'Reply'}
             </Button>
@@ -220,19 +241,51 @@ export function AnnotationCard({
           </div>
         </form>
       ) : (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-xs text-gray-600 hover:text-gray-900"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowReplyForm(true);
-          }}
-        >
-          <Reply className="w-3 h-3 mr-1" />
-          Reply
-        </Button>
+        !isResolved ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-gray-600 hover:text-gray-900"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowReplyForm(true);
+            }}
+            title="Add a reply"
+          >
+            <Reply className="w-3 h-3 mr-1" />
+            Reply
+          </Button>
+        ) : null
       )}
+
+      {/* Delete Reply Confirmation Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Reply</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this reply? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDeleteDialog(false);
+                setReplyToDelete(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteReply}
+            >
+              Delete Reply
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

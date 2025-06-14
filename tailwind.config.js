@@ -20,8 +20,14 @@ export default {
           border: '#E3E7ED',      // refined light border tone
         },
         state: {
-          success: '#4A8048',     // forest green – clear, calm and professional
-          error: '#C53030',       // refined burgundy – sophisticated alert tone
+          success: {
+            DEFAULT: '#4A8048',     // forest green – clear, calm and professional
+            light: '#E6F2E6', // light green – clear, calm and professional
+          },
+          error: {
+            DEFAULT: '#C53030',       // refined burgundy – sophisticated alert tone
+            light: '#FEE4E2', // light red – clear, calm and professional
+          },
         },
       }
     },

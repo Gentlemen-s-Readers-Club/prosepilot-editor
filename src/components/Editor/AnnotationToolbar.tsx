@@ -4,8 +4,7 @@ import { Button } from '../ui/button';
 
 interface AnnotationToolbarProps {
   mode: 'edit' | 'comments';
-  annotationCount: number;
-  openCount: number;
+  totalCount: number;
   onModeChange: (mode: 'edit' | 'comments') => void;
   onTogglePanel: () => void;
   isReadOnly?: boolean;
@@ -13,7 +12,7 @@ interface AnnotationToolbarProps {
 
 export function AnnotationToolbar({
   mode,
-  annotationCount,
+  totalCount,
   onModeChange,
   onTogglePanel,
   isReadOnly = false
@@ -47,9 +46,9 @@ export function AnnotationToolbar({
         >
           <MessageSquare className="w-4 h-4" />
           Annotations
-          {annotationCount > 0 && (
+          {totalCount > 0 && (
             <span className="bg-gray-200 text-gray-600 px-2 rounded-full text-xs aspect-square flex items-center justify-center">
-              {annotationCount}
+              {totalCount}
             </span>
           )}
         </Button>

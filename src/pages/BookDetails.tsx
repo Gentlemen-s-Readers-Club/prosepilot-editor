@@ -645,16 +645,16 @@ export function BookDetails() {
 
       {/* Alert Banners */}
       {isPublished && (
-        <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 shadow-sm">
+        <div className="mb-6 bg-state-success-light border border-state-success rounded-lg p-4 shadow-sm">
           <div className="flex">
             <div className="shrink-0">
-              <BookOpen className="h-5 w-5 text-green-500" />
+              <BookOpen className="h-5 w-5 text-state-success" />
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-green-800">
+              <h3 className="text-sm font-medium text-state-success">
                 Published Book
               </h3>
-              <div className="mt-2 text-sm text-green-700">
+              <div className="mt-2 text-sm text-state-success">
                 This book is published and ready for export. To make changes, you need to unpublish it first.
               </div>
             </div>
@@ -685,7 +685,7 @@ export function BookDetails() {
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-md p-6">
             {/* Book Cover */}
-            <div className="mb-6">
+            <div className="mb-6 max-w-[300px] mx-auto">
               {formData.cover_url ? (
                 <div className="relative">
                   <div className="aspect-[10/16] rounded-lg overflow-hidden shadow-lg">

@@ -12,14 +12,16 @@ import {
 export function useAnnotations(chapterId: string) {
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<AnnotationFilters>({ status: 'all' });
+  const [filters, setFilters] = useState<AnnotationFilters>({ status: 'open' });
   const { toast } = useToast();
 
   const fetchAnnotations = useCallback(async () => {
     try {
       setLoading(true);
       
-      let query = supabase
+      // Always fetch ALL annotations for the chapter, regardless of filters
+      // This ensures the editor always shows all annotations while the panel can filter them locally
+      const { data, error } = await supabase
         .from('annotations')
         .select(`
           *,
@@ -31,22 +33,6 @@ export function useAnnotations(chapterId: string) {
         `)
         .eq('chapter_id', chapterId)
         .order('start_offset', { ascending: true });
-
-      if (filters.status && filters.status !== 'all') {
-        query = query.eq('status', filters.status);
-      }
-
-      if (filters.user_id) {
-        query = query.eq('user_id', filters.user_id);
-      }
-
-      if (filters.date_range) {
-        query = query
-          .gte('created_at', filters.date_range.start)
-          .lte('created_at', filters.date_range.end);
-      }
-
-      const { data, error } = await query;
 
       if (error) throw error;
 
@@ -69,7 +55,7 @@ export function useAnnotations(chapterId: string) {
     } finally {
       setLoading(false);
     }
-  }, [chapterId, filters, toast]);
+  }, [chapterId, toast]);
 
   useEffect(() => {
     if (chapterId) {
@@ -99,11 +85,6 @@ export function useAnnotations(chapterId: string) {
 
       const annotationWithReplies = { ...newAnnotation, replies: [] };
       setAnnotations(prev => [...prev, annotationWithReplies].sort((a, b) => a.start_offset - b.start_offset));
-      
-      toast({
-        title: "Success",
-        description: "Annotation created successfully",
-      });
 
       return annotationWithReplies;
     } catch (error: any) {
@@ -130,11 +111,6 @@ export function useAnnotations(chapterId: string) {
         annotation.id === id ? { ...annotation, ...updates } : annotation
       ));
 
-      toast({
-        title: "Success",
-        description: "Annotation updated successfully",
-      });
-
       return true;
     } catch (error: any) {
       console.error('Error updating annotation:', error);
@@ -157,11 +133,6 @@ export function useAnnotations(chapterId: string) {
       if (error) throw error;
 
       setAnnotations(prev => prev.filter(annotation => annotation.id !== id));
-      
-      toast({
-        title: "Success",
-        description: "Annotation deleted successfully",
-      });
 
       return true;
     } catch (error: any) {
@@ -205,11 +176,6 @@ export function useAnnotations(chapterId: string) {
           : annotation
       ));
 
-      toast({
-        title: "Success",
-        description: "Reply added successfully",
-      });
-
       return newReply;
     } catch (error: any) {
       console.error('Error creating reply:', error);
@@ -239,11 +205,6 @@ export function useAnnotations(chapterId: string) {
             }
           : annotation
       ));
-
-      toast({
-        title: "Success",
-        description: "Reply deleted successfully",
-      });
 
       return true;
     } catch (error: any) {

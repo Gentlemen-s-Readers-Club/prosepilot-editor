@@ -45,7 +45,14 @@ export function EnhancedEditor({
 
   const { 
     annotations, 
+    loading,
+    filters,
+    setFilters,
     createAnnotation, 
+    deleteAnnotation,
+    createReply,
+    deleteReply,
+    toggleAnnotationStatus,
     getAnnotationStats
   } = useAnnotations(chapterId);
 
@@ -145,12 +152,13 @@ export function EnhancedEditor({
       }
     });
     
-    // Add new highlights
+    // Add new highlights - show ALL annotations regardless of panel filter
+    // This ensures the editor always shows all annotations while the panel can filter them
     annotations.forEach(annotation => {
       const { start_offset, end_offset, status } = annotation;
       const textContent = contentElement.textContent || '';
       
-      if (start_offset < 0 || end_offset > textContent.length || start_offset >= end_offset) {
+      if (status !== 'open' || start_offset < 0 || end_offset > textContent.length || start_offset >= end_offset) {
         return;
       }
       
@@ -199,8 +207,8 @@ export function EnhancedEditor({
             highlight.className = `annotation-highlight ${status}`;
             highlight.setAttribute('data-annotation-id', annotation.id);
             highlight.style.cssText = `
-              background-color: ${status === 'resolved' ? '#dcfce7' : '#fef3c7'} !important;
-              border-bottom: 2px solid ${status === 'resolved' ? '#16a34a' : '#d97706'} !important;
+              background-color: ${status === 'open' ? '#fef3c7' : '#d1fae5'} !important;
+              border-bottom: 2px solid ${status === 'open' ? '#d97706' : '#059669'} !important;
               cursor: pointer !important;
               padding: 1px 2px !important;
               border-radius: 2px !important;
@@ -369,6 +377,17 @@ export function EnhancedEditor({
     }
   };
 
+  // Handle annotation status changes
+  const handleAnnotationStatusChange = useCallback(async (annotationId: string) => {
+    const success = await toggleAnnotationStatus(annotationId);
+    if (success) {
+      // Update highlights immediately when status changes
+      setTimeout(() => {
+        highlightAnnotations();
+      }, 100);
+    }
+  }, [toggleAnnotationStatus, highlightAnnotations]);
+
   // Set up keyboard shortcuts
   useEffect(() => {
     if (mode !== 'comments' || readOnly) return;
@@ -403,8 +422,7 @@ export function EnhancedEditor({
       
       <AnnotationToolbar
         mode={mode}
-        annotationCount={stats.total}
-        openCount={stats.open}
+        totalCount={stats.open}
         onModeChange={setMode}
         onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
         isReadOnly={readOnly}
@@ -453,11 +471,20 @@ export function EnhancedEditor({
         
         {mode === 'comments' && showAnnotationPanel && (
           <AnnotationPanel
-            chapterId={chapterId}
             isOpen={showAnnotationPanel}
             onClose={() => setShowAnnotationPanel(false)}
             selectedAnnotation={selectedAnnotation}
             onAnnotationSelect={setSelectedAnnotation}
+            onAnnotationStatusChange={handleAnnotationStatusChange}
+            annotations={annotations}
+            loading={loading}
+            filters={filters}
+            setFilters={setFilters}
+            toggleAnnotationStatus={toggleAnnotationStatus}
+            deleteAnnotation={deleteAnnotation}
+            createReply={createReply}
+            deleteReply={deleteReply}
+            getAnnotationStats={getAnnotationStats}
           />
         )}
       </div>
