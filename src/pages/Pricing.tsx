@@ -215,7 +215,7 @@ export function Pricing() {
               <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> AI story generation</p>
               <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Character development</p>
               <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Plot consistency checking</p>
-              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Multiple export formats</p>
+              {/* <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Multiple export formats</p> */}
             </div>
           </div>
         </div>
