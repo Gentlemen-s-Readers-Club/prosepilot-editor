@@ -102,6 +102,7 @@ export async function getAvailableUpgrades(currentPriceId: string) {
   const planHierarchy = {
     pri_01jxbekwgfx9k8tm8cbejzrns6: { name: "Starter", level: 1 }, // Starter
     pri_01jxben1kf0pfntb8162sfxhba: { name: "Pro", level: 2 }, // Pro
+    pri_01jxxb51m8t8edd9w3wvw96bt4: { name: "Studio", level: 3 }, // Studio
   };
 
   const currentPlan =

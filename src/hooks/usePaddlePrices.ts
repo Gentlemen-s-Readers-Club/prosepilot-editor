@@ -117,6 +117,7 @@ export function usePaddlePrices(paddle: Paddle | null) {
           items: [
             { priceId: "pri_01jxben1kf0pfntb8162sfxhba", quantity: 1 },
             { priceId: "pri_01jxbekwgfx9k8tm8cbejzrns6", quantity: 1 },
+            { priceId: "pri_01jxxb51m8t8edd9w3wvw96bt4", quantity: 1 },
           ],
         });
 

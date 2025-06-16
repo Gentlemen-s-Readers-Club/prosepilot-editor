@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { supabase } from '../../lib/supabase';
-import { ApiState } from '../types';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { supabase } from "../../lib/supabase";
+import { ApiState } from "../types";
 
 export interface Subscription {
   id: string;
@@ -39,6 +39,7 @@ interface SubscriptionState extends ApiState {
 const planHierarchy = {
   pri_01jxbekwgfx9k8tm8cbejzrns6: { name: "Starter", level: 1 }, // Starter
   pri_01jxben1kf0pfntb8162sfxhba: { name: "Pro", level: 2 }, // Pro
+  pri_01jxxb51m8t8edd9w3wvw96bt4: { name: "Studio", level: 3 }, // Studio
   // Note: Studio plan currently uses the same price ID as Pro, but we'll add a separate one when it's ready
   // For now, we'll check for Studio plan by looking for a specific subscription pattern or plan name
 };
@@ -57,12 +58,15 @@ const initialState: SubscriptionState = {
     pendingCancellation: false,
   },
   realtimeSubscription: null,
-  status: 'idle',
+  status: "idle",
   error: null,
 };
 
 // Helper function to calculate subscription status
-const calculateSubscriptionStatus = (subscriptions: Subscription[], currentPlan: string | null) => {
+const calculateSubscriptionStatus = (
+  subscriptions: Subscription[],
+  currentPlan: string | null
+) => {
   const activeSubscriptions = subscriptions.filter(
     (sub) => sub.status === "active" || sub.status === "trialing"
   );
@@ -132,12 +136,14 @@ const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
 };
 
 export const fetchSubscriptions = createAsyncThunk(
-  'subscription/fetchSubscriptions',
+  "subscription/fetchSubscriptions",
   async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session?.user) {
-      throw new Error('No authenticated user');
+      throw new Error("No authenticated user");
     }
 
     console.log("Fetching subscriptions for user ID:", session.user.id);
@@ -185,12 +191,14 @@ export const fetchSubscriptions = createAsyncThunk(
 );
 
 export const setupRealtimeSubscriptions = createAsyncThunk(
-  'subscription/setupRealtimeSubscriptions',
+  "subscription/setupRealtimeSubscriptions",
   async (_, { dispatch }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session?.user) {
-      throw new Error('No authenticated user');
+      throw new Error("No authenticated user");
     }
 
     const subscription = supabase
@@ -215,7 +223,7 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
 );
 
 const subscriptionSlice = createSlice({
-  name: 'subscription',
+  name: "subscription",
   initialState,
   reducers: {
     clearSubscriptions: (state) => {
@@ -235,36 +243,56 @@ const subscriptionSlice = createSlice({
     },
     addSubscription: (state, action: PayloadAction<Subscription>) => {
       state.subscriptions.push(action.payload);
-      if (action.payload.status === "active" || action.payload.status === "trialing") {
+      if (
+        action.payload.status === "active" ||
+        action.payload.status === "trialing"
+      ) {
         state.activeSubscriptions.push(action.payload);
       }
-      
+
       // Recalculate derived state
       state.currentPlan = calculateCurrentPlan(state.subscriptions);
-      state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+      state.subscriptionStatus = calculateSubscriptionStatus(
+        state.subscriptions,
+        state.currentPlan
+      );
     },
     updateSubscription: (state, action: PayloadAction<Subscription>) => {
-      const index = state.subscriptions.findIndex(sub => sub.id === action.payload.id);
+      const index = state.subscriptions.findIndex(
+        (sub) => sub.id === action.payload.id
+      );
       if (index !== -1) {
         state.subscriptions[index] = action.payload;
       }
-      
-      const activeIndex = state.activeSubscriptions.findIndex(sub => sub.id === action.payload.id);
+
+      const activeIndex = state.activeSubscriptions.findIndex(
+        (sub) => sub.id === action.payload.id
+      );
       if (activeIndex !== -1) {
         state.activeSubscriptions[activeIndex] = action.payload;
       }
-      
+
       // Recalculate derived state
       state.currentPlan = calculateCurrentPlan(state.subscriptions);
-      state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+      state.subscriptionStatus = calculateSubscriptionStatus(
+        state.subscriptions,
+        state.currentPlan
+      );
     },
     removeSubscription: (state, action: PayloadAction<string>) => {
-      state.subscriptions = state.subscriptions.filter(sub => sub.id !== action.payload);
-      state.activeSubscriptions = state.activeSubscriptions.filter(sub => sub.id !== action.payload);
-      
+      state.subscriptions = state.subscriptions.filter(
+        (sub) => sub.id !== action.payload
+      );
+      state.activeSubscriptions = state.activeSubscriptions.filter(
+        (sub) => sub.id !== action.payload
+      );
+
       // Recalculate derived state
       state.currentPlan = calculateCurrentPlan(state.subscriptions);
-      state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+      state.subscriptionStatus = calculateSubscriptionStatus(
+        state.subscriptions,
+        state.currentPlan
+      );
     },
     clearRealtimeSubscription: (state) => {
       if (state.realtimeSubscription) {
@@ -276,13 +304,13 @@ const subscriptionSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchSubscriptions.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchSubscriptions.fulfilled, (state, action) => {
-        state.status = 'success';
+        state.status = "success";
         state.subscriptions = action.payload;
-        
+
         // Calculate active subscriptions
         state.activeSubscriptions = action.payload.filter(
           (sub) => sub.status === "active" || sub.status === "trialing"
@@ -292,7 +320,10 @@ const subscriptionSlice = createSlice({
         state.currentPlan = calculateCurrentPlan(state.subscriptions);
 
         // Calculate subscription status
-        state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+        state.subscriptionStatus = calculateSubscriptionStatus(
+          state.subscriptions,
+          state.currentPlan
+        );
 
         console.log("Updated subscription state:", {
           subscriptions: state.subscriptions,
@@ -302,8 +333,8 @@ const subscriptionSlice = createSlice({
         });
       })
       .addCase(fetchSubscriptions.rejected, (state, action) => {
-        state.status = 'error';
-        state.error = action.error.message || 'Failed to fetch subscriptions';
+        state.status = "error";
+        state.error = action.error.message || "Failed to fetch subscriptions";
       })
       .addCase(setupRealtimeSubscriptions.fulfilled, (state, action) => {
         state.realtimeSubscription = action.payload;
@@ -312,21 +343,39 @@ const subscriptionSlice = createSlice({
 });
 
 // Selectors
-export const selectSubscriptions = (state: { subscription: SubscriptionState }) => state.subscription.subscriptions;
-export const selectActiveSubscriptions = (state: { subscription: SubscriptionState }) => state.subscription.activeSubscriptions;
-export const selectCurrentPlan = (state: { subscription: SubscriptionState }) => state.subscription.currentPlan;
-export const selectSubscriptionStatus = (state: { subscription: SubscriptionState }) => state.subscription.subscriptionStatus;
-export const selectHasActiveSubscription = (state: { subscription: SubscriptionState }) => state.subscription.activeSubscriptions.length > 0;
-export const selectCanSubscribeToNewPlan = (state: { subscription: SubscriptionState }) => state.subscription.activeSubscriptions.length === 0;
+export const selectSubscriptions = (state: {
+  subscription: SubscriptionState;
+}) => state.subscription.subscriptions;
+export const selectActiveSubscriptions = (state: {
+  subscription: SubscriptionState;
+}) => state.subscription.activeSubscriptions;
+export const selectCurrentPlan = (state: { subscription: SubscriptionState }) =>
+  state.subscription.currentPlan;
+export const selectSubscriptionStatus = (state: {
+  subscription: SubscriptionState;
+}) => state.subscription.subscriptionStatus;
+export const selectHasActiveSubscription = (state: {
+  subscription: SubscriptionState;
+}) => state.subscription.activeSubscriptions.length > 0;
+export const selectCanSubscribeToNewPlan = (state: {
+  subscription: SubscriptionState;
+}) => state.subscription.activeSubscriptions.length === 0;
 
 // Helper functions
-export const hasActivePlan = (state: { subscription: SubscriptionState }, priceId: string): boolean => {
-  return state.subscription.activeSubscriptions.some((sub) => sub.price_id === priceId);
+export const hasActivePlan = (
+  state: { subscription: SubscriptionState },
+  priceId: string
+): boolean => {
+  return state.subscription.activeSubscriptions.some(
+    (sub) => sub.price_id === priceId
+  );
 };
 
 // Helper function to check if user has Studio plan
 // Note: Currently Studio uses the same price ID as Pro, so this will need to be updated when Studio gets its own price ID
-export const hasStudioPlan = (state: { subscription: SubscriptionState }): boolean => {
+export const hasStudioPlan = (state: {
+  subscription: SubscriptionState;
+}): boolean => {
   // For now, return false since Studio is coming soon
   // When Studio is ready, this should check for the Studio price ID
   // Example: return state.subscription.activeSubscriptions.some((sub) => sub.price_id === "pri_studio_price_id");
@@ -334,19 +383,22 @@ export const hasStudioPlan = (state: { subscription: SubscriptionState }): boole
 };
 
 // Helper function to check if user has Pro or Studio plan (for features that require Pro+)
-export const hasProOrStudioPlan = (state: { subscription: SubscriptionState }): boolean => {
-  return state.subscription.activeSubscriptions.some((sub) => 
-    sub.price_id === "pri_01jxben1kf0pfntb8162sfxhba" // Pro plan
-    // Add Studio price ID here when it's ready
+export const hasProOrStudioPlan = (state: {
+  subscription: SubscriptionState;
+}): boolean => {
+  return state.subscription.activeSubscriptions.some(
+    (sub) =>
+      sub.price_id === "pri_01jxben1kf0pfntb8162sfxhba" || // Pro plan
+      sub.price_id === "pri_01jxxb51m8t8edd9w3wvw96bt4" // Studio plan
   );
 };
 
-export const { 
-  clearSubscriptions, 
-  addSubscription, 
-  updateSubscription, 
+export const {
+  clearSubscriptions,
+  addSubscription,
+  updateSubscription,
   removeSubscription,
-  clearRealtimeSubscription 
+  clearRealtimeSubscription,
 } = subscriptionSlice.actions;
 
-export default subscriptionSlice.reducer; 
+export default subscriptionSlice.reducer;

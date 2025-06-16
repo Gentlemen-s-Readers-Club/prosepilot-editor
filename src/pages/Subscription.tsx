@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Navigation } from "../components/Navigation";
 import { Button } from "../components/ui/button";
-import { Check, AlertCircle, Clock, FileText, Download, Users, Zap, Crown, Plus } from "lucide-react";
+import {
+  Check,
+  AlertCircle,
+  Clock,
+  FileText,
+  Download,
+  Users,
+  Zap,
+  Crown,
+  Plus,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,13 +25,13 @@ import { usePaddlePrices } from "../hooks/usePaddlePrices";
 import { useToast } from "../hooks/use-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store";
-import { 
-  selectSubscriptions, 
-  selectActiveSubscriptions, 
-  selectCurrentPlan, 
-  selectSubscriptionStatus, 
+import {
+  selectSubscriptions,
+  selectActiveSubscriptions,
+  selectCurrentPlan,
+  selectSubscriptionStatus,
   selectCanSubscribeToNewPlan,
-  fetchSubscriptions
+  fetchSubscriptions,
 } from "../store/slices/subscriptionSlice";
 import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
@@ -111,39 +121,39 @@ const plans: Plan[] = [
       "Team access (up to 3 users)",
       "Priority live chat support",
     ],
-    priceId: "pri_01jxben1kf0pfntb8162sfxhba", // Using same as pro for now
+    priceId: "pri_01jxxb51m8t8edd9w3wvw96bt4", // Using same as pro for now
     comingSoon: true,
-  }
+  },
 ];
 
 const mockBillingHistory = [
   {
-    id: '1',
-    date: '2025-03-15',
+    id: "1",
+    date: "2025-03-15",
     amount: 29,
-    status: 'paid',
-    description: 'Pro Author Plan - Monthly'
+    status: "paid",
+    description: "Pro Author Plan - Monthly",
   },
   {
-    id: '2',
-    date: '2025-02-15',
+    id: "2",
+    date: "2025-02-15",
     amount: 29,
-    status: 'paid',
-    description: 'Pro Author Plan - Monthly'
+    status: "paid",
+    description: "Pro Author Plan - Monthly",
   },
   {
-    id: '3',
-    date: '2025-01-15',
+    id: "3",
+    date: "2025-01-15",
     amount: 9,
-    status: 'paid',
-    description: 'Starter Plan - Monthly'
-  }
+    status: "paid",
+    description: "Starter Plan - Monthly",
+  },
 ];
 
 const creditPackages = [
-  { id: 'small', credits: 10, price: 20 },
-  { id: 'medium', credits: 25, price: 45, savings: 10 },
-  { id: 'large', credits: 50, price: 80, savings: 20 },
+  { id: "small", credits: 10, price: 20 },
+  { id: "medium", credits: 25, price: 45, savings: 10 },
+  { id: "large", credits: 50, price: 80, savings: 20 },
 ];
 
 export function Subscription() {
@@ -158,7 +168,9 @@ export function Subscription() {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showBuyCreditsDialog, setShowBuyCreditsDialog] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<typeof creditPackages[0] | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<
+    (typeof creditPackages)[0] | null
+  >(null);
 
   const { paddle, loading: paddleLoading, error: paddleError } = usePaddle();
   const {
@@ -173,9 +185,8 @@ export function Subscription() {
   const currentPlan = useSelector(selectCurrentPlan);
   const subscriptionStatus = useSelector(selectSubscriptionStatus);
   const canSubscribeToNewPlan = useSelector(selectCanSubscribeToNewPlan);
-  const { status: subscriptionsLoading, error: subscriptionsError } = useSelector(
-    (state: RootState) => state.subscription
-  );
+  const { status: subscriptionsLoading, error: subscriptionsError } =
+    useSelector((state: RootState) => state.subscription);
 
   // Helper function to check if user has active plan
   const hasActivePlanForPrice = (priceId: string) => {
@@ -213,7 +224,7 @@ export function Subscription() {
     profileStatus === "loading" ||
     paddleLoading ||
     pricesLoading ||
-    subscriptionsLoading === 'loading'
+    subscriptionsLoading === "loading"
   ) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -392,9 +403,11 @@ export function Subscription() {
 
   const confirmUpgrade = async () => {
     if (!selectedPlan) return;
-    
+
     // Use the existing handleSubscribe logic
-    const planWithPrices = plansWithPrices.find(p => p.id === selectedPlan.id);
+    const planWithPrices = plansWithPrices.find(
+      (p) => p.id === selectedPlan.id
+    );
     if (planWithPrices) {
       await handleSubscribe(planWithPrices);
     }
@@ -410,7 +423,7 @@ export function Subscription() {
     setShowCancelDialog(false);
   };
 
-  const handleBuyCredits = (pkg: typeof creditPackages[0]) => {
+  const handleBuyCredits = (pkg: (typeof creditPackages)[0]) => {
     setSelectedPackage(pkg);
     setShowBuyCreditsDialog(true);
   };
@@ -466,9 +479,9 @@ export function Subscription() {
   };
 
   // Get current plan details
-  const currentPlanDetails = plans.find(p => p.id === currentPlan);
-  const currentSubscription = subscriptions.find(s => 
-    s.status === "active" || s.status === "trialing"
+  const currentPlanDetails = plans.find((p) => p.id === currentPlan);
+  const currentSubscription = subscriptions.find(
+    (s) => s.status === "active" || s.status === "trialing"
   );
 
   return (
@@ -482,16 +495,21 @@ export function Subscription() {
           {/* Current Plan Status */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-base-heading">Current Subscription</h2>
+              <h2 className="text-2xl font-bold text-base-heading">
+                Current Subscription
+              </h2>
               {currentPlan && (
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-base-paragraph" />
-                <span className="text-base-heading">
-                  Next billing date: {currentSubscription?.current_period_end 
-                    ? new Date(currentSubscription.current_period_end).toLocaleDateString()
-                    : "Loading..."}
-                </span>
-              </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-base-paragraph" />
+                  <span className="text-base-heading">
+                    Next billing date:{" "}
+                    {currentSubscription?.current_period_end
+                      ? new Date(
+                          currentSubscription.current_period_end
+                        ).toLocaleDateString()
+                      : "Loading..."}
+                  </span>
+                </div>
               )}
             </div>
 
@@ -502,30 +520,44 @@ export function Subscription() {
                   {currentPlanDetails?.name || "No Active Plan"}
                 </div>
                 <div className="text-base-heading">
-                  {currentPlanDetails ? `$${currentPlanDetails.price}/month` : "Free"}
+                  {currentPlanDetails
+                    ? `$${currentPlanDetails.price}/month`
+                    : "Free"}
                 </div>
               </div>
 
               {currentPlan && (
                 <>
                   <div className="space-y-2">
-                    <div className="text-base-heading">Monthly Credits Used</div>
+                    <div className="text-base-heading">
+                      Monthly Credits Used
+                    </div>
                     <div className="relative pt-1">
                       <div className="flex mb-2 items-center justify-between">
                         <div>
                           <span className="text-xs font-semibold inline-block text-base-heading">
-                            {creditsLimit > 0 ? Math.round((creditsUsed / creditsLimit) * 100) : 0}%
+                            {creditsLimit > 0
+                              ? Math.round((creditsUsed / creditsLimit) * 100)
+                              : 0}
+                            %
                           </span>
                         </div>
                         <div className="text-right">
                           <span className="text-xs font-semibold inline-block text-base-heading">
-                            {creditsUsed}/{creditsLimit > 0 ? creditsLimit : "∞"} credits
+                            {creditsUsed}/
+                            {creditsLimit > 0 ? creditsLimit : "∞"} credits
                           </span>
                         </div>
                       </div>
                       <div className="overflow-hidden h-2 text-xs flex rounded bg-brand-secondary">
                         <div
-                          style={{ width: `${creditsLimit > 0 ? (creditsUsed / creditsLimit) * 100 : 0}%` }}
+                          style={{
+                            width: `${
+                              creditsLimit > 0
+                                ? (creditsUsed / creditsLimit) * 100
+                                : 0
+                            }%`,
+                          }}
                           className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary"
                         />
                       </div>
@@ -533,12 +565,12 @@ export function Subscription() {
                   </div>
 
                   <div className="flex items-center justify-end space-x-4">
-                      <Button
-                        variant="destructive"
-                        onClick={() => setShowCancelDialog(true)}
-                      >
-                        Cancel Subscription
-                      </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => setShowCancelDialog(true)}
+                    >
+                      Cancel Subscription
+                    </Button>
                   </div>
                 </>
               )}
@@ -546,46 +578,52 @@ export function Subscription() {
 
             {/* Credits Section */}
             {currentPlan && (
-            <div className="mt-8 pt-8 border-t">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-base-heading">Buy More Credits</h3>
+              <div className="mt-8 pt-8 border-t">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-base-heading">
+                      Buy More Credits
+                    </h3>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {creditPackages.map((pkg) => (
+                    <div
+                      key={pkg.id}
+                      className="bg-base-background rounded-lg p-4 border hover:border-primary transition-colors"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="text-lg font-semibold text-base-heading">
+                          {pkg.credits} Credits
+                        </div>
+                        {!!pkg.savings && (
+                          <div className="text-sm bg-state-success-light text-state-success px-2 py-1 rounded">
+                            Save {pkg.savings}%
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-2xl font-bold text-brand-accent mb-4">
+                        ${pkg.price}
+                      </div>
+                      <Button
+                        onClick={() => handleBuyCredits(pkg)}
+                        className="w-full"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Buy Credits
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {creditPackages.map((pkg) => (
-                  <div
-                    key={pkg.id}
-                    className="bg-base-background rounded-lg p-4 border hover:border-primary transition-colors"
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="text-lg font-semibold text-base-heading">
-                        {pkg.credits} Credits
-                      </div>
-                      {!!pkg.savings && (
-                        <div className="text-sm bg-state-success-light text-state-success px-2 py-1 rounded">
-                          Save {pkg.savings}%
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-2xl font-bold text-brand-accent mb-4">${pkg.price}</div>
-                    <Button
-                      onClick={() => handleBuyCredits(pkg)}
-                      className="w-full"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Buy Credits
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
             )}
           </div>
 
           {/* Pricing Plans */}
           <div className="space-y-12 mt-20">
-            <h2 className="text-3xl font-bold text-base-heading text-center">Available Plans</h2>
+            <h2 className="text-3xl font-bold text-base-heading text-center">
+              Available Plans
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {plansWithPrices.map((plan) => {
                 const isCurrentPlan = currentPlan === plan.id;
@@ -598,8 +636,8 @@ export function Subscription() {
                   <div
                     key={plan.id}
                     className={`relative bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-105 flex flex-col h-full ${
-                      plan.isPopular ? 'ring-2 ring-brand-accent scale-105' : ''
-                    } ${plan.comingSoon ? 'opacity-75' : ''}`}
+                      plan.isPopular ? "ring-2 ring-brand-accent scale-105" : ""
+                    } ${plan.comingSoon ? "opacity-75" : ""}`}
                   >
                     {plan.isPopular && (
                       <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
@@ -615,11 +653,17 @@ export function Subscription() {
                       <div className="flex-1">
                         {/* Plan Header */}
                         <div className="text-center mb-8">
-                          <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
+                          <div
+                            className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}
+                          >
                             {plan.icon}
                           </div>
-                          <h3 className="text-2xl font-bold text-base-heading">{plan.name}</h3>
-                          <p className="text-base-paragraph mt-2">{plan.description}</p>
+                          <h3 className="text-2xl font-bold text-base-heading">
+                            {plan.name}
+                          </h3>
+                          <p className="text-base-paragraph mt-2">
+                            {plan.description}
+                          </p>
                         </div>
 
                         {/* Pricing */}
@@ -628,10 +672,14 @@ export function Subscription() {
                             <span className="text-5xl font-extrabold text-base-heading">
                               ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
                             </span>
-                            <span className="text-xl text-gray-500 ml-1">/month</span>
+                            <span className="text-xl text-gray-500 ml-1">
+                              /month
+                            </span>
                           </div>
                           <div className="mt-2 text-sm text-gray-500">
-                            {plan.credits === -1 ? 'Unlimited credits' : `${plan.credits} credits included`}
+                            {plan.credits === -1
+                              ? "Unlimited credits"
+                              : `${plan.credits} credits included`}
                           </div>
                         </div>
 
@@ -640,7 +688,9 @@ export function Subscription() {
                           {plan.features.map((feature, index) => (
                             <li key={index} className="flex items-start">
                               <Check className="h-5 w-5 text-state-success shrink-0 mt-0.5" />
-                              <span className="ml-3 text-gray-700 text-sm">{feature}</span>
+                              <span className="ml-3 text-gray-700 text-sm">
+                                {feature}
+                              </span>
                             </li>
                           ))}
                         </ul>
@@ -648,18 +698,32 @@ export function Subscription() {
 
                       {/* CTA Button */}
                       <Button
-                        className={`w-full ${plan.isPopular && 'bg-brand-accent border-brand-accent text-white hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white'}`}
-                        variant={isCurrentPlan ? 'secondary' : plan.isPopular ? 'default' : 'outline'}
+                        className={`w-full ${
+                          plan.isPopular &&
+                          "bg-brand-accent border-brand-accent text-white hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white"
+                        }`}
+                        variant={
+                          isCurrentPlan
+                            ? "secondary"
+                            : plan.isPopular
+                            ? "default"
+                            : "outline"
+                        }
                         onClick={() => handleUpgrade(plan)}
                         disabled={
-                          isCurrentPlan || 
+                          isCurrentPlan ||
                           plan.comingSoon ||
                           (!canSubscribeToThisPlan && hasActiveButDifferentPlan)
                         }
                       >
-                        {isCurrentPlan ? 'Current Plan' : 
-                         plan.comingSoon ? 'Coming Soon' : 
-                         plans.findIndex(p => p.id === plan.id) < plans.findIndex(p => p.id === currentPlan) ? 'Downgrade' : 'Upgrade'}
+                        {isCurrentPlan
+                          ? "Current Plan"
+                          : plan.comingSoon
+                          ? "Coming Soon"
+                          : plans.findIndex((p) => p.id === plan.id) <
+                            plans.findIndex((p) => p.id === currentPlan)
+                          ? "Downgrade"
+                          : "Upgrade"}
                       </Button>
                     </div>
                   </div>
@@ -670,12 +734,22 @@ export function Subscription() {
             {/* Additional Info */}
             <div className="mt-40 text-center">
               <p className="text-base-paragraph mb-4">
-                All plans include our core AI writing features and export capabilities
+                All plans include our core AI writing features and export
+                capabilities
               </p>
               <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-                <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> AI story generation</p>
-                <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Character development</p>
-                <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Plot consistency checking</p>
+                <p className="text-base-paragraph">
+                  <span className="text-brand-accent">✓</span> AI story
+                  generation
+                </p>
+                <p className="text-base-paragraph">
+                  <span className="text-brand-accent">✓</span> Character
+                  development
+                </p>
+                <p className="text-base-paragraph">
+                  <span className="text-brand-accent">✓</span> Plot consistency
+                  checking
+                </p>
                 {/* <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Multiple export formats</p> */}
               </div>
             </div>
@@ -683,7 +757,9 @@ export function Subscription() {
 
           {/* Billing History */}
           <div className="mt-20">
-            <h2 className="text-2xl font-bold text-base-heading mb-6">Billing History</h2>
+            <h2 className="text-2xl font-bold text-base-heading mb-6">
+              Billing History
+            </h2>
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -723,7 +799,10 @@ export function Subscription() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Button variant="ghost" className="text-base-heading hover:text-base-heading/80">
+                        <Button
+                          variant="ghost"
+                          className="text-base-heading hover:text-base-heading/80"
+                        >
                           <Download className="w-4 h-4" />
                         </Button>
                       </td>
@@ -742,7 +821,9 @@ export function Subscription() {
           <DialogHeader>
             <DialogTitle>Cancel Subscription</DialogTitle>
             <DialogDescription>
-              Are you sure you want to cancel your subscription? You'll lose access to premium features at the end of your current billing period.
+              Are you sure you want to cancel your subscription? You'll lose
+              access to premium features at the end of your current billing
+              period.
             </DialogDescription>
           </DialogHeader>
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 my-4">
@@ -756,11 +837,21 @@ export function Subscription() {
                 </h3>
                 <div className="mt-2 text-sm text-yellow-700">
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Your subscription will remain active until {currentSubscription?.current_period_end 
-                      ? new Date(currentSubscription.current_period_end).toLocaleDateString()
-                      : "the end of your billing period"}</li>
-                    <li>You'll lose access to premium features after that date</li>
-                    <li>Existing content will remain accessible but locked for editing</li>
+                    <li>
+                      Your subscription will remain active until{" "}
+                      {currentSubscription?.current_period_end
+                        ? new Date(
+                            currentSubscription.current_period_end
+                          ).toLocaleDateString()
+                        : "the end of your billing period"}
+                    </li>
+                    <li>
+                      You'll lose access to premium features after that date
+                    </li>
+                    <li>
+                      Existing content will remain accessible but locked for
+                      editing
+                    </li>
                     <li>Unused credits will be lost</li>
                   </ul>
                 </div>
@@ -774,10 +865,7 @@ export function Subscription() {
             >
               Keep Subscription
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleCancel}
-            >
+            <Button variant="destructive" onClick={handleCancel}>
               Cancel Subscription
             </Button>
           </DialogFooter>
@@ -789,14 +877,21 @@ export function Subscription() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {plans.findIndex(p => p.id === selectedPlan?.id) < plans.findIndex(p => p.id === currentPlan) 
+              {plans.findIndex((p) => p.id === selectedPlan?.id) <
+              plans.findIndex((p) => p.id === currentPlan)
                 ? `Downgrade to ${selectedPlan?.name}`
                 : `Upgrade to ${selectedPlan?.name}`}
             </DialogTitle>
             <DialogDescription>
-              You're about to {plans.findIndex(p => p.id === selectedPlan?.id) < plans.findIndex(p => p.id === currentPlan) ? 'downgrade' : 'upgrade'} to 
-              the {selectedPlan?.name} plan. Changes will take effect at the start of your next billing period.
-              {plans.findIndex(p => p.id === selectedPlan?.id) < plans.findIndex(p => p.id === currentPlan) && 
+              You're about to{" "}
+              {plans.findIndex((p) => p.id === selectedPlan?.id) <
+              plans.findIndex((p) => p.id === currentPlan)
+                ? "downgrade"
+                : "upgrade"}{" "}
+              to the {selectedPlan?.name} plan. Changes will take effect at the
+              start of your next billing period.
+              {plans.findIndex((p) => p.id === selectedPlan?.id) <
+                plans.findIndex((p) => p.id === currentPlan) &&
                 " You'll continue to have access to your current plan's features until then."}
             </DialogDescription>
           </DialogHeader>
@@ -805,12 +900,17 @@ export function Subscription() {
               <div className="flex justify-between items-center">
                 <div>
                   <div className="font-medium">New Plan Cost</div>
-                  <div className="text-sm text-base-paragraph">Starting next billing period</div>
+                  <div className="text-sm text-base-paragraph">
+                    Starting next billing period
+                  </div>
                 </div>
-                <div className="text-lg font-bold">${selectedPlan?.price}/mo</div>
+                <div className="text-lg font-bold">
+                  ${selectedPlan?.price}/mo
+                </div>
               </div>
             </div>
-            {plans.findIndex(p => p.id === selectedPlan?.id) < plans.findIndex(p => p.id === currentPlan) ? (
+            {plans.findIndex((p) => p.id === selectedPlan?.id) <
+            plans.findIndex((p) => p.id === currentPlan) ? (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <div className="flex">
                   <div className="shrink-0">
@@ -822,8 +922,11 @@ export function Subscription() {
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">
                       <ul className="list-disc pl-5 space-y-1">
-                        {plans.find(p => p.id === currentPlan)?.features
-                          .filter(f => !selectedPlan?.features.includes(f))
+                        {plans
+                          .find((p) => p.id === currentPlan)
+                          ?.features.filter(
+                            (f) => !selectedPlan?.features.includes(f)
+                          )
                           .map((feature, index) => (
                             <li key={index}>{feature}</li>
                           ))}
@@ -845,7 +948,12 @@ export function Subscription() {
                     <div className="mt-2 text-sm text-green-700">
                       <ul className="list-disc pl-5 space-y-1">
                         {selectedPlan?.features
-                          .filter(f => !plans.find(p => p.id === currentPlan)?.features.includes(f))
+                          .filter(
+                            (f) =>
+                              !plans
+                                .find((p) => p.id === currentPlan)
+                                ?.features.includes(f)
+                          )
                           .map((feature, index) => (
                             <li key={index}>{feature}</li>
                           ))}
@@ -864,31 +972,44 @@ export function Subscription() {
               Cancel
             </Button>
             <Button onClick={confirmUpgrade}>
-              Confirm {plans.findIndex(p => p.id === selectedPlan?.id) < plans.findIndex(p => p.id === currentPlan) ? 'Downgrade' : 'Upgrade'}
+              Confirm{" "}
+              {plans.findIndex((p) => p.id === selectedPlan?.id) <
+              plans.findIndex((p) => p.id === currentPlan)
+                ? "Downgrade"
+                : "Upgrade"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Buy Credits Dialog */}
-      <Dialog open={showBuyCreditsDialog} onOpenChange={setShowBuyCreditsDialog}>
+      <Dialog
+        open={showBuyCreditsDialog}
+        onOpenChange={setShowBuyCreditsDialog}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Buy Additional Credits</DialogTitle>
             <DialogDescription>
-              You're about to purchase {selectedPackage?.credits} credits for ${selectedPackage?.price}.
+              You're about to purchase {selectedPackage?.credits} credits for $
+              {selectedPackage?.price}.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="font-medium">{selectedPackage?.credits} Credits</div>
+                  <div className="font-medium">
+                    {selectedPackage?.credits} Credits
+                  </div>
                   <div className="text-sm text-base-paragraph">
-                    Can be used for {Math.floor((selectedPackage?.credits || 0) / 5)} books
+                    Can be used for{" "}
+                    {Math.floor((selectedPackage?.credits || 0) / 5)} books
                   </div>
                 </div>
-                <div className="text-lg font-bold">${selectedPackage?.price}</div>
+                <div className="text-lg font-bold">
+                  ${selectedPackage?.price}
+                </div>
               </div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -918,11 +1039,7 @@ export function Subscription() {
             >
               Cancel
             </Button>
-            <Button
-              onClick={confirmBuyCredits}
-            >
-              Buy Credits
-            </Button>
+            <Button onClick={confirmBuyCredits}>Buy Credits</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
