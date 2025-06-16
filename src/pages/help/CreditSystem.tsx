@@ -200,7 +200,7 @@ export function CreditSystem() {
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-medium">
                   Most Popular
                 </div>
-                <h4 className="font-semibold text-base-heading mb-2">Author</h4>
+                <h4 className="font-semibold text-base-heading mb-2">Pro Author</h4>
                 <div className="text-3xl font-bold text-brand-accent mb-2">25</div>
                 <div className="text-sm text-base-paragraph mb-3">credits/month</div>
                 <div className="text-sm text-base-paragraph">= 5 books/month</div>
@@ -220,9 +220,9 @@ export function CreditSystem() {
             <div className="bg-state-success-light border border-state-success rounded-lg p-6">
               <h4 className="font-semibold text-state-success mb-3">💡 Value comparison</h4>
               <div className="text-state-success text-sm space-y-2">
-                <p>• <strong>Starter:</strong> $1.80 per book ($9 ÷ 5 credits)</p>
-                <p>• <strong>Pro Author:</strong> $1.16 per book ($29 ÷ 25 credits) - 35% savings!</p>
-                <p>• <strong>Studio:</strong> $1.05 per book ($79 ÷ 75 credits) - 42% savings!</p>
+                <p>• <strong>Starter:</strong> $9.00 per book ($9 ÷ 5 credits)</p>
+                <p>• <strong>Pro Author:</strong> $5.80 per book ($29 ÷ 25 credits) - 35% savings!</p>
+                <p>• <strong>Studio:</strong> $5.27 per book ($79 ÷ 75 credits) - 42% savings!</p>
               </div>
             </div>
           </section>

@@ -59,6 +59,7 @@ const plans: Plan[] = [
       'Unlock more genres',
       'Advanced book properties: narrator, tone, style',
       'Export to PDF, ePub, and Docx formats',
+      'Annotations system',
       'Priority email support'
     ],
     isPopular: true

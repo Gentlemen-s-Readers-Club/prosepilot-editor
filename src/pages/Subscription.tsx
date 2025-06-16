@@ -88,6 +88,7 @@ const plans: Plan[] = [
       "Unlock more genres",
       "Advanced book properties: narrator, tone, style",
       "Export to PDF, ePub, and Docx formats",
+      "Annotations system",
       "Priority email support",
     ],
     priceId: "pri_01jxben1kf0pfntb8162sfxhba",
