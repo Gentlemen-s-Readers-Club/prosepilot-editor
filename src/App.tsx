@@ -107,92 +107,94 @@ function App() {
         <Router>
           <ScrollToTop />
           <Navigation />
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/docs" element={<Documentation />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <main>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/docs" element={<Documentation />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-            {/* Help Articles */}
-            <Route
-              path="/help/create-first-book"
-              element={<CreateFirstBook />}
-            />
-            <Route path="/help/credit-system" element={<CreditSystem />} />
-            <Route
-              path="/help/ai-best-practices"
-              element={<AIBestPractices />}
-            />
-            <Route
-              path="/help/team-collaboration"
-              element={<TeamCollaboration />}
-            />
+              {/* Help Articles */}
+              <Route
+                path="/help/create-first-book"
+                element={<CreateFirstBook />}
+              />
+              <Route path="/help/credit-system" element={<CreditSystem />} />
+              <Route
+                path="/help/ai-best-practices"
+                element={<AIBestPractices />}
+              />
+              <Route
+                path="/help/team-collaboration"
+                element={<TeamCollaboration />}
+              />
 
-            <Route
-              path="/app"
-              element={session ? <Dashboard /> : <Navigate to="/app/login" />}
-            />
-            
-            {/* Studio Plan Protected Routes */}
-            <Route
-              path="/app/teams"
-              element={
-                session ? (
-                  <StudioProtectedRoute>
-                    <Teams />
-                  </StudioProtectedRoute>
-                ) : (
-                  <Navigate to="/app/login" />
-                )
-              }
-            />
-            <Route
-              path="/app/teams/:teamId"
-              element={
-                session ? (
-                  <StudioProtectedRoute>
-                    <TeamDetails />
-                  </StudioProtectedRoute>
-                ) : (
-                  <Navigate to="/app/login" />
-                )
-              }
-            />
-            
-            <Route
-              path="/app/book/:id"
-              element={session ? <BookDetails /> : <Navigate to="/app/login" />}
-            />
-            <Route
-              path="/app/chapter/:id"
-              element={
-                session ? <ChapterEditor /> : <Navigate to="/app/login" />
-              }
-            />
-            <Route
-              path="/app/profile"
-              element={session ? <EditProfile /> : <Navigate to="/app/login" />}
-            />
-            <Route
-              path="/app/subscription"
-              element={
-                session ? <Subscription /> : <Navigate to="/app/login" />
-              }
-            />
-            <Route
-              path="/app/login"
-              element={session ? <Navigate to="/app" /> : <Login />}
-            />
-            <Route
-              path="/app/signup"
-              element={session ? <Navigate to="/app" /> : <Signup />}
-            />
-            <Route
-              path="/app/forgot-password"
-              element={session ? <Navigate to="/app" /> : <ForgotPassword />}
-            />
-          </Routes>
+              <Route
+                path="/app"
+                element={session ? <Dashboard /> : <Navigate to="/app/login" />}
+              />
+              
+              {/* Studio Plan Protected Routes */}
+              <Route
+                path="/app/teams"
+                element={
+                  session ? (
+                    <StudioProtectedRoute>
+                      <Teams />
+                    </StudioProtectedRoute>
+                  ) : (
+                    <Navigate to="/app/login" />
+                  )
+                }
+              />
+              <Route
+                path="/app/teams/:teamId"
+                element={
+                  session ? (
+                    <StudioProtectedRoute>
+                      <TeamDetails />
+                    </StudioProtectedRoute>
+                  ) : (
+                    <Navigate to="/app/login" />
+                  )
+                }
+              />
+              
+              <Route
+                path="/app/book/:id"
+                element={session ? <BookDetails /> : <Navigate to="/app/login" />}
+              />
+              <Route
+                path="/app/chapter/:id"
+                element={
+                  session ? <ChapterEditor /> : <Navigate to="/app/login" />
+                }
+              />
+              <Route
+                path="/app/profile"
+                element={session ? <EditProfile /> : <Navigate to="/app/login" />}
+              />
+              <Route
+                path="/app/subscription"
+                element={
+                  session ? <Subscription /> : <Navigate to="/app/login" />
+                }
+              />
+              <Route
+                path="/app/login"
+                element={session ? <Navigate to="/app" /> : <Login />}
+              />
+              <Route
+                path="/app/signup"
+                element={session ? <Navigate to="/app" /> : <Signup />}
+              />
+              <Route
+                path="/app/forgot-password"
+                element={session ? <Navigate to="/app" /> : <ForgotPassword />}
+              />
+            </Routes>
+          </main>
           <Toaster />
         </Router>
       </PaddleProvider>

@@ -28,16 +28,30 @@ export function Landing() {
       </Helmet>
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-base-background">
+        {/* Bolt.new Logo Top Right */}
+        <a
+          href="https://bolt.new"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute top-2 right-2 lg:top-6 lg:right-6 z-20 rounded-full shadow-lg aspect-square"
+          aria-label="Built with Bolt.new"
+        >
+          <img
+            src="/black_circle_360x360.png"
+            alt="Built with Bolt.new"
+            className="w-20 h-20 md:w-24 md:h-24 rounded-full shadow-lg border border-white"
+          />
+        </a>
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
-            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+            <div className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
               <div className="text-center lg:text-left lg:grid lg:grid-cols-12 lg:gap-8">
                 <div className="lg:col-span-6">
                   {/* Social Proof Badge */}
                   <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
                     <Star className="w-4 h-4 text-brand-accent mr-2" />
                     <span className="text-sm font-medium text-base-heading">Trusted by 50,000+ writers</span>
-                    <span className="ml-2 text-sm text-base-paragraph">• 4.9/5 rating</span>
+                    <span className="ml-2 text-sm text-base-paragraph max-md:hidden">• 4.9/5 rating</span>
                   </div>
 
                   <h1 className="text-4xl tracking-tight font-extrabold text-base-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
@@ -90,7 +104,7 @@ export function Landing() {
                       alt="Writer using ProsePilot interface"
                     />
                     {/* Floating Stats */}
-                    <div className="absolute -bottom-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
+                    <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
                         <TrendingUp className="w-8 h-8 text-brand-accent mr-3" />
                         <div>
@@ -99,7 +113,7 @@ export function Landing() {
                         </div>
                       </div>
                     </div>
-                    <div className="absolute -top-6 -right-6 bg-white rounded-lg shadow-lg p-4 border">
+                    <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
                         <Clock className="w-8 h-8 text-state-success mr-3" />
                         <div>
@@ -111,7 +125,7 @@ export function Landing() {
                   </div>
                 </div>
               </div>
-            </main>
+            </div>
           </div>
         </div>
       </div>
