@@ -529,44 +529,110 @@ export function Subscription() {
               {currentPlan && (
                 <>
                   <div className="space-y-2">
-                    <div className="text-base-heading">
-                      Monthly Credits Used
-                    </div>
-                    <div className="relative pt-1">
-                      <div className="flex mb-2 items-center justify-between">
-                        <div>
-                          <span className="text-xs font-semibold inline-block text-base-heading">
-                            {creditBalance?.current_balance || 0} credits
-                            available
-                          </span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-xs font-semibold inline-block text-base-heading">
-                            Used:{" "}
-                            {(creditBalance?.total_consumed || 0) -
-                              (creditBalance?.total_earned || 0) +
-                              (creditBalance?.current_balance || 0)}{" "}
-                            lifetime
-                          </span>
-                        </div>
-                      </div>
-                      <div className="overflow-hidden h-2 text-xs flex rounded bg-brand-secondary">
-                        <div
-                          style={{
-                            width: `${Math.min(
-                              ((creditBalance?.current_balance || 0) / 100) *
-                                100,
+                    <div className="text-base-heading">Credit Balance</div>
+                    {(() => {
+                      // Get current plan details to determine monthly allocation
+                      const currentPlanDetails = plans.find(
+                        (p) => p.id === currentPlan
+                      );
+                      const monthlyAllocation =
+                        currentPlanDetails?.credits || 0;
+                      const currentCredits =
+                        creditBalance?.current_balance || 0;
+
+                      // Calculate progress relative to plan allocation
+                      const baseProgress =
+                        monthlyAllocation > 0
+                          ? Math.min(
+                              (currentCredits / monthlyAllocation) * 100,
                               100
-                            )}%`,
-                          }}
-                          className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary"
-                        />
-                      </div>
-                      <div className="text-xs text-gray-500 mt-2">
-                        Total earned: {creditBalance?.total_earned || 0} | Total
-                        consumed: {creditBalance?.total_consumed || 0}
-                      </div>
-                    </div>
+                            )
+                          : 0;
+
+                      // Calculate overflow credits (credits beyond plan allocation)
+                      const overflowCredits = Math.max(
+                        0,
+                        currentCredits - monthlyAllocation
+                      );
+                      const overflowProgress =
+                        monthlyAllocation > 0 && overflowCredits > 0
+                          ? Math.min(
+                              (overflowCredits / monthlyAllocation) * 100,
+                              100
+                            )
+                          : 0;
+
+                      const isOverflowing =
+                        currentCredits > monthlyAllocation &&
+                        monthlyAllocation > 0;
+
+                      return (
+                        <div className="relative pt-1">
+                          <div className="flex mb-2 items-center justify-between">
+                            <div>
+                              <span className="text-xs font-semibold inline-block text-base-heading">
+                                {currentCredits} credits available
+                              </span>
+                              {isOverflowing && (
+                                <div className="text-xs text-amber-600 font-medium">
+                                  +{overflowCredits} bonus credits
+                                </div>
+                              )}
+                            </div>
+                            <div className="text-right">
+                              <span className="text-xs font-semibold inline-block text-base-heading">
+                                {monthlyAllocation > 0 ? (
+                                  <>
+                                    {Math.round(baseProgress)}% of{" "}
+                                    {monthlyAllocation} monthly
+                                  </>
+                                ) : (
+                                  "No active plan"
+                                )}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Progress bar with base and overflow sections */}
+                          <div className="overflow-hidden h-3 text-xs flex rounded bg-gray-200 relative">
+                            {/* Base allocation progress */}
+                            <div
+                              style={{ width: `${baseProgress}%` }}
+                              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary transition-all duration-300"
+                            />
+                            {/* Overflow credits in different color */}
+                            {isOverflowing && (
+                              <div
+                                style={{ width: `${overflowProgress}%` }}
+                                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-amber-500 transition-all duration-300"
+                              />
+                            )}
+                          </div>
+
+                          {/* Progress bar legend */}
+                          <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                            <div className="flex items-center space-x-4">
+                              <div className="flex items-center">
+                                <div className="w-3 h-2 bg-brand-primary rounded mr-1"></div>
+                                <span>
+                                  Plan allocation ({monthlyAllocation})
+                                </span>
+                              </div>
+                              {isOverflowing && (
+                                <div className="flex items-center">
+                                  <div className="w-3 h-2 bg-amber-500 rounded mr-1"></div>
+                                  <span>Bonus credits</span>
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              Total consumed:{" "}
+                              {creditBalance?.total_consumed || 0}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   <div className="flex items-center justify-end space-x-4">
