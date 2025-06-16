@@ -13,9 +13,16 @@ import {
 import { usePaddle } from "../contexts/PaddleContext";
 import { usePaddlePrices } from "../hooks/usePaddlePrices";
 import { useToast } from "../hooks/use-toast";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import { useSubscriptions } from "../hooks/useSubscriptions";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../store";
+import { 
+  selectSubscriptions, 
+  selectActiveSubscriptions, 
+  selectCurrentPlan, 
+  selectSubscriptionStatus, 
+  selectCanSubscribeToNewPlan,
+  fetchSubscriptions
+} from "../store/slices/subscriptionSlice";
 import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
@@ -139,6 +146,7 @@ const creditPackages = [
 ];
 
 export function Subscription() {
+  const dispatch = useDispatch<AppDispatch>();
   const { profile, status: profileStatus } = useSelector(
     (state: RootState) => state.profile
   );
@@ -158,16 +166,20 @@ export function Subscription() {
     availablePrices,
   } = usePaddlePrices(paddle);
 
-  const {
-    subscriptions,
-    loading: subscriptionsLoading,
-    error: subscriptionsError,
-    hasActivePlan,
-    canSubscribeToNewPlan,
-    getCurrentPlan,
-    getSubscriptionStatus,
-    refetch: refetchSubscriptions,
-  } = useSubscriptions();
+  // Use Redux selectors instead of useSubscriptions hook
+  const subscriptions = useSelector(selectSubscriptions);
+  const activeSubscriptions = useSelector(selectActiveSubscriptions);
+  const currentPlan = useSelector(selectCurrentPlan);
+  const subscriptionStatus = useSelector(selectSubscriptionStatus);
+  const canSubscribeToNewPlan = useSelector(selectCanSubscribeToNewPlan);
+  const { status: subscriptionsLoading, error: subscriptionsError } = useSelector(
+    (state: RootState) => state.subscription
+  );
+
+  // Helper function to check if user has active plan
+  const hasActivePlanForPrice = (priceId: string) => {
+    return activeSubscriptions.some((sub) => sub.price_id === priceId);
+  };
 
   // Handle URL parameters for checkout success/cancel
   useEffect(() => {
@@ -181,7 +193,7 @@ export function Subscription() {
         description: "Your subscription has been activated successfully.",
       });
       // Refresh subscription data
-      refetchSubscriptions();
+      dispatch(fetchSubscriptions());
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (cancelled === "true") {
@@ -193,18 +205,14 @@ export function Subscription() {
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     }
-  }, [toast, refetchSubscriptions]);
-
-  // Get current plan and subscription status from the hook
-  const currentPlan = getCurrentPlan();
-  const subscriptionStatus = getSubscriptionStatus();
+  }, [toast, dispatch]);
 
   // Show loading state if profile is still loading
   if (
     profileStatus === "loading" ||
     paddleLoading ||
     pricesLoading ||
-    subscriptionsLoading
+    subscriptionsLoading === 'loading'
   ) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -282,7 +290,7 @@ export function Subscription() {
     }
 
     // Enhanced subscription validation
-    if (hasActivePlan(plan.priceId)) {
+    if (hasActivePlanForPrice(plan.priceId)) {
       toast({
         title: "Already Subscribed",
         description: "You already have an active subscription to this plan.",
@@ -292,7 +300,7 @@ export function Subscription() {
     }
 
     // Check if user has any active subscription and wants to subscribe to a different plan
-    if (!canSubscribeToNewPlan && !hasActivePlan(plan.priceId)) {
+    if (!canSubscribeToNewPlan && !hasActivePlanForPrice(plan.priceId)) {
       toast({
         title: "Multiple Subscriptions Not Allowed",
         description:
@@ -474,6 +482,7 @@ export function Subscription() {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-base-heading">Current Subscription</h2>
+              {currentPlan && (
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-base-paragraph" />
                 <span className="text-base-heading">
@@ -482,6 +491,7 @@ export function Subscription() {
                     : "Loading..."}
                 </span>
               </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -495,43 +505,46 @@ export function Subscription() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="text-base-heading">Monthly Credits Used</div>
-                <div className="relative pt-1">
-                  <div className="flex mb-2 items-center justify-between">
-                    <div>
-                      <span className="text-xs font-semibold inline-block text-base-heading">
-                        {creditsLimit > 0 ? Math.round((creditsUsed / creditsLimit) * 100) : 0}%
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs font-semibold inline-block text-base-heading">
-                        {creditsUsed}/{creditsLimit > 0 ? creditsLimit : "∞"} credits
-                      </span>
+              {currentPlan && (
+                <>
+                  <div className="space-y-2">
+                    <div className="text-base-heading">Monthly Credits Used</div>
+                    <div className="relative pt-1">
+                      <div className="flex mb-2 items-center justify-between">
+                        <div>
+                          <span className="text-xs font-semibold inline-block text-base-heading">
+                            {creditsLimit > 0 ? Math.round((creditsUsed / creditsLimit) * 100) : 0}%
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-semibold inline-block text-base-heading">
+                            {creditsUsed}/{creditsLimit > 0 ? creditsLimit : "∞"} credits
+                          </span>
+                        </div>
+                      </div>
+                      <div className="overflow-hidden h-2 text-xs flex rounded bg-brand-secondary">
+                        <div
+                          style={{ width: `${creditsLimit > 0 ? (creditsUsed / creditsLimit) * 100 : 0}%` }}
+                          className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary"
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="overflow-hidden h-2 text-xs flex rounded bg-brand-secondary">
-                    <div
-                      style={{ width: `${creditsLimit > 0 ? (creditsUsed / creditsLimit) * 100 : 0}%` }}
-                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary"
-                    />
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex items-center justify-end space-x-4">
-                {currentPlan && (
-                  <Button
-                    variant="destructive"
-                    onClick={() => setShowCancelDialog(true)}
-                  >
-                    Cancel Subscription
-                  </Button>
-                )}
-              </div>
+                  <div className="flex items-center justify-end space-x-4">
+                      <Button
+                        variant="destructive"
+                        onClick={() => setShowCancelDialog(true)}
+                      >
+                        Cancel Subscription
+                      </Button>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Credits Section */}
+            {currentPlan && (
             <div className="mt-8 pt-8 border-t">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -566,6 +579,7 @@ export function Subscription() {
                 ))}
               </div>
             </div>
+            )}
           </div>
 
           {/* Pricing Plans */}

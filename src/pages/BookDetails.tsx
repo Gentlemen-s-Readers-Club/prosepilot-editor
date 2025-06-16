@@ -50,6 +50,7 @@ import { AppDispatch, RootState } from '../store';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
 import { updateBookInList } from '../store/slices/booksSlice';
+import { hasProOrStudioPlan } from '../store/slices/subscriptionSlice';
 import { formatDistanceToNow } from 'date-fns';
 import { getCoverUrl } from '../lib/utils/covers';
 import { Helmet } from 'react-helmet';
@@ -73,6 +74,7 @@ export function BookDetails() {
 
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
+  const hasProOrStudio = useSelector(hasProOrStudioPlan);
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showPublishDialog, setShowPublishDialog] = useState(false);
@@ -812,14 +814,18 @@ export function BookDetails() {
                             <BookText className="w-4 h-4 mr-2" />
                             <span>Export as EPUB</span>
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleExport('pdf')} className="cursor-pointer">
-                            <FileText className="w-4 h-4 mr-2" />
-                            <span>Export as PDF</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleExport('docx')} className="cursor-pointer">
-                            <FileType className="w-4 h-4 mr-2" />
-                            <span>Export as DOCX</span>
-                          </DropdownMenuItem>
+                          {hasProOrStudio && (
+                            <>
+                              <DropdownMenuItem onClick={() => handleExport('pdf')} className="cursor-pointer">
+                                <FileText className="w-4 h-4 mr-2" />
+                                <span>Export as PDF</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleExport('docx')} className="cursor-pointer">
+                                <FileType className="w-4 h-4 mr-2" />
+                                <span>Export as DOCX</span>
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}

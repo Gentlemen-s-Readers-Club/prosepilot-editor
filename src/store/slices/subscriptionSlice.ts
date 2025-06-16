@@ -1,0 +1,352 @@
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { supabase } from '../../lib/supabase';
+import { ApiState } from '../types';
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  customer_id?: string;
+  subscription_id: string;
+  price_id: string;
+  status: "active" | "canceled" | "past_due" | "paused" | "trialing";
+  current_period_start?: string;
+  current_period_end?: string;
+  cancel_at_period_end?: boolean;
+  canceled_at?: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface SubscriptionStatus {
+  isActive: boolean;
+  planId: string | null;
+  planName: string | null;
+  canUpgrade: boolean;
+  canDowngrade: boolean;
+  hasMultipleSubscriptions: boolean;
+  pendingCancellation: boolean;
+}
+
+interface SubscriptionState extends ApiState {
+  subscriptions: Subscription[];
+  activeSubscriptions: Subscription[];
+  currentPlan: string | null;
+  subscriptionStatus: SubscriptionStatus;
+  realtimeSubscription: any; // Supabase realtime subscription
+}
+
+// Define plan hierarchy for upgrade/downgrade logic
+const planHierarchy = {
+  pri_01jxbekwgfx9k8tm8cbejzrns6: { name: "Starter", level: 1 }, // Starter
+  pri_01jxben1kf0pfntb8162sfxhba: { name: "Pro", level: 2 }, // Pro
+  // Note: Studio plan currently uses the same price ID as Pro, but we'll add a separate one when it's ready
+  // For now, we'll check for Studio plan by looking for a specific subscription pattern or plan name
+};
+
+const initialState: SubscriptionState = {
+  subscriptions: [],
+  activeSubscriptions: [],
+  currentPlan: null,
+  subscriptionStatus: {
+    isActive: false,
+    planId: null,
+    planName: null,
+    canUpgrade: false,
+    canDowngrade: false,
+    hasMultipleSubscriptions: false,
+    pendingCancellation: false,
+  },
+  realtimeSubscription: null,
+  status: 'idle',
+  error: null,
+};
+
+// Helper function to calculate subscription status
+const calculateSubscriptionStatus = (subscriptions: Subscription[], currentPlan: string | null) => {
+  const activeSubscriptions = subscriptions.filter(
+    (sub) => sub.status === "active" || sub.status === "trialing"
+  );
+
+  const currentPlanDetails = currentPlan
+    ? planHierarchy[currentPlan as keyof typeof planHierarchy]
+    : null;
+
+  // Check if user has pending cancellation
+  const pendingCancellation = activeSubscriptions.some(
+    (sub) => sub.cancel_at_period_end
+  );
+
+  // Check if user can upgrade or downgrade
+  const canUpgrade = currentPlanDetails
+    ? Object.values(planHierarchy).some(
+        (plan) => plan.level > currentPlanDetails.level
+      )
+    : true;
+
+  const canDowngrade = currentPlanDetails
+    ? Object.values(planHierarchy).some(
+        (plan) => plan.level < currentPlanDetails.level
+      )
+    : false;
+
+  return {
+    isActive: activeSubscriptions.length > 0,
+    planId: currentPlan,
+    planName: currentPlanDetails?.name || null,
+    canUpgrade,
+    canDowngrade,
+    hasMultipleSubscriptions: activeSubscriptions.length > 1,
+    pendingCancellation,
+  };
+};
+
+// Helper function to calculate current plan
+const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
+  if (subscriptions.length === 0) return null;
+
+  // Sort by created_at descending to get the most recent subscription first
+  const sortedSubscriptions = [...subscriptions].sort(
+    (a, b) =>
+      new Date(b.created_at || "").getTime() -
+      new Date(a.created_at || "").getTime()
+  );
+
+  // Find the most recent active subscription
+  const activeSubscription = sortedSubscriptions.find(
+    (sub) => sub.status === "active" || sub.status === "trialing"
+  );
+
+  if (!activeSubscription) return null;
+
+  // Map price_id to plan
+  if (activeSubscription.price_id === "pri_01jxbekwgfx9k8tm8cbejzrns6") {
+    return "starter";
+  } else if (activeSubscription.price_id === "pri_01jxben1kf0pfntb8162sfxhba") {
+    // For now, we'll assume Pro plan since Studio is coming soon
+    // When Studio is ready, we'll need to add a way to distinguish between Pro and Studio
+    // This could be done by adding a plan_type field to the subscription or using a different price ID
+    return "pro";
+  }
+
+  return null;
+};
+
+export const fetchSubscriptions = createAsyncThunk(
+  'subscription/fetchSubscriptions',
+  async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session?.user) {
+      throw new Error('No authenticated user');
+    }
+
+    console.log("Fetching subscriptions for user ID:", session.user.id);
+
+    // First, let's check what columns actually exist in the table
+    const { data: testData } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .limit(1);
+
+    console.log("Sample subscription data structure:", testData?.[0]);
+
+    // Now fetch the user's subscriptions
+    const { data, error: fetchError } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", session.user.id)
+      .order("created_at", { ascending: false });
+
+    console.log("Subscriptions query result:", { data, error: fetchError });
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    // Handle potential missing columns by providing defaults
+    const normalizedData = (data || []).map((sub) => ({
+      id: sub.id,
+      user_id: sub.user_id,
+      customer_id: sub.customer_id || "",
+      subscription_id: sub.subscription_id || sub.id, // fallback to id if subscription_id missing
+      price_id: sub.price_id || "unknown",
+      status: sub.status || "active", // default to active if missing
+      current_period_start: sub.current_period_start,
+      current_period_end: sub.current_period_end,
+      cancel_at_period_end: sub.cancel_at_period_end || false,
+      canceled_at: sub.canceled_at,
+      created_at: sub.created_at,
+      updated_at: sub.updated_at || sub.created_at,
+    }));
+
+    console.log("Normalized subscriptions:", normalizedData);
+    return normalizedData;
+  }
+);
+
+export const setupRealtimeSubscriptions = createAsyncThunk(
+  'subscription/setupRealtimeSubscriptions',
+  async (_, { dispatch }) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session?.user) {
+      throw new Error('No authenticated user');
+    }
+
+    const subscription = supabase
+      .channel("subscriptions-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "subscriptions",
+          filter: `user_id=eq.${session.user.id}`,
+        },
+        () => {
+          console.log("Real-time subscription change detected");
+          dispatch(fetchSubscriptions());
+        }
+      )
+      .subscribe();
+
+    return subscription;
+  }
+);
+
+const subscriptionSlice = createSlice({
+  name: 'subscription',
+  initialState,
+  reducers: {
+    clearSubscriptions: (state) => {
+      state.subscriptions = [];
+      state.activeSubscriptions = [];
+      state.currentPlan = null;
+      state.subscriptionStatus = {
+        isActive: false,
+        planId: null,
+        planName: null,
+        canUpgrade: false,
+        canDowngrade: false,
+        hasMultipleSubscriptions: false,
+        pendingCancellation: false,
+      };
+      state.error = null;
+    },
+    addSubscription: (state, action: PayloadAction<Subscription>) => {
+      state.subscriptions.push(action.payload);
+      if (action.payload.status === "active" || action.payload.status === "trialing") {
+        state.activeSubscriptions.push(action.payload);
+      }
+      
+      // Recalculate derived state
+      state.currentPlan = calculateCurrentPlan(state.subscriptions);
+      state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+    },
+    updateSubscription: (state, action: PayloadAction<Subscription>) => {
+      const index = state.subscriptions.findIndex(sub => sub.id === action.payload.id);
+      if (index !== -1) {
+        state.subscriptions[index] = action.payload;
+      }
+      
+      const activeIndex = state.activeSubscriptions.findIndex(sub => sub.id === action.payload.id);
+      if (activeIndex !== -1) {
+        state.activeSubscriptions[activeIndex] = action.payload;
+      }
+      
+      // Recalculate derived state
+      state.currentPlan = calculateCurrentPlan(state.subscriptions);
+      state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+    },
+    removeSubscription: (state, action: PayloadAction<string>) => {
+      state.subscriptions = state.subscriptions.filter(sub => sub.id !== action.payload);
+      state.activeSubscriptions = state.activeSubscriptions.filter(sub => sub.id !== action.payload);
+      
+      // Recalculate derived state
+      state.currentPlan = calculateCurrentPlan(state.subscriptions);
+      state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+    },
+    clearRealtimeSubscription: (state) => {
+      if (state.realtimeSubscription) {
+        state.realtimeSubscription.unsubscribe();
+        state.realtimeSubscription = null;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSubscriptions.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchSubscriptions.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.subscriptions = action.payload;
+        
+        // Calculate active subscriptions
+        state.activeSubscriptions = action.payload.filter(
+          (sub) => sub.status === "active" || sub.status === "trialing"
+        );
+
+        // Calculate current plan
+        state.currentPlan = calculateCurrentPlan(state.subscriptions);
+
+        // Calculate subscription status
+        state.subscriptionStatus = calculateSubscriptionStatus(state.subscriptions, state.currentPlan);
+
+        console.log("Updated subscription state:", {
+          subscriptions: state.subscriptions,
+          activeSubscriptions: state.activeSubscriptions,
+          currentPlan: state.currentPlan,
+          subscriptionStatus: state.subscriptionStatus,
+        });
+      })
+      .addCase(fetchSubscriptions.rejected, (state, action) => {
+        state.status = 'error';
+        state.error = action.error.message || 'Failed to fetch subscriptions';
+      })
+      .addCase(setupRealtimeSubscriptions.fulfilled, (state, action) => {
+        state.realtimeSubscription = action.payload;
+      });
+  },
+});
+
+// Selectors
+export const selectSubscriptions = (state: { subscription: SubscriptionState }) => state.subscription.subscriptions;
+export const selectActiveSubscriptions = (state: { subscription: SubscriptionState }) => state.subscription.activeSubscriptions;
+export const selectCurrentPlan = (state: { subscription: SubscriptionState }) => state.subscription.currentPlan;
+export const selectSubscriptionStatus = (state: { subscription: SubscriptionState }) => state.subscription.subscriptionStatus;
+export const selectHasActiveSubscription = (state: { subscription: SubscriptionState }) => state.subscription.activeSubscriptions.length > 0;
+export const selectCanSubscribeToNewPlan = (state: { subscription: SubscriptionState }) => state.subscription.activeSubscriptions.length === 0;
+
+// Helper functions
+export const hasActivePlan = (state: { subscription: SubscriptionState }, priceId: string): boolean => {
+  return state.subscription.activeSubscriptions.some((sub) => sub.price_id === priceId);
+};
+
+// Helper function to check if user has Studio plan
+// Note: Currently Studio uses the same price ID as Pro, so this will need to be updated when Studio gets its own price ID
+export const hasStudioPlan = (state: { subscription: SubscriptionState }): boolean => {
+  // For now, return false since Studio is coming soon
+  // When Studio is ready, this should check for the Studio price ID
+  // Example: return state.subscription.activeSubscriptions.some((sub) => sub.price_id === "pri_studio_price_id");
+  return false;
+};
+
+// Helper function to check if user has Pro or Studio plan (for features that require Pro+)
+export const hasProOrStudioPlan = (state: { subscription: SubscriptionState }): boolean => {
+  return state.subscription.activeSubscriptions.some((sub) => 
+    sub.price_id === "pri_01jxben1kf0pfntb8162sfxhba" // Pro plan
+    // Add Studio price ID here when it's ready
+  );
+};
+
+export const { 
+  clearSubscriptions, 
+  addSubscription, 
+  updateSubscription, 
+  removeSubscription,
+  clearRealtimeSubscription 
+} = subscriptionSlice.actions;
+
+export default subscriptionSlice.reducer; 

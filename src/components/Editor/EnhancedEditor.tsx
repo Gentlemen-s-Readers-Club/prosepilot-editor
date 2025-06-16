@@ -11,6 +11,8 @@ import { CreateAnnotationModal } from '../annotations/CreateAnnotationModal';
 import { useAnnotations } from '../../hooks/useAnnotations';
 import { Annotation, CreateAnnotationData } from '../../types/annotations';
 import { editorStyles } from './editorStyles';
+import { useSelector } from 'react-redux';
+import { hasProOrStudioPlan } from '../../store/slices/subscriptionSlice';
 
 interface EnhancedEditorProps {
   chapterId: string;
@@ -42,6 +44,9 @@ export function EnhancedEditor({
     y: number;
     visible: boolean;
   }>({ x: 0, y: 0, visible: false });
+
+  // Check if user has Pro or Studio plan
+  const hasProOrStudio = useSelector(hasProOrStudioPlan);
 
   const { 
     annotations, 
@@ -77,6 +82,18 @@ export function EnhancedEditor({
   });
 
   const stats = getAnnotationStats();
+
+  // Reset to edit mode if user doesn't have Pro or Studio plan
+  useEffect(() => {
+    if (!hasProOrStudio && mode === 'comments') {
+      setMode('edit');
+      setShowAnnotationPanel(false);
+      setSelectedAnnotation(null);
+      setShowCreateModal(false);
+      setSelectionData(null);
+      setFloatingButtonPosition({ x: 0, y: 0, visible: false });
+    }
+  }, [hasProOrStudio, mode]);
 
   // Function to get text selection for comment mode
   const getTextSelection = useCallback(() => {
@@ -137,7 +154,7 @@ export function EnhancedEditor({
 
   // Function to highlight annotations for comment mode
   const highlightAnnotations = useCallback(() => {
-    if (mode !== 'comments' || !contentRef.current) return;
+    if (mode !== 'comments' || !contentRef.current || !hasProOrStudio) return;
     
     const contentElement = contentRef.current;
     
@@ -236,29 +253,29 @@ export function EnhancedEditor({
         }
       }
     });
-  }, [annotations, mode]);
+  }, [annotations, mode, hasProOrStudio]);
 
   // Update content when initialContent changes
   useEffect(() => {
-    if (mode === 'comments' && contentRef.current) {
+    if (mode === 'comments' && contentRef.current && hasProOrStudio) {
       contentRef.current.innerHTML = initialContent;
       // Apply highlights after content is updated
       setTimeout(() => {
         highlightAnnotations();
       }, 100);
     }
-  }, [initialContent, mode, highlightAnnotations]);
+  }, [initialContent, mode, highlightAnnotations, hasProOrStudio]);
 
   // Update highlights when annotations or visibility changes
   useEffect(() => {
-    if (mode === 'comments') {
+    if (mode === 'comments' && hasProOrStudio) {
       highlightAnnotations();
     }
-  }, [annotations, highlightAnnotations, mode]);
+  }, [annotations, highlightAnnotations, mode, hasProOrStudio]);
 
   // Function to handle text selection and show floating button
   const handleTextSelection = useCallback(() => {
-    if (mode !== 'comments' || readOnly) {
+    if (mode !== 'comments' || readOnly || !hasProOrStudio) {
       setFloatingButtonPosition({ x: 0, y: 0, visible: false });
       return;
     }
@@ -295,11 +312,11 @@ export function EnhancedEditor({
     }
     
     setFloatingButtonPosition({ x: 0, y: 0, visible: false });
-  }, [mode, readOnly, getTextSelection]);
+  }, [mode, readOnly, getTextSelection, hasProOrStudio]);
 
   // Set up selection change listeners
   useEffect(() => {
-    if (mode !== 'comments') return;
+    if (mode !== 'comments' || !hasProOrStudio) return;
 
     const handleSelectionChange = () => {
       // Use a shorter debounce to be more responsive
@@ -318,7 +335,7 @@ export function EnhancedEditor({
       document.removeEventListener('selectionchange', handleSelectionChange);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [mode, handleTextSelection]);
+  }, [mode, handleTextSelection, hasProOrStudio]);
 
   // Hide floating button when clicking outside
   useEffect(() => {
@@ -342,17 +359,17 @@ export function EnhancedEditor({
       }
     };
 
-    if (mode === 'comments') {
+    if (mode === 'comments' && hasProOrStudio) {
       document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [mode]);
+  }, [mode, hasProOrStudio]);
 
   const handleCreateAnnotation = useCallback(() => {
-    if (readOnly) return;
+    if (readOnly || !hasProOrStudio) return;
 
     const selection = getTextSelection();
     if (!selection || !selection.text) {
@@ -363,9 +380,11 @@ export function EnhancedEditor({
     setSelectionData(selection);
     setShowCreateModal(true);
     setFloatingButtonPosition({ x: 0, y: 0, visible: false });
-  }, [readOnly, getTextSelection]);
+  }, [readOnly, getTextSelection, hasProOrStudio]);
 
   const handleSubmitAnnotation = async (data: CreateAnnotationData) => {
+    if (!hasProOrStudio) return;
+    
     const newAnnotation = await createAnnotation(data);
     if (newAnnotation) {
       setSelectedAnnotation(newAnnotation);
@@ -379,6 +398,8 @@ export function EnhancedEditor({
 
   // Handle annotation status changes
   const handleAnnotationStatusChange = useCallback(async (annotationId: string) => {
+    if (!hasProOrStudio) return;
+    
     const success = await toggleAnnotationStatus(annotationId);
     if (success) {
       // Update highlights immediately when status changes
@@ -386,11 +407,11 @@ export function EnhancedEditor({
         highlightAnnotations();
       }, 100);
     }
-  }, [toggleAnnotationStatus, highlightAnnotations]);
+  }, [toggleAnnotationStatus, highlightAnnotations, hasProOrStudio]);
 
   // Set up keyboard shortcuts
   useEffect(() => {
-    if (mode !== 'comments' || readOnly) return;
+    if (mode !== 'comments' || readOnly || !hasProOrStudio) return;
     
     // Detect if user is on Mac
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
@@ -415,18 +436,21 @@ export function EnhancedEditor({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [showAnnotationPanel, handleCreateAnnotation, readOnly, mode]);
+  }, [showAnnotationPanel, handleCreateAnnotation, readOnly, mode, hasProOrStudio]);
 
   return (
     <div className="flex flex-col gap-2 h-full">
       
-      <AnnotationToolbar
-        mode={mode}
-        totalCount={stats.open}
-        onModeChange={setMode}
-        onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
-        isReadOnly={readOnly}
-      />
+      {/* Only show annotation toolbar if user has Pro or Studio plan */}
+      {hasProOrStudio && (
+        <AnnotationToolbar
+          mode={mode}
+          totalCount={stats.open}
+          onModeChange={setMode}
+          onTogglePanel={() => setShowAnnotationPanel(!showAnnotationPanel)}
+          isReadOnly={readOnly}
+        />
+      )}
 
       {mode === 'edit' && !readOnly && editor && <EditorToolbar editor={editor} />}
       
@@ -447,8 +471,8 @@ export function EnhancedEditor({
           ) : null}
         </div>
         
-        {/* Floating annotation button */}
-        {mode === 'comments' && !readOnly && floatingButtonPosition.visible && (
+        {/* Floating annotation button - only show if user has Pro or Studio plan */}
+        {hasProOrStudio && mode === 'comments' && !readOnly && floatingButtonPosition.visible && (
           <div
             className="floating-annotation-button fixed z-50 pointer-events-auto"
             style={{
@@ -469,7 +493,8 @@ export function EnhancedEditor({
           </div>
         )}
         
-        {mode === 'comments' && showAnnotationPanel && (
+        {/* Annotation panel - only show if user has Pro or Studio plan */}
+        {hasProOrStudio && mode === 'comments' && showAnnotationPanel && (
           <AnnotationPanel
             isOpen={showAnnotationPanel}
             onClose={() => setShowAnnotationPanel(false)}
@@ -489,7 +514,8 @@ export function EnhancedEditor({
         )}
       </div>
 
-      {mode === 'comments' && showCreateModal && selectionData && !readOnly && (
+      {/* Create annotation modal - only show if user has Pro or Studio plan */}
+      {hasProOrStudio && mode === 'comments' && showCreateModal && selectionData && !readOnly && (
         <CreateAnnotationModal
           isOpen={showCreateModal}
           onClose={() => {

@@ -1,5 +1,14 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store';
+import { 
+  selectSubscriptions, 
+  selectActiveSubscriptions, 
+  selectCurrentPlan, 
+  selectSubscriptionStatus, 
+  selectHasActiveSubscription, 
+  selectCanSubscribeToNewPlan,
+  fetchSubscriptions
+} from '../store/slices/subscriptionSlice';
 
 export interface Subscription {
   id: string;
@@ -16,6 +25,16 @@ export interface Subscription {
   updated_at?: string;
 }
 
+interface SubscriptionStatus {
+  isActive: boolean;
+  planId: string | null;
+  planName: string | null;
+  canUpgrade: boolean;
+  canDowngrade: boolean;
+  hasMultipleSubscriptions: boolean;
+  pendingCancellation: boolean;
+}
+
 interface UseSubscriptionsReturn {
   subscriptions: Subscription[];
   activeSubscriptions: Subscription[];
@@ -29,237 +48,48 @@ interface UseSubscriptionsReturn {
   refetch: () => Promise<void>;
 }
 
-interface SubscriptionStatus {
-  isActive: boolean;
-  planId: string | null;
-  planName: string | null;
-  canUpgrade: boolean;
-  canDowngrade: boolean;
-  hasMultipleSubscriptions: boolean;
-  pendingCancellation: boolean;
-}
-
 export function useSubscriptions(): UseSubscriptionsReturn {
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  
+  // Use Redux selectors
+  const subscriptions = useSelector(selectSubscriptions);
+  const activeSubscriptions = useSelector(selectActiveSubscriptions);
+  const currentPlan = useSelector(selectCurrentPlan);
+  const subscriptionStatus = useSelector(selectSubscriptionStatus);
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
+  const canSubscribeToNewPlan = useSelector(selectCanSubscribeToNewPlan);
+  const { status, error } = useSelector((state: RootState) => state.subscription);
 
-  // Define plan hierarchy for upgrade/downgrade logic
-  const planHierarchy = {
-    pri_01jxbekwgfx9k8tm8cbejzrns6: { name: "Starter", level: 1 }, // Starter
-    pri_01jxben1kf0pfntb8162sfxhba: { name: "Pro", level: 2 }, // Pro
-  };
-
-  // Get the authenticated user ID
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      console.log("Authenticated user:", user);
-      setUserId(user?.id || null);
-    };
-
-    getUser();
-
-    // Listen for auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth state changed:", event, session?.user?.id);
-      setUserId(session?.user?.id || null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchSubscriptions = async () => {
-    if (!userId) {
-      console.log("No user ID available, skipping subscription fetch");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      console.log("Fetching subscriptions for user ID:", userId);
-
-      // First, let's check what columns actually exist in the table
-      const { data: testData } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .limit(1);
-
-      console.log("Sample subscription data structure:", testData?.[0]);
-
-      // Now fetch the user's subscriptions
-      const { data, error: fetchError } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
-
-      console.log("Subscriptions query result:", { data, error: fetchError });
-
-      if (fetchError) {
-        throw fetchError;
-      }
-
-      // Handle potential missing columns by providing defaults
-      const normalizedData = (data || []).map((sub) => ({
-        id: sub.id,
-        user_id: sub.user_id,
-        customer_id: sub.customer_id || "",
-        subscription_id: sub.subscription_id || sub.id, // fallback to id if subscription_id missing
-        price_id: sub.price_id || "unknown",
-        status: sub.status || "active", // default to active if missing
-        current_period_start: sub.current_period_start,
-        current_period_end: sub.current_period_end,
-        cancel_at_period_end: sub.cancel_at_period_end || false,
-        canceled_at: sub.canceled_at,
-        created_at: sub.created_at,
-        updated_at: sub.updated_at || sub.created_at,
-      }));
-
-      setSubscriptions(normalizedData);
-      console.log("Set normalized subscriptions:", normalizedData);
-    } catch (err) {
-      console.error("Error fetching subscriptions:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch subscriptions"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSubscriptions();
-  }, [userId]);
-
-  // Subscribe to real-time updates for subscription changes
-  useEffect(() => {
-    if (!userId) return;
-
-    const subscription = supabase
-      .channel("subscriptions-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "subscriptions",
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          console.log("Real-time subscription change detected");
-          fetchSubscriptions();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [userId]);
-
-  const activeSubscriptions = subscriptions.filter(
-    (sub) => sub.status === "active" || sub.status === "trialing"
-  );
-
-  const hasActiveSubscription = activeSubscriptions.length > 0;
-
-  const hasActivePlan = (priceId: string): boolean => {
+  // Helper function to check if user has active plan
+  const hasActivePlanForPrice = (priceId: string): boolean => {
     return activeSubscriptions.some((sub) => sub.price_id === priceId);
   };
 
-  // Check if user can subscribe to a new plan (should only have one active subscription)
-  const canSubscribeToNewPlan = !hasActiveSubscription;
-
+  // Get current plan (returns the plan ID)
   const getCurrentPlan = (): string | null => {
-    if (!subscriptions || subscriptions.length === 0) return null;
-
-    // Sort by created_at descending to get the most recent subscription first
-    const sortedSubscriptions = [...subscriptions].sort(
-      (a, b) =>
-        new Date(b.created_at || "").getTime() -
-        new Date(a.created_at || "").getTime()
-    );
-
-    // Find the most recent active subscription
-    const activeSubscription = sortedSubscriptions.find(
-      (sub) => sub.status === "active" || sub.status === "trialing"
-    );
-
-    if (!activeSubscription) return null;
-
-    // Map price_id to plan
-    if (activeSubscription.price_id === "pri_01jxbekwgfx9k8tm8cbejzrns6") {
-      return "starter";
-    } else if (
-      activeSubscription.price_id === "pri_01jxben1kf0pfntb8162sfxhba"
-    ) {
-      return "pro";
-    }
-
-    return null;
+    return currentPlan;
   };
 
+  // Get subscription status
   const getSubscriptionStatus = (): SubscriptionStatus => {
-    const currentPlanId = getCurrentPlan();
-    const currentPlan = currentPlanId
-      ? planHierarchy[currentPlanId as keyof typeof planHierarchy]
-      : null;
+    return subscriptionStatus;
+  };
 
-    // Check if user has pending cancellation
-    const pendingCancellation = activeSubscriptions.some(
-      (sub) => sub.cancel_at_period_end
-    );
-
-    // Check if user can upgrade or downgrade
-    const canUpgrade = currentPlan
-      ? Object.values(planHierarchy).some(
-          (plan) => plan.level > currentPlan.level
-        )
-      : true;
-
-    const canDowngrade = currentPlan
-      ? Object.values(planHierarchy).some(
-          (plan) => plan.level < currentPlan.level
-        )
-      : false;
-
-    const status = {
-      isActive: hasActiveSubscription,
-      planId: currentPlanId,
-      planName: currentPlan?.name || null,
-      canUpgrade,
-      canDowngrade,
-      hasMultipleSubscriptions: activeSubscriptions.length > 1,
-      pendingCancellation,
-    };
-
-    console.log("getSubscriptionStatus returning:", status);
-    console.log("activeSubscriptions:", activeSubscriptions);
-    console.log("hasActiveSubscription:", hasActiveSubscription);
-    console.log("canSubscribeToNewPlan:", !hasActiveSubscription);
-
-    return status;
+  // Refetch subscriptions
+  const refetch = async (): Promise<void> => {
+    await dispatch(fetchSubscriptions());
   };
 
   return {
     subscriptions,
     activeSubscriptions,
-    loading,
+    loading: status === 'loading',
     error,
     hasActiveSubscription,
-    hasActivePlan,
+    hasActivePlan: hasActivePlanForPrice,
     canSubscribeToNewPlan,
     getCurrentPlan,
     getSubscriptionStatus,
-    refetch: fetchSubscriptions,
+    refetch,
   };
 }

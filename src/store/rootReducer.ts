@@ -7,6 +7,7 @@ import literatureStylesReducer from './slices/literatureStylesSlice';
 import profileReducer from './slices/profileSlice';
 import booksReducer from './slices/booksSlice';
 import teamsReducer from './slices/teamsSlice';
+import subscriptionReducer from './slices/subscriptionSlice';
 
 const rootReducer = combineReducers({
   categories: categoriesReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   books: booksReducer,
   teams: teamsReducer,
+  subscription: subscriptionReducer,
 });
 
 export default rootReducer;

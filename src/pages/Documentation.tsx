@@ -16,14 +16,25 @@ import {
   BookText,
   Palette,
   VolumeX,
-  Grid2X2
+  Grid2X2,
+  Crown,
+  Star,
+  Users
 } from 'lucide-react';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
+import { useSelector } from 'react-redux';
+import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
+import { useSubscriptions } from '../hooks/useSubscriptions';
 
 export function Documentation() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>('getting-started');
+
+  // Check if user has Pro or Studio plan
+  const { hasActiveSubscription } = useSubscriptions();
+  const hasProOrStudio = useSelector(hasProOrStudioPlan);
+  const hasStudio = useSelector(hasStudioPlan);
 
   // Track scroll position to update active section
   useEffect(() => {
@@ -32,6 +43,7 @@ export function Documentation() {
         'getting-started',
         'prompt-examples',
         'ai-settings',
+        'pro-features',
         'editing-tools',
         'team-collaboration',
         'faq'
@@ -211,6 +223,16 @@ export function Documentation() {
                   onClick={() => scrollToSection('ai-settings')}
                 >
                   AI Settings Guide
+                </button>
+                <button 
+                  className={`block w-full text-left px-3 py-2 rounded-md ${
+                    activeSection === 'pro-features' 
+                      ? 'bg-brand-primary text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => scrollToSection('pro-features')}
+                >
+                  Pro & Studio Features
                 </button>
                 <button 
                   className={`block w-full text-left px-3 py-2 rounded-md ${
@@ -539,6 +561,175 @@ export function Documentation() {
               </div>
             </section>
 
+            {/* Pro & Studio Features */}
+            <section id="pro-features" className="mb-16">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+                <Crown className="w-8 h-8 text-brand-accent mr-4" />
+                Pro & Studio Features
+              </h2>
+              
+              <div>
+                <p className="text-base-paragraph mb-6">
+                  Unlock advanced features and collaboration tools with our Pro and Studio plans. 
+                  These premium features are designed to enhance your writing workflow and enable seamless team collaboration.
+                </p>
+
+                <div className="space-y-6">
+                  {/* Annotations System */}
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <div className="flex items-start mb-4">
+                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
+                        <MessageSquare className="w-6 h-6 text-brand-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-xl font-semibold text-base-heading">Annotations System</h3>
+                          <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">Pro & Studio</span>
+                        </div>
+                        <p className="text-base-paragraph text-sm mb-4">
+                          Advanced commenting and feedback system for collaborative editing and revision tracking.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-base-heading mb-2">How to Use:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Select text to add an annotation</li>
+                          <li>• Add comments, questions, or revision notes</li>
+                          <li>• Reply to annotations for collaborative editing</li>
+                          <li>• Mark annotations as resolved when addressed</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-base-heading mb-2">Best Practices:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Be specific in your annotation comments</li>
+                          <li>• Use annotations for tracking issues to fix</li>
+                          <li>• Categorize annotations by type (plot, character, etc.)</li>
+                          <li>• Review and resolve annotations systematically</li>
+                        </ul>
+                      </div>
+                    </div>
+                    {hasActiveSubscription && !hasProOrStudio && (
+                      <div className="mt-4 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
+                        <Link 
+                          to="/app/subscription" 
+                          className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
+                        >
+                          <Star className="w-4 h-4" />
+                          <span className="font-medium text-sm">Upgrade to Pro or Studio to unlock the annotations system</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Advanced Export Options */}
+                  <div className="bg-white rounded-lg shadow-md p-6 border-2 border-brand-primary/20">
+                    <div className="flex items-start mb-4">
+                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
+                        <FileText className="w-6 h-6 text-brand-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-xl font-semibold text-base-heading">Advanced Export Options</h3>
+                          <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">Pro & Studio</span>
+                        </div>
+                        <p className="text-base-paragraph text-sm mb-4">
+                          Export your books in multiple professional formats for publishing and distribution.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-base-heading mb-2">Export Formats:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• <strong>EPUB</strong> - Standard e-book format (all plans)</li>
+                          <li>• <strong>PDF</strong> - Professional print-ready format</li>
+                          <li>• <strong>DOCX</strong> - Microsoft Word compatible format</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-base-heading mb-2">Benefits:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Publish directly to major platforms</li>
+                          <li>• Professional formatting for print</li>
+                          <li>• Easy sharing with editors and collaborators</li>
+                          <li>• Archive your work in multiple formats</li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    {hasActiveSubscription && !hasProOrStudio && (
+                      <div className="mt-4 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
+                        <Link 
+                          to="/app/subscription" 
+                          className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
+                        >
+                          <Star className="w-4 h-4" />
+                          <span className="font-medium text-sm">Upgrade to Pro or Studio for PDF and DOCX export</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Team Collaboration */}
+                  <div className="bg-white rounded-lg shadow-md p-6 border-2 border-brand-primary/20">
+                    <div className="flex items-start mb-4">
+                      <div className="bg-brand-primary/10 p-3 rounded-lg mr-4">
+                        <Users className="w-6 h-6 text-brand-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-xl font-semibold text-base-heading">Team Collaboration</h3>
+                          <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">Studio</span>
+                        </div>
+                        <p className="text-base-paragraph text-sm mb-4">
+                          Advanced team management and collaboration features for professional writing teams.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-medium text-base-heading mb-2">Team Features:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Create and manage multiple teams</li>
+                          <li>• Invite team members with specific roles</li>
+                          <li>• Shared workspace for team projects</li>
+                          <li>• Activity tracking and team analytics</li>
+                          <li>• Advanced permission management</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-base-heading mb-2">Collaboration Tools:</h4>
+                        <ul className="text-gray-700 space-y-1 text-sm">
+                          <li>• Real-time collaborative editing</li>
+                          <li>• Team-wide annotation systems</li>
+                          <li>• Shared version history</li>
+                          <li>• Team communication tools</li>
+                          <li>• Project management integration</li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    {hasActiveSubscription && !hasStudio && (
+                      <div className="mt-4 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
+                        <Link 
+                          to="/app/subscription" 
+                          className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
+                        >
+                          <Star className="w-4 h-4" />
+                          <span className="font-medium text-sm">Upgrade to Studio for advanced team collaboration</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Editing Tools */}
             <section id="editing-tools" className="mb-16">
               <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
@@ -680,14 +871,30 @@ export function Documentation() {
                         <span className="font-medium text-base-heading">Ctrl+S</span>
                         <span className="text-base-paragraph ml-3">Save version</span>
                       </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">Ctrl+Shift+A</span>
-                        <span className="text-base-paragraph ml-3">Create annotation</span>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">Ctrl+Shift+P</span>
-                        <span className="text-base-paragraph ml-3">Toggle annotation panel</span>
-                      </div>
+                      {/* Annotation shortcuts - Only show for Pro or Studio plan users */}
+                      {hasProOrStudio ? (
+                        <>
+                          <div className="bg-white p-3 rounded-md">
+                            <span className="font-medium text-base-heading">Ctrl+Shift+A</span>
+                            <span className="text-base-paragraph ml-3">Create annotation</span>
+                          </div>
+                          <div className="bg-white p-3 rounded-md">
+                            <span className="font-medium text-base-heading">Ctrl+Shift+P</span>
+                            <span className="text-base-paragraph ml-3">Toggle annotation panel</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="bg-gray-100 p-3 rounded-md opacity-60">
+                            <span className="font-medium text-gray-500">Ctrl+Shift+A</span>
+                            <span className="text-gray-500 ml-3">Create annotation (Pro & Studio)</span>
+                          </div>
+                          <div className="bg-gray-100 p-3 rounded-md opacity-60">
+                            <span className="font-medium text-gray-500">Ctrl+Shift+P</span>
+                            <span className="text-gray-500 ml-3">Toggle annotation panel (Pro & Studio)</span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -740,16 +947,44 @@ export function Documentation() {
                         <span className="font-medium text-base-heading">⌘+S</span>
                         <span className="text-base-paragraph ml-3">Save version</span>
                       </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">⌘+Shift+A</span>
-                        <span className="text-base-paragraph ml-3">Create annotation</span>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">⌘+Shift+P</span>
-                        <span className="text-base-paragraph ml-3">Toggle annotation panel</span>
-                      </div>
+                      {/* Annotation shortcuts - Only show for Pro or Studio plan users */}
+                      {hasProOrStudio ? (
+                        <>
+                          <div className="bg-white p-3 rounded-md">
+                            <span className="font-medium text-base-heading">⌘+Shift+A</span>
+                            <span className="text-base-paragraph ml-3">Create annotation</span>
+                          </div>
+                          <div className="bg-white p-3 rounded-md">
+                            <span className="font-medium text-base-heading">⌘+Shift+P</span>
+                            <span className="text-base-paragraph ml-3">Toggle annotation panel</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="bg-gray-100 p-3 rounded-md opacity-60">
+                            <span className="font-medium text-gray-500">⌘+Shift+A</span>
+                            <span className="text-gray-500 ml-3">Create annotation (Pro & Studio)</span>
+                          </div>
+                          <div className="bg-gray-100 p-3 rounded-md opacity-60">
+                            <span className="font-medium text-gray-500">⌘+Shift+P</span>
+                            <span className="text-gray-500 ml-3">Toggle annotation panel (Pro & Studio)</span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
+                  
+                  {hasActiveSubscription && !hasProOrStudio && (
+                    <div className="mt-6 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
+                      <Link 
+                        to="/app/subscription" 
+                        className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
+                      >
+                        <Star className="w-4 h-4" />
+                        <span className="font-medium text-sm">Upgrade to Pro or Studio to unlock annotation keyboard shortcuts</span>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>

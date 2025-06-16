@@ -9,6 +9,7 @@ import { fetchBooks } from '../store/slices/booksSlice';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
 import { fetchUserTeams } from '../store/slices/teamsSlice';
+import { hasStudioPlan } from '../store/slices/subscriptionSlice';
 import { supabase } from '../lib/supabase';
 import { AppDispatch, RootState } from '../store';
 import type { Book, Category, Language, Status } from '../store/types';
@@ -16,6 +17,7 @@ import { BOOK_STATES, TEAM_ROLES } from '../lib/consts';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { NewBookModal } from '../components/NewBookModal';
 import { Helmet } from 'react-helmet';
+import Footer from '../components/Footer';
 
 const BOOKS_PER_PAGE = 30;
 
@@ -59,6 +61,7 @@ export function Dashboard() {
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
   const { teams, status: teamsStatus } = useSelector((state: RootState) => state.teams);
   const { profile } = useSelector((state: RootState) => state.profile);
+  const hasStudio = useSelector(hasStudioPlan);
 
   // Check if user has any teams
   const hasTeams = teams.length > 0;
@@ -102,7 +105,7 @@ export function Dashboard() {
         if (languagesStatus === 'idle') {
           promises.push(dispatch(fetchLanguages()).unwrap());
         }
-        if (teamsStatus === 'idle') {
+        if (teamsStatus === 'idle' && hasStudio) {
           promises.push(dispatch(fetchUserTeams()).unwrap());
         }
 
@@ -119,8 +122,7 @@ export function Dashboard() {
       }
     };
     loadData();
-  }, [dispatch, booksStatus, categoriesStatus, languagesStatus, teamsStatus]);
-
+  }, [dispatch, booksStatus, categoriesStatus, languagesStatus, teamsStatus, hasStudio]);
 
   // Subscribe to real-time changes
   useEffect(() => {
@@ -144,9 +146,9 @@ export function Dashboard() {
     };
   }, [dispatch]);
 
-  // Filter books based on selected workspace (only if user has teams)
+  // Filter books based on selected workspace (only if user has teams and Studio plan)
   const workspaceFilteredBooks = useMemo(() => {
-    if (!hasTeams || !selectedWorkspace) return books;
+    if (!hasTeams || !hasStudio || !selectedWorkspace) return books;
 
     if (selectedWorkspace.value === 'personal') {
       // Show personal books (no team_id)
@@ -155,7 +157,7 @@ export function Dashboard() {
       // Show team books for selected team
       return books.filter((book: Book) => book.team_id === selectedWorkspace.value);
     }
-  }, [books, selectedWorkspace, hasTeams]);
+  }, [books, selectedWorkspace, hasTeams, hasStudio]);
 
   const filteredBooks = useMemo(() => {
     return workspaceFilteredBooks.filter((book: Book) => {
@@ -176,8 +178,8 @@ export function Dashboard() {
   // Sort books
   const sortedBooks = useMemo(() => {
     const sorted = [...filteredBooks].sort((a: Book, b: Book) => {
-      let aValue: any = a[sortBy.field];
-      let bValue: any = b[sortBy.field];
+      let aValue: string | number | Date = a[sortBy.field];
+      let bValue: string | number | Date = b[sortBy.field];
 
       // Handle date fields
       if (sortBy.field === 'created_at' || sortBy.field === 'updated_at') {
@@ -296,8 +298,8 @@ export function Dashboard() {
           {/* Sidebar */}
           <div className="w-full lg:w-72 lg:shrink-0">
             <div className="space-y-6">
-              {/* Workspace Selector - Only show if user has teams */}
-              {hasTeams && (
+              {/* Workspace Selector - Only show if user has Studio plan and teams */}
+              {hasStudio && hasTeams && (
                 <div className="bg-white rounded-lg shadow-md p-6 text-base-heading">
                   <h2 className="text-lg font-semibold mb-4">Workspace</h2>
                   <div className="relative">
@@ -626,6 +628,9 @@ export function Dashboard() {
         isOpen={showNewBookModal}
         onClose={() => setShowNewBookModal(false)}
       />
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 }
