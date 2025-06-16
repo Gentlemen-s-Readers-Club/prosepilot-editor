@@ -1,0 +1,26 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Form handling configuration
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Handle form submissions
+[[redirects]]
+  from = "/newsletter-subscription"
+  to = "/"
+  status = 302
+  conditions = {Role = ["admin"]}
+
+# Environment variables for form processing
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "preview" 

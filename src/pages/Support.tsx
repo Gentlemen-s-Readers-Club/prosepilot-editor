@@ -6,6 +6,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
+import { Helmet } from 'react-helmet';
 
 const subjectOptions: SelectOption[] = [
   { value: '', label: 'Select a topic' },
@@ -37,6 +38,9 @@ export function Support() {
 
   return (
     <>
+      <Helmet>
+        <title>ProsePilot - Support</title>
+      </Helmet>
       {/* Contact Form */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -81,7 +85,11 @@ export function Support() {
                 <div className="mt-1">
                   <CustomSelect
                     value={subjectOptions.find(option => option.value === formData.subject) || subjectOptions[0]}
-                    onChange={handleSubjectChange}
+                    onChange={(newValue) => {
+                      if (newValue && !Array.isArray(newValue)) {
+                        handleSubjectChange(newValue as SelectOption);
+                      }
+                    }}
                     options={subjectOptions}
                     placeholder="Select a topic"
                   />

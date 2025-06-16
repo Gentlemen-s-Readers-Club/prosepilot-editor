@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import { 
   Sparkles, 
   PenTool, 
@@ -22,6 +23,9 @@ import Footer from '../components/Footer';
 export function Landing() {
   return (
     <>
+      <Helmet>
+        <title>ProsePilot</title>
+      </Helmet>
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-base-background">
         <div className="max-w-7xl mx-auto">

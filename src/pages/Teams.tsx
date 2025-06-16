@@ -26,6 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
+import { Helmet } from 'react-helmet';
 
 const roleIcons = {
   admin: <Crown className="w-4 h-4 text-yellow-500" />,
@@ -117,146 +118,151 @@ export function Teams() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-base-heading">My Teams</h1>
-          <p className="text-gray-600 mt-2">Collaborate with others on your writing projects</p>
-        </div>
-        <Button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2"
-        >
-          <Plus size={20} />
-          Create Team
-        </Button>
-      </div>
-
-      {/* Teams Grid */}
-      {teams.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <div className="flex flex-col items-center">
-            <div className="bg-base-background rounded-full p-4 mb-4">
-              <Users className="w-12 h-12 text-base-heading" />
-            </div>
-            <h3 className="text-lg font-medium text-base-heading mb-2">No teams yet</h3>
-            <p className="text-base-paragraph max-w-md mb-6">
-            Create your first team to start collaborating with others.
-            </p>
-            <Button onClick={() => setShowCreateModal(true)}>
-              Create Your First Team
-            </Button>
+    <>
+      <Helmet>
+        <title>ProsePilot - Teams</title>
+      </Helmet>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-base-heading">My Teams</h1>
+            <p className="text-gray-600 mt-2">Collaborate with others on your writing projects</p>
           </div>
+          <Button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus size={20} />
+            Create Team
+          </Button>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {teams.map((team) => (
-            <div
-              key={team.id}
-              className="bg-white rounded-lg shadow-lg transition-shadow group"
-            >
-              <div className="p-6">
-                {/* Team Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    {team.logo_url ? (
-                      <img
-                        src={team.logo_url}
-                        alt={team.name}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-lg bg-base-background flex items-center justify-center">
-                        <Users className="w-6 h-6 text-base-heading" />
-                      </div>
-                    )}
-                    <div>
-                      <h3 className="text-lg font-semibold text-base-heading  transition-colors">
-                        {team.name}
-                      </h3>
-                      <div className="flex items-center gap-1 text-sm text-base-paragraph">
-                        {roleIcons[team.user_role as TeamRole]}
-                        <span>{roleLabels[team.user_role as TeamRole]}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <MoreVertical className="w-4 h-4 text-brand-accent" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={(e) => {
-                        e.stopPropagation();
-                        handleTeamClick(team);
-                      }}>
-                        <Settings className="w-4 h-4 mr-2 text-brand-accent" />
-                        Manage Team
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={(e) => {
-                        e.stopPropagation();
-                        handleTeamClick(team);
-                      }}>
-                        <UserPlus className="w-4 h-4 mr-2 text-brand-accent" />
-                        Invite
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
 
-                {/* Team Description */}
-                {team.description && (
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {team.description}
-                  </p>
-                )}
-
-                {/* Team Stats */}
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4 text-brand-accent" />
-                      <span className="text-base-paragraph">{team.member_count || 0} members</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-brand-accent" />
-                      <span className="text-base-paragraph">{new Date(team.created_at).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Activity className="w-4 h-4 text-brand-accent" />
-                    <span className="text-base-paragraph">Active</span>
-                  </div>
-                </div>
+        {/* Teams Grid */}
+        {teams.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="flex flex-col items-center">
+              <div className="bg-base-background rounded-full p-4 mb-4">
+                <Users className="w-12 h-12 text-base-heading" />
               </div>
-
-              {/* Team Actions Footer */}
-              <div className="border-t bg-gray-50 px-6 py-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <BookOpen className="w-4 h-4" />
-                    <span>View Books</span>
-                  </div>
-                </div>
-              </div>
+              <h3 className="text-lg font-medium text-base-heading mb-2">No teams yet</h3>
+              <p className="text-base-paragraph max-w-md mb-6">
+              Create your first team to start collaborating with others.
+              </p>
+              <Button onClick={() => setShowCreateModal(true)}>
+                Create Your First Team
+              </Button>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {teams.map((team) => (
+              <div
+                key={team.id}
+                className="bg-white rounded-lg shadow-lg transition-shadow group"
+              >
+                <div className="p-6">
+                  {/* Team Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      {team.logo_url ? (
+                        <img
+                          src={team.logo_url}
+                          alt={team.name}
+                          className="w-12 h-12 rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-base-background flex items-center justify-center">
+                          <Users className="w-6 h-6 text-base-heading" />
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-lg font-semibold text-base-heading  transition-colors">
+                          {team.name}
+                        </h3>
+                        <div className="flex items-center gap-1 text-sm text-base-paragraph">
+                          {roleIcons[team.user_role as TeamRole]}
+                          <span>{roleLabels[team.user_role as TeamRole]}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreVertical className="w-4 h-4 text-brand-accent" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={(e) => {
+                          e.stopPropagation();
+                          handleTeamClick(team);
+                        }}>
+                          <Settings className="w-4 h-4 mr-2 text-brand-accent" />
+                          Manage Team
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={(e) => {
+                          e.stopPropagation();
+                          handleTeamClick(team);
+                        }}>
+                          <UserPlus className="w-4 h-4 mr-2 text-brand-accent" />
+                          Invite
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
 
-      {/* Create Team Modal */}
-      <CreateTeamModal
-        open={showCreateModal}
-        onOpenChange={setShowCreateModal}
-        onCreateTeam={handleCreateTeam}
-      />
-    </div>
+                  {/* Team Description */}
+                  {team.description && (
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {team.description}
+                    </p>
+                  )}
+
+                  {/* Team Stats */}
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Users className="w-4 h-4 text-brand-accent" />
+                        <span className="text-base-paragraph">{team.member_count || 0} members</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-brand-accent" />
+                        <span className="text-base-paragraph">{new Date(team.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Activity className="w-4 h-4 text-brand-accent" />
+                      <span className="text-base-paragraph">Active</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Team Actions Footer */}
+                <div className="border-t bg-gray-50 px-6 py-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <BookOpen className="w-4 h-4" />
+                      <span>View Books</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Create Team Modal */}
+        <CreateTeamModal
+          open={showCreateModal}
+          onOpenChange={setShowCreateModal}
+          onCreateTeam={handleCreateTeam}
+        />
+      </div>
+    </>
   );
 }

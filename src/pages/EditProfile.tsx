@@ -18,6 +18,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { updateProfile, updateNewsletterPreferences } from '../store/slices/profileSlice';
+import { Helmet } from 'react-helmet';
 
 export function EditProfile() {
   const dispatch = useDispatch<AppDispatch>();
@@ -702,152 +703,157 @@ export function EditProfile() {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Sidebar */}
-          <div className="w-full md:w-64 shrink-0">
-            <div className="md:sticky md:top-8">
-              <h2 className="text-2xl font-semibold text-base-heading mb-4">Settings</h2>
-              <nav className="flex flex-col gap-1">
-                {sections.map(({ id, label, icon }) => (
-                  <button
-                    key={id}
-                    onClick={() => setActiveSection(id)}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
-                      activeSection === id
-                        ? 'bg-brand-primary text-white'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {icon}
-                    <span>{label}</span>
-                  </button>
-                ))}
-              </nav>
+      <Helmet>
+        <title>ProsePilot - Edit Profile</title>
+      </Helmet>
+      <div className="min-h-screen bg-base-background">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Sidebar */}
+            <div className="w-full md:w-64 shrink-0">
+              <div className="md:sticky md:top-8">
+                <h2 className="text-2xl font-semibold text-base-heading mb-4">Settings</h2>
+                <nav className="flex flex-col gap-1">
+                  {sections.map(({ id, label, icon }) => (
+                    <button
+                      key={id}
+                      onClick={() => setActiveSection(id)}
+                      className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
+                        activeSection === id
+                          ? 'bg-brand-primary text-white'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {icon}
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </nav>
+              </div>
             </div>
-          </div>
 
-          {/* Main Content */}
-          <div className="flex-1">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold text-base-heading mb-6">
-                {sections.find(s => s.id === activeSection)?.label}
-              </h2>
-              {renderSection()}
+            {/* Main Content */}
+            <div className="flex-1">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-base-heading mb-6">
+                  {sections.find(s => s.id === activeSection)?.label}
+                </h2>
+                {renderSection()}
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Delete Account Dialog */}
+        <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Account</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex">
+                  <div className="shrink-0">
+                    <AlertCircle className="h-5 w-5 text-red-400" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">
+                      Warning
+                    </h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>All your books and writing will be permanently deleted</li>
+                        <li>Your subscription will be cancelled immediately</li>
+                        <li>This action cannot be reversed</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="deleteConfirmation">
+                  Type your email <span className="font-medium">{profile?.email}</span> to confirm
+                </Label>
+                <Input
+                  id="deleteConfirmation"
+                  type="email"
+                  value={deleteConfirmation}
+                  onChange={(e) => setDeleteConfirmation(e.target.value)}
+                  placeholder={profile?.email}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDeleteDialog(false);
+                  setDeleteConfirmation('');
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmation !== profile?.email || loading}
+              >
+                Delete Account
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Unlink Provider Dialog */}
+        <Dialog open={!!showUnlinkDialog} onOpenChange={() => setShowUnlinkDialog(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Unlink {showUnlinkDialog?.charAt(0).toUpperCase()}{showUnlinkDialog?.slice(1)} Account</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to unlink your {showUnlinkDialog} account? You will no longer be able to sign in using this method.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="flex">
+                  <div className="shrink-0">
+                    <AlertCircle className="h-5 w-5 text-yellow-400" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-yellow-800">
+                      Important
+                    </h3>
+                    <div className="mt-2 text-sm text-yellow-700">
+                      <p>Make sure you have at least one other way to sign in to your account.</p>
+                      {connectedProviders.length <= 1 && (
+                        <p className="mt-1 font-semibold">You currently have only one sign-in method. You must add another method before you can remove this one.</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowUnlinkDialog(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => showUnlinkDialog && handleSocialUnlink(showUnlinkDialog)}
+                disabled={loading || connectedProviders.length <= 1}
+              >
+                {loading ? 'Unlinking...' : 'Unlink Account'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Delete Account Dialog */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Account</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex">
-                <div className="shrink-0">
-                  <AlertCircle className="h-5 w-5 text-red-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Warning
-                  </h3>
-                  <div className="mt-2 text-sm text-red-700">
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>All your books and writing will be permanently deleted</li>
-                      <li>Your subscription will be cancelled immediately</li>
-                      <li>This action cannot be reversed</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="deleteConfirmation">
-                Type your email <span className="font-medium">{profile?.email}</span> to confirm
-              </Label>
-              <Input
-                id="deleteConfirmation"
-                type="email"
-                value={deleteConfirmation}
-                onChange={(e) => setDeleteConfirmation(e.target.value)}
-                placeholder={profile?.email}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowDeleteDialog(false);
-                setDeleteConfirmation('');
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteAccount}
-              disabled={deleteConfirmation !== profile?.email || loading}
-            >
-              Delete Account
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Unlink Provider Dialog */}
-      <Dialog open={!!showUnlinkDialog} onOpenChange={() => setShowUnlinkDialog(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Unlink {showUnlinkDialog?.charAt(0).toUpperCase()}{showUnlinkDialog?.slice(1)} Account</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to unlink your {showUnlinkDialog} account? You will no longer be able to sign in using this method.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <div className="flex">
-                <div className="shrink-0">
-                  <AlertCircle className="h-5 w-5 text-yellow-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800">
-                    Important
-                  </h3>
-                  <div className="mt-2 text-sm text-yellow-700">
-                    <p>Make sure you have at least one other way to sign in to your account.</p>
-                    {connectedProviders.length <= 1 && (
-                      <p className="mt-1 font-semibold">You currently have only one sign-in method. You must add another method before you can remove this one.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowUnlinkDialog(null)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => showUnlinkDialog && handleSocialUnlink(showUnlinkDialog)}
-              disabled={loading || connectedProviders.length <= 1}
-            >
-              {loading ? 'Unlinking...' : 'Unlink Account'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

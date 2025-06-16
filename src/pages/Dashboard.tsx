@@ -15,6 +15,7 @@ import type { Book, Category, Language, Status } from '../store/types';
 import { BOOK_STATES, TEAM_ROLES } from '../lib/consts';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { NewBookModal } from '../components/NewBookModal';
+import { Helmet } from 'react-helmet';
 
 const BOOKS_PER_PAGE = 30;
 
@@ -268,6 +269,9 @@ export function Dashboard() {
 
   return (
     <>
+      <Helmet>
+        <title>ProsePilot - Dashboard</title>
+      </Helmet>
       <div className="max-w-[1600px] mx-auto px-6 py-8">
         {/* Header with Stats */}
         <div className="mb-8">

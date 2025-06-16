@@ -19,6 +19,7 @@ import {
   Grid2X2
 } from 'lucide-react';
 import Footer from '../components/Footer';
+import { Helmet } from 'react-helmet';
 
 export function Documentation() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
@@ -148,6 +149,9 @@ export function Documentation() {
 
   return (
     <div className="min-h-screen bg-base-background">
+      <Helmet>
+        <title>ProsePilot - Documentation</title>
+      </Helmet>
       {/* Header */}
       <div className="bg-white pt-16 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

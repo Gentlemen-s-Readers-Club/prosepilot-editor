@@ -18,6 +18,7 @@ import { RootState } from "../store";
 import { useSubscriptions } from "../hooks/useSubscriptions";
 import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
+import { Helmet } from "react-helmet";
 
 // Utility function to format price
 const formatPrice = (
@@ -463,6 +464,9 @@ export function Subscription() {
 
   return (
     <>
+      <Helmet>
+        <title>ProsePilot - Subscription</title>
+      </Helmet>
       <div className="min-h-screen bg-background">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 py-8">

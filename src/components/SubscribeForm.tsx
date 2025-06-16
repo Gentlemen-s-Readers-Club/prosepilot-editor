@@ -36,17 +36,33 @@ export function SubscribeForm({
 
     setIsSubmitting(true);
     
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setIsSubscribed(true);
-      setEmail('');
-      toast({
-        title: "Success!",
-        description: "You've been subscribed to our newsletter",
+      // Use Netlify Forms to handle the submission
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('form-name', 'newsletter-subscription');
+      
+      // Netlify will automatically detect and process forms with the 'netlify' attribute
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
       });
+
+      if (response.ok) {
+        setIsSubscribed(true);
+        setEmail('');
+        toast({
+          title: "Success!",
+          description: "You've been subscribed to our newsletter",
+        });
+      } else {
+        throw new Error('Failed to subscribe');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Subscription error:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -70,16 +86,28 @@ export function SubscribeForm({
 
   if (variant === 'inline') {
     return (
-      <form onSubmit={handleSubmit} className={`flex gap-2 ${className}`}>
+      <form 
+        onSubmit={handleSubmit} 
+        className={`flex gap-2 ${className}`}
+        name="newsletter-subscription"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+      >
+        {/* Hidden input for Netlify */}
+        <input type="hidden" name="form-name" value="newsletter-subscription" />
+        <input type="hidden" name="bot-field" />
+        
         <div className="flex-1 relative">
           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={placeholder}
             className="pl-10 bg-white border-gray-300"
             disabled={isSubmitting}
+            required
           />
         </div>
         <Button 
@@ -95,14 +123,26 @@ export function SubscribeForm({
 
   if (variant === 'minimal') {
     return (
-      <form onSubmit={handleSubmit} className={`space-y-3 ${className}`}>
+      <form 
+        onSubmit={handleSubmit} 
+        className={`space-y-3 ${className}`}
+        name="newsletter-subscription"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+      >
+        {/* Hidden input for Netlify */}
+        <input type="hidden" name="form-name" value="newsletter-subscription" />
+        <input type="hidden" name="bot-field" />
+        
         <Input
           type="email"
+          name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={placeholder}
           className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
           disabled={isSubmitting}
+          required
         />
         <Button 
           type="submit" 
@@ -128,14 +168,26 @@ export function SubscribeForm({
         </div>
       </div>
       
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form 
+        onSubmit={handleSubmit} 
+        className="space-y-3"
+        name="newsletter-subscription"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+      >
+        {/* Hidden input for Netlify */}
+        <input type="hidden" name="form-name" value="newsletter-subscription" />
+        <input type="hidden" name="bot-field" />
+        
         <Input
           type="email"
+          name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={placeholder}
           className="bg-gray-50 border-gray-200"
           disabled={isSubmitting}
+          required
         />
         <Button 
           type="submit" 

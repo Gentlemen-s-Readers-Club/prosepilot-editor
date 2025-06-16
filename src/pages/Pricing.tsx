@@ -12,6 +12,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Footer from '../components/Footer';
+import { Helmet } from 'react-helmet';
 
 interface Plan {
   id: string;
@@ -109,6 +110,9 @@ const faqs = [
 export function Pricing() {
   return (
     <>
+      <Helmet>
+        <title>ProsePilot - Pricing</title>
+      </Helmet>
       {/* Header */}
       <div className="bg-white pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
