@@ -189,6 +189,10 @@ Deno.serve(async (req) => {
     console.log("Subscription data to be processed:", subscriptionData);
     console.log("Event status:", status);
     console.log("Event type:", eventData.event_type);
+    console.log("🐛 DEBUG: price_id from Paddle:", priceId);
+    console.log(
+      "🐛 DEBUG: This price_id needs to exist in subscription_plans table for credit refill to work"
+    );
     // Special handling for canceled subscriptions
     if (
       status === "canceled" ||
@@ -324,12 +328,21 @@ Deno.serve(async (req) => {
     }
     const responseData = await response.text();
     console.log("Supabase response data:", responseData);
+
     // Auto-refill credits for new or reactivated subscriptions
     if (
       status === "active" &&
-      (eventData.event_type === "subscription.activated" ||
+      (eventData.event_type === "subscription.created" ||
+        eventData.event_type === "subscription.activated" ||
         eventData.event_type === "subscription.updated")
     ) {
+      console.log(
+        `✅ Subscription saved. Now attempting to refill credits for user ${userId} with price_id: ${priceId}`
+      );
+
+      // Small delay to ensure database consistency and avoid race condition
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       try {
         const refillResponse = await fetch(
           `${supabaseUrl}/functions/v1/handle-credits`,
@@ -349,53 +362,13 @@ Deno.serve(async (req) => {
 
         if (refillResponse.ok) {
           const refillData = await refillResponse.json();
-          console.log("Credits refilled successfully:", refillData);
+          console.log("💰 Credits refilled successfully:", refillData);
         } else {
-          console.error(
-            "Failed to refill credits:",
-            await refillResponse.text()
-          );
+          const errorText = await refillResponse.text();
+          console.error("❌ Failed to refill credits:", errorText);
         }
       } catch (refillError) {
-        console.error("Error refilling credits:", refillError);
-        // Don't fail the webhook for credit refill errors
-      }
-    }
-
-    // Auto-refill credits for new or reactivated subscriptions
-    if (
-      status === "active" &&
-      (eventData.event_type === "subscription.activated" ||
-        eventData.event_type === "subscription.updated")
-    ) {
-      try {
-        const refillResponse = await fetch(
-          `${supabaseUrl}/functions/v1/handle-credits`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${serviceRoleKey}`,
-              "Content-Type": "application/json",
-              apikey: serviceRoleKey,
-            },
-            body: JSON.stringify({
-              action: "refill_monthly",
-              user_id: userId,
-            }),
-          }
-        );
-
-        if (refillResponse.ok) {
-          const refillData = await refillResponse.json();
-          console.log("Credits refilled successfully:", refillData);
-        } else {
-          console.error(
-            "Failed to refill credits:",
-            await refillResponse.text()
-          );
-        }
-      } catch (refillError) {
-        console.error("Error refilling credits:", refillError);
+        console.error("💥 Error refilling credits:", refillError);
         // Don't fail the webhook for credit refill errors
       }
     }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 interface CreditBalance {
   current_balance: number;
@@ -17,7 +18,7 @@ interface CreditTransaction {
   description: string;
   created_at: string;
   reference_type: string | null;
-  metadata: Record<string, any> | null;
+  metadata: Record<string, unknown> | null;
 }
 
 interface BookGeneration {
@@ -180,16 +181,22 @@ export function useCredits(): UseCreditsReturn {
 
   // Set up real-time subscriptions for balance updates
   useEffect(() => {
-    const {
-      data: { user },
-    } = supabase.auth.getUser();
+    let balanceSubscription: RealtimeChannel | null = null;
+    let transactionsSubscription: RealtimeChannel | null = null;
+    let generationsSubscription: RealtimeChannel | null = null;
 
-    user.then(({ data: { user } }) => {
+    const setupRealtimeSubscriptions = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) return;
 
+      console.log("Setting up realtime subscriptions for user:", user.id);
+
       // Subscribe to credit balance changes
-      const balanceSubscription = supabase
-        .channel("user_credits_changes")
+      balanceSubscription = supabase
+        .channel(`user_credits_${user.id}`)
         .on(
           "postgres_changes",
           {
@@ -198,15 +205,18 @@ export function useCredits(): UseCreditsReturn {
             table: "user_credits",
             filter: `user_id=eq.${user.id}`,
           },
-          () => {
+          (payload) => {
+            console.log("Credit balance changed:", payload);
             refreshBalance();
           }
         )
-        .subscribe();
+        .subscribe((status) => {
+          console.log("Credit balance subscription status:", status);
+        });
 
       // Subscribe to new transactions
-      const transactionsSubscription = supabase
-        .channel("credit_transactions_changes")
+      transactionsSubscription = supabase
+        .channel(`credit_transactions_${user.id}`)
         .on(
           "postgres_changes",
           {
@@ -215,15 +225,20 @@ export function useCredits(): UseCreditsReturn {
             table: "credit_transactions",
             filter: `user_id=eq.${user.id}`,
           },
-          () => {
+          (payload) => {
+            console.log("New credit transaction:", payload);
             refreshTransactions();
+            // Also refresh balance when new transaction is logged
+            refreshBalance();
           }
         )
-        .subscribe();
+        .subscribe((status) => {
+          console.log("Credit transactions subscription status:", status);
+        });
 
       // Subscribe to book generation updates
-      const generationsSubscription = supabase
-        .channel("book_generations_changes")
+      generationsSubscription = supabase
+        .channel(`book_generations_${user.id}`)
         .on(
           "postgres_changes",
           {
@@ -232,18 +247,32 @@ export function useCredits(): UseCreditsReturn {
             table: "book_generations",
             filter: `user_id=eq.${user.id}`,
           },
-          () => {
+          (payload) => {
+            console.log("Book generation updated:", payload);
             refreshBookGenerations();
+            // Refresh balance when book generation status changes (credit consumption)
+            refreshBalance();
           }
         )
-        .subscribe();
+        .subscribe((status) => {
+          console.log("Book generations subscription status:", status);
+        });
+    };
 
-      return () => {
+    setupRealtimeSubscriptions();
+
+    return () => {
+      if (balanceSubscription) {
+        console.log("Unsubscribing from realtime subscriptions");
         balanceSubscription.unsubscribe();
+      }
+      if (transactionsSubscription) {
         transactionsSubscription.unsubscribe();
+      }
+      if (generationsSubscription) {
         generationsSubscription.unsubscribe();
-      };
-    });
+      }
+    };
   }, [refreshBalance, refreshTransactions, refreshBookGenerations]);
 
   return {

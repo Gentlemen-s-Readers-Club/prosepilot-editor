@@ -23,6 +23,7 @@ import {
 import { usePaddle } from "../contexts/PaddleContext";
 import { usePaddlePrices } from "../hooks/usePaddlePrices";
 import { useToast } from "../hooks/use-toast";
+import { useCredits } from "../hooks/useCredits";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store";
 import {
@@ -162,8 +163,7 @@ export function Subscription() {
     (state: RootState) => state.profile
   );
   const { toast } = useToast();
-  const [creditsUsed] = useState(15);
-  const [creditsLimit] = useState(25);
+  const { balance: creditBalance } = useCredits();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
@@ -536,30 +536,35 @@ export function Subscription() {
                       <div className="flex mb-2 items-center justify-between">
                         <div>
                           <span className="text-xs font-semibold inline-block text-base-heading">
-                            {creditsLimit > 0
-                              ? Math.round((creditsUsed / creditsLimit) * 100)
-                              : 0}
-                            %
+                            {creditBalance?.current_balance || 0} credits
+                            available
                           </span>
                         </div>
                         <div className="text-right">
                           <span className="text-xs font-semibold inline-block text-base-heading">
-                            {creditsUsed}/
-                            {creditsLimit > 0 ? creditsLimit : "∞"} credits
+                            Used:{" "}
+                            {(creditBalance?.total_consumed || 0) -
+                              (creditBalance?.total_earned || 0) +
+                              (creditBalance?.current_balance || 0)}{" "}
+                            lifetime
                           </span>
                         </div>
                       </div>
                       <div className="overflow-hidden h-2 text-xs flex rounded bg-brand-secondary">
                         <div
                           style={{
-                            width: `${
-                              creditsLimit > 0
-                                ? (creditsUsed / creditsLimit) * 100
-                                : 0
-                            }%`,
+                            width: `${Math.min(
+                              ((creditBalance?.current_balance || 0) / 100) *
+                                100,
+                              100
+                            )}%`,
                           }}
                           className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary"
                         />
+                      </div>
+                      <div className="text-xs text-gray-500 mt-2">
+                        Total earned: {creditBalance?.total_earned || 0} | Total
+                        consumed: {creditBalance?.total_consumed || 0}
                       </div>
                     </div>
                   </div>

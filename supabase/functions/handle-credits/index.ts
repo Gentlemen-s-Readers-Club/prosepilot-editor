@@ -1,35 +1,17 @@
-import "@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "@supabase/supabase-js";
-
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "jsr:@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
-
-interface CreditOperation {
-  action: "reserve" | "consume" | "refund" | "check_balance" | "refill_monthly";
-  user_id: string;
-  amount?: number;
-  book_generation_id?: string;
-  description?: string;
-  metadata?: Record<string, any>;
-}
-
-interface CreditResponse {
-  success: boolean;
-  balance?: number;
-  transaction_id?: string;
-  error?: string;
-  details?: string;
-}
-
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", {
+      headers: corsHeaders,
+    });
   }
-
   try {
     if (req.method !== "POST") {
       return new Response("Method Not Allowed", {
@@ -37,15 +19,15 @@ Deno.serve(async (req) => {
         headers: corsHeaders,
       });
     }
-
     // Initialize Supabase client
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
     // Parse request body
-    const operation: CreditOperation = await req.json();
+    const operation = await req.json();
+
+    console.log("🔍 Received operation:", operation);
+
     const {
       action,
       user_id,
@@ -54,25 +36,27 @@ Deno.serve(async (req) => {
       description,
       metadata,
     } = operation;
-
     // Validate required fields
     if (!action || !user_id) {
       return new Response(
-        JSON.stringify({ success: false, error: "Missing required fields" }),
+        JSON.stringify({
+          success: false,
+          error: "Missing required fields",
+        }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
         }
       );
     }
-
-    let response: CreditResponse;
-
+    let response;
     switch (action) {
       case "check_balance":
         response = await checkBalance(supabase, user_id);
         break;
-
       case "reserve":
         if (!amount || !book_generation_id) {
           return new Response(
@@ -82,7 +66,10 @@ Deno.serve(async (req) => {
             }),
             {
               status: 400,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
+              headers: {
+                ...corsHeaders,
+                "Content-Type": "application/json",
+              },
             }
           );
         }
@@ -95,7 +82,6 @@ Deno.serve(async (req) => {
           metadata
         );
         break;
-
       case "consume":
         if (!book_generation_id) {
           return new Response(
@@ -105,7 +91,10 @@ Deno.serve(async (req) => {
             }),
             {
               status: 400,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
+              headers: {
+                ...corsHeaders,
+                "Content-Type": "application/json",
+              },
             }
           );
         }
@@ -117,7 +106,6 @@ Deno.serve(async (req) => {
           metadata
         );
         break;
-
       case "refund":
         if (!book_generation_id) {
           return new Response(
@@ -127,7 +115,10 @@ Deno.serve(async (req) => {
             }),
             {
               status: 400,
-              headers: { ...corsHeaders, "Content-Type": "application/json" },
+              headers: {
+                ...corsHeaders,
+                "Content-Type": "application/json",
+              },
             }
           );
         }
@@ -139,24 +130,30 @@ Deno.serve(async (req) => {
           metadata
         );
         break;
-
       case "refill_monthly":
         response = await refillMonthlyCredits(supabase, user_id);
         break;
-
       default:
         return new Response(
-          JSON.stringify({ success: false, error: "Invalid action" }),
+          JSON.stringify({
+            success: false,
+            error: "Invalid action",
+          }),
           {
             status: 400,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers: {
+              ...corsHeaders,
+              "Content-Type": "application/json",
+            },
           }
         );
     }
-
     return new Response(JSON.stringify(response), {
       status: response.success ? 200 : 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
     });
   } catch (error) {
     console.error("Error processing credit operation:", error);
@@ -168,43 +165,48 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
       }
     );
   }
 });
-
 // Check user's current credit balance
-async function checkBalance(
-  supabase: any,
-  user_id: string
-): Promise<CreditResponse> {
+async function checkBalance(supabase, user_id) {
   try {
     const { data, error } = await supabase.rpc("get_user_credits", {
       p_user_id: user_id,
     });
-
     if (error) {
       console.error("Error checking balance:", error);
-      return { success: false, error: "Failed to check balance" };
+      return {
+        success: false,
+        error: "Failed to check balance",
+      };
     }
-
-    return { success: true, balance: data || 0 };
+    return {
+      success: true,
+      balance: data || 0,
+    };
   } catch (error) {
     console.error("Error in checkBalance:", error);
-    return { success: false, error: "Failed to check balance" };
+    return {
+      success: false,
+      error: "Failed to check balance",
+    };
   }
 }
-
 // Reserve credits for book generation (called when generation starts)
 async function reserveCredits(
-  supabase: any,
-  user_id: string,
-  amount: number,
-  book_generation_id: string,
-  description?: string,
-  metadata?: Record<string, any>
-): Promise<CreditResponse> {
+  supabase,
+  user_id,
+  amount,
+  book_generation_id,
+  description,
+  metadata
+) {
   try {
     // Start a transaction
     const { data: updateResult, error: updateError } = await supabase.rpc(
@@ -217,10 +219,12 @@ async function reserveCredits(
         p_reference_type: "book_generation",
         p_description:
           description || `Reserved ${amount} credits for book generation`,
-        p_metadata: { ...metadata, reserved: true },
+        p_metadata: {
+          ...metadata,
+          reserved: true,
+        },
       }
     );
-
     if (updateError || !updateResult) {
       console.error("Error reserving credits:", updateError);
       return {
@@ -228,7 +232,6 @@ async function reserveCredits(
         error: "Insufficient credits or failed to reserve",
       };
     }
-
     // Update book generation record
     const { error: bookError } = await supabase
       .from("book_generations")
@@ -238,15 +241,12 @@ async function reserveCredits(
         started_at: new Date().toISOString(),
       })
       .eq("id", book_generation_id);
-
     if (bookError) {
       console.error("Error updating book generation:", bookError);
       // Note: Credits are already deducted, but we log this for manual review
     }
-
     // Get updated balance
     const balanceResult = await checkBalance(supabase, user_id);
-
     return {
       success: true,
       balance: balanceResult.balance,
@@ -254,18 +254,20 @@ async function reserveCredits(
     };
   } catch (error) {
     console.error("Error in reserveCredits:", error);
-    return { success: false, error: "Failed to reserve credits" };
+    return {
+      success: false,
+      error: "Failed to reserve credits",
+    };
   }
 }
-
 // Consume reserved credits (called when generation completes successfully)
 async function consumeCredits(
-  supabase: any,
-  user_id: string,
-  book_generation_id: string,
-  description?: string,
-  metadata?: Record<string, any>
-): Promise<CreditResponse> {
+  supabase,
+  user_id,
+  book_generation_id,
+  description,
+  metadata
+) {
   try {
     // Get book generation details
     const { data: bookGen, error: bookError } = await supabase
@@ -273,11 +275,12 @@ async function consumeCredits(
       .select("credits_reserved, status")
       .eq("id", book_generation_id)
       .single();
-
     if (bookError || !bookGen) {
-      return { success: false, error: "Book generation not found" };
+      return {
+        success: false,
+        error: "Book generation not found",
+      };
     }
-
     // Update book generation as completed
     const { error: updateError } = await supabase
       .from("book_generations")
@@ -287,21 +290,22 @@ async function consumeCredits(
         completed_at: new Date().toISOString(),
       })
       .eq("id", book_generation_id);
-
     if (updateError) {
       console.error("Error updating book generation:", updateError);
-      return { success: false, error: "Failed to update book generation" };
+      return {
+        success: false,
+        error: "Failed to update book generation",
+      };
     }
-
     // Log the consumption (credits were already deducted during reservation)
     const { error: logError } = await supabase
       .from("credit_transactions")
       .insert({
         user_id,
         transaction_type: "consume",
-        amount: 0, // No additional deduction, just logging
-        balance_before: 0, // Will be updated by trigger
-        balance_after: 0, // Will be updated by trigger
+        amount: 0,
+        balance_before: 0,
+        balance_after: 0,
         reference_id: book_generation_id,
         reference_type: "book_generation_complete",
         description:
@@ -313,13 +317,10 @@ async function consumeCredits(
           original_reserved: bookGen.credits_reserved,
         },
       });
-
     if (logError) {
       console.error("Error logging consumption:", logError);
     }
-
     const balanceResult = await checkBalance(supabase, user_id);
-
     return {
       success: true,
       balance: balanceResult.balance,
@@ -327,18 +328,20 @@ async function consumeCredits(
     };
   } catch (error) {
     console.error("Error in consumeCredits:", error);
-    return { success: false, error: "Failed to consume credits" };
+    return {
+      success: false,
+      error: "Failed to consume credits",
+    };
   }
 }
-
 // Refund credits (called when generation fails)
 async function refundCredits(
-  supabase: any,
-  user_id: string,
-  book_generation_id: string,
-  description?: string,
-  metadata?: Record<string, any>
-): Promise<CreditResponse> {
+  supabase,
+  user_id,
+  book_generation_id,
+  description,
+  metadata
+) {
   try {
     // Get book generation details
     const { data: bookGen, error: bookError } = await supabase
@@ -346,15 +349,18 @@ async function refundCredits(
       .select("credits_reserved, status")
       .eq("id", book_generation_id)
       .single();
-
     if (bookError || !bookGen) {
-      return { success: false, error: "Book generation not found" };
+      return {
+        success: false,
+        error: "Book generation not found",
+      };
     }
-
     if (bookGen.credits_reserved === 0) {
-      return { success: false, error: "No credits to refund" };
+      return {
+        success: false,
+        error: "No credits to refund",
+      };
     }
-
     // Refund the credits
     const { data: updateResult, error: updateError } = await supabase.rpc(
       "update_user_credits",
@@ -374,12 +380,13 @@ async function refundCredits(
         },
       }
     );
-
     if (updateError || !updateResult) {
       console.error("Error refunding credits:", updateError);
-      return { success: false, error: "Failed to refund credits" };
+      return {
+        success: false,
+        error: "Failed to refund credits",
+      };
     }
-
     // Update book generation as failed
     const { error: bookUpdateError } = await supabase
       .from("book_generations")
@@ -389,13 +396,10 @@ async function refundCredits(
         error_message: metadata?.error_message || "Generation failed",
       })
       .eq("id", book_generation_id);
-
     if (bookUpdateError) {
       console.error("Error updating book generation:", bookUpdateError);
     }
-
     const balanceResult = await checkBalance(supabase, user_id);
-
     return {
       success: true,
       balance: balanceResult.balance,
@@ -403,16 +407,25 @@ async function refundCredits(
     };
   } catch (error) {
     console.error("Error in refundCredits:", error);
-    return { success: false, error: "Failed to refund credits" };
+    return {
+      success: false,
+      error: "Failed to refund credits",
+    };
   }
 }
-
 // Refill monthly credits based on subscription
-async function refillMonthlyCredits(
-  supabase: any,
-  user_id: string
-): Promise<CreditResponse> {
+async function refillMonthlyCredits(supabase, user_id) {
   try {
+    console.log("🔍 Starting credit refill for user:", user_id);
+
+    // First, let's see ALL subscriptions for this user
+    const { data: allSubs, error: allSubsError } = await supabase
+      .from("subscriptions")
+      .select("price_id, status, subscription_id, created_at")
+      .eq("user_id", user_id);
+
+    console.log("📋 All subscriptions for user:", allSubs);
+
     // Get user's current subscription
     const { data: subscription, error: subError } = await supabase
       .from("subscriptions")
@@ -421,44 +434,68 @@ async function refillMonthlyCredits(
       .eq("status", "active")
       .single();
 
+    console.log("🔍 Active subscription query result:", {
+      subscription,
+      subError,
+    });
+
     if (subError || !subscription) {
-      return { success: false, error: "No active subscription found" };
+      console.log("❌ No active subscription found. Error:", subError);
+      console.log("❌ Available subscriptions:", allSubs);
+      return {
+        success: false,
+        error: "No active subscription found",
+      };
     }
 
-    // Get subscription plan details
+    console.log("✅ Found active subscription:", subscription);
+    console.log(
+      "🔍 Looking for subscription plan with price_id:",
+      subscription.price_id
+    );
+
+    // First check all available plans
+    const { data: allPlans } = await supabase
+      .from("subscription_plans")
+      .select("name, price_id, monthly_credits");
+    console.log("📋 All available subscription plans:", allPlans);
+
+    // Get subscription plan details (removed max_credits since we eliminated that feature)
     const { data: plan, error: planError } = await supabase
       .from("subscription_plans")
-      .select("monthly_credits, max_credits")
+      .select("monthly_credits")
       .eq("price_id", subscription.price_id)
       .single();
 
+    console.log("📋 Plan query result:", { plan, planError });
+
     if (planError || !plan) {
-      return { success: false, error: "Subscription plan not found" };
+      console.log("❌ No plan found for price_id:", subscription.price_id);
+      return {
+        success: false,
+        error: "Subscription plan not found",
+      };
     }
+
+    console.log("✅ Found subscription plan:", plan);
 
     // Get current balance
     const balanceResult = await checkBalance(supabase, user_id);
     if (!balanceResult.success) {
+      console.log("❌ Failed to check balance:", balanceResult);
       return balanceResult;
     }
 
     const currentBalance = balanceResult.balance || 0;
-    const maxCredits = plan.max_credits;
     const monthlyCredits = plan.monthly_credits;
 
-    // Calculate credits to add (respect max_credits limit)
-    let creditsToAdd = monthlyCredits;
-    if (maxCredits && currentBalance + creditsToAdd > maxCredits) {
-      creditsToAdd = Math.max(0, maxCredits - currentBalance);
-    }
+    console.log("💰 Current balance:", currentBalance);
+    console.log("💰 Monthly credits to add:", monthlyCredits);
 
-    if (creditsToAdd === 0) {
-      return {
-        success: true,
-        balance: currentBalance,
-        details: "Already at maximum credits",
-      };
-    }
+    // Add the full monthly credits allocation (no max limit anymore)
+    const creditsToAdd = monthlyCredits;
+
+    console.log("💰 Credits to add:", creditsToAdd);
 
     // Add the credits
     const { data: updateResult, error: updateError } = await supabase.rpc(
@@ -472,27 +509,30 @@ async function refillMonthlyCredits(
         p_metadata: {
           monthly_refill: true,
           plan_name: subscription.price_id,
-          max_credits: maxCredits,
           monthly_allocation: monthlyCredits,
         },
       }
     );
 
-    if (updateError || !updateResult) {
-      console.error("Error refilling credits:", updateError);
-      return { success: false, error: "Failed to refill credits" };
-    }
+    console.log("💰 Credit update result:", { updateResult, updateError });
 
+    if (updateError || !updateResult) {
+      console.error("❌ Error refilling credits:", updateError);
+      return {
+        success: false,
+        error: "Failed to refill credits",
+      };
+    }
     // Update last refill date
     const { error: userUpdateError } = await supabase
       .from("user_credits")
-      .update({ last_refill_date: new Date().toISOString() })
+      .update({
+        last_refill_date: new Date().toISOString(),
+      })
       .eq("user_id", user_id);
-
     if (userUpdateError) {
       console.error("Error updating refill date:", userUpdateError);
     }
-
     return {
       success: true,
       balance: currentBalance + creditsToAdd,
@@ -500,6 +540,9 @@ async function refillMonthlyCredits(
     };
   } catch (error) {
     console.error("Error in refillMonthlyCredits:", error);
-    return { success: false, error: "Failed to refill credits" };
+    return {
+      success: false,
+      error: "Failed to refill credits",
+    };
   }
 }
