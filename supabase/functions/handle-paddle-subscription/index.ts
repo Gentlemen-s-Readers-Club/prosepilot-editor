@@ -40,13 +40,17 @@ Deno.serve(async (req) => {
 
     // Paddle API credentials and environment
     const paddleApiKey = Deno.env.get("PADDLE_API_KEY"); // Your Paddle API key
-    const paddleEnv = Deno.env.get("PADDLE_ENV") || "sandbox"; // Default to sandbox for safety
+    // Determine if we're in sandbox mode based on API key
+    const isSandbox = paddleApiKey?.startsWith("pdl_sdbx_") ?? true; // Default to sandbox for safety
+    const paddleApiBaseUrl = isSandbox
+      ? "https://sandbox-api.paddle.com"
+      : "https://api.paddle.com";
 
-    // Determine API base URL based on environment
-    const paddleApiBaseUrl =
-      paddleEnv === "production"
-        ? "https://api.paddle.com"
-        : "https://sandbox-api.paddle.com";
+    console.log(
+      `🌐 Using Paddle ${
+        isSandbox ? "Sandbox" : "Live"
+      } API: ${paddleApiBaseUrl}`
+    );
 
     // Validate environment variables
     if (!paddleApiKey) {

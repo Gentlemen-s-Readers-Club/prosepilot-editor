@@ -10,7 +10,6 @@ import {
   Users,
   Zap,
   Crown,
-  Plus,
 } from "lucide-react";
 import {
   Dialog,
@@ -37,6 +36,8 @@ import {
 import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
+import { CreditPurchase } from "../components/CreditPurchase";
+import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
 
 // Utility function to format price
 const formatPrice = (
@@ -151,11 +152,8 @@ const mockBillingHistory = [
   },
 ];
 
-const creditPackages = [
-  { id: "small", credits: 10, price: 20 },
-  { id: "medium", credits: 25, price: 45, savings: 10 },
-  { id: "large", credits: 50, price: 80, savings: 20 },
-];
+// Credit packages are now handled by the CreditPurchase component
+// which fetches real packages from the database with valid Paddle price IDs
 
 export function Subscription() {
   const dispatch = useDispatch<AppDispatch>();
@@ -167,10 +165,7 @@ export function Subscription() {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
-  const [showBuyCreditsDialog, setShowBuyCreditsDialog] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<
-    (typeof creditPackages)[0] | null
-  >(null);
+  // Credit purchase functionality moved to CreditPurchase component
 
   const { paddle, loading: paddleLoading, error: paddleError } = usePaddle();
   const {
@@ -188,6 +183,10 @@ export function Subscription() {
   const { status: subscriptionsLoading, error: subscriptionsError } =
     useSelector((state: RootState) => state.subscription);
 
+  // Subscription management hook
+  const { loading: subscriptionManagementLoading, cancelSubscription } =
+    useSubscriptionManagement();
+
   // Helper function to check if user has active plan
   const hasActivePlanForPrice = (priceId: string) => {
     return activeSubscriptions.some((sub) => sub.price_id === priceId);
@@ -197,6 +196,7 @@ export function Subscription() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const success = urlParams.get("success");
+    const creditPurchaseSuccess = urlParams.get("credit_purchase_success");
     const cancelled = urlParams.get("cancelled");
 
     if (success === "true") {
@@ -206,6 +206,14 @@ export function Subscription() {
       });
       // Refresh subscription data
       dispatch(fetchUserSubscription());
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (creditPurchaseSuccess === "true") {
+      toast({
+        title: "Credit Purchase Successful!",
+        description:
+          "Your credits have been added to your account and are ready to use.",
+      });
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (cancelled === "true") {
@@ -373,6 +381,7 @@ export function Subscription() {
         },
         customData: {
           user_id: user.id, // Use the authenticated user ID instead of profile.id
+          type: "subscription", // Distinguish from credit purchases
         },
       });
     } catch (error) {
@@ -415,67 +424,31 @@ export function Subscription() {
   };
 
   const handleCancel = async () => {
-    // TODO: Implement cancellation logic
-    toast({
-      title: "Cancellation",
-      description: "Subscription cancellation feature coming soon.",
-    });
-    setShowCancelDialog(false);
-  };
-
-  const handleBuyCredits = (pkg: (typeof creditPackages)[0]) => {
-    setSelectedPackage(pkg);
-    setShowBuyCreditsDialog(true);
-  };
-
-  const confirmBuyCredits = async () => {
-    if (!selectedPackage || !paddle) {
-      return;
-    }
-
-    if (!profile?.email) {
+    if (!currentSubscription?.subscription_id) {
       toast({
         title: "Error",
-        description: "Please log in to purchase credits",
+        description: "No active subscription found to cancel.",
         variant: "destructive",
       });
+      setShowCancelDialog(false);
       return;
     }
 
     try {
-      await paddle.Checkout.open({
-        items: [
-          {
-            priceId: selectedPackage.id.toString(), // You'll need to create actual price IDs in Paddle for credit packages
-            quantity: 1,
-          },
-        ],
-        customer: {
-          email: profile.email,
-        },
-        settings: {
-          displayMode: "inline",
-          theme: "light",
-          locale: "en",
-          frameTarget: "paddle-checkout-container",
-          frameStyle:
-            "width: 100%; min-width: 312px; background-color: transparent; border: none;",
-          frameInitialHeight: 450,
-          successUrl: `${window.location.origin}/dashboard?success=true`,
-        },
-        customData: {
-          user_id: profile.id,
-        },
-      });
+      const result = await cancelSubscription(
+        currentSubscription.subscription_id,
+        "User requested cancellation from app"
+      );
+
+      if (result.success) {
+        // Refresh subscription data to reflect the cancellation
+        dispatch(fetchSubscriptions());
+      }
     } catch (error) {
-      console.error("Failed to open checkout:", error);
-      toast({
-        title: "Error",
-        description: "Failed to open checkout. Please try again.",
-        variant: "destructive",
-      });
+      console.error("Error in handleCancel:", error);
     }
-    setShowBuyCreditsDialog(false);
+
+    setShowCancelDialog(false);
   };
 
   // Get current plan details
@@ -639,6 +612,7 @@ export function Subscription() {
                     <Button
                       variant="destructive"
                       onClick={() => setShowCancelDialog(true)}
+                      disabled={subscriptionManagementLoading}
                     >
                       Cancel Subscription
                     </Button>
@@ -650,42 +624,7 @@ export function Subscription() {
             {/* Credits Section */}
             {currentPlan && (
               <div className="mt-8 pt-8 border-t">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-base-heading">
-                      Buy More Credits
-                    </h3>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {creditPackages.map((pkg) => (
-                    <div
-                      key={pkg.id}
-                      className="bg-base-background rounded-lg p-4 border hover:border-primary transition-colors"
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="text-lg font-semibold text-base-heading">
-                          {pkg.credits} Credits
-                        </div>
-                        {!!pkg.savings && (
-                          <div className="text-sm bg-state-success-light text-state-success px-2 py-1 rounded">
-                            Save {pkg.savings}%
-                          </div>
-                        )}
-                      </div>
-                      <div className="text-2xl font-bold text-brand-accent mb-4">
-                        ${pkg.price}
-                      </div>
-                      <Button
-                        onClick={() => handleBuyCredits(pkg)}
-                        className="w-full"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Buy Credits
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                <CreditPurchase />
               </div>
             )}
           </div>
@@ -893,8 +832,8 @@ export function Subscription() {
             <DialogTitle>Cancel Subscription</DialogTitle>
             <DialogDescription>
               Are you sure you want to cancel your subscription? You'll lose
-              access to premium features at the end of your current billing
-              period.
+              access to premium features immediately. This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 my-4">
@@ -908,22 +847,14 @@ export function Subscription() {
                 </h3>
                 <div className="mt-2 text-sm text-yellow-700">
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>
-                      Your subscription will remain active until{" "}
-                      {currentSubscription?.current_period_end
-                        ? new Date(
-                            currentSubscription.current_period_end
-                          ).toLocaleDateString()
-                        : "the end of your billing period"}
-                    </li>
-                    <li>
-                      You'll lose access to premium features after that date
-                    </li>
+                    <li>Your subscription will be cancelled immediately</li>
+                    <li>You'll lose access to premium features right away</li>
                     <li>
                       Existing content will remain accessible but locked for
                       editing
                     </li>
-                    <li>Unused credits will be lost</li>
+                    <li>No further charges will be made</li>
+                    <li>Your existing credits will remain in your account</li>
                   </ul>
                 </div>
               </div>
@@ -936,8 +867,14 @@ export function Subscription() {
             >
               Keep Subscription
             </Button>
-            <Button variant="destructive" onClick={handleCancel}>
-              Cancel Subscription
+            <Button
+              variant="destructive"
+              onClick={handleCancel}
+              disabled={subscriptionManagementLoading}
+            >
+              {subscriptionManagementLoading
+                ? "Cancelling..."
+                : "Cancel Subscription"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1049,68 +986,6 @@ export function Subscription() {
                 ? "Downgrade"
                 : "Upgrade"}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Buy Credits Dialog */}
-      <Dialog
-        open={showBuyCreditsDialog}
-        onOpenChange={setShowBuyCreditsDialog}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Buy Additional Credits</DialogTitle>
-            <DialogDescription>
-              You're about to purchase {selectedPackage?.credits} credits for $
-              {selectedPackage?.price}.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="font-medium">
-                    {selectedPackage?.credits} Credits
-                  </div>
-                  <div className="text-sm text-base-paragraph">
-                    Can be used for{" "}
-                    {Math.floor((selectedPackage?.credits || 0) / 5)} books
-                  </div>
-                </div>
-                <div className="text-lg font-bold">
-                  ${selectedPackage?.price}
-                </div>
-              </div>
-            </div>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex">
-                <div className="shrink-0">
-                  <AlertCircle className="h-5 w-5 text-blue-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">
-                    About Credits
-                  </h3>
-                  <div className="mt-2 text-sm text-blue-700">
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>Credits never expire</li>
-                      <li>Each book costs 5 credits to create</li>
-                      <li>Credits are non-refundable</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowBuyCreditsDialog(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={confirmBuyCredits}>Buy Credits</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
