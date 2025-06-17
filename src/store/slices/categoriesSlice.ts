@@ -15,15 +15,21 @@ const initialState: CategoriesState = {
 
 export const fetchCategories = createAsyncThunk<
   Category[],
-  { force?: boolean } | undefined,
+  { isPro?: boolean } | undefined,
   { state: RootState }
 >(
   'categories/fetchCategories',
-  async () => {
-    const { data, error } = await supabase
+  async ({ isPro = false } = {}) => {
+    let query = supabase
       .from('categories')
       .select('*')
       .order('name');
+
+    if (!isPro) {
+      query = query.eq('is_pro', false);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw new Error(error.message);

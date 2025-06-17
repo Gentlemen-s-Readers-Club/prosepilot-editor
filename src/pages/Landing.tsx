@@ -79,7 +79,7 @@ export function Landing() {
 
                   <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
-                      <Link to="/app/signup">
+                      <Link to="/workspace/signup">
                         <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium">
                           Start Writing Your Book
                           <ArrowRight className="ml-2 h-5 w-5" />
@@ -426,7 +426,7 @@ export function Landing() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Link to="/app/signup">
+            <Link to="/workspace/signup">
               <Button className="px-8 py-4 text-lg font-semibold border-2 transition-all">
                 Start Your Writing Journey
                 <ArrowRight className="ml-2 h-5 w-5" />

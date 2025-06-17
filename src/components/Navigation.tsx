@@ -28,7 +28,7 @@ export function Navigation() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     dispatch(clearProfile());
-    navigate('/app/login');
+    navigate('/workspace/login');
   };
 
   const toggleMobileMenu = () => {
@@ -64,7 +64,7 @@ export function Navigation() {
               </button>
             ) : (
               <button
-                onClick={() => navigate('/app')}
+                onClick={() => navigate('/workspace')}
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <LayoutDashboard className="h-4 w-4 text-brand-accent" />
@@ -91,13 +91,13 @@ export function Navigation() {
             {!loading && !session && (
               <>
                 <button
-                  onClick={() => navigate('/app/login')}
+                  onClick={() => navigate('/workspace/login')}
                   className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   <User className="h-4 w-4 text-brand-accent" />
                   <span>Login</span>
                 </button>
-                <Link to="/app/signup">
+                <Link to="/workspace/signup">
                   <Button className="bg-brand-primary hover:bg-brand-primary/90">Get Started</Button>
                 </Link>
               </>
@@ -124,16 +124,16 @@ export function Navigation() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="text-base-heading">My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/profile')}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/workspace/profile')}>
                     <User className="mr-2 h-4 w-4 text-brand-accent" />
                     <span className="text-base-paragraph">Edit Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/subscription')}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/workspace/subscription')}>
                     <CreditCard className="mr-2 h-4 w-4 text-brand-accent" />
                     <span className="text-base-paragraph">Manage Subscription</span>
                   </DropdownMenuItem>
                   {hasStudio && (
-                    <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/app/teams')}>
+                    <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/workspace/teams')}>
                       <Users className="mr-2 h-4 w-4 text-brand-accent" />
                       <span className="text-base-paragraph">Manage Teams</span>
                     </DropdownMenuItem>
@@ -197,14 +197,14 @@ export function Navigation() {
           {!loading && !session ? (
             <>
               <button
-                onClick={() => { navigate('/app/login'); closeMobileMenu(); }}
+                onClick={() => { navigate('/workspace/login'); closeMobileMenu(); }}
                 className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
               >
                 <User className="h-5 w-5 text-brand-accent" />
                 <span>Login</span>
               </button>
               <button
-                onClick={() => { navigate('/app/signup'); closeMobileMenu(); }}
+                onClick={() => { navigate('/workspace/signup'); closeMobileMenu(); }}
                 className="flex items-center w-full text-left space-x-2 bg-brand-primary text-white px-3 py-2 rounded-md text-base font-medium"
               >
                 <span>Get Started</span>
@@ -214,7 +214,7 @@ export function Navigation() {
             <>
               {hasStudio && (
                 <button
-                  onClick={() => { navigate('/app/teams'); closeMobileMenu(); }}
+                  onClick={() => { navigate('/workspace/teams'); closeMobileMenu(); }}
                   className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
                 >
                   <Users className="h-5 w-5 text-brand-accent" />
@@ -241,7 +241,7 @@ export function Navigation() {
                     </div>
                     
                     <button
-                      onClick={() => { navigate('/app/profile'); closeMobileMenu(); }}
+                      onClick={() => { navigate('/workspace/profile'); closeMobileMenu(); }}
                       className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                     >
                       <User className="h-4 w-4 text-brand-accent" />
@@ -249,7 +249,7 @@ export function Navigation() {
                     </button>
                     
                     <button
-                      onClick={() => { navigate('/app/subscription'); closeMobileMenu(); }}
+                      onClick={() => { navigate('/workspace/subscription'); closeMobileMenu(); }}
                       className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                     >
                       <CreditCard className="h-4 w-4 text-brand-accent" />

@@ -29,7 +29,7 @@ export function Login() {
 
       if (error) throw error;
 
-      navigate("/app");
+      navigate("/workspace");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -46,7 +46,7 @@ export function Login() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/app`,
+          redirectTo: `${window.location.origin}/workspace`,
         },
       });
 
@@ -145,7 +145,7 @@ export function Login() {
 
               <div className="flex items-center justify-between">
                 <Button variant="link" asChild>
-                  <Link to="/app/forgot-password">Forgot your password?</Link>
+                  <Link to="/workspace/forgot-password">Forgot your password?</Link>
                 </Button>
               </div>
 
@@ -157,7 +157,7 @@ export function Login() {
                 <span className="text-sm text-gray-500">
                   Don't have an account?{" "}
                   <Button variant="link" asChild>
-                    <Link to="/app/signup">Sign up</Link>
+                    <Link to="/workspace/signup">Sign up</Link>
                   </Button>
                 </span>
               </div>

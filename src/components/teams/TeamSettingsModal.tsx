@@ -203,7 +203,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
         description: "Team deleted successfully",
       });
       
-      navigate('/app/teams');
+      navigate('/workspace/teams');
       onOpenChange(false);
     } catch (error) {
       console.error('Error deleting team:', error);

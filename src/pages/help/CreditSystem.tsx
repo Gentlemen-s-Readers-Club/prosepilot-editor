@@ -625,7 +625,7 @@ export function CreditSystem() {
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/app/subscription">
+            <Link to="/workspace/subscription">
               <Button
                 variant="outline"
                 className="border-white text-white hover:bg-white/10 px-8 py-3"

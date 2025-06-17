@@ -236,7 +236,7 @@ function ChapterEditorContent() {
             <div className="max-w-5xl mx-auto flex flex-col h-full">
               <div className="flex items-center justify-between mb-6">
                 <button
-                  onClick={() => navigate(`/app/book/${book?.id}`)}
+                  onClick={() => navigate(`/workspace/book/${book?.id}`)}
                   className="flex items-center text-base-heading hover:text-base-heading/80"
                 >
                   <ArrowLeft className="mr-2" size={20} />

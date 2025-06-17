@@ -72,6 +72,7 @@ export function BookDetails() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
   const hasProOrStudio = useSelector(hasProOrStudioPlan);
@@ -132,7 +133,9 @@ export function BookDetails() {
             `)
             .eq('id', id)
             .single(),
-          categoriesStatus === 'idle' ? dispatch(fetchCategories()).unwrap() : Promise.resolve(),
+          categoriesStatus === 'idle' ? dispatch(fetchCategories({
+            isPro: hasProOrStudio
+          })).unwrap() : Promise.resolve(),
           languagesStatus === 'idle' ? dispatch(fetchLanguages()).unwrap() : Promise.resolve()
         ]);
 
@@ -178,14 +181,16 @@ export function BookDetails() {
           title: "Error",
           description: "Failed to load book details",
         });
-        navigate('/app');
+        navigate('/workspace');
       } finally {
         setLoading(false);
       }
     }
 
-    fetchData();
-  }, [id, navigate, toast, categoriesStatus, languagesStatus, dispatch]);
+    if (subscriptionStatus === 'success') { 
+      fetchData();
+    }
+  }, [id, navigate, toast, categoriesStatus, languagesStatus, dispatch, hasProOrStudio, subscriptionStatus]);
 
   const handleFileSelect = async (file: File) => {
     try {
@@ -561,7 +566,7 @@ export function BookDetails() {
         title: "Success",
         description: "Book deleted successfully",
       });
-      navigate('/app');
+      navigate('/workspace');
     } catch (error) {
       console.error('Error deleting book:', error);
       toast({
@@ -635,7 +640,7 @@ export function BookDetails() {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center">
               <button
-                onClick={() => navigate('/app')}
+                onClick={() => navigate('/workspace')}
                 className="flex items-center text-base-heading hover:text-base-heading/80 transition-colors mr-4"
               >
                 <ArrowLeft className="mr-2" size={20} />

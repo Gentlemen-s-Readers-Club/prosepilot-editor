@@ -54,7 +54,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
           {books.map((book) => (
             <div
               key={book.id}
-              onClick={() => book.status !== 'writing' && navigate(`/app/book/${book.id}`)}
+              onClick={() => book.status !== 'writing' && navigate(`/workspace/book/${book.id}`)}
               className={`group ${book.status !== 'writing' ? 'cursor-pointer' : 'cursor-default'}`}
             >
               <div className="relative aspect-[10/16] rounded-lg overflow-hidden bg-gray-100 shadow-md group-hover:shadow-xl transition-all duration-300">
@@ -93,7 +93,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
           {books.map((book) => (
             <div
               key={book.id}
-              onClick={() => book.status !== 'writing' && navigate(`/app/book/${book.id}`)}
+              onClick={() => book.status !== 'writing' && navigate(`/workspace/book/${book.id}`)}
               className={`group bg-white border border-gray-200 rounded-lg p-4 flex gap-4 transition-shadow hover:shadow-md ${
                 book.status !== 'writing' ? 'cursor-pointer' : 'cursor-default'
               }`}

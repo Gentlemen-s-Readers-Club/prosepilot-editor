@@ -43,7 +43,7 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
       if (error) throw error;
 
       // Navigate to the new chapter
-      navigate(`/app/chapter/${data.id}`);
+      navigate(`/workspace/chapter/${data.id}`);
 
       toast({
         title: "Success",
@@ -116,7 +116,7 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
                 {book.chapters.map((chapter) => (
                   <button
                     key={chapter.id}
-                    onClick={() => navigate(`/app/chapter/${chapter.id}`)}
+                    onClick={() => navigate(`/workspace/chapter/${chapter.id}`)}
                     className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm ${
                       chapter.id === currentChapterId
                         ? 'bg-brand-primary text-white'

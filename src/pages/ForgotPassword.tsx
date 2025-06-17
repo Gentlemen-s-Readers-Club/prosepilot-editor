@@ -81,7 +81,7 @@ export function ForgotPassword() {
                   variant="link"
                   asChild
                 >
-                  <Link to="/app/login">
+                  <Link to="/workspace/login">
                     Back to login
                   </Link>
                 </Button>

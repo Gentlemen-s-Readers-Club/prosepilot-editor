@@ -226,7 +226,7 @@ export function TeamDetails() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Team not found</h1>
-          <Button onClick={() => navigate('/app/teams')}>
+          <Button onClick={() => navigate('/workspace/teams')}>
             Back to Teams
           </Button>
         </div>
@@ -239,7 +239,7 @@ export function TeamDetails() {
       {/* Header */}
       <div className="mb-8">
         <button
-          onClick={() => navigate('/app/teams')}
+          onClick={() => navigate('/workspace/teams')}
           className="flex items-center text-base-heading hover:text-brand-accent transition-colors mr-4"
         >
           <ArrowLeft className="mr-2" size={20} />

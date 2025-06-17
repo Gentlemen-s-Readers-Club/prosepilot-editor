@@ -7,7 +7,7 @@ import {
   selectSubscriptionStatus, 
   selectHasActiveSubscription, 
   selectCanSubscribeToNewPlan,
-  fetchSubscriptions
+  fetchUserSubscription
 } from '../store/slices/subscriptionSlice';
 
 export interface Subscription {
@@ -77,7 +77,7 @@ export function useSubscriptions(): UseSubscriptionsReturn {
 
   // Refetch subscriptions
   const refetch = async (): Promise<void> => {
-    await dispatch(fetchSubscriptions());
+    await dispatch(fetchUserSubscription());
   };
 
   return {

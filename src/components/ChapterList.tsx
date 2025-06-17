@@ -251,7 +251,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
                     setEditingId(null);
                   }}
                   onCancel={() => setEditingId(null)}
-                  onNavigate={() => navigate(`/app/chapter/${chapter.id}`)}
+                  onNavigate={() => navigate(`/workspace/chapter/${chapter.id}`)}
                   onDelete={() => setChapterToDelete(chapter)}
                   disabled={isPublished}
                 />

@@ -565,7 +565,7 @@ export function TeamCollaboration() {
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl font-bold text-white mb-4">Ready to start collaborating?</h3>
           <p className="text-white/90 mb-6">Create your first team and invite collaborators to start writing together.</p>
-          <Link to="/app/teams">
+          <Link to="/workspace/teams">
             <Button className="bg-white text-base-heading hover:bg-gray-100 px-8 py-3">
               Create Team
               <ChevronRight className="ml-2 h-4 w-4" />

@@ -9,7 +9,7 @@ import { fetchBooks } from '../store/slices/booksSlice';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
 import { fetchUserTeams } from '../store/slices/teamsSlice';
-import { hasStudioPlan } from '../store/slices/subscriptionSlice';
+import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
 import { supabase } from '../lib/supabase';
 import { AppDispatch, RootState } from '../store';
 import type { Book, Category, Language, Status } from '../store/types';
@@ -56,12 +56,15 @@ export function Dashboard() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>(sortOptions[0]);
 
+
+  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
   const { items: books, status: booksStatus } = useSelector((state: RootState) => state.books);
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
   const { teams, status: teamsStatus } = useSelector((state: RootState) => state.teams);
   const { profile } = useSelector((state: RootState) => state.profile);
   const hasStudio = useSelector(hasStudioPlan);
+  const hasPro = useSelector(hasProOrStudioPlan);
 
   // Check if user has any teams
   const hasTeams = teams.length > 0;
@@ -100,7 +103,9 @@ export function Dashboard() {
           promises.push(dispatch(fetchBooks()).unwrap());
         }
         if (categoriesStatus === 'idle') {
-          promises.push(dispatch(fetchCategories()).unwrap());
+          promises.push(dispatch(fetchCategories({
+            isPro: hasPro
+          })).unwrap());
         }
         if (languagesStatus === 'idle') {
           promises.push(dispatch(fetchLanguages()).unwrap());
@@ -121,8 +126,11 @@ export function Dashboard() {
         setLoading(false);
       }
     };
-    loadData();
-  }, [dispatch, booksStatus, categoriesStatus, languagesStatus, teamsStatus, hasStudio]);
+    
+    if (subscriptionStatus === 'success') {
+      loadData();
+    }
+  }, [dispatch, booksStatus, categoriesStatus, languagesStatus, teamsStatus, hasStudio, hasPro, subscriptionStatus]);
 
   // Subscribe to real-time changes
   useEffect(() => {

@@ -71,7 +71,7 @@ export function Teams() {
   }, [dispatch, status, toast]);
 
   const handleTeamClick = (team: Team) => {
-    navigate(`/app/teams/${team.id}`);
+    navigate(`/workspace/teams/${team.id}`);
   };
 
   const handleCreateTeam = async (teamData: { name: string; description?: string; logo_url?: string }) => {
@@ -83,7 +83,7 @@ export function Teams() {
         description: "Team created successfully",
       });
       // Navigate to the new team
-      navigate(`/app/teams/${newTeam.id}`);
+      navigate(`/workspace/teams/${newTeam.id}`);
     } catch (err) {
       console.error('Error creating team:', err);
       toast({

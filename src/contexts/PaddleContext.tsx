@@ -30,8 +30,8 @@ export function PaddleProvider({ children }: PaddleProviderProps) {
                 theme: "light",
                 displayMode: "overlay",
                 locale: "en",
-                successUrl: `${window.location.origin}/app/subscription?success=true`,
-                closeUrl: `${window.location.origin}/app/subscription`,
+                successUrl: `${window.location.origin}/workspace/subscription?success=true`,
+                closeUrl: `${window.location.origin}/workspace/subscription`,
               },
             },
           });

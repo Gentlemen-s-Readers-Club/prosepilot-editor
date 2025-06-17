@@ -32,7 +32,7 @@ import {
   selectCurrentPlan,
   selectSubscriptionStatus,
   selectCanSubscribeToNewPlan,
-  fetchSubscriptions,
+  fetchUserSubscription,
 } from "../store/slices/subscriptionSlice";
 import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
@@ -159,10 +159,10 @@ const creditPackages = [
 
 export function Subscription() {
   const dispatch = useDispatch<AppDispatch>();
+  const { toast } = useToast();
   const { profile, status: profileStatus } = useSelector(
     (state: RootState) => state.profile
   );
-  const { toast } = useToast();
   const { balance: creditBalance } = useCredits();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
@@ -205,7 +205,7 @@ export function Subscription() {
         description: "Your subscription has been activated successfully.",
       });
       // Refresh subscription data
-      dispatch(fetchSubscriptions());
+      dispatch(fetchUserSubscription());
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (cancelled === "true") {
@@ -369,7 +369,7 @@ export function Subscription() {
           allowLogout: false,
           showAddDiscounts: false,
           showAddTaxId: false,
-          successUrl: `${window.location.origin}/app/subscription?success=true`,
+          successUrl: `${window.location.origin}/workspace/subscription?success=true`,
         },
         customData: {
           user_id: user.id, // Use the authenticated user ID instead of profile.id

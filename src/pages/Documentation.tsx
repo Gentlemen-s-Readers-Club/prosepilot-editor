@@ -614,7 +614,7 @@ export function Documentation() {
                     {hasActiveSubscription && !hasProOrStudio && (
                       <div className="mt-4 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
                         <Link 
-                          to="/app/subscription" 
+                          to="/workspace/subscription" 
                           className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
                         >
                           <Star className="w-4 h-4" />
@@ -664,7 +664,7 @@ export function Documentation() {
                     {hasActiveSubscription && !hasProOrStudio && (
                       <div className="mt-4 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
                         <Link 
-                          to="/app/subscription" 
+                          to="/workspace/subscription" 
                           className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
                         >
                           <Star className="w-4 h-4" />
@@ -717,7 +717,7 @@ export function Documentation() {
                     {hasActiveSubscription && !hasStudio && (
                       <div className="mt-4 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
                         <Link 
-                          to="/app/subscription" 
+                          to="/workspace/subscription" 
                           className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
                         >
                           <Star className="w-4 h-4" />
@@ -977,7 +977,7 @@ export function Documentation() {
                   {hasActiveSubscription && !hasProOrStudio && (
                     <div className="mt-6 p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-lg">
                       <Link 
-                        to="/app/subscription" 
+                        to="/workspace/subscription" 
                         className="flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 transition-colors"
                       >
                         <Star className="w-4 h-4" />

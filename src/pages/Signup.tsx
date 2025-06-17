@@ -98,7 +98,7 @@ export function Signup() {
         description: "Please check your email to verify your account.",
       });
       
-      navigate('/app/login');
+      navigate('/workspace/login');
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -115,7 +115,7 @@ export function Signup() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/app`,
+          redirectTo: `${window.location.origin}/workspace`,
         },
       });
 
@@ -255,7 +255,7 @@ export function Signup() {
                     variant="link"
                     asChild
                   >
-                    <Link to="/app/login">
+                    <Link to="/workspace/login">
                       Sign in
                     </Link>
                   </Button>

@@ -40,8 +40,6 @@ const planHierarchy = {
   pri_01jxbekwgfx9k8tm8cbejzrns6: { name: "Starter", level: 1 }, // Starter
   pri_01jxben1kf0pfntb8162sfxhba: { name: "Pro", level: 2 }, // Pro
   pri_01jxxb51m8t8edd9w3wvw96bt4: { name: "Studio", level: 3 }, // Studio
-  // Note: Studio plan currently uses the same price ID as Pro, but we'll add a separate one when it's ready
-  // For now, we'll check for Studio plan by looking for a specific subscription pattern or plan name
 };
 
 const initialState: SubscriptionState = {
@@ -126,17 +124,16 @@ const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
   if (activeSubscription.price_id === "pri_01jxbekwgfx9k8tm8cbejzrns6") {
     return "starter";
   } else if (activeSubscription.price_id === "pri_01jxben1kf0pfntb8162sfxhba") {
-    // For now, we'll assume Pro plan since Studio is coming soon
-    // When Studio is ready, we'll need to add a way to distinguish between Pro and Studio
-    // This could be done by adding a plan_type field to the subscription or using a different price ID
     return "pro";
+  } else if (activeSubscription.price_id === "pri_01jxxb51m8t8edd9w3wvw96bt4") {
+    return "studio";
   }
 
   return null;
 };
 
-export const fetchSubscriptions = createAsyncThunk(
-  "subscription/fetchSubscriptions",
+export const fetchUserSubscription = createAsyncThunk(
+  "subscription/fetchUserSubscription",
   async () => {
     const {
       data: { session },
@@ -146,24 +143,12 @@ export const fetchSubscriptions = createAsyncThunk(
       throw new Error("No authenticated user");
     }
 
-    console.log("Fetching subscriptions for user ID:", session.user.id);
-
-    // First, let's check what columns actually exist in the table
-    const { data: testData } = await supabase
-      .from("subscriptions")
-      .select("*")
-      .limit(1);
-
-    console.log("Sample subscription data structure:", testData?.[0]);
-
     // Now fetch the user's subscriptions
     const { data, error: fetchError } = await supabase
       .from("subscriptions")
       .select("*")
       .eq("user_id", session.user.id)
       .order("created_at", { ascending: false });
-
-    console.log("Subscriptions query result:", { data, error: fetchError });
 
     if (fetchError) {
       throw fetchError;
@@ -213,7 +198,7 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
         },
         () => {
           console.log("Real-time subscription change detected");
-          dispatch(fetchSubscriptions());
+          dispatch(fetchUserSubscription());
         }
       )
       .subscribe();
@@ -303,11 +288,11 @@ const subscriptionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSubscriptions.pending, (state) => {
+      .addCase(fetchUserSubscription.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchSubscriptions.fulfilled, (state, action) => {
+      .addCase(fetchUserSubscription.fulfilled, (state, action) => {
         state.status = "success";
         state.subscriptions = action.payload;
 
@@ -332,7 +317,7 @@ const subscriptionSlice = createSlice({
           subscriptionStatus: state.subscriptionStatus,
         });
       })
-      .addCase(fetchSubscriptions.rejected, (state, action) => {
+      .addCase(fetchUserSubscription.rejected, (state, action) => {
         state.status = "error";
         state.error = action.error.message || "Failed to fetch subscriptions";
       })
