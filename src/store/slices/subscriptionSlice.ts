@@ -169,8 +169,7 @@ export const fetchUserSubscription = createAsyncThunk(
       created_at: sub.created_at,
       updated_at: sub.updated_at || sub.created_at,
     }));
-
-    console.log("Normalized subscriptions:", normalizedData);
+    
     return normalizedData;
   }
 );
@@ -309,13 +308,6 @@ const subscriptionSlice = createSlice({
           state.subscriptions,
           state.currentPlan
         );
-
-        console.log("Updated subscription state:", {
-          subscriptions: state.subscriptions,
-          activeSubscriptions: state.activeSubscriptions,
-          currentPlan: state.currentPlan,
-          subscriptionStatus: state.subscriptionStatus,
-        });
       })
       .addCase(fetchUserSubscription.rejected, (state, action) => {
         state.status = "error";

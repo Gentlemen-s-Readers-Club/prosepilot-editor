@@ -79,7 +79,6 @@ export const fetchProfile = createAsyncThunk(
       throw new Error(error.message);
     }
 
-    console.log('Successfully fetched profile:', data);
     return {
       ...data,
       email: session.user.email,
