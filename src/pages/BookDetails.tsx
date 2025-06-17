@@ -181,7 +181,7 @@ export function BookDetails() {
           title: "Error",
           description: "Failed to load book details",
         });
-        navigate('/workspace');
+        navigate('/app');
       } finally {
         setLoading(false);
       }
@@ -566,7 +566,7 @@ export function BookDetails() {
         title: "Success",
         description: "Book deleted successfully",
       });
-      navigate('/workspace');
+      navigate('/app');
     } catch (error) {
       console.error('Error deleting book:', error);
       toast({
@@ -640,7 +640,7 @@ export function BookDetails() {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center">
               <button
-                onClick={() => navigate('/workspace')}
+                onClick={() => navigate('/app')}
                 className="flex items-center text-base-heading hover:text-base-heading/80 transition-colors mr-4"
               >
                 <ArrowLeft className="mr-2" size={20} />
