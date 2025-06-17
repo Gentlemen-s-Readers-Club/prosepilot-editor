@@ -13,9 +13,10 @@ import { fetchTones } from '../store/slices/tonesSlice';
 import { fetchNarrators } from '../store/slices/narratorsSlice';
 import { fetchLiteratureStyles } from '../store/slices/literatureStylesSlice';
 import { fetchUserTeams } from '../store/slices/teamsSlice';
+import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
 
 interface ValidationIssue {
-  type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration';
+  type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration' | 'content_coherence';
   description: string;
 }
 
@@ -32,9 +33,11 @@ interface OwnerOption extends SelectOption {
 export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
+  
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<ValidationIssue[] | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [promptCharCount, setPromptCharCount] = useState(0);
@@ -45,6 +48,8 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const [languageError, setLanguageError] = useState<string | null>(null);
   
   // Get form options from Redux store
+  const userHasProPlan = useSelector(hasProOrStudioPlan);
+  const userHasStudioPlan = useSelector(hasStudioPlan);
   const { items: categories } = useSelector((state: RootState) => state.categories);
   const { items: languages } = useSelector((state: RootState) => state.languages);
   const { items: tones, status: tonesStatus } = useSelector((state: RootState) => state.tones);
@@ -102,7 +107,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to load data",
+          description: "Failed to load form data",
         });
       } finally {
         setLoading(false);
@@ -110,7 +115,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
     };
 
     loadData();
-  }, [dispatch, literatureStylesStatus, narratorsStatus, teamsStatus, toast, tonesStatus]);
+  }, [dispatch, literatureStylesStatus, narratorsStatus, teamsStatus, toast, tonesStatus, onClose]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -134,6 +139,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
     setSelectedStyle(null);
     setSelectedTone(null);
     setCurrentStep(1);
+    setError(null);
     setIssues(null);
   };
 
@@ -141,6 +147,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
     if (!selectedLanguage || !selectedOwner) return;
     
     setIsSubmitting(true);
+    setError(null);
     setIssues(null);
 
     try {
@@ -178,18 +185,26 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create book. Please try again.');
+        throw new Error;
       }
 
       const result = await response.json();
 
+      console.log(result);
+
+      if (!result.success) {
+        setError(result.message || "Failed to create book. Please try again later or contact support.");
+        return result;
+      }
+      
       if (!result.is_valid) {
         setCurrentStep(1);
-        setIssues(result.issues || null);
-        setIsSubmitting(false);
+        setIssues(result.issues);
         return result;
-      } else if (!result.book) {
-        throw new Error('No book data received');
+      }
+      
+      if (!result.book) {
+        throw new Error;
       }
 
       onClose();
@@ -200,11 +215,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
       });
     } catch (error) {
       console.error('Error creating book:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create book. Please try again.",
-      });
+      setError("Failed to create book. Please try again later or contact support.");
     } finally {
       setIsSubmitting(false);
     }
@@ -212,11 +223,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
 
   const nextStep = () => {
     if (currentStep === 1 && (!prompt || prompt.trim().length < 10)) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Please enter a story idea or outline (minimum 10 characters).",
-      });
+      setError("Please enter a story idea or outline (minimum 10 characters).");
       return;
     }
 
@@ -281,13 +288,17 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
                 <div className={`h-1 w-12 ${currentStep >= 2 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
-                <div className={`h-1 w-12 ${currentStep >= 3 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>3</div>
+                {userHasProPlan && (
+                  <>
+                    <div className={`h-1 w-12 ${currentStep >= 3 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>3</div>
+                  </>
+                )}
               </div>
             </div>
             <Dialog.Close asChild>
               <button 
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-base-paragraph transition-colors"
                 disabled={isSubmitting}
               >
                 <X size={24} />
@@ -301,22 +312,40 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
               <div className="flex items-center justify-center h-full p-6">
                 <div className="flex flex-col items-center gap-4">
                   <Loader2 className="w-10 h-10 text-base-heading animate-spin" />
-                  <p className="text-gray-600">Loading...</p>
+                  <p className="text-base-paragraph">Loading...</p>
                 </div>
               </div>
             ) : (
               <div className="p-6 space-y-6">
-                {issues && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                {error && (
+                  <div className="bg-state-error-light border border-state-error rounded-lg p-4">
                     <div className="flex flex-col gap-1">
-                      <div className="flex">
-                        <AlertCircle className="h-5 w-5 text-red-400" />
-                        <h3 className="text-sm font-medium text-red-800 ml-3">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-5 w-5 text-state-error" />
+                        <h3 className="text-sm font-medium text-state-error">
+                          Error
+                        </h3>
+                      </div>
+                      <div className="ml-3">
+                        <div className="mt-2 text-sm text-state-error">
+                          {error}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {issues && (
+                  <div className="bg-state-error-light border border-state-error rounded-lg p-4">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-5 w-5 text-state-error" />
+                        <h3 className="text-sm font-medium text-state-error">
                           Content Policy Violation
                         </h3>
                       </div>
                       <div className="ml-3">
-                        <div className="mt-2 text-sm text-red-700">
+                        <div className="mt-2 text-sm text-state-error">
                           <ul className="list-disc pl-5 space-y-2">
                             {issues.map((issue, index) => (
                               <li key={index}>{issue.description}</li>
@@ -333,11 +362,11 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
                       <div className="bg-brand-primary/10 p-3 rounded-lg">
-                        <Lightbulb className="h-6 w-6 text-base-heading" />
+                        <Lightbulb className="h-6 w-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Story Idea or Outline</h3>
-                        <p className="text-gray-600 text-sm">Describe your story concept, including main characters, setting, and central conflict.</p>
+                        <h3 className="text-lg font-semibold text-base-heading">Story Idea or Outline</h3>
+                        <p className="text-base-paragraph text-sm">Describe your story concept, including main characters, setting, and central conflict.</p>
                       </div>
                     </div>
 
@@ -374,16 +403,16 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
                       <div className="bg-brand-primary/10 p-3 rounded-lg">
-                        <BookOpen className="h-6 w-6 text-base-heading" />
+                        <BookOpen className="h-6 w-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Book Settings</h3>
-                        <p className="text-gray-600 text-sm">Choose the basic properties for your book.</p>
+                        <h3 className="text-lg font-semibold text-base-heading">Book Settings</h3>
+                        <p className="text-base-paragraph text-sm">Choose the basic properties for your book.</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
-                      {ownerOptions.length > 0 && (
+                      {userHasStudioPlan && ownerOptions.length > 0 && (
                         <div className="space-y-2">
                           <Label htmlFor="owner" className="text-gray-700 flex items-center gap-1">
                             Book Owner
@@ -469,11 +498,11 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
                       <div className="bg-brand-primary/10 p-3 rounded-lg">
-                        <Sparkles className="h-6 w-6 text-base-heading" />
+                        <Sparkles className="h-6 w-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Advanced Settings</h3>
-                        <p className="text-gray-600 text-sm">Fine-tune your book's style and tone (optional).</p>
+                        <h3 className="text-lg font-semibold text-base-heading">Advanced Settings</h3>
+                        <p className="text-base-paragraph text-sm">Fine-tune your book's style and tone (optional).</p>
                       </div>
                     </div>
 
@@ -515,15 +544,15 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                       </div>
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="bg-state-info-light border border-state-info rounded-lg p-4">
                       <div className="flex items-start gap-3">
-                        <Globe className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                        <Globe className="w-5 h-5 text-state-info mt-0.5 shrink-0" />
                         <div>
-                          <h4 className="text-sm font-medium text-blue-800 mb-1">Book Generation</h4>
-                          <p className="text-xs text-blue-700">
+                          <h4 className="text-sm font-medium text-state-info mb-1">Book Generation</h4>
+                          <p className="text-xs text-state-info">
                             When you click "Create Book", our AI will first generate the book structure based on your settings, which typically takes 2-5 minutes. After that, the AI will begin writing your complete book, which can take up to 30 minutes to complete.
                           </p>
-                          <p className="text-xs text-blue-700 mt-1">
+                          <p className="text-xs text-state-info mt-1">
                             <strong>Note:</strong> This will use 5 credits from your account.
                           </p>
                         </div>
@@ -551,7 +580,8 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
                   <div></div>
                 )}
                 
-                {currentStep < 3 ? (
+                
+                {(currentStep < 3 && userHasProPlan) || (currentStep < 2 && !userHasProPlan) ? (
                   <Button
                     onClick={nextStep}
                     disabled={isSubmitting || (currentStep === 1 && (!prompt || prompt.trim().length < 10))}
