@@ -43,6 +43,7 @@ export function SubscribeForm({
       formData.append('first_name', data.firstName);
       formData.append('last_name', data.lastName);
       formData.append('email', data.email);
+      formData.append('tags', JSON.stringify(['newsletter']));
       
       const response = await fetch(`${import.meta.env.VITE_API_URL}/subscribe-newsletter`, {
         method: 'POST',
