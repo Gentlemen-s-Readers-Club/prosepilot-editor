@@ -386,7 +386,7 @@ export function Landing() {
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center bg-brand-primary/10 rounded-full px-6 py-2 mb-6">
-              <Rocket className="w-5 h-5 text-brand-primary mr-2" />
+              <Rocket className="w-5 h-5 text-brand-accent mr-2" />
               <span className="text-brand-primary font-medium">Ready to Transform Your Writing?</span>
             </div>
             
@@ -410,17 +410,17 @@ export function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {[
               {
-                icon: <Zap className="w-8 h-8" />,
+                icon: <Zap className="w-8 h-8 text-brand-accent" />,
                 title: "Lightning Fast",
                 description: "Generate complete books in hours, not months"
               },
               {
-                icon: <Award className="w-8 h-8" />,
+                icon: <Award className="w-8 h-8 text-brand-accent" />,
                 title: "Professional Quality",
                 description: "AI-powered editing ensures publication-ready content"
               },
               {
-                icon: <Target className="w-8 h-8" />,
+                icon: <Target className="w-8 h-8 text-brand-accent" />,
                 title: "Your Vision",
                 description: "Maintain creative control while AI handles the heavy lifting"
               }
