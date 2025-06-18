@@ -170,14 +170,14 @@ export function Signup() {
                 Continue with Google
               </Button>
 
-              <Button
+              {/* <Button
                 variant="outline"
                 onClick={() => handleSocialLogin('facebook')}
                 className="group w-full flex items-center justify-center gap-3"
               >
                 <Facebook className="w-5 h-5 text-[#1877F2] group-hover:text-white transition-colors" />
                 Continue with Facebook
-              </Button>
+              </Button> */}
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
