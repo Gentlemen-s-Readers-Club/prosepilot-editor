@@ -47,7 +47,7 @@ export function Navigation() {
           <div className="flex items-center">
             <div className="flex items-center gap-1 cursor-pointer" onClick={() => { navigate('/'); closeMobileMenu(); }}>
               <img src="/logo.png" alt="ProsePilot Logo" className="h-10 w-10" />
-              <span className="ml-2 text-xl font-bold text-base-heading hidden sm:block">ProsePilot</span>
+              <span className="ml-2 text-xl font-bold text-base-heading">ProsePilot</span>
             </div>
           </div>
 
@@ -98,7 +98,7 @@ export function Navigation() {
                   <span>Login</span>
                 </button>
                 <Link to="/workspace/signup">
-                  <Button className="bg-brand-primary hover:bg-brand-primary/90">Get Started</Button>
+                  <Button>Get Started</Button>
                 </Link>
               </>
             )}
@@ -168,6 +168,15 @@ export function Navigation() {
       {/* Mobile menu */}
       <div className={`md:hidden ${mobileMenuOpen ? 'block' : 'hidden'}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+          {!loading && !!session && (
+            <button
+              onClick={() => { navigate('/workspace'); closeMobileMenu(); }}
+              className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
+            >
+              <LayoutDashboard className="h-5 w-5 text-brand-accent" />
+              <span>Dashboard</span>
+            </button>
+          )}
           <button
             onClick={() => { navigate('/support'); closeMobileMenu(); }}
             className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"

@@ -8,6 +8,7 @@ import { useToast } from '../hooks/use-toast';
 import { Eye, EyeOff, Facebook } from 'lucide-react';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
+import useAnalytics from '../hooks/useAnalytics';
 
 export function Signup() {
   const [email, setEmail] = useState('');
@@ -18,6 +19,9 @@ export function Signup() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { trackEvent } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -93,6 +97,12 @@ export function Signup() {
         await createProfile(user.id, { full_name: fullName });
       }
 
+      trackEvent({
+        category: "authentication",
+        action: "signup",
+        label: "email",
+      });
+
       toast({
         title: "Success",
         description: "Please check your email to verify your account.",
@@ -120,6 +130,12 @@ export function Signup() {
       });
 
       if (error) throw error;
+
+      trackEvent({
+        category: "authentication",
+        action: "signup",
+        label: provider,
+      });
     } catch (error: any) {
       toast({
         variant: "destructive",

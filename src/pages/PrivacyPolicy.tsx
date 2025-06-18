@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -14,8 +14,17 @@ import {
   Mail
 } from 'lucide-react';
 import Footer from '../components/Footer';
+import useAnalytics from '../hooks/useAnalytics';
 
 export function PrivacyPolicy() {
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView(window.location.pathname, 'Privacy Policy');
+  }, [trackPageView]);
+  
   return (
     <div className="min-h-screen bg-base-background">
       {/* Header */}

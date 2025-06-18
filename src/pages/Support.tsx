@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -7,6 +7,7 @@ import { CustomSelect, SelectOption } from '../components/ui/select';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
+import useAnalytics from '../hooks/useAnalytics';
 
 const subjectOptions: SelectOption[] = [
   { value: '', label: 'Select a topic' },
@@ -18,6 +19,14 @@ const subjectOptions: SelectOption[] = [
 ];
 
 export function Support() {
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView(window.location.pathname, 'Support');
+  }, [trackPageView]);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',

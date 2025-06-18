@@ -8,8 +8,12 @@ import { useToast } from "../hooks/use-toast";
 import { Eye, EyeOff, Facebook } from "lucide-react";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
+import useAnalytics from "../hooks/useAnalytics";
 
 export function Login() {
+  const { trackEvent } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +32,12 @@ export function Login() {
       });
 
       if (error) throw error;
+
+      trackEvent({
+        category: "authentication",
+        action: "login",
+        label: "email",
+      });
 
       navigate("/workspace");
     } catch (error: any) {
@@ -51,6 +61,12 @@ export function Login() {
       });
 
       if (error) throw error;
+
+      trackEvent({
+        category: "authentication",
+        action: "login",
+        label: provider,
+      });
     } catch (error) {
       toast({
         variant: "destructive",

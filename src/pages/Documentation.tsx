@@ -26,10 +26,20 @@ import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
 import { useSubscriptions } from '../hooks/useSubscriptions';
+import useAnalytics from '../hooks/useAnalytics';
 
 export function Documentation() {
   const [copiedExample, setCopiedExample] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>('getting-started');
+
+
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView(window.location.pathname, 'Documentation');
+  }, [trackPageView]);
 
   // Check if user has Pro or Studio plan
   const { hasActiveSubscription } = useSubscriptions();

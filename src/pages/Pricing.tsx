@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { 
@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
+import useAnalytics from '../hooks/useAnalytics';
 
 interface Plan {
   id: string;
@@ -109,6 +110,14 @@ const faqs = [
 ];
 
 export function Pricing() {
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView(window.location.pathname, 'Pricing');
+  }, [trackPageView]);
+  
   return (
     <>
       <Helmet>

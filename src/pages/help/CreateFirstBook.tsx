@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navigation } from '../../components/Navigation';
 import { Button } from '../../components/ui/button';
@@ -14,8 +14,17 @@ import {
   Eye
 } from 'lucide-react';
 import Footer from '../../components/Footer';
+import useAnalytics from '../../hooks/useAnalytics';
 
 export function CreateFirstBook() {
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView(window.location.pathname);
+  }, [trackPageView]);
+  
   return (
     <div className="min-h-screen bg-base-background">
       <Navigation />

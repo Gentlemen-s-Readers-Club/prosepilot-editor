@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { 
   Sparkles, 
   PenTool, 
   Brain,
-  Star,
   Clock,
   TrendingUp,
   CheckCircle,
@@ -19,8 +18,17 @@ import {
 import { Button } from '../components/ui/button';
 import { SubscribeForm } from '../components/SubscribeForm';
 import Footer from '../components/Footer';
+import useAnalytics from '../hooks/useAnalytics';
 
 export function Landing() {
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView(window.location.pathname, 'Landing');
+  }, [trackPageView]);
+
   return (
     <>
       <Helmet>
@@ -48,11 +56,11 @@ export function Landing() {
               <div className="text-center lg:text-left lg:grid lg:grid-cols-12 lg:gap-8">
                 <div className="lg:col-span-6">
                   {/* Social Proof Badge */}
-                  <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
+                  {/* <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
                     <Star className="w-4 h-4 text-brand-accent mr-2" />
                     <span className="text-sm font-medium text-base-heading">Trusted by 50,000+ writers</span>
                     <span className="ml-2 text-sm text-base-paragraph max-md:hidden">• 4.9/5 rating</span>
-                  </div>
+                  </div> */}
 
                   <h1 className="text-4xl tracking-tight font-extrabold text-base-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
                     <span className="block">Write your book in</span>
@@ -294,15 +302,15 @@ export function Landing() {
             {[
               {
                 quote: "I went from idea to published novel in just 3 weeks. ProsePilot didn't just help me write—it helped me become a real author.",
-                author: "Sarah Chen",
+                author: "Paulo Guerra",
                 role: "Romance Novelist",
-                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+                avatar: "/testimonials/paulo-guerra.png"
               },
               {
                 quote: "The AI understood my vision better than I did. It helped me develop plot threads I never would have thought of on my own.",
-                author: "Marcus Rodriguez",
+                author: "David Bergmann",
                 role: "Sci-Fi Author",
-                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+                avatar: "/testimonials/david-bergmann.jpeg"
               },
               {
                 quote: "Finally, a tool that gets writers. The collaborative features helped my writing group finish our anthology in record time.",
@@ -332,7 +340,7 @@ export function Landing() {
           </div>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 gap-8 lg:grid-cols-4">
+          {/* <div className="mt-16 grid grid-cols-2 gap-8 lg:grid-cols-4">
             {[
               { number: "50K+", label: "Active Writers" },
               { number: "1M+", label: "Books Created" },
@@ -344,7 +352,7 @@ export function Landing() {
                 <div className="text-brand-primary mt-2">{stat.label}</div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -388,9 +396,14 @@ export function Landing() {
             </h2>
             
             <p className="text-xl text-base-paragraph max-w-3xl mx-auto mb-8">
-              Don't let another year pass with your story untold. Join 50,000+ writers who've 
+              Don't let another year pass with your story untold. Join thousands of writers worldwide who've 
               transformed their ideas into published books with ProsePilot.
             </p>
+            
+            {/* <p className="text-xl text-base-paragraph max-w-3xl mx-auto mb-8">
+              Don't let another year pass with your story untold. Join 50,000+ writers who've 
+              transformed their ideas into published books with ProsePilot.
+            </p> */}
           </div>
 
           {/* Feature Grid */}
@@ -449,10 +462,10 @@ export function Landing() {
               <CheckCircle className="w-4 h-4 text-state-success" />
               <span>Start from $9/month</span>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-state-success" />
               <span>50,000+ happy writers</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
