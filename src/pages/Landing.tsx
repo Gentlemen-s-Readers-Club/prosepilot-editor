@@ -251,7 +251,7 @@ export function Landing() {
                 Join 25,000+ writers who receive our weekly newsletter with exclusive writing tips, 
                 AI prompts, and early access to new features.
               </p>
-              <div className="mt-6 flex items-center gap-6 text-white/80">
+              <div className="mt-6 flex flex-col justify-center items-center gap-6 text-white/80 md:flex-row lg:justify-start">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5" />
                   <span>Weekly writing tips</span>
@@ -268,7 +268,7 @@ export function Landing() {
             </div>
             <div className="mt-10 lg:mt-0">
               <SubscribeForm 
-                variant="minimal"
+                // variant="minimal"
                 placeholder="Enter your email for writing tips"
                 buttonText="Get Writing Tips"
                 className="max-w-md mx-auto lg:mx-0"
