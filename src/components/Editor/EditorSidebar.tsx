@@ -6,18 +6,19 @@ import { StatusBadge } from '../ui/status-badge';
 import { NewContentModal } from '../NewContentModal';
 import { useToast } from '../../hooks/use-toast';
 import { supabase } from '../../lib/supabase';
-import { Book } from '../../store/types';
+import { Book, Chapter } from '../../store/types';
 import { getCoverUrl } from '../../lib/utils/covers';
 
 interface EditorSidebarProps {
   book: Book;
+  chapters: Chapter[];
   currentChapterId: string;
   isCollapsed: boolean;
   onToggle: () => void;
   isPublished?: boolean;
 }
 
-export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, isPublished = false }: EditorSidebarProps) {
+export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, onToggle, isPublished = false }: EditorSidebarProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -113,7 +114,7 @@ export function EditorSidebar({ book, currentChapterId, isCollapsed, onToggle, i
                 )}
               </div>
               <div className="space-y-1">
-                {book.chapters.map((chapter) => (
+                {chapters.map((chapter) => (
                   <button
                     key={chapter.id}
                     onClick={() => navigate(`/workspace/chapter/${chapter.id}`)}

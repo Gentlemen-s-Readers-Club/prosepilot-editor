@@ -163,12 +163,8 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
                       onFileSelect={handleLogoUpload}
                       className="w-40 h-40"
                       showInstructions={false}
+                      loading={isUploadingLogo}
                     />
-                    {isUploadingLogo && (
-                      <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
-                        <Loader2 className="w-6 h-6 animate-spin text-base-heading" />
-                      </div>
-                    )}
                   </div>
                 )}
               </div>

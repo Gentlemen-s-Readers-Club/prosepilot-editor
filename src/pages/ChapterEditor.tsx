@@ -35,6 +35,7 @@ function ChapterEditorContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [chapterTitle, setChapterTitle] = useState('');
   const [book, setBook] = useState<Book | null>(null);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const [versions, setVersions] = useState<Version[]>([]);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
@@ -45,6 +46,7 @@ function ChapterEditorContent() {
 
       setIsLoading(true);
       try {
+        // First, get the chapter with book info
         const { data: chapter, error: chapterError } = await supabase
           .from('chapters')
           .select('*, books!inner(*)')
@@ -54,36 +56,39 @@ function ChapterEditorContent() {
         if (chapterError) throw chapterError;
         if (!chapter) throw new Error('Chapter not found');
 
-        setIsPublished(chapter.books.status === 'published');
+        // Load versions, book details, and chapters in parallel
+        const [versionsResult, bookResult, chaptersResult] = await Promise.all([
+          supabase
+            .from('chapter_versions')
+            .select('*')
+            .eq('chapter_id', id)
+            .order('created_at', { ascending: false }),
+          
+          supabase
+            .from('books')
+            .select('*')
+            .eq('id', chapter.book_id)
+            .single(),
+          
+          supabase
+            .from('chapters')
+            .select('*')
+            .eq('book_id', chapter.book_id)
+            .order('order')
+        ]);
 
-        const { data: bookData, error: bookError } = await supabase
-          .from('books')
-          .select(`
-            *,
-            chapters (
-              id,
-              title,
-              type,
-              "order"
-            )
-          `)
-          .eq('id', chapter.book_id)
-          .single();
+        // Check for errors in parallel results
+        if (versionsResult.error) throw versionsResult.error;
+        if (bookResult.error) throw bookResult.error;
+        if (chaptersResult.error) throw chaptersResult.error;
+        if (!bookResult.data) throw new Error('Book not found');
 
-        if (bookError) throw bookError;
-        if (!bookData) throw new Error('Book not found');
+        // Set state with results
+        setBook(bookResult.data);
+        setIsPublished(bookResult.data.status === 'published');
+        setChapters(chaptersResult.data);
 
-        const { data: versionsData, error: versionsError } = await supabase
-          .from('chapter_versions')
-          .select('*')
-          .eq('chapter_id', id)
-          .order('created_at', { ascending: false });
-
-        if (versionsError) throw versionsError;
-
-        setBook(bookData);
-
-        const formattedVersions = versionsData.map((v, i) => ({
+        const formattedVersions = versionsResult.data.map((v, i) => ({
           id: v.id,
           createdAt: v.created_at,
           content: v.content,
@@ -91,7 +96,7 @@ function ChapterEditorContent() {
         }));
         setVersions(formattedVersions);
 
-        setContent(versionsData[0]?.content || '');
+        setContent(versionsResult.data[0]?.content || '');
         setChapterTitle(chapter.title);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -224,6 +229,7 @@ function ChapterEditorContent() {
           {book && (
             <EditorSidebar
               book={book}
+              chapters={chapters}
               currentChapterId={id || ''}
               isCollapsed={isSidebarCollapsed}
               onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}

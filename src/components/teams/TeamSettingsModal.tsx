@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Upload, Trash2, AlertCircle, Loader2 } from 'lucide-react';
+import { X, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -78,7 +78,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       const fileName = `team-logos/${user.id}/${Date.now()}.${fileExt}`;
 
       // Use avatars bucket for team logo uploads
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, file, { 
           upsert: true,
@@ -275,12 +275,8 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                         onFileSelect={handleLogoUpload}
                         className="w-40 h-40"
                         showInstructions={false}
+                        loading={isUploadingLogo}
                       />
-                      {isUploadingLogo && (
-                        <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
-                          <Loader2 className="w-6 h-6 animate-spin text-base-heading" />
-                        </div>
-                      )}
                     </div>
                   )}
                 </div>

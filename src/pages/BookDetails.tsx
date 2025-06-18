@@ -81,6 +81,7 @@ export function BookDetails() {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [showUnpublishDialog, setShowUnpublishDialog] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [coverLoading, setCoverLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState({
@@ -194,6 +195,7 @@ export function BookDetails() {
 
   const handleFileSelect = async (file: File) => {
     try {
+      setCoverLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('No user found');
 
@@ -247,6 +249,8 @@ export function BookDetails() {
         title: "Error",
         description: "Failed to upload cover image",
       });
+    } finally {
+      setCoverLoading(false);
     }
   };
 
@@ -727,6 +731,7 @@ export function BookDetails() {
                         <FileUpload 
                           onFileSelect={handleFileSelect} 
                           className="aspect-[10/16]"
+                          loading={coverLoading}
                         />
                       ) : (
                         <div className="aspect-[10/16] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors">
