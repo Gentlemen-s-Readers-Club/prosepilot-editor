@@ -442,7 +442,7 @@ export function Subscription() {
 
       if (result.success) {
         // Refresh subscription data to reflect the cancellation
-        dispatch(fetchSubscriptions());
+        dispatch(fetchUserSubscription());
       }
     } catch (error) {
       console.error("Error in handleCancel:", error);
@@ -497,6 +497,11 @@ export function Subscription() {
                     ? `$${currentPlanDetails.price}/month`
                     : "Free"}
                 </div>
+                {currentPlan && (
+                  <div className="text-sm text-gray-600">
+                    Monthly credits: {currentPlanDetails?.credits || 0}
+                  </div>
+                )}
               </div>
 
               {currentPlan && (
@@ -504,104 +509,49 @@ export function Subscription() {
                   <div className="space-y-2">
                     <div className="text-base-heading">Credit Balance</div>
                     {(() => {
-                      // Get current plan details to determine monthly allocation
-                      const currentPlanDetails = plans.find(
-                        (p) => p.id === currentPlan
-                      );
-                      const monthlyAllocation =
-                        currentPlanDetails?.credits || 0;
                       const currentCredits =
                         creditBalance?.current_balance || 0;
+                      const totalEarned = creditBalance?.total_earned || 0;
+                      const totalConsumed = creditBalance?.total_consumed || 0;
 
-                      // Calculate progress relative to plan allocation
-                      const baseProgress =
-                        monthlyAllocation > 0
-                          ? Math.min(
-                              (currentCredits / monthlyAllocation) * 100,
-                              100
-                            )
+                      // Calculate total credits ever available in account
+                      const totalAccountCredits = totalEarned;
+
+                      // Calculate usage percentage against total account credits
+                      const accountUsageProgress =
+                        totalAccountCredits > 0
+                          ? (totalConsumed / totalAccountCredits) * 100
                           : 0;
-
-                      // Calculate overflow credits (credits beyond plan allocation)
-                      const overflowCredits = Math.max(
-                        0,
-                        currentCredits - monthlyAllocation
-                      );
-                      const overflowProgress =
-                        monthlyAllocation > 0 && overflowCredits > 0
-                          ? Math.min(
-                              (overflowCredits / monthlyAllocation) * 100,
-                              100
-                            )
-                          : 0;
-
-                      const isOverflowing =
-                        currentCredits > monthlyAllocation &&
-                        monthlyAllocation > 0;
 
                       return (
-                        <div className="relative pt-1">
-                          <div className="flex mb-2 items-center justify-between">
-                            <div>
-                              <span className="text-xs font-semibold inline-block text-base-heading">
-                                {currentCredits} credits available
-                              </span>
-                              {isOverflowing && (
-                                <div className="text-xs text-amber-600 font-medium">
-                                  +{overflowCredits} bonus credits
-                                </div>
-                              )}
-                            </div>
-                            <div className="text-right">
-                              <span className="text-xs font-semibold inline-block text-base-heading">
-                                {monthlyAllocation > 0 ? (
-                                  <>
-                                    {Math.round(baseProgress)}% of{" "}
-                                    {monthlyAllocation} monthly
-                                  </>
-                                ) : (
-                                  "No active plan"
-                                )}
-                              </span>
-                            </div>
+                        <div className="space-y-3">
+                          {/* Account balance header */}
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-700">
+                              Account credits used:
+                            </span>
+                            <span className="text-sm font-semibold text-gray-900">
+                              {totalConsumed}/{totalAccountCredits}
+                            </span>
                           </div>
 
-                          {/* Progress bar with base and overflow sections */}
-                          <div className="overflow-hidden h-3 text-xs flex rounded bg-gray-200 relative">
-                            {/* Base allocation progress */}
+                          {/* Progress bar showing usage vs total account credits */}
+                          <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              style={{ width: `${baseProgress}%` }}
-                              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-primary transition-all duration-300"
+                              className="bg-gray-800 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${accountUsageProgress}%` }}
                             />
-                            {/* Overflow credits in different color */}
-                            {isOverflowing && (
-                              <div
-                                style={{ width: `${overflowProgress}%` }}
-                                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-amber-500 transition-all duration-300"
-                              />
-                            )}
                           </div>
 
-                          {/* Progress bar legend */}
-                          <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
-                            <div className="flex items-center space-x-4">
-                              <div className="flex items-center">
-                                <div className="w-3 h-2 bg-brand-primary rounded mr-1"></div>
-                                <span>
-                                  Plan allocation ({monthlyAllocation})
-                                </span>
-                              </div>
-                              {isOverflowing && (
-                                <div className="flex items-center">
-                                  <div className="w-3 h-2 bg-amber-500 rounded mr-1"></div>
-                                  <span>Bonus credits</span>
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              Total consumed:{" "}
-                              {creditBalance?.total_consumed || 0}
-                            </div>
+                          {/* Footer info */}
+                          <div className="flex items-center justify-between text-sm text-gray-600">
+                            <span>
+                              {totalAccountCredits > 0
+                                ? `${Math.round(
+                                    (currentCredits / totalAccountCredits) * 100
+                                  )}% remaining`
+                                : "0% remaining"}
+                            </span>
                           </div>
                         </div>
                       );

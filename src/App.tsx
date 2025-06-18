@@ -20,6 +20,7 @@ import { Landing } from "./pages/Landing";
 import { Pricing } from "./pages/Pricing";
 import { Support } from "./pages/Support";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { TermsOfService } from "./pages/TermsOfService";
 import { NotFound } from "./pages/NotFound";
 import { Toaster } from "./components/Toaster";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -27,7 +28,13 @@ import { useAuth } from "./hooks/useAuth";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfile } from "./store/slices/profileSlice";
-import { fetchUserSubscription, setupRealtimeSubscriptions, clearRealtimeSubscription, hasStudioPlan, selectHasActiveSubscription } from "./store/slices/subscriptionSlice";
+import {
+  fetchUserSubscription,
+  setupRealtimeSubscriptions,
+  clearRealtimeSubscription,
+  hasStudioPlan,
+  selectHasActiveSubscription,
+} from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
 
 // Help Articles
@@ -52,22 +59,26 @@ function SubscriptionLoadingSpinner() {
 // Protected Route Component for Studio Plan
 function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
   const hasStudio = useSelector(hasStudioPlan);
-  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
+  const { status: subscriptionStatus } = useSelector(
+    (state: RootState) => state.subscription
+  );
 
   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-  if (subscriptionStatus === 'loading' || subscriptionStatus === 'idle') {
+  if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
     return <SubscriptionLoadingSpinner />;
   }
 
   // If there was an error loading subscription data, still allow access
   // This prevents users from being locked out due to temporary API issues
-  if (subscriptionStatus === 'error') {
-    console.warn('Subscription data failed to load, allowing access to prevent lockout');
+  if (subscriptionStatus === "error") {
+    console.warn(
+      "Subscription data failed to load, allowing access to prevent lockout"
+    );
     return <>{children}</>;
   }
 
   // Only redirect if subscription data has been successfully loaded and user doesn't have Studio plan
-  if (subscriptionStatus === 'success' && !hasStudio) {
+  if (subscriptionStatus === "success" && !hasStudio) {
     return <Navigate to="/workspace/subscription" replace />;
   }
 
@@ -75,24 +86,32 @@ function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 // Protected Route Component for Active Subscription
-function SubscriptionProtectedRoute({ children }: { children: React.ReactNode }) {
+function SubscriptionProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const hasActiveSubscription = useSelector(selectHasActiveSubscription);
-  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
+  const { status: subscriptionStatus } = useSelector(
+    (state: RootState) => state.subscription
+  );
 
   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-  if (subscriptionStatus === 'loading' || subscriptionStatus === 'idle') {
+  if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
     return <SubscriptionLoadingSpinner />;
   }
 
   // If there was an error loading subscription data, still allow access
   // This prevents users from being locked out due to temporary API issues
-  if (subscriptionStatus === 'error') {
-    console.warn('Subscription data failed to load, allowing access to prevent lockout');
+  if (subscriptionStatus === "error") {
+    console.warn(
+      "Subscription data failed to load, allowing access to prevent lockout"
+    );
     return <>{children}</>;
   }
 
   // Only redirect if subscription data has been successfully loaded and user doesn't have an active subscription
-  if (subscriptionStatus === 'success' && !hasActiveSubscription) {
+  if (subscriptionStatus === "success" && !hasActiveSubscription) {
     return <Navigate to="/workspace/subscription" replace />;
   }
 
@@ -103,7 +122,9 @@ function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session, loading } = useAuth();
   const { profile } = useSelector((state: RootState) => state.profile);
-  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
+  const { status: subscriptionStatus } = useSelector(
+    (state: RootState) => state.subscription
+  );
 
   useEffect(() => {
     if (session && !profile) {
@@ -112,7 +133,7 @@ function App() {
   }, [dispatch, session, profile]);
 
   useEffect(() => {
-    if (session && subscriptionStatus === 'idle') {
+    if (session && subscriptionStatus === "idle") {
       dispatch(fetchUserSubscription());
     }
   }, [dispatch, session, subscriptionStatus]);
@@ -152,6 +173,7 @@ function App() {
               <Route path="/support" element={<Support />} />
               <Route path="/docs" element={<Documentation />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
 
               {/* Help Articles */}
               <Route
@@ -180,7 +202,7 @@ function App() {
                   )
                 }
               />
-              
+
               <Route
                 path="/workspace/book/:id"
                 element={
@@ -207,12 +229,18 @@ function App() {
               />
               <Route
                 path="/workspace/profile"
-                element={session ? <EditProfile /> : <Navigate to="/workspace/login" />}
+                element={
+                  session ? <EditProfile /> : <Navigate to="/workspace/login" />
+                }
               />
               <Route
                 path="/workspace/subscription"
                 element={
-                  session ? <Subscription /> : <Navigate to="/workspace/login" />
+                  session ? (
+                    <Subscription />
+                  ) : (
+                    <Navigate to="/workspace/login" />
+                  )
                 }
               />
               <Route
@@ -225,9 +253,11 @@ function App() {
               />
               <Route
                 path="/workspace/forgot-password"
-                element={session ? <Navigate to="/workspace" /> : <ForgotPassword />}
+                element={
+                  session ? <Navigate to="/workspace" /> : <ForgotPassword />
+                }
               />
-              
+
               {/* Studio Plan Protected Routes */}
               <Route
                 path="/workspace/teams"
@@ -253,7 +283,7 @@ function App() {
                   )
                 }
               />
-              
+
               {/* Catch-all route for 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
