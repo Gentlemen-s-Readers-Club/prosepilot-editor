@@ -751,7 +751,7 @@ export function BookDetails() {
                   <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Book Stats</h3>
                   <div className="flex flex-col gap-3">
                     <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Calendar className="w-4 h-4" />
                         <span>Created</span>
                       </div>
@@ -760,7 +760,7 @@ export function BookDetails() {
                       </p>
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Clock className="w-4 h-4" />
                         <span>Updated</span>
                       </div>
