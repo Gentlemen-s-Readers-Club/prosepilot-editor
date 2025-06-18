@@ -64,7 +64,7 @@ export function Navigation() {
               </button>
             ) : (
               <button
-                onClick={() => navigate('/app')}
+                onClick={() => navigate('workspace')}
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <LayoutDashboard className="h-4 w-4 text-brand-accent" />

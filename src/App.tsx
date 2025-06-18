@@ -169,7 +169,7 @@ function App() {
               />
 
               <Route
-                path="/app"
+                path="/workspace"
                 element={
                   session ? (
                     <SubscriptionProtectedRoute>
@@ -217,15 +217,15 @@ function App() {
               />
               <Route
                 path="/workspace/login"
-                element={session ? <Navigate to="/app" /> : <Login />}
+                element={session ? <Navigate to="/workspace" /> : <Login />}
               />
               <Route
                 path="/workspace/signup"
-                element={session ? <Navigate to="/app" /> : <Signup />}
+                element={session ? <Navigate to="/workspace" /> : <Signup />}
               />
               <Route
                 path="/workspace/forgot-password"
-                element={session ? <Navigate to="/app" /> : <ForgotPassword />}
+                element={session ? <Navigate to="/workspace" /> : <ForgotPassword />}
               />
               
               {/* Studio Plan Protected Routes */}

@@ -44,7 +44,7 @@ export function NotFound() {
               </Link>
               
               {session && (
-                <Link to="/app">
+                <Link to="/workspace">
                   <Button variant="outline" className="w-full py-3">
                     <BookOpen className="mr-2 h-5 w-5" />
                     Go to Dashboard
