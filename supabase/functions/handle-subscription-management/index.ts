@@ -8,9 +8,8 @@ const corsHeaders = {
 };
 
 // Get the appropriate Paddle API key based on environment
-function getPaddleApiKey() {
-  const env = Deno.env.get("PADDLE_ENV") || "sandbox";
-  return env === "production"
+function getPaddleApiKey(environment: string) {
+  return environment === "production"
     ? Deno.env.get("PADDLE_API_KEY_PROD")
     : Deno.env.get("PADDLE_API_KEY");
 }
@@ -34,8 +33,19 @@ Deno.serve(async (req) => {
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const paddleApiKey = getPaddleApiKey();
-    const env = Deno.env.get("PADDLE_ENV") || "sandbox";
+
+    // Parse request body
+    const operation = await req.json();
+    console.log("🔍 Received subscription management operation:", operation);
+
+    const {
+      action,
+      user_id,
+      subscription_id,
+      cancellation_reason,
+      environment = "sandbox",
+    } = operation;
+    const paddleApiKey = getPaddleApiKey(environment);
 
     if (!supabaseUrl || !supabaseServiceKey || !paddleApiKey) {
       return new Response(
@@ -56,35 +66,14 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Determine API URL based on environment
-    const isSandbox = env === "sandbox";
+    const isSandbox = environment === "sandbox";
     const paddleBaseUrl = isSandbox
       ? "https://sandbox-api.paddle.com"
       : "https://api.paddle.com";
 
-    console.log(`🌐 Using Paddle ${env.toUpperCase()} API: ${paddleBaseUrl}`);
-
-    // Parse request body
-    const operation = await req.json();
-    console.log("🔍 Received subscription management operation:", operation);
-
-    const { action, user_id, subscription_id, cancellation_reason } = operation;
-
-    // Validate required fields
-    if (!action || !user_id) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "Missing required fields: action, user_id",
-        }),
-        {
-          status: 400,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
+    console.log(
+      `🌐 Using Paddle ${environment.toUpperCase()} API: ${paddleBaseUrl}`
+    );
 
     let response;
 

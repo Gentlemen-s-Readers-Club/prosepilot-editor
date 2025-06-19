@@ -134,7 +134,8 @@ function App() {
 
   useEffect(() => {
     if (session && subscriptionStatus === "idle") {
-      dispatch(fetchUserSubscription());
+      const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+      dispatch(fetchUserSubscription(environment));
     }
   }, [dispatch, session, subscriptionStatus]);
 

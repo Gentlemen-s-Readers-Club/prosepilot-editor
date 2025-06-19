@@ -138,7 +138,7 @@ const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
 
 export const fetchUserSubscription = createAsyncThunk(
   "subscription/fetchUserSubscription",
-  async () => {
+  async (environment: string) => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -147,11 +147,8 @@ export const fetchUserSubscription = createAsyncThunk(
       throw new Error("No authenticated user");
     }
 
-    // Get current environment
-    const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
     console.log("🌍 Fetching subscriptions for environment:", environment);
 
-    // Now fetch the user's subscriptions for the current environment
     const { data, error: fetchError } = await supabase
       .from("subscriptions")
       .select("*")
@@ -214,7 +211,7 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
         },
         () => {
           console.log("Real-time subscription change detected");
-          dispatch(fetchUserSubscription());
+          dispatch(fetchUserSubscription(environment));
         }
       )
       .subscribe();

@@ -1,9 +1,8 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 // Get the appropriate webhook secret based on environment
-function getWebhookSecret() {
-  const env = Deno.env.get("PADDLE_ENV") || "sandbox";
-  return env === "production"
+function getWebhookSecret(environment: string) {
+  return environment === "production"
     ? Deno.env.get("PADDLE_WEBHOOK_SECRET_PROD")
     : Deno.env.get("PADDLE_WEBHOOK_SECRET");
 }
@@ -21,12 +20,14 @@ Deno.serve(async (req) => {
     const bodyRaw = await req.arrayBuffer();
     const bodyString = new TextDecoder().decode(bodyRaw);
 
-    // Log the received data
-    console.log("Received event:", bodyString);
+    // Parse the event data to get environment from custom data
+    const eventData = JSON.parse(bodyString);
+    const environment = eventData.data?.custom_data?.environment || "sandbox";
+    console.log("🌍 Processing webhook in environment:", environment);
 
     // Extract the Paddle-Signature header
     const paddleSignature = req.headers.get("Paddle-Signature");
-    const secretKey = getWebhookSecret();
+    const secretKey = getWebhookSecret(environment);
 
     // Check if Paddle-Signature is present
     if (!paddleSignature) {
@@ -105,7 +106,6 @@ Deno.serve(async (req) => {
     }
 
     // Process the webhook event
-    const eventData = JSON.parse(bodyString);
     console.log("Received webhook event type:", eventData.event_type);
     console.log("Parsed event data:", eventData);
 
@@ -175,8 +175,8 @@ async function handleSubscriptionEvent(
 ) {
   console.log("🔄 Processing subscription event:", eventData.event_type);
 
-  // Get the current environment from env var
-  const environment = Deno.env.get("PADDLE_ENV") || "sandbox";
+  // Get the environment from custom data
+  const environment = eventData.data?.custom_data?.environment || "sandbox";
   console.log("🌍 Processing subscription in environment:", environment);
 
   // Extract relevant fields from the event data with safety checks

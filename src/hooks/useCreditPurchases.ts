@@ -51,6 +51,7 @@ export const useCreditPurchases = () => {
           body: {
             action: "get_packages",
             user_id: user?.id,
+            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
           },
         }
       );
@@ -104,6 +105,7 @@ export const useCreditPurchases = () => {
           body: {
             action: "get_user_purchases",
             user_id: user.id,
+            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
           },
         }
       );
@@ -174,6 +176,7 @@ export const useCreditPurchases = () => {
             action: "create_purchase",
             user_id: user.id,
             package_id: packageId,
+            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
           },
         }
       );
@@ -226,6 +229,7 @@ export const useCreditPurchases = () => {
           purchase_id: purchase.id,
           user_id: user.id,
           type: "credit_purchase",
+          environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
         },
         settings: {
           displayMode: "overlay" as const,

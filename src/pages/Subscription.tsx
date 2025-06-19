@@ -381,8 +381,9 @@ export function Subscription() {
           successUrl: `${window.location.origin}/workspace/subscription?success=true`,
         },
         customData: {
-          user_id: user.id, // Use the authenticated user ID instead of profile.id
-          type: "subscription", // Distinguish from credit purchases
+          user_id: user.id,
+          type: "subscription",
+          environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
         },
       });
     } catch (error) {

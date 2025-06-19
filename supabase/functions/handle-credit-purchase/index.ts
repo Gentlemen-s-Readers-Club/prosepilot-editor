@@ -33,8 +33,14 @@ Deno.serve(async (req) => {
 
     console.log("🔍 Received credit purchase operation:", operation);
 
-    const { action, user_id, package_id, checkout_id, transaction_id } =
-      operation;
+    const {
+      action,
+      user_id,
+      package_id,
+      checkout_id,
+      transaction_id,
+      environment = "sandbox",
+    } = operation;
 
     // Validate required fields
     if (!action) {
@@ -93,7 +99,8 @@ Deno.serve(async (req) => {
           supabase,
           user_id,
           package_id,
-          checkout_id
+          checkout_id,
+          environment
         );
         break;
 
@@ -113,15 +120,20 @@ Deno.serve(async (req) => {
             }
           );
         }
-        response = await completePurchase(supabase, user_id, transaction_id);
+        response = await completePurchase(
+          supabase,
+          user_id,
+          transaction_id,
+          environment
+        );
         break;
 
       case "get_packages":
-        response = await getCreditPackages(supabase);
+        response = await getCreditPackages(supabase, environment);
         break;
 
       case "get_user_purchases":
-        response = await getUserPurchases(supabase, user_id);
+        response = await getUserPurchases(supabase, user_id, environment);
         break;
 
       default:
@@ -167,10 +179,8 @@ Deno.serve(async (req) => {
 });
 
 // Get available credit packages
-async function getCreditPackages(supabase: any) {
+async function getCreditPackages(supabase: any, environment: string) {
   try {
-    // Get the current environment from env var
-    const environment = Deno.env.get("PADDLE_ENV") || "sandbox";
     console.log("🌍 Getting credit packages for environment:", environment);
 
     const { data, error } = await supabase
@@ -211,7 +221,8 @@ async function createPurchase(
   supabase: any,
   user_id: string,
   package_id: string,
-  checkout_id?: string
+  checkout_id?: string,
+  environment: string = "sandbox"
 ) {
   try {
     // First get the package details
@@ -220,6 +231,7 @@ async function createPurchase(
       .select("*")
       .eq("id", package_id)
       .eq("is_active", true)
+      .eq("environment", environment)
       .single();
 
     if (packageError || !packageData) {
@@ -241,6 +253,7 @@ async function createPurchase(
         currency: packageData.currency,
         paddle_checkout_id: checkout_id,
         status: "pending",
+        environment: environment,
       })
       .select()
       .single();
@@ -272,11 +285,10 @@ async function createPurchase(
 async function completePurchase(
   supabase: any,
   userId: string,
-  transactionId: string
+  transactionId: string,
+  environment: string
 ) {
   try {
-    // Get the current environment from env var
-    const environment = Deno.env.get("PADDLE_ENV") || "sandbox";
     console.log("🌍 Completing purchase in environment:", environment);
 
     // Get the purchase record
@@ -382,7 +394,11 @@ async function completePurchase(
 }
 
 // Get user's purchase history
-async function getUserPurchases(supabase: any, user_id: string) {
+async function getUserPurchases(
+  supabase: any,
+  user_id: string,
+  environment: string
+) {
   try {
     const { data, error } = await supabase
       .from("credit_purchases")
@@ -398,6 +414,7 @@ async function getUserPurchases(supabase: any, user_id: string) {
       `
       )
       .eq("user_id", user_id)
+      .eq("environment", environment)
       .order("created_at", { ascending: false });
 
     if (error) {

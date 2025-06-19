@@ -29,6 +29,7 @@ export async function handleSubscription({
   try {
     // Get the Supabase URL and anon key for the edge function call
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
 
     if (!supabaseUrl) {
       throw new Error("Supabase URL not configured");
@@ -56,6 +57,7 @@ export async function handleSubscription({
           subscriptionId,
           newPlanId,
           effectiveFrom,
+          environment,
         }),
       }
     );

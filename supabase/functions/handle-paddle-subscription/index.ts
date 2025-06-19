@@ -7,9 +7,8 @@ const corsHeaders = {
 };
 
 // Get the appropriate Paddle API key based on environment
-function getPaddleApiKey() {
-  const env = Deno.env.get("PADDLE_ENV") || "sandbox";
-  return env === "production"
+function getPaddleApiKey(environment: string) {
+  return environment === "production"
     ? Deno.env.get("PADDLE_API_KEY_PROD")
     : Deno.env.get("PADDLE_API_KEY");
 }
@@ -33,7 +32,13 @@ Deno.serve(async (req) => {
     const bodyString = new TextDecoder().decode(bodyRaw);
     const requestData = JSON.parse(bodyString);
     // Extract necessary fields from the request
-    const { action, subscriptionId, newPlanId, effectiveFrom } = requestData;
+    const {
+      action,
+      subscriptionId,
+      newPlanId,
+      effectiveFrom,
+      environment = "sandbox",
+    } = requestData;
     // Validate input
     if (
       !action ||
@@ -47,15 +52,14 @@ Deno.serve(async (req) => {
     }
 
     // Get environment-specific Paddle API key
-    const paddleApiKey = getPaddleApiKey();
-    const env = Deno.env.get("PADDLE_ENV") || "sandbox";
-    const isSandbox = env === "sandbox";
+    const paddleApiKey = getPaddleApiKey(environment);
+    const isSandbox = environment === "sandbox";
     const paddleApiBaseUrl = isSandbox
       ? "https://sandbox-api.paddle.com"
       : "https://api.paddle.com";
 
     console.log(
-      `🌐 Using Paddle ${env.toUpperCase()} API: ${paddleApiBaseUrl}`
+      `🌐 Using Paddle ${environment.toUpperCase()} API: ${paddleApiBaseUrl}`
     );
 
     // Validate environment variables
