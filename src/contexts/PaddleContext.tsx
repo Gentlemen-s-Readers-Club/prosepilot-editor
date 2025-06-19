@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { Environments, initializePaddle, type Paddle } from "@paddle/paddle-js";
+import { initializePaddle, type Paddle } from "@paddle/paddle-js";
 import { PaddleContextType, PaddleProviderProps } from "../types/paddle";
+import { getPaddleEnvConfig } from "../lib/paddle-env";
 
 const PaddleContext = createContext<PaddleContextType | undefined>(undefined);
 
@@ -12,26 +13,17 @@ export function PaddleProvider({ children }: PaddleProviderProps) {
   useEffect(() => {
     const initPaddle = async () => {
       try {
-        if (!import.meta.env.VITE_PADDLE_CLIENT_TOKEN) {
-          throw new Error("Missing Paddle client token");
-        }
-
-        if (!import.meta.env.VITE_PADDLE_ENV) {
-          throw new Error("Missing Paddle environment configuration");
-        }
+        const config = getPaddleEnvConfig();
 
         if (!paddle) {
           const paddleInstance = await initializePaddle({
-            token: import.meta.env.VITE_PADDLE_CLIENT_TOKEN,
-            environment:
-              (import.meta.env.VITE_PADDLE_ENV as Environments) || "sandbox",
+            token: config.clientToken,
+            environment: config.environment,
             checkout: {
               settings: {
                 theme: "light",
                 displayMode: "overlay",
                 locale: "en",
-                successUrl: `${window.location.origin}/workspace/subscription?success=true`,
-                closeUrl: `${window.location.origin}/workspace/subscription`,
               },
             },
           });

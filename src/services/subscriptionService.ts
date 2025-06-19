@@ -75,10 +75,18 @@ export async function getCurrentSubscription() {
       return null;
     }
 
+    // Get current environment
+    const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+    console.log(
+      "🌍 Getting current subscription for environment:",
+      environment
+    );
+
     const { data: subscriptions, error } = await supabase
       .from("subscriptions")
       .select("*")
       .eq("user_id", user.id)
+      .eq("environment", environment)
       .in("status", ["active", "trialing"])
       .order("created_at", { ascending: false })
       .limit(1);

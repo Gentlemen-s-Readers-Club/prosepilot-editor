@@ -38,6 +38,7 @@ import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import { CreditPurchase } from "../components/CreditPurchase";
 import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
+import { getPaddleConfig } from "../lib/paddle-config";
 
 // Utility function to format price
 const formatPrice = (
@@ -84,7 +85,7 @@ const plans: Plan[] = [
       "Export to ePub",
       "Community support",
     ],
-    priceId: "pri_01jxbekwgfx9k8tm8cbejzrns6",
+    priceId: getPaddleConfig().subscriptionPrices.starter,
   },
   {
     id: "pro",
@@ -103,7 +104,7 @@ const plans: Plan[] = [
       "Annotations system",
       "Priority email support",
     ],
-    priceId: "pri_01jxben1kf0pfntb8162sfxhba",
+    priceId: getPaddleConfig().subscriptionPrices.pro,
     isPopular: true,
   },
   {
@@ -123,7 +124,7 @@ const plans: Plan[] = [
       "Team access (up to 3 users)",
       "Priority live chat support",
     ],
-    priceId: "pri_01jxxb51m8t8edd9w3wvw96bt4", // Using same as pro for now
+    priceId: getPaddleConfig().subscriptionPrices.studio,
     comingSoon: true,
   },
 ];

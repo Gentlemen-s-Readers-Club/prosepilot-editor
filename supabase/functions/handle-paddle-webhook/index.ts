@@ -1,5 +1,13 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
+// Get the appropriate webhook secret based on environment
+function getWebhookSecret() {
+  const env = Deno.env.get("PADDLE_ENV") || "sandbox";
+  return env === "production"
+    ? Deno.env.get("PADDLE_WEBHOOK_SECRET_PROD")
+    : Deno.env.get("PADDLE_WEBHOOK_SECRET");
+}
+
 Deno.serve(async (req) => {
   try {
     // Check if the request method is POST
@@ -18,8 +26,7 @@ Deno.serve(async (req) => {
 
     // Extract the Paddle-Signature header
     const paddleSignature = req.headers.get("Paddle-Signature");
-    const secretKey =
-      "pdl_ntfset_01jxev4nj3nmpv61q0hjssatp3_/GI8zuTs/31JVjz6RKvbgzuSfIjcauyM";
+    const secretKey = getWebhookSecret();
 
     // Check if Paddle-Signature is present
     if (!paddleSignature) {
@@ -168,6 +175,10 @@ async function handleSubscriptionEvent(
 ) {
   console.log("🔄 Processing subscription event:", eventData.event_type);
 
+  // Get the current environment from env var
+  const environment = Deno.env.get("PADDLE_ENV") || "sandbox";
+  console.log("🌍 Processing subscription in environment:", environment);
+
   // Extract relevant fields from the event data with safety checks
   const subscriptionId = eventData.data?.id;
   const priceId = eventData.data?.items?.[0]?.price?.id;
@@ -216,7 +227,7 @@ async function handleSubscriptionEvent(
 
   // Check for existing active subscriptions for this user
   const existingSubscriptionsResponse = await fetch(
-    `${supabaseUrl}/rest/v1/subscriptions?user_id=eq.${userId}&status=in.(active,trialing)&select=*`,
+    `${supabaseUrl}/rest/v1/subscriptions?user_id=eq.${userId}&status=in.(active,trialing)&environment=eq.${environment}&select=*`,
     {
       method: "GET",
       headers: {
@@ -245,6 +256,7 @@ async function handleSubscriptionEvent(
     status: status,
     current_period_start: currentPeriodStart,
     current_period_end: currentPeriodEnd,
+    environment: environment,
   };
 
   console.log("Subscription data to be processed:", subscriptionData);
@@ -258,7 +270,7 @@ async function handleSubscriptionEvent(
 
     // Update the subscription status
     const response = await fetch(
-      `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}`,
+      `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}&environment=eq.${environment}`,
       {
         method: "PATCH",
         headers: {
@@ -294,52 +306,10 @@ async function handleSubscriptionEvent(
 
   // Insert or update the subscription
   let response;
-  if (
-    status === "active" ||
-    status === "subscription.activated" ||
-    eventData.event_type === "subscription.activated"
-  ) {
-    // Check if this exact subscription already exists
-    const duplicateSubscription = existingSubscriptions.find(
-      (sub: any) => sub.subscription_id === subscriptionId
-    );
-
-    if (duplicateSubscription) {
-      console.log("Subscription already exists, updating instead of inserting");
-      response = await fetch(
-        `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${serviceRoleKey}`,
-            "Content-Type": "application/json",
-            apikey: serviceRoleKey,
-            Prefer: "return=representation",
-          },
-          body: JSON.stringify({
-            status: status,
-            current_period_start: currentPeriodStart,
-            current_period_end: currentPeriodEnd,
-          }),
-        }
-      );
-    } else {
-      console.log("Attempting to INSERT new subscription");
-      response = await fetch(`${supabaseUrl}/rest/v1/subscriptions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          "Content-Type": "application/json",
-          apikey: serviceRoleKey,
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify(subscriptionData),
-      });
-    }
-  } else {
+  if (existingSubscriptions.length > 0) {
     console.log("Attempting to UPDATE existing subscription");
     response = await fetch(
-      `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}`,
+      `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}&environment=eq.${environment}`,
       {
         method: "PATCH",
         headers: {
@@ -355,6 +325,18 @@ async function handleSubscriptionEvent(
         }),
       }
     );
+  } else {
+    console.log("Attempting to INSERT new subscription");
+    response = await fetch(`${supabaseUrl}/rest/v1/subscriptions`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${serviceRoleKey}`,
+        "Content-Type": "application/json",
+        apikey: serviceRoleKey,
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(subscriptionData),
+    });
   }
 
   // Handle the response from the Supabase API
@@ -393,6 +375,7 @@ async function handleSubscriptionEvent(
           body: JSON.stringify({
             action: "refill_monthly",
             user_id: userId,
+            environment: environment,
           }),
         }
       );

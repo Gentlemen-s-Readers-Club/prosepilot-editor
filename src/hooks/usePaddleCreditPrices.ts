@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Paddle } from "@paddle/paddle-js";
 import { PaddlePrices } from "../types/paddle";
-import { getSubscriptionPriceIds } from "../lib/paddle-config";
+import { getCreditPriceIds } from "../lib/paddle-config";
 
 interface PaddlePrice {
   id: string;
@@ -12,10 +12,6 @@ interface PaddlePrice {
     amount: string;
     currency_code: string;
   };
-  billingCycle?: {
-    interval: string;
-    frequency: number;
-  };
 }
 
 interface PaddleResponsePrice {
@@ -24,17 +20,12 @@ interface PaddleResponsePrice {
   description: string;
   customData: null;
   status: string;
-  billingCycle: {
-    interval: string;
-    frequency: number;
-  };
   productId: string;
   quantity: {
     minimum: number;
     maximum: number;
   };
   taxMode: string;
-  trialPeriod: null;
   unitPrice: {
     amount: string;
     currencyCode: string;
@@ -96,7 +87,7 @@ interface PaddleResponse {
   };
 }
 
-export function usePaddlePrices(paddle: Paddle | null) {
+export function usePaddleCreditPrices(paddle: Paddle | null) {
   const [prices, setPrices] = useState<PaddlePrices>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,8 +104,8 @@ export function usePaddlePrices(paddle: Paddle | null) {
         setLoading(true);
         setError(null);
 
-        // Get price IDs based on the current environment
-        const priceIds = getSubscriptionPriceIds();
+        // Get credit price IDs based on the current environment
+        const priceIds = getCreditPriceIds();
 
         // Get all available prices using price preview
         const response = await paddle.PricePreview({
@@ -122,7 +113,7 @@ export function usePaddlePrices(paddle: Paddle | null) {
         });
 
         // Log the response to debug the structure
-        console.log("Paddle PricePreview response:", response);
+        console.log("Paddle Credit PricePreview response:", response);
 
         const pricePreview = response as unknown as PaddleResponse;
 
@@ -140,12 +131,6 @@ export function usePaddlePrices(paddle: Paddle | null) {
               amount: item.price.unitPrice.amount,
               currency_code: item.price.unitPrice.currencyCode,
             },
-            billingCycle: item.price.billingCycle
-              ? {
-                  interval: item.price.billingCycle.interval,
-                  frequency: item.price.billingCycle.frequency,
-                }
-              : undefined,
           })
         );
 
@@ -162,11 +147,11 @@ export function usePaddlePrices(paddle: Paddle | null) {
 
         setPrices(formattedPrices);
       } catch (err) {
-        console.error("Failed to fetch Paddle prices:", err);
+        console.error("Failed to fetch Paddle credit prices:", err);
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError("Failed to fetch prices");
+          setError("Failed to fetch credit prices");
         }
         setPrices({});
         setAvailablePrices([]);

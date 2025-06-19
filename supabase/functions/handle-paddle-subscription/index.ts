@@ -6,6 +6,14 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Get the appropriate Paddle API key based on environment
+function getPaddleApiKey() {
+  const env = Deno.env.get("PADDLE_ENV") || "sandbox";
+  return env === "production"
+    ? Deno.env.get("PADDLE_API_KEY_PROD")
+    : Deno.env.get("PADDLE_API_KEY");
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -38,18 +46,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Paddle API credentials and environment
-    const paddleApiKey = Deno.env.get("PADDLE_API_KEY"); // Your Paddle API key
-    // Determine if we're in sandbox mode based on API key
-    const isSandbox = paddleApiKey?.startsWith("pdl_sdbx_") ?? true; // Default to sandbox for safety
+    // Get environment-specific Paddle API key
+    const paddleApiKey = getPaddleApiKey();
+    const env = Deno.env.get("PADDLE_ENV") || "sandbox";
+    const isSandbox = env === "sandbox";
     const paddleApiBaseUrl = isSandbox
       ? "https://sandbox-api.paddle.com"
       : "https://api.paddle.com";
 
     console.log(
-      `🌐 Using Paddle ${
-        isSandbox ? "Sandbox" : "Live"
-      } API: ${paddleApiBaseUrl}`
+      `🌐 Using Paddle ${env.toUpperCase()} API: ${paddleApiBaseUrl}`
     );
 
     // Validate environment variables

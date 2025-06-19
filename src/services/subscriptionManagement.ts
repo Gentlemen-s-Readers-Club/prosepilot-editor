@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { getPaddleConfig } from "../lib/paddle-config";
 
 export interface SubscriptionManagementResponse {
   success: boolean;
@@ -120,17 +121,24 @@ export async function upgradeSubscription(
  * Get available plan change options for a current plan (both upgrades and downgrades)
  */
 export function getAvailablePlanChanges(currentPriceId: string) {
+  const config = getPaddleConfig();
+
   // Define plan hierarchy
   const planHierarchy = {
-    pri_01jxbekwgfx9k8tm8cbejzrns6: {
+    [config.subscriptionPrices.starter]: {
       name: "Starter",
       level: 1,
       id: "starter",
     },
-    pri_01jxben1kf0pfntb8162sfxhba: {
+    [config.subscriptionPrices.pro]: {
       name: "Pro",
       level: 2,
       id: "pro",
+    },
+    [config.subscriptionPrices.studio]: {
+      name: "Studio",
+      level: 3,
+      id: "studio",
     },
   };
 

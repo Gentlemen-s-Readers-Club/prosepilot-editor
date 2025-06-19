@@ -7,6 +7,14 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Get the appropriate Paddle API key based on environment
+function getPaddleApiKey() {
+  const env = Deno.env.get("PADDLE_ENV") || "sandbox";
+  return env === "production"
+    ? Deno.env.get("PADDLE_API_KEY_PROD")
+    : Deno.env.get("PADDLE_API_KEY");
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -26,7 +34,8 @@ Deno.serve(async (req) => {
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const paddleApiKey = Deno.env.get("PADDLE_API_KEY");
+    const paddleApiKey = getPaddleApiKey();
+    const env = Deno.env.get("PADDLE_ENV") || "sandbox";
 
     if (!supabaseUrl || !supabaseServiceKey || !paddleApiKey) {
       return new Response(
@@ -46,15 +55,13 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Determine if we're in sandbox mode based on API key
-    const isSandbox = paddleApiKey.startsWith("pdl_sdbx_");
+    // Determine API URL based on environment
+    const isSandbox = env === "sandbox";
     const paddleBaseUrl = isSandbox
       ? "https://sandbox-api.paddle.com"
       : "https://api.paddle.com";
 
-    console.log(
-      `🌐 Using Paddle ${isSandbox ? "Sandbox" : "Live"} API: ${paddleBaseUrl}`
-    );
+    console.log(`🌐 Using Paddle ${env.toUpperCase()} API: ${paddleBaseUrl}`);
 
     // Parse request body
     const operation = await req.json();

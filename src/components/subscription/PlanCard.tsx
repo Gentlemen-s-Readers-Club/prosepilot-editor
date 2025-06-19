@@ -101,7 +101,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({
           <div className="text-center mb-8">
             <div className="flex items-baseline justify-center">
               <span className="text-5xl font-extrabold text-base-heading">
-                ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
+                {formatPrice(plan.paddlePrice?.unitPrice.amount)}
               </span>
               <span className="text-xl text-gray-500 ml-1">/month</span>
             </div>

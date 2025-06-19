@@ -148,11 +148,11 @@ Deno.serve(async (req) => {
       },
     });
   } catch (error) {
-    console.error("Error processing credit purchase operation:", error);
+    console.error("Error handling request:", error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: "Internal Server Error",
+        error: "Internal server error",
         details: error instanceof Error ? error.message : "Unknown error",
       }),
       {
@@ -169,10 +169,15 @@ Deno.serve(async (req) => {
 // Get available credit packages
 async function getCreditPackages(supabase: any) {
   try {
+    // Get the current environment from env var
+    const environment = Deno.env.get("PADDLE_ENV") || "sandbox";
+    console.log("🌍 Getting credit packages for environment:", environment);
+
     const { data, error } = await supabase
       .from("credit_packages")
       .select("*")
       .eq("is_active", true)
+      .eq("environment", environment)
       .order("credits_amount");
 
     if (error) {
@@ -183,9 +188,14 @@ async function getCreditPackages(supabase: any) {
       };
     }
 
+    console.log(
+      `✅ Found ${
+        data?.length || 0
+      } credit packages for ${environment} environment`
+    );
     return {
       success: true,
-      packages: data || [],
+      packages: data,
     };
   } catch (error) {
     console.error("Error in getCreditPackages:", error);
@@ -258,86 +268,72 @@ async function createPurchase(
   }
 }
 
-// Complete a credit purchase after Paddle webhook
+// Complete a credit purchase
 async function completePurchase(
   supabase: any,
-  user_id: string,
-  transaction_id: string
+  userId: string,
+  transactionId: string
 ) {
   try {
-    console.log(
-      `🔍 Starting completePurchase for user ${user_id}, transaction ${transaction_id}`
-    );
+    // Get the current environment from env var
+    const environment = Deno.env.get("PADDLE_ENV") || "sandbox";
+    console.log("🌍 Completing purchase in environment:", environment);
 
-    // Find the purchase by transaction ID
-    const { data: purchase, error: findError } = await supabase
+    // Get the purchase record
+    const { data: purchases, error: purchaseError } = await supabase
       .from("credit_purchases")
-      .select("*")
-      .eq("paddle_transaction_id", transaction_id)
-      .eq("user_id", user_id)
+      .select("*, credit_packages(*)")
+      .eq("paddle_transaction_id", transactionId)
+      .eq("user_id", userId)
+      .eq("environment", environment)
       .single();
 
-    if (findError || !purchase) {
-      console.error("❌ Error finding purchase:", findError);
-      console.error("❌ Query parameters:", { transaction_id, user_id });
+    if (purchaseError || !purchases) {
+      console.error("Error getting purchase record:", purchaseError);
       return {
         success: false,
-        error: "Purchase not found",
+        error: "Purchase record not found",
       };
     }
 
-    console.log("✅ Found purchase record:", purchase);
+    console.log("✅ Purchase record found:", purchases);
 
-    if (purchase.status === "completed") {
-      console.log("ℹ️ Purchase already completed, skipping");
-      return {
-        success: true,
-        message: "Purchase already completed",
-        purchase,
-      };
-    }
-
-    // Update purchase status
-    console.log("📝 Updating purchase status to completed...");
-    const { error: updateError } = await supabase
+    // Complete the purchase
+    const { data: updatedPurchase, error: updateError } = await supabase
       .from("credit_purchases")
       .update({
         status: "completed",
+        paddle_transaction_id: transactionId,
         completed_at: new Date().toISOString(),
       })
-      .eq("id", purchase.id);
+      .eq("user_id", userId)
+      .eq("paddle_checkout_id", transactionId)
+      .eq("environment", environment)
+      .select()
+      .single();
 
-    if (updateError) {
-      console.error("❌ Error updating purchase:", updateError);
+    if (updateError || !updatedPurchase) {
+      console.error("Error completing purchase:", updateError);
       return {
         success: false,
-        error: "Failed to update purchase status",
+        error: "Failed to complete purchase",
+        details: updateError,
       };
     }
 
-    console.log("✅ Purchase status updated to completed");
-
-    // Check current user credits before adding
-    console.log("🔍 Checking current user credits...");
-    const { data: currentCredits } = await supabase
-      .from("user_credits")
-      .select("*")
-      .eq("user_id", user_id)
-      .single();
-
-    console.log("📊 Current user credits:", currentCredits);
+    console.log("✅ Purchase record updated:", updatedPurchase);
 
     // Add credits to user account
     console.log(
-      `💰 Adding ${purchase.credits_amount} credits to user account...`
+      `💰 Adding ${updatedPurchase.credits_amount} credits to user account...`
     );
     const { data: rpcResult, error: creditsError } = await supabase.rpc(
       "add_purchased_credits",
       {
-        p_user_id: user_id,
-        p_purchase_id: purchase.id,
-        p_credits_amount: purchase.credits_amount,
-        p_description: `Purchased ${purchase.credits_amount} credits`,
+        p_user_id: userId,
+        p_purchase_id: updatedPurchase.id,
+        p_credits_amount: updatedPurchase.credits_amount,
+        p_description: `Purchased ${updatedPurchase.credits_amount} credits`,
       }
     );
 
@@ -357,20 +353,20 @@ async function completePurchase(
     const { data: updatedCredits } = await supabase
       .from("user_credits")
       .select("*")
-      .eq("user_id", user_id)
+      .eq("user_id", userId)
       .single();
 
     console.log("📊 Updated user credits:", updatedCredits);
 
     console.log(
-      `✅ Added ${purchase.credits_amount} credits to user ${user_id}`
+      `✅ Added ${updatedPurchase.credits_amount} credits to user ${userId}`
     );
 
     return {
       success: true,
       message: "Purchase completed successfully",
       purchase: {
-        ...purchase,
+        ...updatedPurchase,
         status: "completed",
         completed_at: new Date().toISOString(),
       },

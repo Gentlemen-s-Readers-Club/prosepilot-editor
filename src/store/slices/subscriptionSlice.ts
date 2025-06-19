@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
 import { ApiState } from "../types";
+import { getPaddleConfig } from "../../lib/paddle-config";
 
 export interface Subscription {
   id: string;
@@ -15,6 +16,7 @@ export interface Subscription {
   canceled_at?: string | null;
   created_at: string;
   updated_at?: string;
+  environment?: string;
 }
 
 export interface SubscriptionStatus {
@@ -37,9 +39,9 @@ interface SubscriptionState extends ApiState {
 
 // Define plan hierarchy for upgrade/downgrade logic
 const planHierarchy = {
-  pri_01jxbekwgfx9k8tm8cbejzrns6: { name: "Starter", level: 1 }, // Starter
-  pri_01jxben1kf0pfntb8162sfxhba: { name: "Pro", level: 2 }, // Pro
-  pri_01jxxb51m8t8edd9w3wvw96bt4: { name: "Studio", level: 3 }, // Studio
+  [getPaddleConfig().subscriptionPrices.starter]: { name: "Starter", level: 1 },
+  [getPaddleConfig().subscriptionPrices.pro]: { name: "Pro", level: 2 },
+  [getPaddleConfig().subscriptionPrices.studio]: { name: "Studio", level: 3 },
 };
 
 const initialState: SubscriptionState = {
@@ -120,12 +122,14 @@ const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
 
   if (!activeSubscription) return null;
 
+  const config = getPaddleConfig();
+
   // Map price_id to plan
-  if (activeSubscription.price_id === "pri_01jxbekwgfx9k8tm8cbejzrns6") {
+  if (activeSubscription.price_id === config.subscriptionPrices.starter) {
     return "starter";
-  } else if (activeSubscription.price_id === "pri_01jxben1kf0pfntb8162sfxhba") {
+  } else if (activeSubscription.price_id === config.subscriptionPrices.pro) {
     return "pro";
-  } else if (activeSubscription.price_id === "pri_01jxxb51m8t8edd9w3wvw96bt4") {
+  } else if (activeSubscription.price_id === config.subscriptionPrices.studio) {
     return "studio";
   }
 
@@ -143,11 +147,16 @@ export const fetchUserSubscription = createAsyncThunk(
       throw new Error("No authenticated user");
     }
 
-    // Now fetch the user's subscriptions
+    // Get current environment
+    const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+    console.log("🌍 Fetching subscriptions for environment:", environment);
+
+    // Now fetch the user's subscriptions for the current environment
     const { data, error: fetchError } = await supabase
       .from("subscriptions")
       .select("*")
       .eq("user_id", session.user.id)
+      .eq("environment", environment)
       .order("created_at", { ascending: false });
 
     if (fetchError) {
@@ -159,17 +168,18 @@ export const fetchUserSubscription = createAsyncThunk(
       id: sub.id,
       user_id: sub.user_id,
       customer_id: sub.customer_id || "",
-      subscription_id: sub.subscription_id || sub.id, // fallback to id if subscription_id missing
+      subscription_id: sub.subscription_id || sub.id,
       price_id: sub.price_id || "unknown",
-      status: sub.status || "active", // default to active if missing
+      status: sub.status || "active",
       current_period_start: sub.current_period_start,
       current_period_end: sub.current_period_end,
       cancel_at_period_end: sub.cancel_at_period_end || false,
       canceled_at: sub.canceled_at,
       created_at: sub.created_at,
       updated_at: sub.updated_at || sub.created_at,
+      environment: sub.environment || environment,
     }));
-    
+
     return normalizedData;
   }
 );
@@ -185,6 +195,13 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
       throw new Error("No authenticated user");
     }
 
+    // Get current environment
+    const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+    console.log(
+      "🌍 Setting up realtime subscriptions for environment:",
+      environment
+    );
+
     const subscription = supabase
       .channel("subscriptions-changes")
       .on(
@@ -193,7 +210,7 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
           event: "*",
           schema: "public",
           table: "subscriptions",
-          filter: `user_id=eq.${session.user.id}`,
+          filter: `user_id=eq.${session.user.id} and environment=eq.${environment}`,
         },
         () => {
           console.log("Real-time subscription change detected");
