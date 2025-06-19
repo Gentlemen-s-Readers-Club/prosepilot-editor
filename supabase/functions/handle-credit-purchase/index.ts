@@ -318,8 +318,7 @@ async function completePurchase(
         paddle_transaction_id: transactionId,
         completed_at: new Date().toISOString(),
       })
-      .eq("user_id", userId)
-      .eq("paddle_checkout_id", transactionId)
+      .eq("id", purchases.id)
       .eq("environment", environment)
       .select()
       .single();

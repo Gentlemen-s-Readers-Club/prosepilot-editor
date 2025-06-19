@@ -183,6 +183,7 @@ async function handleSubscriptionEvent(
   const subscriptionId = eventData.data?.id;
   const priceId = eventData.data?.items?.[0]?.price?.id;
   const status = eventData.data?.status;
+  const customerId = eventData.data?.customer?.id;
 
   // Handle billing period data safely (may be null for some events)
   const currentPeriodStart =
@@ -192,12 +193,13 @@ async function handleSubscriptionEvent(
   const userId = eventData.data?.custom_data?.user_id;
 
   // Validate required fields
-  if (!subscriptionId || !priceId || !status || !userId) {
+  if (!subscriptionId || !priceId || !status || !userId || !customerId) {
     console.error("Missing required fields in subscription webhook data:", {
       subscriptionId,
       priceId,
       status,
       userId,
+      customerId,
       eventType: eventData.event_type,
     });
     return new Response("Missing required webhook data", {
@@ -252,6 +254,7 @@ async function handleSubscriptionEvent(
   const subscriptionData = {
     user_id: userId,
     subscription_id: subscriptionId,
+    customer_id: customerId,
     price_id: priceId,
     status: status,
     current_period_start: currentPeriodStart,
