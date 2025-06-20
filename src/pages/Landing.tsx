@@ -368,9 +368,9 @@ export function Landing() {
               },
               {
                 quote: "Finally, a tool that gets writers. The collaborative features helped my writing group finish our anthology in record time.",
-                author: "Emily Watson",
+                author: "Olivia Franco",
                 role: "Writing Group Leader",
-                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+                avatar: "/images/testimonials/olivia-franco.png"
               }
             ].map((testimonial, index) => (
               <div key={index} className="bg-base-background rounded-lg p-8 relative">
