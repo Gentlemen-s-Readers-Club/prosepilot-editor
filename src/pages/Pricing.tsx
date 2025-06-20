@@ -79,8 +79,7 @@ const plans: Plan[] = [
       'AI-generated illustrations (50 credits/month)',
       'Cover generation',
       'Metadata & ISBN generation',
-      'Team access (up to 3 users)',
-      'Priority live chat support'
+      'Team access (up to 3 users)'
     ],
     comingSoon: true
   }

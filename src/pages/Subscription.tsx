@@ -6,7 +6,6 @@ import {
   AlertCircle,
   Clock,
   FileText,
-  Download,
   Users,
   Zap,
   Crown,
@@ -40,6 +39,7 @@ import { CreditPurchase } from "../components/CreditPurchase";
 import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
 import { getPaddleConfig } from "../lib/paddle-config";
 import { BillingHistorySection } from "../components/subscription/BillingHistorySection";
+
 
 // Utility function to format price
 const formatPrice = (
