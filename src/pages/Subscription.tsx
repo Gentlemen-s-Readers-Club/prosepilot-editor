@@ -123,7 +123,6 @@ const plans: Plan[] = [
       "Cover generation",
       "Metadata & ISBN generation",
       "Team access (up to 3 users)",
-      "Priority live chat support",
     ],
     priceId: getPaddleConfig().subscriptionPrices.studio,
     comingSoon: true,
