@@ -119,7 +119,7 @@ const plans: Plan[] = [
     features: [
       "75 credits/month (15 books)",
       "All Pro features",
-      "AI-generated illustrations (50 credits/month)",
+      "AI-generated illustrations",
       "Cover generation",
       "Metadata & ISBN generation",
       "Team access (up to 3 users)",
