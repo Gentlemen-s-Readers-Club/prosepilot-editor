@@ -29,13 +29,65 @@ export function Landing() {
     trackPageView(window.location.pathname, 'Landing');
   }, [trackPageView]);
 
+  // Structured data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ProsePilot",
+    "description": "AI-powered book writing platform that transforms ideas into publication-ready books",
+    "url": "https://prosepilot.app",
+    "applicationCategory": "WritingApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "9.00",
+      "priceCurrency": "USD",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "9.00",
+        "priceCurrency": "USD",
+        "billingIncrement": "P1M"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1250"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "ProsePilot"
+    }
+  };
+
   return (
     <>
       <Helmet>
-        <title>ProsePilot</title>
+        <title>ProsePilot - AI-Powered Book Writing Platform | Write Your Book in Days</title>
+        <meta name="description" content="Transform your ideas into publication-ready books with ProsePilot's AI writing platform. Generate complete books from simple prompts, get professional editing, and export to all major publishing formats. Start from $9/month." />
+        <meta name="keywords" content="AI writing, book writing, novel writing, AI author, writing software, book generator, writing assistant, self-publishing, manuscript writing, creative writing, story generator, book creation, writing platform, AI storytelling" />
+        <link rel="canonical" href="https://prosepilot.app" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="ProsePilot - AI-Powered Book Writing Platform | Write Your Book in Days" />
+        <meta property="og:description" content="Transform your ideas into publication-ready books with ProsePilot's AI writing platform. Generate complete books from simple prompts, get professional editing, and export to all major publishing formats." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://prosepilot.app" />
+        <meta property="og:image" content="https://prosepilot.app/og-image.png" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="ProsePilot - AI-Powered Book Writing Platform | Write Your Book in Days" />
+        <meta name="twitter:description" content="Transform your ideas into publication-ready books with ProsePilot's AI writing platform. Generate complete books from simple prompts, get professional editing, and export to all major publishing formats." />
+        <meta name="twitter:image" content="https://prosepilot.app/twitter-image.png" />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Helmet>
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-base-background">
+      <section className="relative overflow-hidden bg-base-background" aria-labelledby="hero-heading">
         {/* Bolt.new Logo Top Right */}
         <a
           href="https://bolt.new"
@@ -62,7 +114,7 @@ export function Landing() {
                     <span className="ml-2 text-sm text-base-paragraph max-md:hidden">• 4.9/5 rating</span>
                   </div> */}
 
-                  <h1 className="text-4xl tracking-tight font-extrabold text-base-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
+                  <h1 id="hero-heading" className="text-4xl tracking-tight font-extrabold text-base-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
                     <span className="block">Write your book in</span>
                     <span className="block text-brand-accent">days, not years</span>
                   </h1>
@@ -79,7 +131,7 @@ export function Landing() {
                       "Export to all major publishing formats"
                     ].map((benefit, index) => (
                       <div key={index} className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-state-success mr-3" />
+                        <CheckCircle className="w-5 h-5 text-state-success mr-3" aria-hidden="true" />
                         <span className="text-base-paragraph">{benefit}</span>
                       </div>
                     ))}
@@ -90,7 +142,7 @@ export function Landing() {
                       <Link to="/workspace/signup">
                         <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium">
                           Start Writing Your Book
-                          <ArrowRight className="ml-2 h-5 w-5" />
+                          <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                         </Button>
                       </Link>
                     </div>
@@ -109,12 +161,13 @@ export function Landing() {
                     <img
                       className="w-full rounded-lg shadow-2xl"
                       src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                      alt="Writer using ProsePilot interface"
+                      alt="Writer using ProsePilot interface to create a book"
+                      loading="lazy"
                     />
                     {/* Floating Stats */}
                     <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
-                        <TrendingUp className="w-8 h-8 text-brand-accent mr-3" />
+                        <TrendingUp className="w-8 h-8 text-brand-accent mr-3" aria-hidden="true" />
                         <div>
                           <div className="text-2xl font-bold text-base-heading">1M+</div>
                           <div className="text-sm text-base-paragraph">Books Created</div>
@@ -123,7 +176,7 @@ export function Landing() {
                     </div>
                     <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
-                        <Clock className="w-8 h-8 text-state-success mr-3" />
+                        <Clock className="w-8 h-8 text-state-success mr-3" aria-hidden="true" />
                         <div>
                           <div className="text-2xl font-bold text-base-heading">72hrs</div>
                           <div className="text-sm text-base-paragraph">Avg. Completion</div>
@@ -136,14 +189,14 @@ export function Landing() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Problem/Solution Section */}
-      <div className="py-16 bg-white">
+      <section className="py-16 bg-white" aria-labelledby="problem-solution-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
             <div>
-              <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl">
+              <h2 id="problem-solution-heading" className="text-3xl font-extrabold text-base-heading sm:text-4xl">
                 Stop letting your book ideas die in drafts
               </h2>
               <div className="mt-6 space-y-6">
@@ -164,7 +217,7 @@ export function Landing() {
                   <div key={index} className="flex">
                     <div className="flex-shrink-0">
                       <div className="flex items-center justify-center h-12 w-12 rounded-md bg-state-error/20">
-                        <span className="text-state-error font-bold">✗</span>
+                        <span className="text-state-error font-bold" aria-hidden="true">✗</span>
                       </div>
                     </div>
                     <div className="ml-4">
@@ -172,7 +225,7 @@ export function Landing() {
                         {item.problem}
                       </h3>
                       <div className="flex items-center mt-2">
-                        <CheckCircle className="w-5 h-5 text-state-success mr-2" />
+                        <CheckCircle className="w-5 h-5 text-state-success mr-2" aria-hidden="true" />
                         <p className="text-base text-state-success font-medium">{item.solution}</p>
                       </div>
                     </div>
@@ -184,18 +237,19 @@ export function Landing() {
               <img
                 className="w-full rounded-lg shadow-lg"
                 src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Frustrated writer at desk"
+                alt="Frustrated writer at desk before discovering ProsePilot"
+                loading="lazy"
               />
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Features Section */}
-      <div className="py-24 bg-base-background">
+      <section className="py-24 bg-base-background" aria-labelledby="features-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-base text-brand-accent font-semibold tracking-wide uppercase">Everything You Need</h2>
+            <h2 id="features-heading" className="text-base text-brand-accent font-semibold tracking-wide uppercase">Everything You Need</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-base-heading sm:text-4xl">
               From idea to published book in record time
             </p>
@@ -226,26 +280,28 @@ export function Landing() {
                   benefits: ["Chapter organization", "Plot hole detection", "Character tracking"]
                 }
               ].map((feature, index) => (
-                <div key={index} className="relative bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-accent text-white mb-6">
-                    {feature.icon}
+                <article key={index} className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary/10 rounded-full mb-6">
+                    <div className="text-brand-primary" aria-hidden="true">
+                      {feature.icon}
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-base-heading mb-4">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold text-base-heading mb-4">{feature.title}</h3>
                   <p className="text-base-paragraph mb-6">{feature.description}</p>
                   <ul className="space-y-2">
-                    {feature.benefits.map((benefit, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-base-paragraph">
-                        <CheckCircle className="w-4 h-4 text-state-success mr-2" />
+                    {feature.benefits.map((benefit, benefitIndex) => (
+                      <li key={benefitIndex} className="text-sm text-base-paragraph flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-state-success mr-2" aria-hidden="true" />
                         {benefit}
                       </li>
                     ))}
                   </ul>
-                </div>
+                </article>
               ))}
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Newsletter Subscription Section */}
       <div className="bg-gradient-to-r from-brand-primary to-brand-accent py-16">

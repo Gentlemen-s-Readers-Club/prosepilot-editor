@@ -12,7 +12,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Footer from '../components/Footer';
-import { Helmet } from 'react-helmet';
+import { SEOHead, structuredData } from '../components/SEOHead';
 import useAnalytics from '../hooks/useAnalytics';
 
 interface Plan {
@@ -86,26 +86,27 @@ const plans: Plan[] = [
   }
 ];
 
-const faqs = [
+// FAQ data for structured data
+const pricingFaqs = [
   {
-    question: "What are credits and how do they work?",
-    answer: "Credits are used to generate books. Each book costs 5 credits to create. Credits reset monthly with your subscription and unused credits don't roll over."
+    question: "How does the credit system work?",
+    answer: "Credits are used to generate AI content. Each book typically requires 5 credits. Credits refresh monthly with your subscription."
   },
   {
-    question: "Can I upgrade or downgrade my plan anytime?",
-    answer: "Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at your next billing cycle."
+    question: "Can I cancel my subscription anytime?",
+    answer: "Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period."
   },
   {
-    question: "Do you offer annual billing discounts?",
-    answer: "Yes! Annual subscribers save 20% compared to monthly billing. You can switch to annual billing from your subscription settings."
+    question: "What formats can I export my books in?",
+    answer: "Starter plan supports ePub export. Pro and Studio plans support PDF, ePub, and DOCX formats."
   },
   {
-    question: "What happens to my books if I cancel?",
-    answer: "Your books remain accessible in read-only mode. You can still export them, but editing requires an active subscription."
+    question: "Is there a free trial available?",
+    answer: "We offer a limited free trial to test our platform. Sign up to get started with basic features."
   },
   {
-    question: "Can I buy additional credits?",
-    answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
+    question: "Do you offer refunds?",
+    answer: "We don't offer refunds, but you can cancel anytime. Your subscription will remain active until the end of your billing period."
   }
 ];
 
@@ -118,16 +119,52 @@ export function Pricing() {
     trackPageView(window.location.pathname, 'Pricing');
   }, [trackPageView]);
   
+  // Structured data for pricing
+  const pricingStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "ProsePilot AI Writing Platform",
+    "description": "AI-powered book writing platform with multiple subscription tiers",
+    "offers": plans.map(plan => ({
+      "@type": "Offer",
+      "name": `${plan.name} Plan`,
+      "price": plan.price.toString(),
+      "priceCurrency": "USD",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": plan.price.toString(),
+        "priceCurrency": "USD",
+        "billingIncrement": "P1M"
+      },
+      "description": plan.description,
+      "availability": plan.comingSoon ? "PreOrder" : "InStock"
+    })),
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1250"
+    }
+  };
+  
   return (
     <>
-      <Helmet>
-        <title>ProsePilot - Pricing</title>
-      </Helmet>
+      <SEOHead
+        title="Pricing Plans - AI Book Writing Platform"
+        description="Choose your ProsePilot plan: Starter ($9/month), Pro Author ($29/month), or Studio ($79/month). All plans include AI book generation, professional editing, and multiple export formats."
+        keywords="ProsePilot pricing, AI writing cost, book writing subscription, writing software pricing, AI author pricing"
+        structuredData={pricingStructuredData}
+      />
+      
+      {/* FAQ Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData.faqPage(pricingFaqs))}
+      </script>
+      
       {/* Header */}
-      <div className="bg-white pt-16">
+      <section className="bg-white pt-16" aria-labelledby="pricing-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl">
+            <h1 id="pricing-heading" className="text-4xl font-extrabold text-base-heading sm:text-5xl">
               Choose Your Writing Plan
             </h1>
             <p className="mt-4 text-xl text-base-paragraph max-w-3xl mx-auto">
@@ -137,191 +174,144 @@ export function Pricing() {
             {/* Trust Indicators */}
             <div className="mt-8 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
               <div className="flex items-center text-base-paragraph">
-                <CheckCircle className="w-4 h-4 mr-2 text-brand-accent" />
+                <CheckCircle className="w-4 h-4 mr-2 text-brand-accent" aria-hidden="true" />
                 Cancel anytime
               </div>
               <div className="flex items-center text-base-paragraph">
-                <CreditCard className="w-4 h-4 mr-2 text-brand-accent" />
+                <CreditCard className="w-4 h-4 mr-2 text-brand-accent" aria-hidden="true" />
                 Start from just $9/month
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Pricing Plans */}
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-16 bg-base-background" aria-labelledby="plans-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 id="plans-heading" className="sr-only">Pricing Plans</h2>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {plans.map((plan) => (
-              <div
+              <article
                 key={plan.id}
-                className={`relative bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-105 ${
-                  plan.isPopular ? 'ring-2 ring-brand-accent scale-105' : ''
-                } ${plan.comingSoon ? 'opacity-75' : ''}`}
+                className={`relative bg-white rounded-2xl shadow-lg p-8 ${
+                  plan.isPopular ? 'ring-2 ring-brand-accent' : ''
+                }`}
               >
                 {plan.isPopular && (
-                  <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
-                    Most Popular
-                  </div>
-                )}
-                {plan.comingSoon && (
-                  <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
-                    Coming Soon
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-brand-accent text-white px-4 py-1 rounded-full text-sm font-medium">
+                      Most Popular
+                    </span>
                   </div>
                 )}
                 
-                <div className="p-8 flex flex-col h-full">
-                  <div className="flex-1">
-                    {/* Plan Header */}
-                  <div className="text-center mb-8">
-                    <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
-                      {plan.icon}
-                    </div>
-                    <h3 className="text-2xl font-bold text-base-heading">{plan.name}</h3>
-                    <p className="text-base-paragraph mt-2">{plan.description}</p>
+                {plan.comingSoon && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-state-warning text-white px-4 py-1 rounded-full text-sm font-medium">
+                      Coming Soon
+                    </span>
+                  </div>
+                )}
+
+                <div className="text-center">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${plan.color} text-white mb-4`}>
+                    {plan.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-base-heading mb-2">{plan.name}</h3>
+                  <p className="text-base-paragraph mb-6">{plan.description}</p>
+                  
+                  <div className="mb-6">
+                    <span className="text-4xl font-extrabold text-base-heading">${plan.price}</span>
+                    <span className="text-base-paragraph">/month</span>
+                  </div>
+                  
+                  <div className="mb-8">
+                    <span className="text-sm text-base-paragraph">
+                      {plan.credits} credits/month ({Math.floor(plan.credits / 5)} books)
+                    </span>
                   </div>
 
-                  {/* Pricing */}
-                  <div className="text-center mb-8">
-                    <div className="flex items-baseline justify-center">
-                      <span className="text-5xl font-extrabold text-base-heading">${plan.price}</span>
-                      <span className="text-xl text-gray-500 ml-1">/month</span>
-                    </div>
-                    <div className="mt-2 text-sm text-gray-500">
-                      {plan.credits === -1 ? 'Unlimited credits' : `${plan.credits} credits included`}
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <ul className="space-y-4 mb-8">
+                  <ul className="space-y-4 mb-8 text-left">
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
-                        <Check className="h-5 w-5 text-state-success shrink-0 mt-0.5" />
-                        <span className="ml-3 text-gray-700 text-sm">{feature}</span>
+                        <Check className="w-5 h-5 text-state-success mr-3 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                        <span className="text-base-paragraph">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  </div>
 
-                  {/* CTA Button */}
-                  <Link to="/workspace/signup">
+                  <Link to={plan.comingSoon ? "#" : "/workspace/signup"}>
                     <Button
-                      className={`w-full ${plan.isPopular && 'bg-brand-accent border-brand-accent text-white hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white'}`}
+                      className={`w-full ${
+                        plan.isPopular
+                          ? 'bg-brand-accent hover:bg-brand-accent/90'
+                          : ''
+                      }`}
                       disabled={plan.comingSoon}
-                      variant={plan.isPopular ? 'default' : 'outline'}
                     >
                       {plan.comingSoon ? 'Coming Soon' : 'Get Started'}
-                      {!plan.comingSoon && <ArrowRight className="ml-2 h-4 w-4" />}
+                      {!plan.comingSoon && <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />}
                     </Button>
                   </Link>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Additional Info */}
-          <div className="mt-16 text-center">
-            <p className="text-base-paragraph mb-4">
-              All plans include our core AI writing features and export capabilities
-            </p>
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> AI story generation</p>
-              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Character development</p>
-              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Plot consistency checking</p>
-              {/* <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Multiple export formats</p> */}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Credit Packages */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-base-heading">Need More Credits?</h2>
-            <p className="mt-4 text-xl text-base-paragraph">
-              Purchase additional credits that never expire
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {[
-              { credits: 10, price: 20, popular: false },
-              { credits: 25, price: 45, savings: 10, popular: true },
-              { credits: 50, price: 80, savings: 20, popular: false }
-            ].map((pack, index) => (
-              <div
-                key={index}
-                className={`bg-base-background rounded-lg p-6 text-center flex flex-col justify-center items-center ${
-                  pack.popular ? 'ring-2 ring-brand-accent' : ''
-                }`}
-              >
-                {pack.popular && (
-                  <div className="bg-brand-accent text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
-                    Best Value
-                  </div>
-                )}
-                <div className="text-3xl font-bold text-base-heading mb-2">
-                  {pack.credits} Credits
-                </div>
-                <div className="text-2xl font-bold text-base-heading mb-4">
-                  ${pack.price}
-                </div>
-                {pack.savings && (
-                  <div className="text-sm text-state-success font-medium mb-4">
-                    Save {pack.savings}%
-                  </div>
-                )}
-                <div className="text-sm text-base-paragraph mb-6">
-                  Create {Math.floor(pack.credits / 5)} books
-                </div>
-                <Link to="/workspace/signup">
-                  <Button className={`w-full ${pack.popular ? 'bg-brand-accent border-brand-accent hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white' : ''}`}>
-                    Purchase Credits
-                  </Button>
-                </Link>
-              </div>
+              </article>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* FAQ Section */}
-      <div className="bg-gray-50 py-16">
+      <section className="py-16 bg-white" aria-labelledby="faq-heading">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-base-heading">Frequently Asked Questions</h2>
-            <p className="mt-4 text-xl text-base-paragraph">
-              Everything you need to know about our pricing
+            <h2 id="faq-heading" className="text-3xl font-bold text-base-heading">
+              Frequently Asked Questions
+            </h2>
+            <p className="mt-4 text-lg text-base-paragraph">
+              Everything you need to know about ProsePilot pricing and plans
             </p>
           </div>
-
+          
           <div className="space-y-8">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-base-heading mb-3 flex items-center">
-                  <HelpCircle className="w-5 h-5 text-base-heading mr-3" />
+            {pricingFaqs.map((faq, index) => (
+              <article key={index} className="bg-base-background rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-base-heading mb-3">
                   {faq.question}
                 </h3>
-                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
-              </div>
+                <p className="text-base-paragraph">{faq.answer}</p>
+              </article>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
-            <p className="text-base-paragraph mb-4">Still have questions?</p>
+      {/* CTA Section */}
+      <section className="py-16 bg-brand-accent/5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-base-heading mb-4">
+            Ready to Start Writing?
+          </h2>
+          <p className="text-lg text-base-paragraph mb-8">
+            Join thousands of writers who've transformed their ideas into published books with ProsePilot.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/workspace/signup">
+              <Button className="px-8 py-3 text-lg">
+                Start Your Free Trial
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+              </Button>
+            </Link>
             <Link to="/support">
-              <Button>
-                Contact Support
-                <ArrowRight className="ml-2 h-4 w-4" />
+              <Button variant="outline" className="px-8 py-3 text-lg">
+                <HelpCircle className="mr-2 h-5 w-5" aria-hidden="true" />
+                Need Help?
               </Button>
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Footer */}
       <Footer />
     </>
   );

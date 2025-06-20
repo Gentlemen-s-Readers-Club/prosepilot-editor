@@ -508,7 +508,7 @@ export function PrivacyPolicy() {
                 </p>
                 <ul className="list-disc pl-6 space-y-1">
                   <li>Accessing your account settings to update your personal information</li>
-                  <li>Contacting us at privacy@prosepilot.com</li>
+                  <li>Contacting us at privacy@prosepilot.app</li>
                   <li>Using the "Delete Account" option in your account settings</li>
                 </ul>
               </div>
@@ -561,7 +561,7 @@ export function PrivacyPolicy() {
               <div className="bg-state-error-light border border-state-error rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-state-error mb-3">Notice to Parents and Guardians</h3>
                 <p className="text-state-error text-sm">
-                  If you are a parent or guardian and you believe that your child has provided us with personal information without your consent, please contact us at privacy@prosepilot.com. We will take steps to remove that information from our servers.
+                  If you are a parent or guardian and you believe that your child has provided us with personal information without your consent, please contact us at privacy@prosepilot.app. We will take steps to remove that information from our servers.
                 </p>
               </div>
             </div>
@@ -606,9 +606,9 @@ export function PrivacyPolicy() {
               <div className="bg-white border rounded-lg p-6 shadow-sm">
                 <h3 className="text-lg font-semibold text-base-heading mb-3">Contact Information</h3>
                 <div className="space-y-2">
-                  <p><strong>Email:</strong> privacy@prosepilot.com</p>
+                  <p><strong>Email:</strong> privacy@prosepilot.app</p>
                   {/* <p><strong>Postal Address:</strong> ProsePilot Inc., 123 Writer's Lane, Suite 456, San Francisco, CA 94107, USA</p> */}
-                  <p><strong>Data Protection Officer:</strong> dpo@prosepilot.com</p>
+                  <p><strong>Data Protection Officer:</strong> dpo@prosepilot.app</p>
                 </div>
               </div>
               
@@ -619,7 +619,7 @@ export function PrivacyPolicy() {
                 </p>
                 <div className="space-y-1 text-sm text-blue-800 mt-2">
                   <p>ProsePilot EU Representative</p>
-                  <p>Email: eu-rep@prosepilot.com</p>
+                  <p>Email: eu-rep@prosepilot.app</p>
                   <p>Address: Bergstrasse 15, 10115 Berlin, Germany</p>
                 </div>
               </div> */}

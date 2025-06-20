@@ -6,7 +6,7 @@ import { Checkbox } from '../components/ui/checkbox';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
-import { Helmet } from 'react-helmet';
+import { SEOHead } from '../components/SEOHead';
 import useAnalytics from '../hooks/useAnalytics';
 
 const subjectOptions: SelectOption[] = [
@@ -47,9 +47,11 @@ export function Support() {
 
   return (
     <>
-      <Helmet>
-        <title>ProsePilot - Support</title>
-      </Helmet>
+      <SEOHead
+        title="Support - Get Help with ProsePilot"
+        description="Get help with ProsePilot's AI writing platform. Contact our support team for technical assistance, billing questions, feature guidance, and account issues."
+        keywords="ProsePilot support, AI writing help, technical support, customer service, writing platform assistance"
+      />
       {/* Contact Form */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
