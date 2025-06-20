@@ -164,7 +164,7 @@ export function Pricing() {
       <section className="bg-white pt-16" aria-labelledby="pricing-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 id="pricing-heading" className="text-4xl font-extrabold text-base-heading sm:text-5xl">
+            <h1 id="pricing-heading" className="text-4xl font-bold text-base-heading sm:text-5xl font-heading">
               Choose Your Writing Plan
             </h1>
             <p className="mt-4 text-xl text-base-paragraph max-w-3xl mx-auto">
@@ -189,7 +189,7 @@ export function Pricing() {
       {/* Pricing Plans */}
       <section className="py-16 bg-base-background" aria-labelledby="plans-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 id="plans-heading" className="sr-only">Pricing Plans</h2>
+          <h2 id="plans-heading" className="sr-only font-heading">Pricing Plans</h2>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {plans.map((plan) => (
               <article
@@ -218,11 +218,11 @@ export function Pricing() {
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${plan.color} text-white mb-4`}>
                     {plan.icon}
                   </div>
-                  <h3 className="text-2xl font-bold text-base-heading mb-2">{plan.name}</h3>
+                  <h3 className="text-2xl font-bold text-base-heading mb-2 font-heading">{plan.name}</h3>
                   <p className="text-base-paragraph mb-6">{plan.description}</p>
                   
                   <div className="mb-6">
-                    <span className="text-4xl font-extrabold text-base-heading">${plan.price}</span>
+                    <span className="text-4xl font-bold text-base-heading">${plan.price}</span>
                     <span className="text-base-paragraph">/month</span>
                   </div>
                   
@@ -265,7 +265,7 @@ export function Pricing() {
       <section className="py-16 bg-white" aria-labelledby="faq-heading">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 id="faq-heading" className="text-3xl font-bold text-base-heading">
+            <h2 id="faq-heading" className="text-3xl font-bold text-base-heading font-heading">
               Frequently Asked Questions
             </h2>
             <p className="mt-4 text-lg text-base-paragraph">
@@ -276,7 +276,7 @@ export function Pricing() {
           <div className="space-y-8">
             {pricingFaqs.map((faq, index) => (
               <article key={index} className="bg-base-background rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-base-heading mb-3">
+                <h3 className="text-lg font-semibold text-base-heading mb-3 font-heading">
                   {faq.question}
                 </h3>
                 <p className="text-base-paragraph">{faq.answer}</p>
@@ -289,7 +289,7 @@ export function Pricing() {
       {/* CTA Section */}
       <section className="py-16 bg-brand-accent/5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-base-heading mb-4">
+          <h2 className="text-3xl font-bold text-base-heading mb-4 font-heading">
             Ready to Start Writing?
           </h2>
           <p className="text-lg text-base-paragraph mb-8">

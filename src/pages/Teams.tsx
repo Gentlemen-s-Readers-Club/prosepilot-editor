@@ -126,8 +126,10 @@ export function Teams() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-base-heading">My Teams</h1>
-            <p className="text-gray-600 mt-2">Collaborate with others on your writing projects</p>
+            <h1 className="text-3xl font-bold text-base-heading font-heading">My Teams</h1>
+            <p className="text-base-paragraph font-copy mt-2">
+              Manage your collaborative writing teams and projects.
+            </p>
           </div>
           <Button
             onClick={() => setShowCreateModal(true)}
@@ -145,9 +147,9 @@ export function Teams() {
               <div className="bg-base-background rounded-full p-4 mb-4">
                 <Users className="w-12 h-12 text-base-heading" />
               </div>
-              <h3 className="text-lg font-medium text-base-heading mb-2">No teams yet</h3>
-              <p className="text-base-paragraph max-w-md mb-6">
-              Create your first team to start collaborating with others.
+              <h3 className="text-lg font-medium text-base-heading font-heading mb-2">No teams yet</h3>
+              <p className="text-base-paragraph font-copy mb-4">
+                Create your first team to start collaborating with other writers.
               </p>
               <Button onClick={() => setShowCreateModal(true)}>
                 Create Your First Team
@@ -177,10 +179,10 @@ export function Teams() {
                         </div>
                       )}
                       <div>
-                        <h3 className="text-lg font-semibold text-base-heading  transition-colors">
+                        <h3 className="text-lg font-semibold text-base-heading font-heading transition-colors">
                           {team.name}
                         </h3>
-                        <div className="flex items-center gap-1 text-sm text-base-paragraph">
+                        <div className="flex items-center gap-1 text-sm text-base-paragraph font-copy">
                           {roleIcons[team.user_role as TeamRole]}
                           <span>{roleLabels[team.user_role as TeamRole]}</span>
                         </div>
@@ -218,7 +220,7 @@ export function Teams() {
 
                   {/* Team Description */}
                   {team.description && (
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    <p className="text-sm text-base-paragraph font-copy mb-4 line-clamp-2">
                       {team.description}
                     </p>
                   )}
@@ -228,16 +230,16 @@ export function Teams() {
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1">
                         <Users className="w-4 h-4 text-brand-accent" />
-                        <span className="text-base-paragraph">{team.member_count || 0} members</span>
+                        <span className="text-base-paragraph font-copy">{team.member_count || 0} members</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4 text-brand-accent" />
-                        <span className="text-base-paragraph">{new Date(team.created_at).toLocaleDateString()}</span>
+                        <span className="text-base-paragraph font-copy">{new Date(team.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
                       <Activity className="w-4 h-4 text-brand-accent" />
-                      <span className="text-base-paragraph">Active</span>
+                      <span className="text-base-paragraph font-copy">Active</span>
                     </div>
                   </div>
                 </div>

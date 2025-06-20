@@ -74,7 +74,7 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
               
               {item.current ? (
                 <span 
-                  className="text-gray-500 font-medium"
+                  className="text-gray-500 font-medium font-copy"
                   aria-current="page"
                 >
                   {item.label === 'Home' ? (
@@ -86,7 +86,7 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
               ) : (
                 <Link
                   to={item.path}
-                  className="text-gray-600 hover:text-brand-accent transition-colors"
+                  className="text-gray-600 hover:text-brand-accent transition-colors font-copy"
                 >
                   {item.label === 'Home' ? (
                     <Home className="w-4 h-4" aria-hidden="true" />

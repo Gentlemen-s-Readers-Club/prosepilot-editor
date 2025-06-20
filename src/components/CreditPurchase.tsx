@@ -59,7 +59,7 @@ export function CreditPurchase() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
+        <h2 className="text-xl font-semibold text-base-heading font-heading">
           Buy More Credits
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -81,10 +81,10 @@ export function CreditPurchase() {
   if (error) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
+        <h2 className="text-xl font-semibold text-base-heading font-heading">
           Buy More Credits
         </h2>
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg font-copy">
           Error loading credit packages: {error}
         </div>
       </div>
@@ -94,12 +94,12 @@ export function CreditPurchase() {
   if (packages.length === 0 && !loading) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
+        <h2 className="text-xl font-semibold text-base-heading font-heading">
           Buy More Credits
         </h2>
-        <div className="bg-yellow-50 border border-yellow-200 text-yellow-600 px-4 py-3 rounded-lg">
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-600 px-4 py-3 rounded-lg font-copy">
           <p>No credit packages available. This could mean:</p>
-          <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
+          <ul className="list-disc list-inside mt-2 space-y-1 text-sm font-copy">
             <li>Database schema not applied</li>
             <li>Credit packages not inserted</li>
             <li>Backend function not working</li>
@@ -114,7 +114,7 @@ export function CreditPurchase() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-base-heading">
+      <h2 className="text-xl font-semibold text-base-heading font-heading">
         Buy More Credits
       </h2>
 
@@ -125,11 +125,11 @@ export function CreditPurchase() {
             className="bg-base-background rounded-lg p-4 border hover:border-primary transition-colors"
           >
             <div className="flex justify-between items-center mb-2">
-              <div className="text-lg font-semibold text-base-heading">
+              <div className="text-lg font-semibold text-base-heading font-copy">
                 {pkg.credits_amount} Credits
               </div>
               {pkg.discount_percentage > 0 && (
-                <div className="text-sm bg-state-success-light text-state-success px-2 py-1 rounded">
+                <div className="text-sm bg-state-success-light text-state-success px-2 py-1 rounded font-copy">
                   Save {pkg.discount_percentage}%
                 </div>
               )}
@@ -152,7 +152,7 @@ export function CreditPurchase() {
       <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg">
         <div className="flex items-start">
           <CreditCard className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-          <div className="text-sm">
+          <div className="text-sm font-copy">
             <strong>Secure Payment:</strong> All payments are processed securely
             through Paddle. Credits are added to your account immediately after
             payment confirmation.

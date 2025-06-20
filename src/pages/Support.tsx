@@ -56,8 +56,8 @@ export function Support() {
       <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl">How can we help you?</h1>
-            <p className="mt-4 text-xl text-base-paragraph">
+            <h1 className="text-4xl font-bold text-base-heading sm:text-5xl font-heading">How can we help you?</h1>
+            <p className="mt-4 text-xl text-base-paragraph font-copy">
               Send us a message and we'll get back to you within 24 hours
             </p>
           </div>

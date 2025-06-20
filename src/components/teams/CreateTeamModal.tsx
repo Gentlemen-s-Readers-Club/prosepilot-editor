@@ -125,7 +125,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-md mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-base-heading">Create New Team</h2>
+          <h2 className="text-xl font-semibold text-base-heading font-heading">Create New Team</h2>
           <button 
             onClick={handleClose} 
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -168,7 +168,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
                   </div>
                 )}
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 font-copy">
                 Supports JPG, PNG (max 5MB)
               </p>
             </div>
@@ -193,11 +193,11 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
                 maxLength={50}
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1 text-sm text-red-600 font-copy">
                   Team name must be between 3 and 50 characters
                 </p>
               )}
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 font-copy">
                 {formData.name.length}/50 characters
               </p>
             </div>
@@ -217,15 +217,15 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
                 className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isSubmitting}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 font-copy">
                 {formData.description.length}/200 characters
               </p>
             </div>
 
             {/* Team Limits Info */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="text-sm font-medium text-blue-800 mb-2">Team Limits</h4>
-              <ul className="text-sm text-blue-700 space-y-1">
+              <h4 className="text-sm font-medium text-blue-800 mb-2 font-heading">Team Limits</h4>
+              <ul className="text-sm text-blue-700 space-y-1 font-copy">
                 <li>• Maximum 3 members per team</li>
                 <li>• Unlimited collaborative books</li>
                 <li>• Full activity tracking</li>
@@ -251,7 +251,7 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating...
+                  <span className="font-copy">Creating...</span>
                 </div>
               ) : (
                 'Create Team'

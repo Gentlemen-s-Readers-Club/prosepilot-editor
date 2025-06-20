@@ -109,11 +109,11 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
           .upsert(updates);
 
         if (error) throw error;
-      } catch (error: any) {
+      } catch (error) {
+        console.error('Error updating chapter:', error);
         toast({
-          variant: "destructive",
           title: "Error",
-          description: "Failed to update chapter order",
+          description: "Failed to update chapter",
         });
       }
     }
@@ -147,9 +147,9 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
         title: "Success",
         description: `${type === 'chapter' ? 'Chapter' : 'Page'} created successfully`,
       });
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error creating chapter:', error);
       toast({
-        variant: "destructive",
         title: "Error",
         description: "Failed to create chapter",
       });
@@ -173,9 +173,9 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
         title: "Success",
         description: "Title updated successfully",
       });
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error updating chapter title:', error);
       toast({
-        variant: "destructive",
         title: "Error",
         description: "Failed to update title",
       });
@@ -198,9 +198,9 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
           title: "Success",
           description: `${chapterToDelete.type === 'chapter' ? 'Chapter' : 'Page'} deleted`,
         });
-      } catch (error: any) {
+      } catch (error) {
+        console.error('Error deleting chapter:', error);
         toast({
-          variant: "destructive",
           title: "Error",
           description: "Failed to delete chapter",
         });
@@ -213,7 +213,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-base-heading">Book Content</h2>
+        <h2 className="text-xl font-bold text-base-heading font-heading">Book Content</h2>
         {!isPublished && (
           <Button onClick={() => setShowAddDialog(true)} className="flex items-center gap-2">
             <Plus size={16} />
@@ -226,7 +226,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
         <div className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-8 h-8 text-base-heading animate-spin" />
-            <p className="text-gray-600">Loading chapters...</p>
+            <p className="text-gray-600 font-copy">Loading chapters...</p>
           </div>
         </div>
       ) : (
@@ -266,8 +266,10 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
           <div className="bg-gray-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <FileText className="w-8 h-8 text-brand-accent" />
           </div>
-          <h3 className="text-lg font-medium text-base-heading mb-2">No chapters yet</h3>
-          <p className="text-base-paragraph mb-6">Start organizing your book by adding chapters or pages.</p>
+          <h3 className="text-lg font-medium text-base-heading font-heading mb-2">No chapters yet</h3>
+          <p className="text-base-paragraph font-copy mb-4">
+            Create your first chapter to get started with your book.
+          </p>
           <Button onClick={() => setShowAddDialog(true)}>
             Add Your First Chapter
           </Button>
@@ -283,8 +285,8 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
       <Dialog open={!!chapterToDelete} onOpenChange={() => setChapterToDelete(null)}>
         <DialogContent className="bg-white">
           <DialogHeader>
-            <DialogTitle>Delete {chapterToDelete?.type === 'chapter' ? 'Chapter' : 'Page'}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading">Delete {chapterToDelete?.type === 'chapter' ? 'Chapter' : 'Page'}</DialogTitle>
+            <DialogDescription className="font-copy">
               Are you sure you want to delete "{chapterToDelete?.title}"? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>

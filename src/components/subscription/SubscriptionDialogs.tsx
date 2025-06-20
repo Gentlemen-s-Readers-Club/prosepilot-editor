@@ -76,8 +76,8 @@ export const SubscriptionDialogs: React.FC<SubscriptionDialogsProps> = ({
       <Dialog open={showCancelDialog} onOpenChange={onCancelDialogChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel Subscription</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading">Cancel Subscription</DialogTitle>
+            <DialogDescription className="font-copy">
               Are you sure you want to cancel your subscription? You'll lose
               access to premium features immediately. This action cannot be
               undone.
@@ -90,10 +90,10 @@ export const SubscriptionDialogs: React.FC<SubscriptionDialogsProps> = ({
                 <AlertCircle className="h-5 w-5 text-yellow-400" />
               </div>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-yellow-800">
+                <h3 className="text-sm font-medium text-yellow-800 font-heading">
                   Before you cancel
                 </h3>
-                <div className="mt-2 text-sm text-yellow-700">
+                <div className="mt-2 text-sm text-yellow-700 font-copy">
                   <ul className="list-disc pl-5 space-y-1">
                     <li>Your subscription will be cancelled immediately</li>
                     <li>You'll lose access to premium features right away</li>
@@ -131,12 +131,12 @@ export const SubscriptionDialogs: React.FC<SubscriptionDialogsProps> = ({
       <Dialog open={showUpgradeDialog} onOpenChange={onUpgradeDialogChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="font-heading">
               {isDowngrade()
                 ? `Downgrade to ${selectedPlan?.name}`
                 : `Upgrade to ${selectedPlan?.name}`}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="font-copy">
               You're about to {isDowngrade() ? "downgrade" : "upgrade"} to the{" "}
               {selectedPlan?.name} plan. Changes will take effect at the start
               of your next billing period.
@@ -149,12 +149,12 @@ export const SubscriptionDialogs: React.FC<SubscriptionDialogsProps> = ({
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="font-medium">New Plan Cost</div>
-                  <div className="text-sm text-base-paragraph">
+                  <div className="font-medium font-copy">New Plan Cost</div>
+                  <div className="text-sm text-base-paragraph font-copy">
                     Starting next billing period
                   </div>
                 </div>
-                <div className="text-lg font-bold">
+                <div className="text-lg font-bold font-copy">
                   ${selectedPlan?.price}/mo
                 </div>
               </div>
@@ -167,10 +167,10 @@ export const SubscriptionDialogs: React.FC<SubscriptionDialogsProps> = ({
                     <AlertCircle className="h-5 w-5 text-yellow-400" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">
+                    <h3 className="text-sm font-medium text-yellow-800 font-heading">
                       Features You'll Lose
                     </h3>
-                    <div className="mt-2 text-sm text-yellow-700">
+                    <div className="mt-2 text-sm text-yellow-700 font-copy">
                       <ul className="list-disc pl-5 space-y-1">
                         {getLostFeatures().map((feature, index) => (
                           <li key={index}>{feature}</li>
@@ -187,10 +187,10 @@ export const SubscriptionDialogs: React.FC<SubscriptionDialogsProps> = ({
                     <Zap className="h-5 w-5 text-green-400" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-green-800">
+                    <h3 className="text-sm font-medium text-green-800 font-heading">
                       New Features You'll Get
                     </h3>
-                    <div className="mt-2 text-sm text-green-700">
+                    <div className="mt-2 text-sm text-green-700 font-copy">
                       <ul className="list-disc pl-5 space-y-1">
                         {getNewFeatures().map((feature, index) => (
                           <li key={index}>{feature}</li>

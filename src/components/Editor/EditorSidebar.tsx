@@ -67,7 +67,7 @@ export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, o
       isCollapsed ? 'w-[50px]' : 'w-[300px]'
     }`}>
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        {!isCollapsed && <h2 className="font-semibold text-gray-900">Book Overview</h2>}
+        {!isCollapsed && <h2 className="font-semibold text-gray-900 font-heading">Book Overview</h2>}
         <Button
           variant="ghost"
           size="sm"
@@ -94,14 +94,14 @@ export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, o
                 </div>
               )}
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{book.title}</h3>
+            <h3 className="font-semibold text-gray-900 mb-2 font-heading">{book.title}</h3>
             <StatusBadge status={book.status} />
           </div>
 
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-gray-500">Chapters & Pages</h4>
+                <h4 className="text-sm font-medium text-gray-500 font-heading">Chapters & Pages</h4>
                 {!isPublished && (
                   <Button
                     variant="ghost"
@@ -129,7 +129,7 @@ export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, o
                     ) : (
                       <FileText size={16} />
                     )}
-                    <span className="truncate text-left">{chapter.title}</span>
+                    <span className="truncate text-left font-copy">{chapter.title}</span>
                   </button>
                 ))}
               </div>

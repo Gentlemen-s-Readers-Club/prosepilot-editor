@@ -154,7 +154,7 @@ export function Signup() {
         <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
           <div className="max-w-md w-full space-y-8">
             <div>
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">
+              <h2 className="mt-6 text-center text-3xl font-bold text-base-heading font-heading">
                 Create your account
               </h2>
             </div>
@@ -184,7 +184,7 @@ export function Signup() {
                   <div className="w-full border-t border-brand-accent" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-base-background text-brand-accent">Or continue with email</span>
+                  <span className="px-2 bg-base-background text-brand-accent font-copy">Or continue with email</span>
                 </div>
               </div>
             </div>
@@ -235,8 +235,8 @@ export function Signup() {
                   {password && (
                     <div className="mt-2">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm text-gray-500">Password strength:</span>
-                        <span className="text-sm font-medium text-gray-700">{getStrengthText()}</span>
+                        <span className="text-sm text-gray-500 font-copy">Password strength:</span>
+                        <span className="text-sm font-medium text-gray-700 font-copy">{getStrengthText()}</span>
                       </div>
                       <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div
@@ -244,7 +244,7 @@ export function Signup() {
                           style={{ width: `${(passwordStrength / 5) * 100}%` }}
                         />
                       </div>
-                      <ul className="mt-2 text-sm text-gray-500 space-y-1">
+                      <ul className="mt-2 text-sm text-gray-500 space-y-1 font-copy">
                         <li className={password.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
                         <li className={password.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
                         <li className={password.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
@@ -265,7 +265,7 @@ export function Signup() {
               </Button>
 
               <div className="text-center">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 font-copy">
                   Already have an account?{' '}
                   <Button
                     variant="link"

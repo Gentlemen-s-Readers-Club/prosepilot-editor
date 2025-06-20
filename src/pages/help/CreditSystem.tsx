@@ -57,10 +57,10 @@ export function CreditSystem() {
 
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <h1 className="text-4xl font-bold text-base-heading mb-4">
+                <h1 className="text-4xl font-bold text-base-heading font-heading mb-4">
                   Understanding the credit system
                 </h1>
-                <div className="flex items-center text-sm text-base-paragraph space-x-4 mb-6">
+                <div className="flex items-center text-sm text-base-paragraph font-copy space-x-4 mb-6">
                   <div className="flex items-center">
                     <Clock className="w-4 h-4 mr-1 text-brand-accent" />
                     4 min read
@@ -74,50 +74,50 @@ export function CreditSystem() {
                     Billing & Subscriptions
                   </div>
                 </div>
-                <p className="text-xl text-base-paragraph leading-relaxed">
+                <p className="text-xl text-base-paragraph font-copy leading-relaxed">
                   Learn how ProsePilot's credit system works, how to manage your usage effectively, 
                   and get the most value from your subscription.
                 </p>
               </div>
               <div className="ml-8 hidden lg:block">
                 <div className="bg-gray-50 rounded-lg p-6 w-64">
-                  <h3 className="font-semibold text-base-heading mb-4">
+                  <h3 className="font-semibold text-base-heading font-heading mb-4">
                     In this article
                   </h3>
                   <nav className="space-y-2 text-sm">
                     <a
                       href="#what-are-credits"
-                      className="block text-base-paragraph hover:text-base-heading"
+                      className="block text-base-paragraph font-copy hover:text-base-heading"
                     >
                       What are credits?
                     </a>
                     <a
                       href="#how-credits-work"
-                      className="block text-base-paragraph hover:text-base-heading"
+                      className="block text-base-paragraph font-copy hover:text-base-heading"
                     >
                       How credits work
                     </a>
                     <a
                       href="#credit-costs"
-                      className="block text-base-paragraph hover:text-base-heading"
+                      className="block text-base-paragraph font-copy hover:text-base-heading"
                     >
                       Credit costs by plan
                     </a>
                     <a
                       href="#tracking-usage"
-                      className="block text-base-paragraph hover:text-base-heading"
+                      className="block text-base-paragraph font-copy hover:text-base-heading"
                     >
                       Tracking your usage
                     </a>
                     <a
                       href="#buying-credits"
-                      className="block text-base-paragraph hover:text-base-heading"
+                      className="block text-base-paragraph font-copy hover:text-base-heading"
                     >
                       Buying additional credits
                     </a>
                     <a
                       href="#tips"
-                      className="block text-base-paragraph hover:text-base-heading"
+                      className="block text-base-paragraph font-copy hover:text-base-heading"
                     >
                       Tips for maximizing credits
                     </a>
@@ -133,12 +133,12 @@ export function CreditSystem() {
           <div>
             {/* What are credits */}
             <section id="what-are-credits" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
                 <Zap className="w-8 h-8 mr-4 text-brand-accent" />
                 What are credits?
               </h2>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 font-copy mb-6">
                 Credits are ProsePilot's usage currency that powers our AI book
                 generation. Think of them as tokens that you spend to create
                 books, with each book requiring a specific number of credits based
@@ -146,7 +146,7 @@ export function CreditSystem() {
               </p>
 
               <div className="bg-state-info-light border border-state-info rounded-lg p-6 mb-6">
-                <h4 className="font-semibold text-state-info mb-3">
+                <h4 className="font-semibold text-state-info font-heading mb-3">
                   Key credit concepts:
                 </h4>
                 <div className="space-y-3 text-state-info">
@@ -184,12 +184,12 @@ export function CreditSystem() {
 
             {/* How credits work */}
             <section id="how-credits-work" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
                 <RefreshCw className="w-8 h-8 mr-4 text-brand-accent" />
                 How credits work
               </h2>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 font-copy mb-6">
                 When you create a book, the system deducts 5 credits from your
                 account. The generation process includes everything from initial
                 outline creation to final content generation and consistency
@@ -198,12 +198,12 @@ export function CreditSystem() {
 
               <div className="space-y-6">
                 <div className="border rounded-lg p-6 bg-white">
-                  <h4 className="font-semibold text-base-heading mb-3">
+                  <h4 className="font-semibold text-base-heading font-heading mb-3">
                     What's included in each book generation:
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <h5 className="font-medium text-base-heading mb-2">
+                      <h5 className="font-medium text-base-heading font-heading mb-2">
                         Content Creation
                       </h5>
                       <ul className="text-gray-700 space-y-1 text-sm">
@@ -214,7 +214,7 @@ export function CreditSystem() {
                       </ul>
                     </div>
                     <div>
-                      <h5 className="font-medium text-base-heading mb-2">
+                      <h5 className="font-medium text-base-heading font-heading mb-2">
                         Quality Assurance
                       </h5>
                       <ul className="text-gray-700 space-y-1 text-sm">
@@ -228,11 +228,11 @@ export function CreditSystem() {
                 </div>
 
                 <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
-                  <h4 className="font-semibold text-state-warning mb-3 flex items-center">
+                  <h4 className="font-semibold text-state-warning font-heading mb-3 flex items-center">
                     <AlertCircle className="w-5 h-5 mr-2" />
                     Important: When credits are deducted
                   </h4>
-                  <p className="text-state-warning text-sm mb-3">
+                  <p className="text-state-warning text-sm font-copy mb-3">
                     Credits are deducted when you click "Create Book" and the
                     generation process begins. If generation fails due to a system
                     error, your credits will be automatically refunded.
@@ -249,19 +249,19 @@ export function CreditSystem() {
 
             {/* Credit costs by plan */}
             <section id="credit-costs" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
                 <Package className="w-8 h-8 mr-4 text-brand-accent" />
                 Credit allocation by plan
               </h2>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 font-copy mb-6">
                 Each subscription plan includes a different number of monthly
                 credits. Here's what you get with each plan:
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="border rounded-lg p-6 text-center bg-white">
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     Starter
                   </h4>
                   <div className="text-3xl font-bold text-brand-accent mb-2">
@@ -282,7 +282,7 @@ export function CreditSystem() {
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-medium">
                     Most Popular
                   </div>
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     Pro Author
                   </h4>
                   <div className="text-3xl font-bold text-brand-accent mb-2">
@@ -300,7 +300,7 @@ export function CreditSystem() {
                 </div>
 
                 <div className="border rounded-lg p-6 text-center opacity-75 bg-white">
-                  <h4 className="font-semibold text-base-heading mb-2">Studio</h4>
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">Studio</h4>
                   <div className="text-3xl font-bold text-brand-accent mb-2">
                     75
                   </div>
@@ -318,7 +318,7 @@ export function CreditSystem() {
               </div>
 
               <div className="bg-state-success-light border border-state-success rounded-lg p-6">
-                <h4 className="font-semibold text-state-success mb-3">
+                <h4 className="font-semibold text-state-success font-heading mb-3">
                   💡 Value comparison
                 </h4>
                 <div className="text-state-success text-sm space-y-2">
@@ -339,19 +339,19 @@ export function CreditSystem() {
 
             {/* Tracking usage */}
             <section id="tracking-usage" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
                 <TrendingUp className="w-8 h-8 mr-4 text-brand-accent" />
                 Tracking your usage
               </h2>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 font-copy mb-6">
                 You can monitor your credit usage and remaining balance from
                 multiple places in your account.
               </p>
 
               <div className="space-y-6">
                 <div className="border rounded-lg p-6 bg-white">
-                  <h4 className="font-semibold text-base-heading mb-3">
+                  <h4 className="font-semibold text-base-heading font-heading mb-3">
                     Where to check your credits:
                   </h4>
                   <div className="space-y-4">
@@ -360,7 +360,7 @@ export function CreditSystem() {
                         1
                       </div>
                       <div>
-                        <h5 className="font-medium text-base-heading">
+                        <h5 className="font-medium text-base-heading font-heading">
                           Dashboard
                         </h5>
                         <p className="text-gray-700 text-sm">
@@ -424,7 +424,7 @@ export function CreditSystem() {
 
             {/* Buying additional credits */}
             <section id="buying-credits" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
                 <DollarSign className="w-8 h-8 mr-4 text-brand-accent" />
                 Buying additional credits
               </h2>
@@ -437,7 +437,7 @@ export function CreditSystem() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div className="border rounded-lg p-6 text-center bg-white">
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     Small Pack
                   </h4>
                   <div className="text-2xl font-bold text-brand-accent mb-2">
@@ -458,7 +458,7 @@ export function CreditSystem() {
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-medium">
                     Best Value
                   </div>
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     Medium Pack
                   </h4>
                   <div className="text-2xl font-bold text-brand-accent mb-2">
@@ -477,7 +477,7 @@ export function CreditSystem() {
                 </div>
 
                 <div className="border rounded-lg p-6 text-center bg-white">
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     Large Pack
                   </h4>
                   <div className="text-2xl font-bold text-brand-accent mb-2">
@@ -497,7 +497,7 @@ export function CreditSystem() {
               </div>
 
               <div className="bg-state-info-light border border-state-info rounded-lg p-6">
-                <h4 className="font-semibold text-state-info mb-3">
+                <h4 className="font-semibold text-state-info font-heading mb-3">
                   How purchased credits work:
                 </h4>
                 <ul className="text-state-info space-y-2 text-sm">
@@ -515,24 +515,24 @@ export function CreditSystem() {
 
             {/* Tips for maximizing credits */}
             <section id="tips" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
                 <Zap className="w-8 h-8 mr-4 text-brand-accent" />
                 Tips for maximizing your credits
               </h2>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 font-copy mb-6">
                 Get the most value from your credits with these proven strategies
                 and best practices.
               </p>
 
               <div className="space-y-6">
                 <div className="border rounded-lg p-6 bg-white">
-                  <h4 className="font-semibold text-base-heading mb-4">
+                  <h4 className="font-semibold text-base-heading font-heading mb-4">
                     Smart usage strategies:
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h5 className="font-medium text-base-heading mb-3 flex items-center">
+                      <h5 className="font-medium text-base-heading font-heading mb-3 flex items-center">
                         <CheckCircle className="w-5 h-5 text-state-success mr-2" />
                         Plan your books
                       </h5>
@@ -543,7 +543,7 @@ export function CreditSystem() {
                       </ul>
                     </div>
                     <div>
-                      <h5 className="font-medium text-base-heading mb-3 flex items-center">
+                      <h5 className="font-medium text-base-heading font-heading mb-3 flex items-center">
                         <CheckCircle className="w-5 h-5 text-state-success mr-2" />
                         Time your usage
                       </h5>
@@ -557,7 +557,7 @@ export function CreditSystem() {
                 </div>
 
                 <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
-                  <h4 className="font-semibold text-state-warning mb-3">
+                  <h4 className="font-semibold text-state-warning font-heading mb-3">
                     ⚡ Pro tips:
                   </h4>
                   <ul className="text-state-warning space-y-2 text-sm">
@@ -587,7 +587,7 @@ export function CreditSystem() {
 
             {/* Related Articles */}
             <section className="border-t pt-8">
-              <h3 className="text-2xl font-bold text-base-heading mb-6">
+              <h3 className="text-2xl font-bold text-base-heading font-heading mb-6">
                 Related Articles
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -595,7 +595,7 @@ export function CreditSystem() {
                   to="/help/create-first-book"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-gray-100 transition-colors"
                 >
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     How to create your first book with AI
                   </h4>
                   <p className="text-base-paragraph text-sm mb-3">
@@ -612,7 +612,7 @@ export function CreditSystem() {
                   to="/pricing"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-gray-100 transition-colors"
                 >
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
                     Compare subscription plans
                   </h4>
                   <p className="text-base-paragraph text-sm mb-3">
@@ -631,7 +631,7 @@ export function CreditSystem() {
         {/* Footer CTA */}
         <div className="bg-brand-primary py-12">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h3 className="text-2xl font-bold text-white mb-4">
+            <h3 className="text-2xl font-bold text-white font-heading mb-4">
               Need more credits?
             </h3>
             <p className="text-white/90 mb-6">

@@ -671,7 +671,7 @@ export function BookDetails() {
                   <BookOpen className="h-5 w-5 text-state-success" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-state-success">
+                  <h3 className="text-sm font-medium text-state-success font-heading">
                     Published Book
                   </h3>
                   <div className="mt-2 text-sm text-state-success">
@@ -689,7 +689,7 @@ export function BookDetails() {
                   <AlertCircle className="h-5 w-5 text-red-400" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
+                  <h3 className="text-sm font-medium text-red-800 font-heading">
                     Generation Error
                   </h3>
                   <div className="mt-2 text-sm text-red-700">
@@ -748,7 +748,7 @@ export function BookDetails() {
                 {/* Book Stats */}
                 {!isEditMode && (
                 <div className="space-y-3 mb-6">
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Book Stats</h3>
+                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">Book Stats</h3>
                   <div className="flex flex-col gap-3">
                     <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -775,7 +775,7 @@ export function BookDetails() {
                 {/* Action Buttons */}
                 {!isEditMode && (
                 <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</h3>
+                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">Actions</h3>
                   <div className="space-y-2">
                     {/* Publish/Unpublish Button */}
                     {formData.status !== 'published' && formData.status !== 'archived' && formData.status !== 'error' && (
@@ -1027,7 +1027,7 @@ export function BookDetails() {
                         {/* Book Title and Author */}
                         <div>
                           <div className="flex items-start justify-between">
-                            <h1 className="text-3xl font-bold text-base-heading mb-2">{formData.title}</h1>
+                            <h1 className="text-3xl font-bold text-base-heading font-heading mb-2">{formData.title}</h1>
                             <StatusBadge status={formData.status} />
                           </div>
                           <div className="flex items-center text-gray-600">
@@ -1040,7 +1040,7 @@ export function BookDetails() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-4">
                             <div>
-                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Categories</h3>
+                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading mb-2">Categories</h3>
                               <div className="flex flex-wrap gap-2">
                                 {formData.categories.length > 0 ? (
                                   formData.categories.map((category) => (
@@ -1059,7 +1059,7 @@ export function BookDetails() {
                             </div>
 
                             <div>
-                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Language</h3>
+                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading mb-2">Language</h3>
                               <div className="flex items-center text-gray-700">
                                 <Globe className="w-4 h-4 mr-2" />
                                 <span>{formData.language?.label || 'Not specified'}</span>
@@ -1068,14 +1068,14 @@ export function BookDetails() {
 
                             {formData.isbn && (
                               <div>
-                                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">ISBN</h3>
+                                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading mb-2">ISBN</h3>
                                 <p className="text-gray-700">{formData.isbn}</p>
                               </div>
                             )}
                           </div>
 
                           <div>
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Synopsis</h3>
+                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">Synopsis</h3>
                             {formData.synopsis ? (
                               <p className="text-gray-700 whitespace-pre-line">{formData.synopsis}</p>
                             ) : (
@@ -1112,7 +1112,7 @@ export function BookDetails() {
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-red-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Warning</h3>
+                    <h3 className="text-sm font-medium text-red-800 font-heading">Warning</h3>
                     <div className="mt-2 text-sm text-red-700">
                       <ul className="list-disc pl-5 space-y-1">
                         <li>All chapters and content will be permanently deleted</li>
@@ -1155,7 +1155,7 @@ export function BookDetails() {
                 <div className="flex items-start">
                   <Info className="h-5 w-5 text-blue-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-blue-800">Publishing Information</h3>
+                    <h3 className="text-sm font-medium text-blue-800 font-heading">Publishing Information</h3>
                     <div className="mt-2 text-sm text-blue-700">
                       <ul className="list-disc pl-5 space-y-1">
                         <li>Publishing will lock the book for editing</li>
@@ -1197,7 +1197,7 @@ export function BookDetails() {
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">Note</h3>
+                    <h3 className="text-sm font-medium text-yellow-800 font-heading">Note</h3>
                     <div className="mt-2 text-sm text-yellow-700">
                       <p>Unpublishing will change the book status to "draft" and allow you to make changes. You'll need to publish it again when you're done editing.</p>
                     </div>

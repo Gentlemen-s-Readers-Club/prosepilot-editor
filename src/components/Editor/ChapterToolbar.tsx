@@ -81,7 +81,7 @@ export function ChapterToolbar({
             </div>
           ) : (
             <>
-              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 font-heading">{title}</h2>
               {!isPublished && (
                 <button
                   onClick={() => setIsEditing(true)}
@@ -109,7 +109,7 @@ export function ChapterToolbar({
       <Dialog open={showVersions} onOpenChange={setShowVersions}>
         <DialogContent className="max-w-6xl">
           <DialogHeader>
-            <DialogTitle>Version History</DialogTitle>
+            <DialogTitle className="font-heading">Version History</DialogTitle>
           </DialogHeader>
           <div className="flex gap-6 mt-4 h-[600px]">
             {/* Versions List */}
@@ -126,11 +126,11 @@ export function ChapterToolbar({
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-medium">
+                      <div className="font-medium font-copy">
                         Version {versions.length - index}
                       </div>
                       {version.isCurrent && (
-                        <span className="px-2 py-0.5 text-xs font-medium bg-brand-primary text-white rounded-full">
+                        <span className="px-2 py-0.5 text-xs font-medium bg-brand-primary text-white rounded-full font-copy">
                           Current
                         </span>
                       )}
@@ -139,7 +139,7 @@ export function ChapterToolbar({
                       selectedVersion?.id === version.id
                         ? 'text-white/80'
                         : 'text-gray-500'
-                    }`}>
+                    } font-copy`}>
                       {new Date(version.createdAt).toLocaleString(undefined, {
                         dateStyle: 'medium',
                         timeStyle: 'short'
@@ -156,10 +156,10 @@ export function ChapterToolbar({
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold">
+                      <h3 className="text-lg font-semibold font-heading">
                         Version from {new Date(selectedVersion.createdAt).toLocaleString()}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 font-copy">
                         {selectedVersion.isCurrent 
                           ? "This is the current version"
                           : "Select this version to restore your content to this point"}
@@ -179,7 +179,7 @@ export function ChapterToolbar({
                   </div>
                 </div>
               ) : (
-                <div className="h-full flex items-center justify-center text-gray-500">
+                <div className="h-full flex items-center justify-center text-gray-500 font-copy">
                   Select a version to preview its content
                 </div>
               )}

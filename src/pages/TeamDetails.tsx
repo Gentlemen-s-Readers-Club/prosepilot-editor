@@ -225,7 +225,10 @@ export function TeamDetails() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Team not found</h1>
+          <h1 className="text-2xl font-bold text-gray-900 font-heading mb-4">Team not found</h1>
+          <p className="text-base-paragraph font-copy mb-6">
+            The team you're looking for doesn't exist or you don't have access to it.
+          </p>
           <Button onClick={() => navigate('/workspace/teams')}>
             Back to Teams
           </Button>
@@ -260,9 +263,11 @@ export function TeamDetails() {
             </div>
           )}
           <div>
-            <h1 className="text-3xl font-bold text-base-heading">{currentTeam.name}</h1>
+            <h1 className="text-3xl font-bold text-base-heading font-heading">{currentTeam.name}</h1>
             {currentTeam.description && (
-              <p className="text-gray-600">{currentTeam.description}</p>
+              <p className="text-base-paragraph font-copy mt-2 max-w-2xl">
+                {currentTeam.description}
+              </p>
             )}
           </div>
         </div>
@@ -320,7 +325,7 @@ export function TeamDetails() {
             <div className="space-y-6">
               {/* Active Members */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 font-heading mb-4">
                   Team Members ({members.filter(m => m.status === 'active').length})
                 </h3>
                 <div className="space-y-3">
@@ -394,7 +399,7 @@ export function TeamDetails() {
               {/* Pending Invitations */}
               {invitations.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 font-heading mb-4">
                     Pending Invitations ({invitations.length})
                   </h3>
                   <div className="space-y-3">
@@ -444,7 +449,7 @@ export function TeamDetails() {
           {/* Activity Tab */}
           {activeTab === 'activity' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+              <h3 className="text-lg font-semibold text-gray-900 font-heading mb-4">Recent Activity</h3>
               <div className="space-y-4">
                 {activityLogs.map((log) => (
                   <div key={log.id} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
@@ -502,7 +507,7 @@ export function TeamDetails() {
                 <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">
+                <h3 className="text-sm font-medium text-red-800 font-heading">
                   This action cannot be undone
                 </h3>
                 <div className="mt-2 text-sm text-red-700">

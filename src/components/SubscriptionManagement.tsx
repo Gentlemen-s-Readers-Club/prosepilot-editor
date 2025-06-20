@@ -177,7 +177,7 @@ export function SubscriptionManagement({
 
       {/* Pending Cancellation Notice */}
       {isPendingCancellation && (
-        <div className="text-sm text-orange-600 bg-orange-50 px-3 py-2 rounded-md">
+        <div className="text-sm text-orange-600 bg-orange-50 px-3 py-2 rounded-md font-copy">
           Subscription will be cancelled at the end of your billing period
         </div>
       )}
@@ -186,8 +186,8 @@ export function SubscriptionManagement({
       <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Change Your Subscription Plan</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading">Change Your Subscription Plan</DialogTitle>
+            <DialogDescription className="font-copy">
               Choose a new plan to switch to. For upgrades, you'll be charged
               the prorated difference immediately. For downgrades, the change
               will take effect at your next billing cycle.
@@ -197,20 +197,20 @@ export function SubscriptionManagement({
           <div className="space-y-4">
             {/* Current Plan Info */}
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium text-sm text-gray-700 mb-1">
+              <h4 className="font-medium text-sm text-gray-700 mb-1 font-heading">
                 Current Plan
               </h4>
-              <div className="text-lg font-semibold">
+              <div className="text-lg font-semibold font-copy">
                 {currentPlan?.name || "Unknown Plan"}
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 font-copy">
                 ${(currentPlan?.price || 0) / 100}/month
               </div>
             </div>
 
             {/* Plan Change Options */}
             <div className="space-y-3">
-              <h4 className="font-medium text-sm text-gray-700">
+              <h4 className="font-medium text-sm text-gray-700 font-heading">
                 Available Plans
               </h4>
               {planChangeOptions.map((option) => {
@@ -233,17 +233,17 @@ export function SubscriptionManagement({
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="font-semibold">{plan.name}</div>
-                        <div className="text-sm text-gray-600">
+                        <div className="font-semibold font-copy">{plan.name}</div>
+                        <div className="text-sm text-gray-600 font-copy">
                           {plan.description}
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-semibold">
+                        <div className="font-semibold font-copy">
                           ${plan.price / 100}/month
                         </div>
                         <div
-                          className={`text-sm ${
+                          className={`text-sm font-copy ${
                             option.changeType === "upgrade"
                               ? "text-green-600"
                               : "text-blue-600"
@@ -291,11 +291,11 @@ export function SubscriptionManagement({
       <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 font-heading">
               <AlertTriangle className="h-5 w-5 text-red-500" />
               Cancel Subscription?
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="font-copy">
               Choose when you'd like your subscription to end.
             </DialogDescription>
           </DialogHeader>
@@ -327,9 +327,9 @@ export function SubscriptionManagement({
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-gray-600" />
-                      <span className="font-medium">End of billing period</span>
+                      <span className="font-medium font-copy">End of billing period</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 font-copy">
                       Keep access until your next billing date. No further
                       charges will be made.
                     </p>
@@ -362,9 +362,9 @@ export function SubscriptionManagement({
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-gray-600" />
-                      <span className="font-medium">Cancel immediately</span>
+                      <span className="font-medium font-copy">Cancel immediately</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 mt-1 font-copy">
                       Lose access to premium features right away.
                     </p>
                   </div>
@@ -373,7 +373,7 @@ export function SubscriptionManagement({
             </div>
 
             <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 font-copy">
                 <strong>Note:</strong> You can reactivate anytime by subscribing
                 to a new plan.
               </p>

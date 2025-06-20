@@ -14,7 +14,7 @@ export function BillingHistorySection() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
+        <h2 className="text-xl font-semibold text-base-heading font-heading">
           Billing History
         </h2>
         <div className="flex items-center justify-center py-8">
@@ -27,10 +27,10 @@ export function BillingHistorySection() {
   if (error) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
+        <h2 className="text-xl font-semibold text-base-heading font-heading">
           Billing History
         </h2>
-        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg font-copy">
           Error loading billing history: {error}
         </div>
       </div>
@@ -40,10 +40,10 @@ export function BillingHistorySection() {
   if (!transactions.length) {
     return (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
+        <h2 className="text-xl font-semibold text-base-heading font-heading">
           Billing History
         </h2>
-        <div className="text-base-muted text-center py-8">
+        <div className="text-base-muted text-center py-8 font-copy">
           No billing history available
         </div>
       </div>
@@ -52,7 +52,7 @@ export function BillingHistorySection() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-base-heading">
+      <h2 className="text-xl font-semibold text-base-heading font-heading">
         Billing History
       </h2>
       <div className="bg-base-background rounded-lg border">
@@ -60,19 +60,19 @@ export function BillingHistorySection() {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted font-copy">
                   Date
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted font-copy">
                   Description
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted font-copy">
                   Amount
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted font-copy">
                   Status
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted font-copy">
                   Invoice
                 </th>
               </tr>
@@ -100,20 +100,20 @@ export function BillingHistorySection() {
 
                   return (
                     <tr key={transaction.id} className="border-b last:border-0">
-                      <td className="text-center px-4 py-3 text-sm text-base-content">
+                      <td className="text-center px-4 py-3 text-sm text-base-content font-copy">
                         {formatDate(transaction.billed_at)}
                       </td>
-                      <td className="text-center px-4 py-3 text-sm text-base-content">
+                      <td className="text-center px-4 py-3 text-sm text-base-content font-copy">
                         {description}
                       </td>
-                      <td className="text-center px-4 py-3 text-sm text-base-content">
+                      <td className="text-center px-4 py-3 text-sm text-base-content font-copy">
                         {formatAmount(
                           transaction.details?.totals?.total || "0",
                           transaction.currency_code
                         )}
                       </td>
                       <td className="text-center px-4 py-3 text-sm">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 font-copy">
                           Completed
                         </span>
                       </td>

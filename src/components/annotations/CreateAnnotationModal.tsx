@@ -57,7 +57,7 @@ export function CreateAnnotationModal({
         <div className="flex justify-between items-center p-4 border-b">
           <div className="flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-base-heading" />
-            <h2 className="text-lg font-semibold text-base-heading">Add Annotation</h2>
+            <h2 className="text-lg font-semibold text-base-heading font-heading">Add Annotation</h2>
           </div>
           <button 
             onClick={handleClose} 
@@ -73,7 +73,7 @@ export function CreateAnnotationModal({
             {/* Selected Text */}
             <div>
               <Label className="text-base-heading">Selected Text</Label>
-              <div className="mt-1 p-3 bg-gray-100 rounded-md text-sm italic text-gray-700 border">
+              <div className="mt-1 p-3 bg-gray-100 rounded-md text-sm italic text-gray-700 border font-copy">
                 "{selectedText}"
               </div>
             </div>
@@ -94,15 +94,15 @@ export function CreateAnnotationModal({
                 disabled={isSubmitting}
                 autoFocus
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 font-copy">
                 {content.length}/1000 characters
               </p>
             </div>
 
             {/* Keyboard Shortcuts Info */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-              <h4 className="text-sm font-medium text-blue-800 mb-1">Keyboard Shortcuts</h4>
-              <div className="text-xs text-blue-700 space-y-1">
+              <h4 className="text-sm font-medium text-blue-800 mb-1 font-heading">Keyboard Shortcuts</h4>
+              <div className="text-xs text-blue-700 space-y-1 font-copy">
                 <div><kbd className="bg-blue-100 px-1 rounded">Ctrl+Enter</kbd> - Submit annotation</div>
                 <div><kbd className="bg-blue-100 px-1 rounded">Esc</kbd> - Cancel</div>
               </div>

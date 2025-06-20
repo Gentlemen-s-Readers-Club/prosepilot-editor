@@ -605,7 +605,7 @@ export function EditProfile() {
         return (
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-base-heading">Change Password</h3>
+              <h3 className="text-sm font-medium text-base-heading font-heading">Change Password</h3>
               <p className="mt-1 text-sm text-base-paragraph">
                 Make sure your new password is at least 8 characters long and includes a mix of letters, numbers, and symbols.
               </p>
@@ -712,7 +712,7 @@ export function EditProfile() {
             {/* Sidebar */}
             <div className="w-full md:w-64 shrink-0">
               <div className="md:sticky md:top-8">
-                <h2 className="text-2xl font-semibold text-base-heading mb-4">Settings</h2>
+                <h2 className="text-2xl font-semibold text-base-heading mb-4 font-heading">Settings</h2>
                 <nav className="flex flex-col gap-1">
                   {sections.map(({ id, label, icon }) => (
                     <button
@@ -735,7 +735,7 @@ export function EditProfile() {
             {/* Main Content */}
             <div className="flex-1">
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-base-heading mb-6">
+                <h2 className="text-lg font-semibold text-base-heading mb-6 font-heading">
                   {sections.find(s => s.id === activeSection)?.label}
                 </h2>
                 {renderSection()}
@@ -760,7 +760,7 @@ export function EditProfile() {
                     <AlertCircle className="h-5 w-5 text-red-400" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
+                    <h3 className="text-sm font-medium text-red-800 font-heading">
                       Warning
                     </h3>
                     <div className="mt-2 text-sm text-red-700">
@@ -823,7 +823,7 @@ export function EditProfile() {
                     <AlertCircle className="h-5 w-5 text-yellow-400" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">
+                    <h3 className="text-sm font-medium text-yellow-800 font-heading">
                       Important
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">

@@ -111,14 +111,14 @@ export function Landing() {
                   {/* <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
                     <Star className="w-4 h-4 text-brand-accent mr-2" />
                     <span className="text-sm font-medium text-base-heading">Trusted by 50,000+ writers</span>
-                    <span className="ml-2 text-sm text-base-paragraph max-md:hidden">• 4.9/5 rating</span>
+                    <span className="ml-2 text-sm text-base-paragraph font-copy max-md:hidden">• 4.9/5 rating</span>
                   </div> */}
 
-                  <h1 id="hero-heading" className="text-4xl tracking-tight font-extrabold text-base-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
+                  <h1 id="hero-heading" className="text-4xl tracking-tight font-bold text-base-heading font-heading sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
                     <span className="block">Write your book in</span>
                     <span className="block text-brand-accent">days, not years</span>
                   </h1>
-                  <p className="mt-3 text-base-paragraph sm:mt-5 sm:text-xl sm:max-w-xl sm:mx-auto md:mt-5 lg:mx-0">
+                  <p className="mt-3 text-base-paragraph font-copy sm:mt-5 sm:text-xl sm:max-w-xl sm:mx-auto md:mt-5 lg:mx-0">
                     Stop staring at blank pages. ProsePilot's AI transforms your ideas into compelling, 
                     publication-ready books faster than you ever thought possible.
                   </p>
@@ -132,7 +132,7 @@ export function Landing() {
                     ].map((benefit, index) => (
                       <div key={index} className="flex items-center">
                         <CheckCircle className="w-5 h-5 text-state-success mr-3" aria-hidden="true" />
-                        <span className="text-base-paragraph">{benefit}</span>
+                        <span className="text-base-paragraph font-copy">{benefit}</span>
                       </div>
                     ))}
                   </div>
@@ -149,7 +149,7 @@ export function Landing() {
                   </div>
 
                   {/* Trust Indicators */}
-                  <div className="mt-6 text-sm text-base-paragraph">
+                  <div className="mt-6 text-sm text-base-paragraph font-copy">
                     <span>✓ Cancel anytime</span>
                     <span className="mx-3">•</span>
                     <span>✓ Start from just $9/month</span>
@@ -169,8 +169,8 @@ export function Landing() {
                       <div className="flex items-center">
                         <TrendingUp className="w-8 h-8 text-brand-accent mr-3" aria-hidden="true" />
                         <div>
-                          <div className="text-2xl font-bold text-base-heading">1M+</div>
-                          <div className="text-sm text-base-paragraph">Books Created</div>
+                          <div className="text-2xl font-bold text-base-heading font-heading">1M+</div>
+                          <div className="text-sm text-base-paragraph font-copy">Books Created</div>
                         </div>
                       </div>
                     </div>
@@ -178,8 +178,8 @@ export function Landing() {
                       <div className="flex items-center">
                         <Clock className="w-8 h-8 text-state-success mr-3" aria-hidden="true" />
                         <div>
-                          <div className="text-2xl font-bold text-base-heading">72hrs</div>
-                          <div className="text-sm text-base-paragraph">Avg. Completion</div>
+                          <div className="text-2xl font-bold text-base-heading font-heading">72hrs</div>
+                          <div className="text-sm text-base-paragraph font-copy">Avg. Completion</div>
                         </div>
                       </div>
                     </div>
@@ -196,7 +196,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
             <div>
-              <h2 id="problem-solution-heading" className="text-3xl font-extrabold text-base-heading sm:text-4xl">
+              <h2 id="problem-solution-heading" className="text-3xl font-bold text-base-heading font-heading sm:text-4xl">
                 Stop letting your book ideas die in drafts
               </h2>
               <div className="mt-6 space-y-6">
@@ -221,12 +221,12 @@ export function Landing() {
                       </div>
                     </div>
                     <div className="ml-4">
-                      <h3 className="text-lg font-medium text-base-paragraph line-through opacity-70">
+                      <h3 className="text-lg font-medium text-base-paragraph font-copy line-through opacity-70">
                         {item.problem}
                       </h3>
                       <div className="flex items-center mt-2">
                         <CheckCircle className="w-5 h-5 text-state-success mr-2" aria-hidden="true" />
-                        <p className="text-base text-state-success font-medium">{item.solution}</p>
+                        <p className="text-base text-state-success font-medium font-copy">{item.solution}</p>
                       </div>
                     </div>
                   </div>
@@ -249,11 +249,11 @@ export function Landing() {
       <section className="py-24 bg-base-background" aria-labelledby="features-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 id="features-heading" className="text-base text-brand-accent font-semibold tracking-wide uppercase">Everything You Need</h2>
-            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-base-heading sm:text-4xl">
+            <h2 id="features-heading" className="text-base text-brand-accent font-semibold tracking-wide uppercase font-heading">Everything You Need</h2>
+            <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-base-heading font-heading sm:text-4xl">
               From idea to published book in record time
             </p>
-            <p className="mt-4 max-w-2xl text-xl text-base-paragraph lg:mx-auto">
+            <p className="mt-4 max-w-2xl text-xl text-base-paragraph font-copy lg:mx-auto">
               Our AI-powered platform handles the heavy lifting so you can focus on your creativity.
             </p>
           </div>
@@ -286,11 +286,11 @@ export function Landing() {
                       {feature.icon}
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-4">{feature.title}</h3>
-                  <p className="text-base-paragraph mb-6">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-base-heading font-heading mb-4">{feature.title}</h3>
+                  <p className="text-base-paragraph font-copy mb-6">{feature.description}</p>
                   <ul className="space-y-2">
                     {feature.benefits.map((benefit, benefitIndex) => (
-                      <li key={benefitIndex} className="text-sm text-base-paragraph flex items-center justify-center">
+                      <li key={benefitIndex} className="text-sm text-base-paragraph font-copy flex items-center justify-center">
                         <CheckCircle className="w-4 h-4 text-state-success mr-2" aria-hidden="true" />
                         {benefit}
                       </li>
@@ -308,7 +308,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
             <div className="text-center lg:text-left">
-              <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+              <h2 className="text-3xl font-bold text-white sm:text-4xl font-heading">
                 Get writing tips delivered to your inbox
               </h2>
               <p className="mt-4 text-xl text-white/90">
@@ -346,10 +346,10 @@ export function Landing() {
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl">
+            <h2 className="text-3xl font-bold text-base-heading font-heading sm:text-4xl">
               Join thousands of successful authors
             </h2>
-            <p className="mt-4 text-xl text-base-paragraph">
+            <p className="mt-4 text-xl text-base-paragraph font-copy">
               See what writers are saying about their ProsePilot experience
             </p>
           </div>
@@ -378,7 +378,7 @@ export function Landing() {
               <div key={index} className="bg-base-background rounded-lg p-8 relative">
                 <Quote className="absolute top-4 left-4 w-8 h-8 text-brand-accent/50" />
                 <div className="relative">
-                  <p className="text-base-paragraph text-lg italic mb-6">"{testimonial.quote}"</p>
+                  <p className="text-base-paragraph text-lg italic font-copy mb-6">"{testimonial.quote}"</p>
                   <div className="flex items-center">
                     <img
                       src={testimonial.avatar}
@@ -386,8 +386,8 @@ export function Landing() {
                       className="w-12 h-12 rounded-full mr-4 object-cover"
                     />
                     <div>
-                      <div className="font-semibold text-base-heading">{testimonial.author}</div>
-                      <div className="text-sm text-base-paragraph">{testimonial.role}</div>
+                      <div className="font-semibold text-base-heading font-heading">{testimonial.author}</div>
+                      <div className="text-sm text-base-paragraph font-copy">{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
@@ -415,7 +415,7 @@ export function Landing() {
       {/* Pricing Preview */}
       <div className="bg-brand-primary py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+          <h2 className="text-3xl font-bold text-white sm:text-4xl font-heading">
             Start writing today, publish tomorrow
           </h2>
           <p className="mt-4 text-xl text-white/90">
@@ -446,12 +446,12 @@ export function Landing() {
               <span className="text-brand-primary font-medium">Ready to Transform Your Writing?</span>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-extrabold text-base-heading mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-base-heading font-heading mb-6">
               Your book is waiting.
               <span className="block text-brand-accent">Start writing it today.</span>
             </h2>
             
-            <p className="text-xl text-base-paragraph max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-base-paragraph font-copy max-w-3xl mx-auto mb-8">
               Don't let another year pass with your story untold. Join thousands of writers worldwide who've 
               transformed their ideas into published books with ProsePilot.
             </p>
@@ -487,8 +487,8 @@ export function Landing() {
                     {feature.icon}
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-base-heading mb-2">{feature.title}</h3>
-                <p className="text-base-paragraph">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-base-heading font-heading mb-2">{feature.title}</h3>
+                <p className="text-base-paragraph font-copy">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -509,7 +509,7 @@ export function Landing() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-base-paragraph">
+          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-base-paragraph font-copy">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-state-success" />
               <span>Cancel anytime</span>

@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'heading': ['Lora', 'serif'],
+        'copy': ['Inter', 'sans-serif'],
+      },
       colors: {
         brand: {
           primary: '#3E4C59',

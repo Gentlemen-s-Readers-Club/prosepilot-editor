@@ -39,7 +39,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
 
   const validateForm = () => {
     const validEmails = emails.filter(email => email.trim() && validateEmail(email.trim()));
-    const errors = emails.map(email => email.trim() && !validateEmail(email.trim()));
+    const errors = emails.map(email => email.trim() !== '' && !validateEmail(email.trim()));
     setEmailErrors(errors);
     return validEmails.length > 0 && !errors.some(Boolean);
   };
@@ -108,7 +108,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
       setEmailErrors([false]);
       setMessage('');
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error inviting members:', error);
       toast({
         variant: "destructive",
@@ -135,7 +135,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold text-base-heading">Invite Team Members</h2>
+          <h2 className="text-xl font-semibold text-base-heading font-heading">Invite Team Members</h2>
           <button 
             onClick={handleClose} 
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -166,7 +166,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
                         disabled={isSubmitting}
                       />
                       {emailErrors[index] && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-red-600 font-copy">
                           Please enter a valid email address
                         </p>
                       )}
@@ -200,7 +200,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
                 </Button>
               )}
               
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-500 mt-2 font-copy">
                 You can invite up to 2 people at once. ({emails.length}/2)
               </p>
             </div>
@@ -217,7 +217,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
                   isDisabled={isSubmitting}
                 />
               </div>
-              <div className="mt-3 text-sm text-gray-600">
+              <div className="mt-3 text-sm text-gray-600 font-copy">
                 <div className="space-y-2">
                   <div>
                     <span className="font-medium">Reader:</span> Can view books and leave comments
@@ -247,7 +247,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
                 className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isSubmitting}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 font-copy">
                 {message.length}/500 characters
               </p>
             </div>
@@ -257,8 +257,8 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
               <div className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-blue-600 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-medium text-blue-800">How invitations work</h4>
-                  <ul className="text-sm text-blue-700 mt-2 space-y-1">
+                  <h4 className="text-sm font-medium text-blue-800 font-heading">How invitations work</h4>
+                  <ul className="text-sm text-blue-700 mt-2 space-y-1 font-copy">
                     <li>• Invitations are sent via email</li>
                     <li>• Recipients have 7 days to accept</li>
                     <li>• You can cancel pending invitations anytime</li>
@@ -287,7 +287,7 @@ export function InviteMembersModal({ open, onOpenChange, teamId }: InviteMembers
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Sending...
+                  <span className="font-copy">Sending...</span>
                 </div>
               ) : (
                 'Send Invitations'

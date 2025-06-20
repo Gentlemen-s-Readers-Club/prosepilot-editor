@@ -234,7 +234,7 @@ export function Subscription() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
+          <h2 className="text-2xl font-bold text-red-600 mb-4 font-heading">
             Failed to load subscription system
           </h2>
           <p className="text-muted-foreground">
@@ -608,7 +608,7 @@ export function Subscription() {
                         {/* Pricing */}
                         <div className="text-center mb-8">
                           <div className="flex items-baseline justify-center">
-                            <span className="text-5xl font-extrabold text-base-heading">
+                            <span className="text-5xl font-bold text-base-heading">
                               ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
                             </span>
                             <span className="text-xl text-gray-500 ml-1">

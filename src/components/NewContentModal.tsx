@@ -19,9 +19,9 @@ export function NewContentModal({ open, onOpenChange, onAdd }: NewContentModalPr
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Add New Content</DialogTitle>
-          <DialogDescription>
-            Choose whether to add a new chapter or a single page.
+          <DialogTitle className="font-heading">Add New Content</DialogTitle>
+          <DialogDescription className="text-base-paragraph font-copy">
+            Choose the type of content you want to add to your book.
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 py-4">
@@ -33,8 +33,10 @@ export function NewContentModal({ open, onOpenChange, onAdd }: NewContentModalPr
               <BookOpen className="w-6 h-6 text-base-heading" />
             </div>
             <div className="text-center">
-              <h3 className="font-medium text-gray-900">New Chapter</h3>
-              <p className="text-sm text-gray-500">Create a new chapter</p>
+              <h3 className="font-medium text-gray-900 font-heading">New Chapter</h3>
+              <p className="text-sm text-base-paragraph font-copy">
+                Add a new chapter to your book with AI-generated content.
+              </p>
             </div>
           </button>
           <button
@@ -45,8 +47,10 @@ export function NewContentModal({ open, onOpenChange, onAdd }: NewContentModalPr
               <FileText className="w-6 h-6 text-base-heading" />
             </div>
             <div className="text-center">
-              <h3 className="font-medium text-gray-900">Single Page</h3>
-              <p className="text-sm text-gray-500">Add a standalone page</p>
+              <h3 className="font-medium text-gray-900 font-heading">New Page</h3>
+              <p className="text-sm text-base-paragraph font-copy">
+                Add a standalone page with custom content.
+              </p>
             </div>
           </button>
         </div>

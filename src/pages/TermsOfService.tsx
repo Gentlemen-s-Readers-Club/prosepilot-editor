@@ -52,7 +52,7 @@ export function TermsOfService() {
 
             <div className="flex items-start">
               <div className="flex-1">
-                <h1 className="text-4xl font-bold text-base-heading mb-4">
+                <h1 className="text-4xl font-bold text-base-heading mb-4 font-heading">
                   Terms of Service
                 </h1>
                 <p className="text-xl text-base-paragraph leading-relaxed">
@@ -71,7 +71,7 @@ export function TermsOfService() {
               <div className="flex items-start">
                 <Shield className="w-6 h-6 text-state-info mt-1 mr-3 shrink-0" />
                 <div>
-                  <h3 className="text-lg font-semibold text-state-info mb-2">
+                  <h3 className="text-lg font-semibold text-state-info mb-2 font-heading">
                     Agreement to Terms
                   </h3>
                   <p className="text-state-info text-sm">
@@ -87,7 +87,7 @@ export function TermsOfService() {
 
             {/* Table of Contents */}
             <div className="bg-gray-50 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-semibold text-base-heading mb-4">
+              <h3 className="text-lg font-semibold text-base-heading mb-4 font-heading">
                 Table of Contents
               </h3>
               <nav className="space-y-1">
@@ -186,14 +186,14 @@ export function TermsOfService() {
 
             {/* 1. Service Description */}
             <section id="service-description" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <BookOpen className="w-8 h-8 mr-4 text-brand-accent" />
                 1. Service Description
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-brand-accent/5 border border-brand-accent/20 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-base-heading mb-3">
+                  <h3 className="text-lg font-semibold text-base-heading mb-3 font-heading">
                     What is ProsePilot?
                   </h3>
                   <p className="text-base-paragraph mb-4">
@@ -207,7 +207,7 @@ export function TermsOfService() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3 flex items-center">
+                    <h4 className="font-semibold text-base-heading mb-3 flex items-center font-heading">
                       <Zap className="w-5 h-5 mr-2 text-brand-accent" />
                       AI Writing Features
                     </h4>
@@ -222,7 +222,7 @@ export function TermsOfService() {
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3 flex items-center">
+                    <h4 className="font-semibold text-base-heading mb-3 flex items-center font-heading">
                       <Users className="w-5 h-5 mr-2 text-brand-accent" />
                       Collaboration Tools
                     </h4>
@@ -237,7 +237,7 @@ export function TermsOfService() {
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3 flex items-center">
+                    <h4 className="font-semibold text-base-heading mb-3 flex items-center font-heading">
                       <FileText className="w-5 h-5 mr-2 text-brand-accent" />
                       Export & Publishing
                     </h4>
@@ -251,7 +251,7 @@ export function TermsOfService() {
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3 flex items-center">
+                    <h4 className="font-semibold text-base-heading mb-3 flex items-center font-heading">
                       <CreditCard className="w-5 h-5 mr-2 text-brand-accent" />
                       Credit System
                     </h4>
@@ -269,14 +269,14 @@ export function TermsOfService() {
 
             {/* 2. Account Registration */}
             <section id="account-registration" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Users className="w-8 h-8 mr-4 text-brand-accent" />
                 2. Account Registration
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Account Requirements
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -303,7 +303,7 @@ export function TermsOfService() {
                 </div>
 
                 <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-warning mb-3">
+                  <h3 className="text-lg font-semibold text-state-warning mb-3 font-heading">
                     Account Security
                   </h3>
                   <p className="text-state-warning text-sm">
@@ -318,14 +318,14 @@ export function TermsOfService() {
 
             {/* 3. Subscription and Pricing */}
             <section id="subscription-pricing" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <CreditCard className="w-8 h-8 mr-4 text-brand-accent" />
                 3. Subscription and Pricing
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-brand-accent/5 border border-brand-accent/20 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-base-heading mb-3">
+                  <h3 className="text-lg font-semibold text-base-heading mb-3 font-heading">
                     Subscription Plans
                   </h3>
                   <p className="text-base-paragraph mb-4">
@@ -337,7 +337,7 @@ export function TermsOfService() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3">
+                    <h4 className="font-semibold text-base-heading mb-3 font-heading">
                       Starter Plan
                     </h4>
                     <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -349,7 +349,7 @@ export function TermsOfService() {
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3">
+                    <h4 className="font-semibold text-base-heading mb-3 font-heading">
                       Professional Plan
                     </h4>
                     <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -361,7 +361,7 @@ export function TermsOfService() {
                   </div>
 
                   <div className="bg-white border rounded-lg p-6 shadow-sm">
-                    <h4 className="font-semibold text-base-heading mb-3">
+                    <h4 className="font-semibold text-base-heading mb-3 font-heading">
                       Studio Plan
                     </h4>
                     <ul className="list-disc pl-6 space-y-1 text-sm">
@@ -374,7 +374,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Pricing Terms
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -404,14 +404,14 @@ export function TermsOfService() {
 
             {/* 4. Acceptable Use Policy */}
             <section id="acceptable-use" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Shield className="w-8 h-8 mr-4 text-brand-accent" />
                 4. Acceptable Use Policy
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-state-error-light border border-state-error rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-error mb-3">
+                  <h3 className="text-lg font-semibold text-state-error mb-3 font-heading">
                     Prohibited Uses
                   </h3>
                   <p className="text-state-error text-sm mb-3">
@@ -445,7 +445,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Content Standards
                   </h3>
                   <p className="text-base-paragraph mb-4">
@@ -477,14 +477,14 @@ export function TermsOfService() {
 
             {/* 5. Intellectual Property Rights */}
             <section id="intellectual-property" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Lock className="w-8 h-8 mr-4 text-brand-accent" />
                 5. Intellectual Property Rights
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Your Content
                   </h3>
                   <div className="bg-state-success-light border border-state-success rounded-lg p-6 mb-4">
@@ -515,7 +515,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Our Platform
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -539,14 +539,14 @@ export function TermsOfService() {
 
             {/* 6. AI-Generated Content */}
             <section id="ai-content" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Zap className="w-8 h-8 mr-4 text-brand-accent" />
                 6. AI-Generated Content
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-brand-accent/5 border border-brand-accent/20 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-base-heading mb-3">
+                  <h3 className="text-lg font-semibold text-base-heading mb-3 font-heading">
                     AI Content Ownership and Usage
                   </h3>
                   <p className="text-base-paragraph">
@@ -558,7 +558,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     AI Content Disclaimer
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -585,7 +585,7 @@ export function TermsOfService() {
                 </div>
 
                 <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-warning mb-3">
+                  <h3 className="text-lg font-semibold text-state-warning mb-3 font-heading">
                     AI Training and Improvement
                   </h3>
                   <p className="text-state-warning text-sm">
@@ -601,14 +601,14 @@ export function TermsOfService() {
 
             {/* 7. Team Collaboration */}
             <section id="team-collaboration" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Users className="w-8 h-8 mr-4 text-brand-accent" />
                 7. Team Collaboration
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Team Workspaces
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -633,7 +633,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Shared Content
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -660,14 +660,14 @@ export function TermsOfService() {
 
             {/* 8. Payment Terms */}
             <section id="payment-terms" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <CreditCard className="w-8 h-8 mr-4 text-brand-accent" />
                 8. Payment Terms
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Subscription Billing
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -692,7 +692,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Credit Purchases
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -715,7 +715,7 @@ export function TermsOfService() {
                 </div>
 
                 <div className="bg-state-info-light border border-state-info rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-info mb-3">
+                  <h3 className="text-lg font-semibold text-state-info mb-3 font-heading">
                     Payment Processing
                   </h3>
                   <p className="text-state-info text-sm">
@@ -731,14 +731,14 @@ export function TermsOfService() {
 
             {/* 9. Cancellation and No Refund Policy */}
             <section id="cancellation-refunds" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Clock className="w-8 h-8 mr-4 text-brand-accent" />
                 9. Cancellation and No Refund Policy
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Cancellation Policy
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -766,11 +766,11 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     No Refund Policy
                   </h3>
                   <div className="bg-state-error-light border border-state-error rounded-lg p-6 mb-4">
-                    <h4 className="font-semibold text-state-error mb-2">
+                    <h4 className="font-semibold text-state-error mb-2 font-heading">
                       All Sales Are Final
                     </h4>
                     <p className="text-state-error text-sm">
@@ -802,14 +802,14 @@ export function TermsOfService() {
 
             {/* 10. Privacy and Data Protection */}
             <section id="privacy-data" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Lock className="w-8 h-8 mr-4 text-brand-accent" />
                 10. Privacy and Data Protection
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-state-info-light border border-state-info rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-info mb-3">
+                  <h3 className="text-lg font-semibold text-state-info mb-3 font-heading">
                     Privacy Commitment
                   </h3>
                   <p className="text-state-info text-sm">
@@ -826,7 +826,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Data Security
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -848,7 +848,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Your Data Rights
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -869,14 +869,14 @@ export function TermsOfService() {
 
             {/* 11. Limitation of Liability */}
             <section id="limitation-liability" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Scale className="w-8 h-8 mr-4 text-brand-accent" />
                 11. Limitation of Liability
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-warning mb-3">
+                  <h3 className="text-lg font-semibold text-state-warning mb-3 font-heading">
                     Service Disclaimer
                   </h3>
                   <p className="text-state-warning text-sm">
@@ -888,7 +888,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Liability Limitations
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -914,7 +914,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Indemnification
                   </h3>
                   <p className="text-base-paragraph mb-3">
@@ -936,14 +936,14 @@ export function TermsOfService() {
 
             {/* 12. Termination */}
             <section id="termination" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <AlertTriangle className="w-8 h-8 mr-4 text-brand-accent" />
                 12. Termination
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Termination by You
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -963,11 +963,11 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Termination by Us
                   </h3>
                   <div className="bg-state-error-light border border-state-error rounded-lg p-6 mb-4">
-                    <h4 className="font-semibold text-state-error mb-2">
+                    <h4 className="font-semibold text-state-error mb-2 font-heading">
                       Grounds for Termination
                     </h4>
                     <p className="text-state-error text-sm">
@@ -988,7 +988,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Effect of Termination
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -1008,14 +1008,14 @@ export function TermsOfService() {
 
             {/* 13. Legal Compliance */}
             <section id="legal-compliance" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Gavel className="w-8 h-8 mr-4 text-brand-accent" />
                 13. Legal Compliance
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Governing Law
                   </h3>
                   <p className="text-base-paragraph mb-4">
@@ -1027,7 +1027,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Compliance Requirements
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -1050,7 +1050,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Dispute Resolution
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -1073,14 +1073,14 @@ export function TermsOfService() {
 
             {/* 14. Changes to Terms */}
             <section id="changes-terms" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <FileText className="w-8 h-8 mr-4 text-brand-accent" />
                 14. Changes to Terms
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Modification Process
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -1104,7 +1104,7 @@ export function TermsOfService() {
                 </div>
 
                 <div className="bg-state-info-light border border-state-info rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-state-info mb-3">
+                  <h3 className="text-lg font-semibold text-state-info mb-3 font-heading">
                     Notification Methods
                   </h3>
                   <p className="text-state-info text-sm">
@@ -1119,19 +1119,19 @@ export function TermsOfService() {
 
             {/* 15. Contact Information */}
             <section id="contact-information" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Users className="w-8 h-8 mr-4 text-brand-accent" />
                 15. Contact Information
               </h2>
 
               <div className="space-y-6">
                 <div className="bg-brand-accent/5 border border-brand-accent/20 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-base-heading mb-4">
+                  <h3 className="text-lg font-semibold text-base-heading mb-4 font-heading">
                     Get in Touch
                   </h3>
                   <div className="space-y-3">
                     <div>
-                      <h4 className="font-medium text-base-heading mb-1">
+                      <h4 className="font-medium text-base-heading mb-1 font-heading">
                         Legal Entity
                       </h4>
                       <p className="text-base-paragraph text-sm">
@@ -1140,7 +1140,7 @@ export function TermsOfService() {
                     </div>
 
                     <div>
-                      <h4 className="font-medium text-base-heading mb-1">
+                      <h4 className="font-medium text-base-heading mb-1 font-heading">
                         Support
                       </h4>
                       <p className="text-base-paragraph text-sm">
@@ -1155,7 +1155,7 @@ export function TermsOfService() {
                     </div>
 
                     <div>
-                      <h4 className="font-medium text-base-heading mb-1">
+                      <h4 className="font-medium text-base-heading mb-1 font-heading">
                         Business Address
                       </h4>
                       <p className="text-base-paragraph text-sm">
@@ -1172,7 +1172,7 @@ export function TermsOfService() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-base-heading mb-3">
+                  <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                     Additional Resources
                   </h3>
                   <ul className="list-disc pl-6 space-y-2">
@@ -1215,7 +1215,7 @@ export function TermsOfService() {
 
             {/* Footer Notice */}
             <div className="bg-gray-50 rounded-lg p-6 mt-12">
-              <h3 className="text-lg font-semibold text-base-heading mb-3">
+              <h3 className="text-lg font-semibold text-base-heading mb-3 font-heading">
                 Legal Notice
               </h3>
               <p className="text-sm text-base-paragraph">

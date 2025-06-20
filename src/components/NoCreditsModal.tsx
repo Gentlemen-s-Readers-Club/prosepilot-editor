@@ -82,7 +82,7 @@ export function NoCreditsModal({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <AlertCircle className="h-5 w-5 text-brand-accent" />
-              <Dialog.Title className="text-lg font-semibold leading-none tracking-tight text-base-heading">
+              <Dialog.Title className="text-lg font-semibold leading-none tracking-tight text-base-heading font-heading">
                 Insufficient Credits
               </Dialog.Title>
             </div>
@@ -92,7 +92,7 @@ export function NoCreditsModal({
             </Dialog.Close>
           </div>
 
-          <Dialog.Description className="text-sm text-base-paragraph">
+          <Dialog.Description className="text-sm text-base-paragraph font-copy">
             You need {requiredCredits} credit{requiredCredits !== 1 ? 's' : ''} to {action}, but you currently have {currentCredits} credit{currentCredits !== 1 ? 's' : ''}.
           </Dialog.Description>
 
@@ -102,15 +102,15 @@ export function NoCreditsModal({
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <CreditCard className="h-4 w-4 text-state-warning" />
-                  <span className="text-sm font-medium text-state-warning">Credit Status</span>
+                  <span className="text-sm font-medium text-state-warning font-copy">Credit Status</span>
                 </div>
 
                 {currentCredits && (
                   <div className="text-right">
-                    <div className="text-sm text-state-warning">
+                    <div className="text-sm text-state-warning font-copy">
                         {currentCredits} / {requiredCredits} credits
                     </div>
-                    <div className="text-xs text-state-error">
+                    <div className="text-xs text-state-error font-copy">
                         {requiredCredits - currentCredits} more needed
                     </div>
                   </div>  
@@ -122,7 +122,7 @@ export function NoCreditsModal({
             {/* Purchase Options */}
             {!hasActiveSubscription ? (
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-900">Purchase Credits</h3>
+                <h3 className="text-sm font-medium text-gray-900 font-heading">Purchase Credits</h3>
                 
                 {loading ? (
                   <div className="space-y-2">
@@ -148,21 +148,21 @@ export function NoCreditsModal({
                           <div className="flex items-center space-x-3">
                             <div className="flex-1">
                               <div className="flex items-center space-x-2">
-                                <span className="font-medium text-base-heading">
+                                <span className="font-medium text-base-heading font-copy">
                                   {pkg.credits_amount} Credits
                                 </span>
                                 {pkg.discount_percentage > 0 && (
-                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-copy">
                                     Save {pkg.discount_percentage}%
                                   </span>
                                 )}
                                 {recommendedPackage?.id === pkg.id && (
-                                  <span className="text-xs bg-brand-accent text-white px-2 py-1 rounded">
+                                  <span className="text-xs bg-brand-accent text-white px-2 py-1 rounded font-copy">
                                     Recommended
                                   </span>
                                 )}
                               </div>
-                              <div className="text-sm text-base-paragraph">
+                              <div className="text-sm text-base-paragraph font-copy">
                                 {formatPrice(pkg.price_cents, pkg.currency)}
                               </div>
                             </div>
@@ -182,7 +182,7 @@ export function NoCreditsModal({
             ) : (
               <div className="bg-state-info-light border border-state-info rounded-lg p-4">
                 <div className="flex items-start">
-                  <div className="text-sm text-state-info">
+                  <div className="text-sm text-state-info font-copy">
                     <strong>Subscription Required:</strong> You need an active subscription to purchase credits. 
                     Please upgrade your account to continue.
                   </div>

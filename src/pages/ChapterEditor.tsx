@@ -261,10 +261,10 @@ function ChapterEditorContent() {
                       <AlertCircle className="h-5 w-5 text-state-success" />
                     </div>
                     <div className="ml-3">
-                      <h3 className="text-sm font-medium text-state-success">
+                      <h3 className="text-sm font-medium text-state-success font-heading">
                         Published Book
                       </h3>
-                      <div className="mt-2 text-sm text-state-success">
+                      <div className="mt-2 text-sm text-state-success font-copy">
                         This chapter is part of a published book and cannot be edited. To make changes, the book needs to be unpublished first.
                       </div>
                     </div>
@@ -277,7 +277,7 @@ function ChapterEditorContent() {
                   <div className="h-[calc(100vh-300px)] flex items-center justify-center">
                     <div className="flex flex-col items-center gap-4">
                       <Loader2 className="w-8 h-8 text-base-heading animate-spin" />
-                      <p className="text-gray-600">Loading chapter content...</p>
+                      <p className="text-gray-600 font-copy">Loading chapter content...</p>
                     </div>
                   </div>
                 </div>

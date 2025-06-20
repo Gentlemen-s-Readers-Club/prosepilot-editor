@@ -237,7 +237,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg w-full max-w-md mx-4 my-8 flex flex-col max-h-[calc(100vh-4rem)]">
           <div className="flex justify-between items-center p-6 border-b">
-            <h2 className="text-xl font-semibold text-base-heading">Team Settings</h2>
+            <h2 className="text-xl font-semibold text-base-heading font-heading">Team Settings</h2>
             <button 
               onClick={handleClose} 
               className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -302,11 +302,11 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                   maxLength={50}
                 />
                 {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-red-600 font-copy">
                     Team name must be between 3 and 50 characters
                   </p>
                 )}
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1 font-copy">
                   {formData.name.length}/50 characters
                 </p>
               </div>
@@ -326,20 +326,20 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isSubmitting}
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1 font-copy">
                   {formData.description.length}/200 characters
                 </p>
               </div>
 
               {/* Danger Zone */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold text-red-600 mb-4">Danger Zone</h3>
+                <h3 className="text-lg font-semibold text-red-600 mb-4 font-heading">Danger Zone</h3>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
                     <div className="flex-1">
-                      <h4 className="text-sm font-medium text-red-800">Delete Team</h4>
-                      <p className="text-sm text-red-700 mt-1">
+                      <h4 className="text-sm font-medium text-red-800 font-heading">Delete Team</h4>
+                      <p className="text-sm text-red-700 mt-1 font-copy">
                         Permanently delete this team and all associated data. This action cannot be undone.
                       </p>
                       <Button
@@ -376,7 +376,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                 {isSubmitting ? (
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Saving...
+                    <span className="font-copy">Saving...</span>
                   </div>
                 ) : (
                   'Save Changes'
@@ -391,8 +391,8 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Team</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading">Delete Team</DialogTitle>
+            <DialogDescription className="font-copy">
               This action cannot be undone. This will permanently delete the team "{team.name}" 
               and remove all associated data including books, members, and activity logs.
             </DialogDescription>
@@ -404,10 +404,10 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
                   <AlertCircle className="h-5 w-5 text-red-400" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
+                  <h3 className="text-sm font-medium text-red-800 font-heading">
                     This will permanently delete:
                   </h3>
-                  <div className="mt-2 text-sm text-red-700">
+                  <div className="mt-2 text-sm text-red-700 font-copy">
                     <ul className="list-disc pl-5 space-y-1">
                       <li>All team books and chapters</li>
                       <li>All member access and roles</li>
@@ -419,7 +419,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="deleteConfirmation">
+              <Label htmlFor="deleteConfirmation" className="font-copy">
                 Type the team name <span className="font-medium">"{team.name}"</span> to confirm
               </Label>
               <Input
@@ -449,7 +449,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
               {isSubmitting ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Deleting...
+                  <span className="font-copy">Deleting...</span>
                 </div>
               ) : (
                 'Delete Team'
