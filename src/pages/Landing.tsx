@@ -108,7 +108,7 @@ export function Landing() {
                   <div className="relative">
                     <img
                       className="w-full rounded-lg shadow-2xl"
-                      src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                      src="/images/masthead.jpg"
                       alt="Writer using ProsePilot interface"
                     />
                     {/* Floating Stats */}
@@ -142,6 +142,13 @@ export function Landing() {
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+            <div className="mt-10 lg:mt-0">
+              <img
+                className="w-full rounded-lg shadow-lg aspect-[3/2] object-cover"
+                src="/images/ideas.jpg"
+                alt="Frustrated writer at desk"
+              />
+            </div>
             <div>
               <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl">
                 Stop letting your book ideas die in drafts
@@ -179,13 +186,6 @@ export function Landing() {
                   </div>
                 ))}
               </div>
-            </div>
-            <div className="mt-10 lg:mt-0">
-              <img
-                className="w-full rounded-lg shadow-lg"
-                src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Frustrated writer at desk"
-              />
             </div>
           </div>
         </div>
