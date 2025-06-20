@@ -78,8 +78,9 @@ const plans: Plan[] = [
       'All Pro features',
       'AI-generated illustrations',
       'Cover generation',
-      'Metadata & ISBN generation',
-      'Team access (up to 3 users)'
+      'Advanced Metadata management',
+      'Team access (up to 3 users)',
+      'More features coming soon'
     ],
     comingSoon: true
   }

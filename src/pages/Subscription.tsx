@@ -121,8 +121,9 @@ const plans: Plan[] = [
       "All Pro features",
       "AI-generated illustrations",
       "Cover generation",
-      "Metadata & ISBN generation",
+      'Advanced Metadata management',
       "Team access (up to 3 users)",
+      'More features coming soon'
     ],
     priceId: getPaddleConfig().subscriptionPrices.studio,
     comingSoon: true,
