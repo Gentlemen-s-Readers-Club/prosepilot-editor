@@ -262,29 +262,27 @@ export function Landing() {
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               {[
                 {
-                  icon: <Sparkles className="h-8 w-8" />,
+                  image: "/images/features/creation.png",
                   title: "AI Story Generation",
                   description: "Transform simple prompts into rich, engaging narratives with advanced AI that understands storytelling.",
                   benefits: ["Complete plot development", "Character arc creation", "Dialogue generation"]
                 },
                 {
-                  icon: <PenTool className="h-8 w-8" />,
+                  image: "/images/features/editor.png",
                   title: "Professional Editor",
                   description: "Write and refine your story with our intuitive editor that includes real-time suggestions and formatting.",
                   benefits: ["Grammar & style checking", "Consistency validation", "Format optimization"]
                 },
                 {
-                  icon: <Brain className="h-8 w-8" />,
+                  image: "/images/features/organization.png",
                   title: "Smart Organization",
                   description: "Keep your story structured with intelligent chapter management and plot tracking tools.",
                   benefits: ["Chapter organization", "Plot hole detection", "Character tracking"]
                 }
               ].map((feature, index) => (
                 <article key={index} className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary/10 rounded-full mb-6">
-                    <div className="text-brand-primary" aria-hidden="true">
-                      {feature.icon}
-                    </div>
+                  <div className="aspect-[3/2] w-full mb-4">
+                    <img src={feature.image} alt={feature.title} className="size-full object-cover rounded-lg shadow-lg" />
                   </div>
                   <h3 className="text-xl font-semibold text-base-heading font-heading mb-4">{feature.title}</h3>
                   <p className="text-base-paragraph font-copy mb-6">{feature.description}</p>
@@ -360,13 +358,13 @@ export function Landing() {
                 quote: "I went from idea to published novel in just 3 weeks. ProsePilot didn't just help me write—it helped me become a real author.",
                 author: "Paulo Guerra",
                 role: "Romance Novelist",
-                avatar: "/testimonials/paulo-guerra.png"
+                avatar: "/images/testimonials/paulo-guerra.png"
               },
               {
                 quote: "The AI understood my vision better than I did. It helped me develop plot threads I never would have thought of on my own.",
                 author: "David Bergmann",
                 role: "Sci-Fi Author",
-                avatar: "/testimonials/david-bergmann.jpeg"
+                avatar: "/images/testimonials/david-bergmann.jpeg"
               },
               {
                 quote: "Finally, a tool that gets writers. The collaborative features helped my writing group finish our anthology in record time.",
