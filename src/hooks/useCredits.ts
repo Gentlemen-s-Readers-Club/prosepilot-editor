@@ -155,6 +155,7 @@ export function useCredits(): UseCreditsReturn {
 
       const { data } = await supabase.rpc("get_user_credits", {
         p_user_id: user.id,
+        p_environment: import.meta.env.VITE_PADDLE_ENV,
       });
 
       return data || 0;

@@ -18,6 +18,8 @@ import { CustomSelect, SelectOption } from '../components/ui/select';
 import { NewBookModal } from '../components/NewBookModal';
 import { Helmet } from 'react-helmet';
 import Footer from '../components/Footer';
+import { useCredits } from '../hooks/useCredits';
+import { NoCreditsModal } from '../components/NoCreditsModal';
 
 const BOOKS_PER_PAGE = 30;
 
@@ -42,9 +44,12 @@ const sortOptions: SortOption[] = [
 
 export function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
+  const { checkBalance } = useCredits();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [showNewBookModal, setShowNewBookModal] = useState(false);
+  const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('');
@@ -65,6 +70,9 @@ export function Dashboard() {
   const { profile } = useSelector((state: RootState) => state.profile);
   const hasStudio = useSelector(hasStudioPlan);
   const hasPro = useSelector(hasProOrStudioPlan);
+
+  // Book creation credits
+  const BOOK_CREATION_CREDITS = 5;
 
   // Check if user has any teams
   const hasTeams = teams.length > 0;
@@ -257,6 +265,17 @@ export function Dashboard() {
     }
   };
 
+  const openCreateModal = async () => {
+    const balance = await checkBalance();
+
+    if (balance && balance < BOOK_CREATION_CREDITS) {
+      setShowNoCreditsModal(true);
+      return;
+    }
+
+    setShowNewBookModal(true);
+  };
+
   if (loading || booksStatus === 'loading') {
     return (
       <div className="h-full">
@@ -292,9 +311,7 @@ export function Dashboard() {
             </div>
             <Button
               className="flex items-center gap-2"
-              onClick={() => {
-                setShowNewBookModal(true);
-              }}
+              onClick={openCreateModal}
             >
               <Plus size={20} />
               Create New Book
@@ -574,9 +591,7 @@ export function Dashboard() {
                   </p>
                   <Button 
                     className="bg-brand-primary hover:bg-brand-primary/90 text-white"
-                    onClick={() => {
-                      setShowNewBookModal(true);
-                    }}
+                    onClick={openCreateModal}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Create Your First Book
@@ -598,7 +613,7 @@ export function Dashboard() {
                       : 'This team doesn\'t have any books yet. Create the first one!'
                     }
                   </p>
-                  <Button  onClick={() => { setShowNewBookModal(true) }}>
+                  <Button  onClick={openCreateModal}>
                     <Plus className="mr-2 h-4 w-4" />
                     Create Book
                   </Button>
@@ -635,6 +650,13 @@ export function Dashboard() {
       <NewBookModal
         isOpen={showNewBookModal}
         onClose={() => setShowNewBookModal(false)}
+      />
+
+      <NoCreditsModal
+        isOpen={showNoCreditsModal}
+        onClose={() => setShowNoCreditsModal(false)}
+        requiredCredits={BOOK_CREATION_CREDITS}
+        action="create a book"
       />
 
       {/* Footer */}

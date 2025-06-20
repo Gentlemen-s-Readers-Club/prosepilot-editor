@@ -195,9 +195,7 @@ function App() {
                 path="/workspace"
                 element={
                   session ? (
-                    <SubscriptionProtectedRoute>
                       <Dashboard />
-                    </SubscriptionProtectedRoute>
                   ) : (
                     <Navigate to="/workspace/login" />
                   )
@@ -208,9 +206,7 @@ function App() {
                 path="/workspace/book/:id"
                 element={
                   session ? (
-                    <SubscriptionProtectedRoute>
                       <BookDetails />
-                    </SubscriptionProtectedRoute>
                   ) : (
                     <Navigate to="/workspace/login" />
                   )
@@ -220,9 +216,7 @@ function App() {
                 path="/workspace/chapter/:id"
                 element={
                   session ? (
-                    <SubscriptionProtectedRoute>
                       <ChapterEditor />
-                    </SubscriptionProtectedRoute>
                   ) : (
                     <Navigate to="/workspace/login" />
                   )
