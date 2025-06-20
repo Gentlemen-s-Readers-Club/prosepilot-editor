@@ -265,19 +265,19 @@ export function Landing() {
                   image: "/images/features/creation.png",
                   title: "AI Story Generation",
                   description: "Transform simple prompts into rich, engaging narratives with advanced AI that understands storytelling.",
-                  benefits: ["Complete plot development", "Character arc creation", "Dialogue generation"]
+                  benefits: ["Complete plot development", "Character arc creation", "Consistency validation"]
                 },
                 {
                   image: "/images/features/editor.png",
                   title: "Professional Editor",
-                  description: "Write and refine your story with our intuitive editor that includes real-time suggestions and formatting.",
-                  benefits: ["Grammar & style checking", "Consistency validation", "Format optimization"]
+                  description: "Write and refine your story with our intuitive editor featuring rich text formatting and collaborative annotation tools.",
+                  benefits: ["Clean, modern interface", "Real-time content updates", "Advanced Annotation System"]
                 },
                 {
                   image: "/images/features/organization.png",
                   title: "Smart Organization",
-                  description: "Keep your story structured with intelligent chapter management and plot tracking tools.",
-                  benefits: ["Chapter organization", "Plot hole detection", "Character tracking"]
+                  description: "Keep your story structured with intelligent chapter management, cover generation and multiple export options.",
+                  benefits: ["Chapter organization", "Cover image upload", "Multi-format export"]
                 }
               ].map((feature, index) => (
                 <article key={index} className="text-center">
