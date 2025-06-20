@@ -271,7 +271,7 @@ export function Landing() {
                   image: "/images/features/editor.png",
                   title: "Professional Editor",
                   description: "Write and refine your story with our intuitive editor featuring rich text formatting and collaborative annotation tools.",
-                  benefits: ["Clean, modern interface", "Real-time content updates", "Advanced Annotation System"]
+                  benefits: ["Clean, modern interface", "Real-time content updates", "Advanced Annotation System", "Version History"]
                 },
                 {
                   image: "/images/features/organization.png",
