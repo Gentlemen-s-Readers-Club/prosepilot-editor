@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -10,21 +11,33 @@ import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
 import useAnalytics from '../hooks/useAnalytics';
 
+interface ResetPasswordFormData {
+  password: string;
+  confirmPassword: string;
+}
+
 export function ResetPassword() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { trackEvent } = useAnalytics({
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ResetPasswordFormData>({
+    mode: 'onSubmit',
+  });
+
+  const watchedPassword = watch('password', '');
 
   // Calculate password strength
   const calculatePasswordStrength = (pass: string) => {
@@ -38,8 +51,8 @@ export function ResetPassword() {
   };
 
   useEffect(() => {
-    setPasswordStrength(calculatePasswordStrength(password));
-  }, [password]);
+    setPasswordStrength(calculatePasswordStrength(watchedPassword));
+  }, [watchedPassword]);
 
   const getStrengthColor = () => {
     switch (passwordStrength) {
@@ -65,77 +78,12 @@ export function ResetPassword() {
     }
   };
 
-  // Check if the reset token is valid
-  useEffect(() => {
-    const checkToken = async () => {
-      const accessToken = searchParams.get('access_token');
-      const refreshToken = searchParams.get('refresh_token');
-      const type = searchParams.get('type');
-
-      if (!accessToken || !refreshToken || type !== 'recovery') {
-        setIsValidToken(false);
-        return;
-      }
-
-      try {
-        // Set the session with the tokens from the URL
-        const { error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        });
-
-        if (error) {
-          console.error('Token validation error:', error);
-          setIsValidToken(false);
-        } else {
-          setIsValidToken(true);
-        }
-      } catch (error) {
-        console.error('Error validating token:', error);
-        setIsValidToken(false);
-      }
-    };
-
-    checkToken();
-  }, [searchParams]);
-
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: ResetPasswordFormData) => {
     setLoading(true);
-
-    if (password.length < 8) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Password must be at least 8 characters long",
-      });
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Passwords do not match",
-      });
-      setLoading(false);
-      return;
-    }
-
-    if (passwordStrength < 3) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Password is not strong enough",
-      });
-      setLoading(false);
-      return;
-    }
 
     try {
       const { error } = await supabase.auth.updateUser({
-        password: password,
+        password: data.password,
       });
 
       if (error) throw error;
@@ -172,69 +120,6 @@ export function ResetPassword() {
     }
   };
 
-  // Show loading while checking token
-  if (isValidToken === null) {
-    return (
-      <>
-        <Helmet>
-          <title>ProsePilot - Reset Password</title>
-        </Helmet>
-        <div className='flex flex-col min-h-[calc(100vh-64px)]'>
-          <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-accent mx-auto mb-4"></div>
-              <p className="text-base-paragraph">Validating reset link...</p>
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </>
-    );
-  }
-
-  // Show error if token is invalid
-  if (isValidToken === false) {
-    return (
-      <>
-        <Helmet>
-          <title>ProsePilot - Invalid Reset Link</title>
-        </Helmet>
-        <div className='flex flex-col min-h-[calc(100vh-64px)]'>
-          <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
-            <div className="max-w-md w-full space-y-8 text-center">
-              <div>
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">
-                  Invalid Reset Link
-                </h2>
-                <p className="mt-2 text-center text-sm text-base-paragraph">
-                  This password reset link is invalid or has expired. Please request a new password reset.
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <Button
-                  onClick={() => navigate('/forgot-password')}
-                  className="w-full"
-                >
-                  Request New Reset Link
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  onClick={() => navigate('/login')}
-                  className="w-full"
-                >
-                  Back to Login
-                </Button>
-              </div>
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <Helmet>
@@ -252,7 +137,7 @@ export function ResetPassword() {
               </p>
             </div>
             
-            <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="password" className="text-base-heading">New Password</Label>
@@ -260,10 +145,20 @@ export function ResetPassword() {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-brand-brand-accent border-secondary/20 focus:border-brand-accent pr-10"
+                      {...register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                          value: 8,
+                          message: 'Password must be at least 8 characters long'
+                        },
+                        pattern: {
+                          value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/,
+                          message: 'Password must contain uppercase, lowercase, number, and special character'
+                        }
+                      })}
+                      className={`bg-brand-brand-accent border-secondary/20 focus:border-brand-accent pr-10 ${
+                        errors.password ? 'border-state-error' : ''
+                      }`}
                     />
                     <button
                       type="button"
@@ -273,8 +168,11 @@ export function ResetPassword() {
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-state-error">{errors.password.message}</p>
+                  )}
                   
-                  {password && (
+                  {watchedPassword && (
                     <div className="mt-2">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-sm text-gray-500">Password strength:</span>
@@ -287,11 +185,11 @@ export function ResetPassword() {
                         />
                       </div>
                       <ul className="mt-2 text-sm text-gray-500 space-y-1">
-                        <li className={password.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
-                        <li className={password.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
-                        <li className={password.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
-                        <li className={password.match(/[0-9]/) ? "text-state-success" : ""}>• At least one number</li>
-                        <li className={password.match(/[^A-Za-z0-9]/) ? "text-state-success" : ""}>• At least one special character</li>
+                        <li className={watchedPassword.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
+                        <li className={watchedPassword.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
+                        <li className={watchedPassword.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
+                        <li className={watchedPassword.match(/[0-9]/) ? "text-state-success" : ""}>• At least one number</li>
+                        <li className={watchedPassword.match(/[^A-Za-z0-9]/) ? "text-state-success" : ""}>• At least one special character</li>
                       </ul>
                     </div>
                   )}
@@ -303,10 +201,16 @@ export function ResetPassword() {
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      className="bg-brand-brand-accent border-secondary/20 focus:border-brand-accent pr-10"
+                      {...register('confirmPassword', {
+                        required: 'Please confirm your password',
+                        validate: (value) => {
+                          const password = watch('password');
+                          return value === password || 'Passwords do not match';
+                        }
+                      })}
+                      className={`bg-brand-brand-accent border-secondary/20 focus:border-brand-accent pr-10 ${
+                        errors.confirmPassword ? 'border-state-error' : ''
+                      }`}
                     />
                     <button
                       type="button"
@@ -316,13 +220,16 @@ export function ResetPassword() {
                       {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
+                  {errors.confirmPassword && (
+                    <p className="mt-1 text-sm text-state-error">{errors.confirmPassword.message}</p>
+                  )}
                 </div>
               </div>
 
               <Button
                 type="submit"
                 className="w-full"
-                disabled={loading || passwordStrength < 3 || password.length < 8 || password !== confirmPassword}
+                disabled={loading || passwordStrength < 3}
               >
                 {loading ? 'Resetting password...' : 'Reset Password'}
               </Button>

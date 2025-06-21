@@ -1,34 +1,45 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { supabase } from "../lib/supabase";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useToast } from "../hooks/use-toast";
-import { Eye, EyeOff, Facebook } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import useAnalytics from "../hooks/useAnalytics";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 export function Login() {
   const { trackEvent } = useAnalytics({
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    mode: 'onSubmit',
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
       });
 
       if (error) throw error;
@@ -40,11 +51,11 @@ export function Login() {
       });
 
       navigate("/workspace");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     } finally {
       setLoading(false);
@@ -124,18 +135,27 @@ export function Login() {
               </div>
             </div>
 
-            <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email address</Label>
                   <Input
                     id="email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-brand-brand-accent"
+                    {...register('email', {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Please enter a valid email address'
+                      }
+                    })}
+                    className={`bg-brand-brand-accent ${
+                      errors.email ? 'border-state-error' : ''
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-state-error">{errors.email.message}</p>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="password">Password</Label>
@@ -143,10 +163,12 @@ export function Login() {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-brand-brand-accent pr-10"
+                      {...register('password', {
+                        required: 'Password is required'
+                      })}
+                      className={`bg-brand-brand-accent pr-10 ${
+                        errors.password ? 'border-state-error' : ''
+                      }`}
                     />
                     <button
                       type="button"
@@ -156,6 +178,9 @@ export function Login() {
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-state-error">{errors.password.message}</p>
+                  )}
                 </div>
               </div>
 
