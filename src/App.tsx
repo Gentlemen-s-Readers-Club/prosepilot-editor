@@ -187,7 +187,7 @@ function App() {
                   session ? <Navigate to="/workspace" /> : <ForgotPassword />
                 }
               />
-              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/reset-password" element={session ? <ResetPassword /> : <Navigate to="/login" />} />
 
               {/* Help Articles */}
               <Route
