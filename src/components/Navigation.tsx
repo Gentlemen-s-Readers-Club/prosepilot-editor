@@ -38,7 +38,7 @@ export function Navigation() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     dispatch(clearProfile());
-    navigate("/workspace/login");
+    navigate("/login");
   };
 
   const toggleMobileMenu = () => {
@@ -112,13 +112,13 @@ export function Navigation() {
             {!loading && !session && (
               <>
                 <button
-                  onClick={() => navigate("/workspace/login")}
+                  onClick={() => navigate("/login")}
                   className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   <User className="h-4 w-4 text-brand-accent" />
                   <span>Login</span>
                 </button>
-                <Link to="/workspace/signup">
+                <Link to="/signup">
                   <Button>Get Started</Button>
                 </Link>
               </>
@@ -260,7 +260,7 @@ export function Navigation() {
             <>
               <button
                 onClick={() => {
-                  navigate("/workspace/login");
+                  navigate("/login");
                   closeMobileMenu();
                 }}
                 className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
@@ -270,7 +270,7 @@ export function Navigation() {
               </button>
               <button
                 onClick={() => {
-                  navigate("/workspace/signup");
+                  navigate("/signup");
                   closeMobileMenu();
                 }}
                 className="flex items-center w-full text-left space-x-2 bg-brand-primary text-white px-3 py-2 rounded-md text-base font-medium"

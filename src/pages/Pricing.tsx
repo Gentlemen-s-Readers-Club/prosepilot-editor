@@ -205,7 +205,7 @@ export function Pricing() {
                   </div>
 
                   {/* CTA Button */}
-                  <Link to="/workspace/signup">
+                  <Link to="/signup">
                     <Button
                       className={`w-full ${plan.isPopular && 'bg-brand-accent border-brand-accent text-white hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white'}`}
                       disabled={plan.comingSoon}
@@ -276,7 +276,7 @@ export function Pricing() {
                 <div className="text-sm text-base-paragraph mb-6">
                   Create {Math.floor(pack.credits / 5)} books
                 </div>
-                <Link to="/workspace/signup">
+                <Link to="/signup">
                   <Button className={`w-full ${pack.popular ? 'bg-brand-accent border-brand-accent hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white' : ''}`}>
                     Purchase Credits
                   </Button>

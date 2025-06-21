@@ -33,8 +33,7 @@ import {
   fetchUserSubscription,
   setupRealtimeSubscriptions,
   clearRealtimeSubscription,
-  hasStudioPlan,
-  selectHasActiveSubscription,
+  hasStudioPlan
 } from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
 
@@ -88,37 +87,37 @@ function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 // Protected Route Component for Active Subscription
-function SubscriptionProtectedRoute({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
-  const { status: subscriptionStatus } = useSelector(
-    (state: RootState) => state.subscription
-  );
+// function SubscriptionProtectedRoute({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   const hasActiveSubscription = useSelector(selectHasActiveSubscription);
+//   const { status: subscriptionStatus } = useSelector(
+//     (state: RootState) => state.subscription
+//   );
 
-  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-  if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
-    return <SubscriptionLoadingSpinner />;
-  }
+//   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
+//   if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
+//     return <SubscriptionLoadingSpinner />;
+//   }
 
-  // If there was an error loading subscription data, still allow access
-  // This prevents users from being locked out due to temporary API issues
-  if (subscriptionStatus === "error") {
-    console.warn(
-      "Subscription data failed to load, allowing access to prevent lockout"
-    );
-    return <>{children}</>;
-  }
+//   // If there was an error loading subscription data, still allow access
+//   // This prevents users from being locked out due to temporary API issues
+//   if (subscriptionStatus === "error") {
+//     console.warn(
+//       "Subscription data failed to load, allowing access to prevent lockout"
+//     );
+//     return <>{children}</>;
+//   }
 
-  // Only redirect if subscription data has been successfully loaded and user doesn't have an active subscription
-  if (subscriptionStatus === "success" && !hasActiveSubscription) {
-    return <Navigate to="/workspace/subscription" replace />;
-  }
+//   // Only redirect if subscription data has been successfully loaded and user doesn't have an active subscription
+//   if (subscriptionStatus === "success" && !hasActiveSubscription) {
+//     return <Navigate to="/workspace/subscription" replace />;
+//   }
 
-  return <>{children}</>;
-}
+//   return <>{children}</>;
+// }
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -178,6 +177,23 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
 
+
+              <Route  path="/login"
+                element={session ? <Navigate to="/workspace" /> : <Login />}
+              />
+              <Route path="/signup"
+                element={session ? <Navigate to="/workspace" /> : <Signup />}
+              />
+              <Route path="/forgot-password"
+                element={
+                  session ? <Navigate to="/workspace" /> : <ForgotPassword />
+                }
+              />
+              <Route path="/reset-password"
+              element={
+                session ? <Navigate to="/workspace" /> : <ResetPassword />
+              } />
+
               {/* Help Articles */}
               <Route
                 path="/help/create-first-book"
@@ -199,7 +215,7 @@ function App() {
                   session ? (
                     <Dashboard />
                   ) : (
-                    <Navigate to="/workspace/login" />
+                    <Navigate to="/login" />
                   )
                 }
               />
@@ -210,7 +226,7 @@ function App() {
                   session ? (
                     <BookDetails />
                   ) : (
-                    <Navigate to="/workspace/login" />
+                    <Navigate to="/login" />
                   )
                 }
               />
@@ -220,14 +236,14 @@ function App() {
                   session ? (
                     <ChapterEditor />
                   ) : (
-                    <Navigate to="/workspace/login" />
+                    <Navigate to="/login" />
                   )
                 }
               />
               <Route
                 path="/workspace/profile"
                 element={
-                  session ? <EditProfile /> : <Navigate to="/workspace/login" />
+                  session ? <EditProfile /> : <Navigate to="/login" />
                 }
               />
               <Route
@@ -236,30 +252,8 @@ function App() {
                   session ? (
                     <Subscription />
                   ) : (
-                    <Navigate to="/workspace/login" />
+                    <Navigate to="/login" />
                   )
-                }
-              />
-              <Route
-                path="/workspace/login"
-                element={session ? <Navigate to="/workspace" /> : <Login />}
-              />
-              <Route
-                path="/workspace/signup"
-                element={session ? <Navigate to="/workspace" /> : <Signup />}
-              />
-              <Route
-                path="/workspace/forgot-password"
-                element={
-                  session ? <Navigate to="/workspace" /> : <ForgotPassword />
-                }
-              />
-
-
-              <Route
-                path="/workspace/reset-password"
-                element={
-                  <ResetPassword />
                 }
               />
 
@@ -272,7 +266,7 @@ function App() {
                       <Teams />
                     </StudioProtectedRoute>
                   ) : (
-                    <Navigate to="/workspace/login" />
+                    <Navigate to="/login" />
                   )
                 }
               />
@@ -284,7 +278,7 @@ function App() {
                       <TeamDetails />
                     </StudioProtectedRoute>
                   ) : (
-                    <Navigate to="/workspace/login" />
+                    <Navigate to="/login" />
                   )
                 }
               />

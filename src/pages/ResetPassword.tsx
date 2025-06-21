@@ -152,7 +152,7 @@ export function ResetPassword() {
       });
 
       // Redirect to login page
-      navigate('/workspace/login');
+      navigate('/login');
     } catch (error: unknown) {
       console.error('Error resetting password:', error);
       
@@ -213,7 +213,7 @@ export function ResetPassword() {
               
               <div className="space-y-4">
                 <Button
-                  onClick={() => navigate('/workspace/forgot-password')}
+                  onClick={() => navigate('/forgot-password')}
                   className="w-full"
                 >
                   Request New Reset Link
@@ -221,7 +221,7 @@ export function ResetPassword() {
                 
                 <Button
                   variant="outline"
-                  onClick={() => navigate('/workspace/login')}
+                  onClick={() => navigate('/login')}
                   className="w-full"
                 >
                   Back to Login

@@ -161,7 +161,7 @@ export function Login() {
 
               <div className="flex items-center justify-between">
                 <Button variant="link" asChild>
-                  <Link to="/workspace/forgot-password">Forgot your password?</Link>
+                  <Link to="/forgot-password">Forgot your password?</Link>
                 </Button>
               </div>
 
@@ -173,7 +173,7 @@ export function Login() {
                 <span className="text-sm text-gray-500">
                   Don't have an account?{" "}
                   <Button variant="link" asChild>
-                    <Link to="/workspace/signup">Sign up</Link>
+                    <Link to="/signup">Sign up</Link>
                   </Button>
                 </span>
               </div>

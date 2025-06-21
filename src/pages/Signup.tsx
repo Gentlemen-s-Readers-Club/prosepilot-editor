@@ -108,7 +108,7 @@ export function Signup() {
         description: "Please check your email to verify your account.",
       });
       
-      navigate('/workspace/login');
+      navigate('/login');
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -271,7 +271,7 @@ export function Signup() {
                     variant="link"
                     asChild
                   >
-                    <Link to="/workspace/login">
+                    <Link to="/login">
                       Sign in
                     </Link>
                   </Button>
