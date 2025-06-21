@@ -43,7 +43,6 @@ import { CreditSystem } from "./pages/help/CreditSystem";
 import { AIBestPractices } from "./pages/help/AIBestPractices";
 import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
-import { AuthEventListener } from "./components/AuthEventListener";
 
 // Shared Loading Component
 function SubscriptionLoadingSpinner() {
@@ -167,7 +166,6 @@ function App() {
         <Router>
           <ScrollToTop />
           <Navigation />
-          <AuthEventListener />
           <main>
             <Routes>
               <Route path="/" element={<Landing />} />
