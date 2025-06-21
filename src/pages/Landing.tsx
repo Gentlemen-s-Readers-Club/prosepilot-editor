@@ -41,7 +41,7 @@ export function Landing() {
           href="https://bolt.new"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute top-2 right-2 lg:top-6 lg:right-6 z-20 rounded-full shadow-lg aspect-square"
+          className="absolute top-2 right-2 lg:top-6 lg:right-6 z-20 rounded-full shadow-lg aspect-square max-md:hidden"
           aria-label="Built with Bolt.new"
         >
           <img
@@ -105,7 +105,7 @@ export function Landing() {
                 </div>
 
                 <div className="lg:flex-1 shrink-0">
-                  <div className="relative mx-4 lg:mx-0">
+                  <div className="relative max-md:pt-4 md:mx-4 lg:mx-0">
                     <video
                       className="w-full rounded-lg shadow-2xl"
                       src="/videos/masthead.mp4"
@@ -115,8 +115,22 @@ export function Landing() {
                       playsInline
                       poster="/images/masthead.jpg"
                     />
+                    {/* Bolt.new Logo Top Right */}
+                    <a
+                      href="https://bolt.new"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute -top-8 -right-3 z-20 rounded-full shadow-lg aspect-square md:hidden"
+                      aria-label="Built with Bolt.new"
+                    >
+                      <img
+                        src="/black_circle_360x360.png"
+                        alt="Built with Bolt.new"
+                        className="w-20 h-20 md:w-24 md:h-24 rounded-full shadow-lg border border-white"
+                      />
+                    </a>
                     {/* Floating Stats */}
-                    <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
+                    <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border max-md:hidden">
                       <div className="flex items-center">
                         <TrendingUp className="w-8 h-8 text-brand-accent mr-3" />
                         <div>
@@ -125,7 +139,7 @@ export function Landing() {
                         </div>
                       </div>
                     </div>
-                    <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border">
+                    <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border max-md:hidden">
                       <div className="flex items-center">
                         <Clock className="w-8 h-8 text-state-success mr-3" />
                         <div>
