@@ -53,8 +53,8 @@ export function Landing() {
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
             <div className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-              <div className="text-center lg:text-left lg:grid lg:grid-cols-12 lg:gap-8">
-                <div className="lg:col-span-6">
+              <div className="flex flex-col items-center lg:flex-row gap-12">
+                <div className="text-center lg:text-left lg:flex-1 lg:max-w-lg">
                   {/* Social Proof Badge */}
                   {/* <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
                     <Star className="w-4 h-4 text-brand-accent mr-2" />
@@ -78,7 +78,7 @@ export function Landing() {
                       "Professional editing and formatting included",
                       "Export to all major publishing formats"
                     ].map((benefit, index) => (
-                      <div key={index} className="flex items-center">
+                      <div key={index} className="flex items-center justify-center lg:justify-start">
                         <CheckCircle className="w-5 h-5 text-state-success mr-3" />
                         <span className="text-base-paragraph">{benefit}</span>
                       </div>
@@ -104,19 +104,23 @@ export function Landing() {
                   </div>
                 </div>
 
-                <div className="mt-12 lg:mt-0 lg:col-span-6">
-                  <div className="relative">
-                    <img
+                <div className="lg:flex-1 shrink-0">
+                  <div className="relative mx-4 lg:mx-0">
+                    <video
                       className="w-full rounded-lg shadow-2xl"
-                      src="/images/masthead.jpg"
-                      alt="Writer using ProsePilot interface"
+                      src="/videos/masthead.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/images/masthead.jpg"
                     />
                     {/* Floating Stats */}
                     <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
                       <div className="flex items-center">
                         <TrendingUp className="w-8 h-8 text-brand-accent mr-3" />
                         <div>
-                          <div className="text-2xl font-bold text-base-heading">1M+</div>
+                          <div className="text-2xl font-bold text-base-heading">1K+</div>
                           <div className="text-sm text-base-paragraph">Books Created</div>
                         </div>
                       </div>
@@ -142,14 +146,12 @@ export function Landing() {
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+            <img
+              className="w-full rounded-lg shadow-lg aspect-[3/2] object-cover"
+              src="/images/ideas.jpg"
+              alt="Frustrated writer at desk"
+            />
             <div className="mt-10 lg:mt-0">
-              <img
-                className="w-full rounded-lg shadow-lg aspect-[3/2] object-cover"
-                src="/images/ideas.jpg"
-                alt="Frustrated writer at desk"
-              />
-            </div>
-            <div>
               <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl">
                 Stop letting your book ideas die in drafts
               </h2>
