@@ -96,11 +96,11 @@ export function ResetPassword() {
 
       toast({
         title: "Success",
-        description: "Your password has been reset successfully. You can now sign in with your new password.",
+        description: "Your password has been reset successfully.",
       });
 
       // Redirect to login page
-      navigate('/login');
+      navigate('/workspace');
     } catch (error: unknown) {
       console.error('Error resetting password:', error);
       
