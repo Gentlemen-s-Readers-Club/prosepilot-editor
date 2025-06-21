@@ -4,10 +4,12 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { ForgotPassword } from "./pages/ForgotPassword";
+import { ResetPassword } from "./pages/ResetPassword";
 import { Dashboard } from "./pages/Dashboard";
 import { BookDetails } from "./pages/BookDetails";
 import { ChapterEditor } from "./pages/ChapterEditor";
@@ -43,6 +45,7 @@ import { CreditSystem } from "./pages/help/CreditSystem";
 import { AIBestPractices } from "./pages/help/AIBestPractices";
 import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
+import { supabase } from "./lib/supabase";
 
 // Shared Loading Component
 function SubscriptionLoadingSpinner() {
@@ -121,10 +124,21 @@ function SubscriptionProtectedRoute({
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session, loading } = useAuth();
+  const navigate = useNavigate();
   const { profile } = useSelector((state: RootState) => state.profile);
   const { status: subscriptionStatus } = useSelector(
     (state: RootState) => state.subscription
   );
+  useEffect(() => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event == "PASSWORD_RECOVERY") {
+        navigate(
+          `/workspace/reset-password?access_token=${session?.access_token}&refresh_token=${session?.refresh_token}&type=recovery`,
+          { replace: true }
+        );
+      }
+    });
+  }, [])
 
   useEffect(() => {
     if (session && !profile) {
@@ -194,7 +208,7 @@ function App() {
                 path="/workspace"
                 element={
                   session ? (
-                      <Dashboard />
+                    <Dashboard />
                   ) : (
                     <Navigate to="/workspace/login" />
                   )
@@ -205,7 +219,7 @@ function App() {
                 path="/workspace/book/:id"
                 element={
                   session ? (
-                      <BookDetails />
+                    <BookDetails />
                   ) : (
                     <Navigate to="/workspace/login" />
                   )
@@ -215,7 +229,7 @@ function App() {
                 path="/workspace/chapter/:id"
                 element={
                   session ? (
-                      <ChapterEditor />
+                    <ChapterEditor />
                   ) : (
                     <Navigate to="/workspace/login" />
                   )
@@ -249,6 +263,14 @@ function App() {
                 path="/workspace/forgot-password"
                 element={
                   session ? <Navigate to="/workspace" /> : <ForgotPassword />
+                }
+              />
+
+
+              <Route
+                path="/workspace/reset-password"
+                element={
+                  <ResetPassword />
                 }
               />
 
