@@ -38,7 +38,7 @@ export function NotFound() {
                 <div className="text-sm text-base-paragraph font-copy">
                   <p>Or try one of these popular pages:</p>
                   <div className="mt-2 space-y-2">
-                    <Link to="/workspace/signup" className="block text-brand-accent hover:text-brand-accent/80 font-copy">
+                    <Link to="/signup" className="block text-brand-accent hover:text-brand-accent/80 font-copy">
                       Start writing your book
                     </Link>
                     <Link to="/help" className="block text-brand-accent hover:text-brand-accent/80 font-copy">

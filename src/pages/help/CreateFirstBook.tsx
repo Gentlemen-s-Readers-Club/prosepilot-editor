@@ -451,7 +451,7 @@ export function CreateFirstBook() {
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h3 className="text-2xl font-bold text-white font-heading mb-4">Ready to create your first book?</h3>
             <p className="text-white/90 font-copy mb-6">Start your writing journey with ProsePilot today.</p>
-            <Link to="/workspace/signup">
+            <Link to="/signup">
               <Button className="bg-white text-base-heading hover:bg-gray-100 px-8 py-3">
                 Get Started Now
                 <ChevronRight className="ml-2 h-4 w-4" />

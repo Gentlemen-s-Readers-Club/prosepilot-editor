@@ -10,6 +10,11 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
+Disallow /login
+Disallow /signup
+Disallow /forgot-password
+Disallow /reset-password
+
 
 # Allow important pages
 Allow: /pricing

@@ -361,7 +361,7 @@ export function Pricing() {
             Join thousands of writers who've transformed their ideas into published books with ProsePilot.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/workspace/signup">
+            <Link to="/signup">
               <Button className="px-8 py-3 text-lg">
                 Start Your Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
