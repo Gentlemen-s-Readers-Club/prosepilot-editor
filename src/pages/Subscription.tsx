@@ -6,7 +6,6 @@ import {
   AlertCircle,
   Clock,
   FileText,
-  Download,
   Users,
   Zap,
   Crown,
@@ -40,6 +39,7 @@ import { CreditPurchase } from "../components/CreditPurchase";
 import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
 import { getPaddleConfig } from "../lib/paddle-config";
 import { BillingHistorySection } from "../components/subscription/BillingHistorySection";
+
 
 // Utility function to format price
 const formatPrice = (
@@ -119,11 +119,11 @@ const plans: Plan[] = [
     features: [
       "75 credits/month (15 books)",
       "All Pro features",
-      "AI-generated illustrations (50 credits/month)",
+      "AI-generated illustrations",
       "Cover generation",
-      "Metadata & ISBN generation",
+      'Advanced Metadata management',
       "Team access (up to 3 users)",
-      "Priority live chat support",
+      'More features coming soon'
     ],
     priceId: getPaddleConfig().subscriptionPrices.studio,
     comingSoon: true,

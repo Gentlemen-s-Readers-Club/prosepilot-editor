@@ -577,17 +577,17 @@ export function AIBestPractices() {
         {/* Footer CTA */}
         <div className="bg-brand-primary py-12">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h3 className="text-2xl font-bold text-white font-heading mb-4">Ready to put these techniques to work?</h3>
-            <p className="text-white/90 font-copy mb-6">Start creating better AI-generated content with these proven strategies.</p>
-            <Link to="/workspace/signup">
+            <h3 className="text-2xl font-bold text-white mb-4 font-heading">Ready to put these techniques to work?</h3>
+            <p className="text-white/90 mb-6 font-copy">Start creating better AI-generated content with these proven strategies.</p>
+            <Link to="/signup">
               <Button className="bg-white text-base-heading hover:bg-gray-100 px-8 py-3">
                 Start Writing
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
+          <Footer />
         </div>
-        <Footer />
       </div>
     </>
   );

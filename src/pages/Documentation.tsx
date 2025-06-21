@@ -407,7 +407,7 @@ export function Documentation() {
                       <div className="flex items-center mb-4">
                         <Users className="w-5 h-5 text-brand-accent mr-2" />
                         <h3 className="font-semibold text-base-heading font-heading">
-                          Team Collaboration
+                          Team Collaboration (Coming soon)
                         </h3>
                       </div>
                       <p className="text-sm text-base-paragraph">
@@ -1058,7 +1058,7 @@ export function Documentation() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-xl font-semibold text-base-heading font-heading">
-                            Team Collaboration
+                            Team Collaboration (Coming soon)
                           </h3>
                           <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">
                             Studio
@@ -1081,7 +1081,6 @@ export function Documentation() {
                           <li>• Invite team members with specific roles</li>
                           <li>• Shared workspace for team projects</li>
                           <li>• Activity tracking and team analytics</li>
-                          <li>• Advanced permission management</li>
                         </ul>
                       </div>
                       <div>
@@ -1093,7 +1092,6 @@ export function Documentation() {
                           <li>• Team-wide annotation systems</li>
                           <li>• Shared version history</li>
                           <li>• Team communication tools</li>
-                          <li>• Project management integration</li>
                         </ul>
                       </div>
                     </div>
@@ -1507,7 +1505,7 @@ export function Documentation() {
             <section id="team-collaboration" className="mb-16">
               <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <MessageSquare className="w-8 h-8 text-brand-accent mr-4" />
-                Team Collaboration
+                Team Collaboration (Coming soon)
               </h2>
 
               <div>
@@ -1685,7 +1683,7 @@ export function Documentation() {
                   {
                     question: "How many books can I create?",
                     answer:
-                      "The number of books you can create depends on your subscription plan. The Starter plan includes 5 credits (1 book), Pro Author includes 25 credits (5 books), and Studio includes 75 credits (15 books). Each book requires 5 credits to generate.",
+                      "The number of books you can create depends on your subscription plan. The Starter plan includes 5 credits (1 book), Pro Author includes 25 credits (5 books), and Studio includes 75 credits (15 books). Each book requires 5 credits to generate. You can also purchase additional credit packs anytime to create more books beyond your monthly allowance.",
                   },
                   {
                     question: "Can I edit my book after it's generated?",
@@ -1696,7 +1694,7 @@ export function Documentation() {
                     question:
                       "What happens if I'm not satisfied with the generated book?",
                     answer:
-                      "If you're not satisfied with the results, you can regenerate specific chapters or try again with a more detailed prompt. While we don't offer credit refunds for generations you don't like, we provide extensive editing tools to help you refine the content.",
+                      "If you're not satisfied with the results, you can try again with a more detailed prompt. While we don't offer credit refunds for generations you don't like, we provide extensive editing tools to help you refine the content.",
                   },
                   {
                     question: "Can I publish books created with ProsePilot?",
@@ -1706,12 +1704,12 @@ export function Documentation() {
                   {
                     question: "How do I export my book?",
                     answer:
-                      "From your book's detail page, click the 'Export' button. You can choose from multiple formats including PDF, EPUB, and DOCX, making it easy to publish or share your work.",
+                      "From your book's detail page, click the 'Export' button when your book is marked as published. You can choose from multiple formats including PDF, EPUB, and DOCX, making it easy to publish or share your work.",
                   },
                   {
                     question: "Can I collaborate with others on my book?",
                     answer:
-                      "Yes! Our team features allow you to invite collaborators with different permission levels. Team members can view, comment on, or edit your books depending on the role you assign them.",
+                      "Team collaboration features are coming soon! We're working on advanced team management tools that will allow you to invite collaborators with different permission levels. Team members will be able to view, comment on, or edit your books depending on the role you assign them. Stay tuned for updates!",
                   },
                 ].map((faq, index) => (
                   <div
@@ -1784,7 +1782,7 @@ export function Documentation() {
                   </div>
                 </Link>
 
-                <Link
+                {/* <Link
                   to="/help/team-collaboration"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors"
                 >
@@ -1798,7 +1796,7 @@ export function Documentation() {
                     <span>Read article</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </section>
           </div>

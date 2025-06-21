@@ -56,8 +56,8 @@
         }
         .cta-button {
             display: inline-block;
-            background-color: #3E4C59;
-            color: #ffffff;
+            background-color: #3E4C59 !important;
+            color: #ffffff !important;
             text-decoration: none;
             padding: 8px 16px;
             border: 1px solid #3E4C59;
@@ -69,8 +69,8 @@
             transition: all 0.2s ease;
         }
         .cta-button:hover {
-            background-color: transparent;
-            color: #3E4C59;
+            background-color: transparent !important;
+            color: #3E4C59 !important;
         }
         .button-container {
             text-align: center;
@@ -165,7 +165,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://prosepilot.app/logo.png" alt="ProsePilot Logo" class="logo">
+            <img src="https://prosepilot.app/logo-dark.png" alt="ProsePilot Logo" class="logo">
             <div style="color: #fff; font-size: 22px; font-weight: bold; margin-top: 8px; letter-spacing: 1px;">ProsePilot</div>
             <p class="tagline">Your AI-powered writing companion</p>
         </div>
@@ -178,7 +178,7 @@
             </p>
             
             <div class="button-container">
-                <a href="{{ .ConfirmationURL }}" class="cta-button">
+                <a href="{{ .ConfirmationURL }}/workspace" class="cta-button">
                     Confirm Your Email Address
                 </a>
             </div>
@@ -202,7 +202,7 @@
             
             <p style="text-align: center; color: #616161; font-size: 14px; margin-top: 32px;">
                 If the button doesn't work, copy and paste this link into your browser:<br>
-                <a href="{{ .ConfirmationURL }}" style="color: #B08F6A; word-break: break-all;">{{ .ConfirmationURL }}</a>
+                <a href="{{ .ConfirmationURL }}/workspace" style="color: #B08F6A; word-break: break-all;">{{ .ConfirmationURL }}/workspace</a>
             </p>
         </div>
         

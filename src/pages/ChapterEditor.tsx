@@ -126,15 +126,12 @@ function ChapterEditorContent() {
 
       setChapterTitle(newTitle);
       
-      if (book) {
-        setBook({
-          ...book,
-          chapters: book.chapters.map((chapter: Chapter) =>
-            chapter.id === id
-              ? { ...chapter, title: newTitle }
-              : chapter
-          )
-        });
+      if (chapters) {
+        setChapters(chapters.map((chapter: Chapter) =>
+          chapter.id === id
+            ? { ...chapter, title: newTitle }
+            : chapter
+        ));
       }
 
       toast({
@@ -207,6 +204,7 @@ function ChapterEditorContent() {
 
   const handleRestoreVersion = async (version: Version) => {
     try {
+      setIsLoading(true);
       await createNewVersion(version.content);
       setContent(version.content);
     } catch (error) {
@@ -216,6 +214,8 @@ function ChapterEditorContent() {
         title: "Error",
         description: "Failed to restore version",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 

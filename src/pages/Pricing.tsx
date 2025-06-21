@@ -76,11 +76,11 @@ const plans: Plan[] = [
     features: [
       '75 credits/month (15 books)',
       'All Pro features',
-      'AI-generated illustrations (50 credits/month)',
+      'AI-generated illustrations',
       'Cover generation',
-      'Metadata & ISBN generation',
+      'Advanced Metadata management',
       'Team access (up to 3 users)',
-      'Priority live chat support'
+      'More features coming soon'
     ],
     comingSoon: true
   }
@@ -241,7 +241,7 @@ export function Pricing() {
                     ))}
                   </ul>
 
-                  <Link to={plan.comingSoon ? "#" : "/workspace/signup"}>
+                  <Link to={plan.comingSoon ? "#" : "/signup"}>
                     <Button
                       className={`w-full ${
                         plan.isPopular
@@ -256,6 +256,71 @@ export function Pricing() {
                   </Link>
                 </div>
               </article>
+            ))}
+          </div>
+
+          {/* Additional Info */}
+          <div className="mt-16 text-center">
+            <p className="text-base-paragraph mb-4">
+              All plans include our core AI writing features and export capabilities
+            </p>
+            <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> AI story generation</p>
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Character development</p>
+              <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Plot consistency checking</p>
+              {/* <p className="text-base-paragraph"><span className="text-brand-accent">✓</span> Multiple export formats</p> */}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Credit Packages */}
+      <section className="bg-white py-16" aria-labelledby="credit-packages-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 id="credit-packages-heading" className="text-3xl font-extrabold text-base-heading font-heading">Need More Credits?</h2>
+            <p className="mt-4 text-xl text-base-paragraph">
+              Purchase additional credits that never expire
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              { credits: 10, price: 20, popular: false },
+              { credits: 25, price: 45, savings: 10, popular: true },
+              { credits: 50, price: 80, savings: 20, popular: false }
+            ].map((pack, index) => (
+              <div
+                key={index}
+                className={`bg-base-background rounded-lg p-6 text-center flex flex-col justify-center items-center ${
+                  pack.popular ? 'ring-2 ring-brand-accent' : ''
+                }`}
+              >
+                {pack.popular && (
+                  <div className="bg-brand-accent text-white text-sm font-medium px-3 py-1 rounded-full inline-block mb-4">
+                    Best Value
+                  </div>
+                )}
+                <div className="text-3xl font-bold text-base-heading mb-2">
+                  {pack.credits} Credits
+                </div>
+                <div className="text-2xl font-bold text-base-heading mb-4">
+                  ${pack.price}
+                </div>
+                {pack.savings && (
+                  <div className="text-sm text-state-success font-medium mb-4">
+                    Save {pack.savings}%
+                  </div>
+                )}
+                <div className="text-sm text-base-paragraph mb-6">
+                  Create {Math.floor(pack.credits / 5)} books
+                </div>
+                <Link to="/signup">
+                  <Button className={`w-full ${pack.popular ? 'bg-brand-accent border-brand-accent hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white' : ''}`}>
+                    Purchase Credits
+                  </Button>
+                </Link>
+              </div>
             ))}
           </div>
         </div>

@@ -93,7 +93,7 @@ export function Landing() {
           href="https://bolt.new"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute top-2 right-2 lg:top-6 lg:right-6 z-20 rounded-full shadow-lg aspect-square"
+          className="absolute top-2 right-2 lg:top-6 lg:right-6 z-20 rounded-full shadow-lg aspect-square max-md:hidden"
           aria-label="Built with Bolt.new"
         >
           <img
@@ -105,8 +105,8 @@ export function Landing() {
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
             <div className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-              <div className="text-center lg:text-left lg:grid lg:grid-cols-12 lg:gap-8">
-                <div className="lg:col-span-6">
+              <div className="flex flex-col items-center lg:flex-row gap-12">
+                <div className="text-center lg:text-left lg:flex-1 lg:max-w-lg">
                   {/* Social Proof Badge */}
                   {/* <div className="inline-flex items-center bg-white rounded-full px-4 py-2 mb-6 shadow-sm border">
                     <Star className="w-4 h-4 text-brand-accent mr-2" />
@@ -130,8 +130,8 @@ export function Landing() {
                       "Professional editing and formatting included",
                       "Export to all major publishing formats"
                     ].map((benefit, index) => (
-                      <div key={index} className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-state-success mr-3" aria-hidden="true" />
+                      <div key={index} className="flex items-center justify-center lg:justify-start">
+                        <CheckCircle className="w-5 h-5 text-state-success mr-3" />
                         <span className="text-base-paragraph font-copy">{benefit}</span>
                       </div>
                     ))}
@@ -139,7 +139,7 @@ export function Landing() {
 
                   <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
-                      <Link to="/workspace/signup">
+                      <Link to="/signup">
                         <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium">
                           Start Writing Your Book
                           <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
@@ -156,25 +156,42 @@ export function Landing() {
                   </div>
                 </div>
 
-                <div className="mt-12 lg:mt-0 lg:col-span-6">
-                  <div className="relative">
-                    <img
+                <div className="lg:flex-1 shrink-0">
+                  <div className="relative max-md:pt-4 md:mx-4 lg:mx-0">
+                    <video
                       className="w-full rounded-lg shadow-2xl"
-                      src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                      alt="Writer using ProsePilot interface to create a book"
-                      loading="lazy"
+                      src="/videos/masthead.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/images/masthead.jpg"
                     />
+                    {/* Bolt.new Logo Top Right */}
+                    <a
+                      href="https://bolt.new"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute -top-8 -right-3 z-20 rounded-full shadow-lg aspect-square md:hidden"
+                      aria-label="Built with Bolt.new"
+                    >
+                      <img
+                        src="/black_circle_360x360.png"
+                        alt="Built with Bolt.new"
+                        className="w-20 h-20 md:w-24 md:h-24 rounded-full shadow-lg border border-white"
+                      />
+                    </a>
                     {/* Floating Stats */}
-                    <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border">
+                    <div className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-4 border max-md:hidden">
                       <div className="flex items-center">
                         <TrendingUp className="w-8 h-8 text-brand-accent mr-3" aria-hidden="true" />
                         <div>
-                          <div className="text-2xl font-bold text-base-heading font-heading">1M+</div>
+                          <div className="text-2xl font-bold text-base-heading font-heading">1K+</div>
                           <div className="text-sm text-base-paragraph font-copy">Books Created</div>
                         </div>
                       </div>
                     </div>
-                    <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border">
+                    <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border max-md:hidden">
                       <div className="flex items-center">
                         <Clock className="w-8 h-8 text-state-success mr-3" aria-hidden="true" />
                         <div>
@@ -195,8 +212,13 @@ export function Landing() {
       <section className="py-16 bg-white" aria-labelledby="problem-solution-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
-            <div>
-              <h2 id="problem-solution-heading" className="text-3xl font-bold text-base-heading font-heading sm:text-4xl">
+            <img
+              className="w-full rounded-lg shadow-lg aspect-[3/2] object-cover"
+              src="/images/ideas.jpg"
+              alt="Frustrated writer at desk"
+            />
+            <div className="mt-10 lg:mt-0">
+              <h2 className="text-3xl font-extrabold text-base-heading sm:text-4xl  font-heading">
                 Stop letting your book ideas die in drafts
               </h2>
               <div className="mt-6 space-y-6">
@@ -232,14 +254,6 @@ export function Landing() {
                   </div>
                 ))}
               </div>
-            </div>
-            <div className="mt-10 lg:mt-0">
-              <img
-                className="w-full rounded-lg shadow-lg"
-                src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Frustrated writer at desk before discovering ProsePilot"
-                loading="lazy"
-              />
             </div>
           </div>
         </div>
@@ -493,7 +507,7 @@ export function Landing() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Link to="/workspace/signup">
+            <Link to="/signup">
               <Button className="px-8 py-4 text-lg font-semibold border-2 transition-all">
                 Start Your Writing Journey
                 <ArrowRight className="ml-2 h-5 w-5" />

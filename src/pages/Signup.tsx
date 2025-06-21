@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useToast } from '../hooks/use-toast';
-import { Eye, EyeOff, Facebook } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
 import useAnalytics from '../hooks/useAnalytics';
 
+interface SignupFormData {
+  fullName: string;
+  email: string;
+  password: string;
+}
+
 export function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -22,6 +26,17 @@ export function Signup() {
   const { trackEvent } = useAnalytics({
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<SignupFormData>({
+    mode: 'onSubmit',
+  });
+
+  const watchedPassword = watch('password', '');
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -34,8 +49,8 @@ export function Signup() {
   };
 
   useEffect(() => {
-    setPasswordStrength(calculatePasswordStrength(password));
-  }, [password]);
+    setPasswordStrength(calculatePasswordStrength(watchedPassword));
+  }, [watchedPassword]);
 
   const getStrengthColor = () => {
     switch (passwordStrength) {
@@ -61,7 +76,7 @@ export function Signup() {
     }
   };
 
-  const createProfile = async (userId: string, userData: any) => {
+  const createProfile = async (userId: string, userData: { full_name?: string; avatar_url?: string | null }) => {
     try {
       const { error } = await supabase.from('profiles').insert([
         {
@@ -71,22 +86,21 @@ export function Signup() {
         },
       ]);
       if (error) throw error;
-    } catch (error: any) {
-      console.error('Error creating profile:', error.message);
+    } catch (error: unknown) {
+      console.error('Error creating profile:', error instanceof Error ? error.message : 'Unknown error');
     }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: SignupFormData) => {
     setLoading(true);
 
     try {
       const { data: { user }, error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         options: {
           data: {
-            full_name: fullName,
+            full_name: data.fullName,
           },
         },
       });
@@ -94,7 +108,7 @@ export function Signup() {
       if (error) throw error;
 
       if (user) {
-        await createProfile(user.id, { full_name: fullName });
+        await createProfile(user.id, { full_name: data.fullName });
       }
 
       trackEvent({
@@ -108,12 +122,12 @@ export function Signup() {
         description: "Please check your email to verify your account.",
       });
       
-      navigate('/workspace/login');
-    } catch (error: any) {
+      navigate('/login');
+    } catch (error: unknown) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     } finally {
       setLoading(false);
@@ -136,11 +150,11 @@ export function Signup() {
         action: "signup",
         label: provider,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     }
   };
@@ -189,29 +203,47 @@ export function Signup() {
               </div>
             </div>
 
-            <form className="mt-8 space-y-6" onSubmit={handleSignup}>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="fullName">Full Name</Label>
                   <Input
                     id="fullName"
                     type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                    className="bg-brand-brand-accent"
+                    {...register('fullName', {
+                      required: 'Full name is required',
+                      minLength: {
+                        value: 2,
+                        message: 'Full name must be at least 2 characters long'
+                      }
+                    })}
+                    className={`bg-brand-brand-accent ${
+                      errors.fullName ? 'border-state-error' : ''
+                    }`}
                   />
+                  {errors.fullName && (
+                    <p className="mt-1 text-sm text-state-error">{errors.fullName.message}</p>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="email">Email address</Label>
                   <Input
                     id="email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-brand-brand-accent"
+                    {...register('email', {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Please enter a valid email address'
+                      }
+                    })}
+                    className={`bg-brand-brand-accent ${
+                      errors.email ? 'border-state-error' : ''
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-state-error">{errors.email.message}</p>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="password">Password</Label>
@@ -219,10 +251,20 @@ export function Signup() {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-brand-brand-accent pr-10"
+                      {...register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                          value: 8,
+                          message: 'Password must be at least 8 characters long'
+                        },
+                        pattern: {
+                          value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/,
+                          message: 'Password must contain uppercase, lowercase, number, and special character'
+                        }
+                      })}
+                      className={`bg-brand-brand-accent pr-10 ${
+                        errors.password ? 'border-state-error' : ''
+                      }`}
                     />
                     <button
                       type="button"
@@ -232,7 +274,10 @@ export function Signup() {
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
-                  {password && (
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-state-error">{errors.password.message}</p>
+                  )}
+                  {watchedPassword && (
                     <div className="mt-2">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-sm text-gray-500 font-copy">Password strength:</span>
@@ -245,11 +290,11 @@ export function Signup() {
                         />
                       </div>
                       <ul className="mt-2 text-sm text-gray-500 space-y-1 font-copy">
-                        <li className={password.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
-                        <li className={password.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
-                        <li className={password.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
-                        <li className={password.match(/[0-9]/) ? "text-state-success" : ""}>• At least one number</li>
-                        <li className={password.match(/[^A-Za-z0-9]/) ? "text-state-success" : ""}>• At least one special character</li>
+                        <li className={watchedPassword.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
+                        <li className={watchedPassword.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
+                        <li className={watchedPassword.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
+                        <li className={watchedPassword.match(/[0-9]/) ? "text-state-success" : ""}>• At least one number</li>
+                        <li className={watchedPassword.match(/[^A-Za-z0-9]/) ? "text-state-success" : ""}>• At least one special character</li>
                       </ul>
                     </div>
                   )}
@@ -271,7 +316,7 @@ export function Signup() {
                     variant="link"
                     asChild
                   >
-                    <Link to="/workspace/login">
+                    <Link to="/login">
                       Sign in
                     </Link>
                   </Button>

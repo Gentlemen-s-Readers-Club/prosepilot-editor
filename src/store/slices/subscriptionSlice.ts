@@ -3,6 +3,8 @@ import { supabase } from "../../lib/supabase";
 import { ApiState } from "../types";
 import { getPaddleConfig } from "../../lib/paddle-config";
 
+const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+
 export interface Subscription {
   id: string;
   user_id: string;
@@ -138,7 +140,7 @@ const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
 
 export const fetchUserSubscription = createAsyncThunk(
   "subscription/fetchUserSubscription",
-  async (environment: string) => {
+  async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -191,9 +193,7 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
     if (!session?.user) {
       throw new Error("No authenticated user");
     }
-
-    // Get current environment
-    const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+    
     console.log(
       "🌍 Setting up realtime subscriptions for environment:",
       environment
@@ -211,7 +211,7 @@ export const setupRealtimeSubscriptions = createAsyncThunk(
         },
         () => {
           console.log("Real-time subscription change detected");
-          dispatch(fetchUserSubscription(environment));
+          dispatch(fetchUserSubscription());
         }
       )
       .subscribe();
@@ -363,14 +363,13 @@ export const hasActivePlan = (
 };
 
 // Helper function to check if user has Studio plan
-// Note: Currently Studio uses the same price ID as Pro, so this will need to be updated when Studio gets its own price ID
 export const hasStudioPlan = (state: {
   subscription: SubscriptionState;
 }): boolean => {
-  // For now, return false since Studio is coming soon
-  // When Studio is ready, this should check for the Studio price ID
-  // Example: return state.subscription.activeSubscriptions.some((sub) => sub.price_id === "pri_studio_price_id");
-  return false;
+  return state.subscription.activeSubscriptions.some(
+    (sub) =>
+      sub.price_id === getPaddleConfig().subscriptionPrices.studio // Studio plan
+  );
 };
 
 // Helper function to check if user has Pro or Studio plan (for features that require Pro+)
@@ -379,8 +378,8 @@ export const hasProOrStudioPlan = (state: {
 }): boolean => {
   return state.subscription.activeSubscriptions.some(
     (sub) =>
-      sub.price_id === "pri_01jxben1kf0pfntb8162sfxhba" || // Pro plan
-      sub.price_id === "pri_01jxxb51m8t8edd9w3wvw96bt4" // Studio plan
+      sub.price_id === getPaddleConfig().subscriptionPrices.pro || // Pro plan
+      sub.price_id === getPaddleConfig().subscriptionPrices.studio // Studio plan
   );
 };
 

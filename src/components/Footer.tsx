@@ -46,7 +46,7 @@ const Footer = () => {
               Terms of Service
             </Link>
             <Link
-              to="/workspace/login"
+              to="/login"
               className="text-brand-secondary hover:text-white text-sm transition-colors font-copy"
             >
               Login
