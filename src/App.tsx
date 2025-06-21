@@ -3,8 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
-  useNavigate,
+  Navigate
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
@@ -45,7 +44,7 @@ import { CreditSystem } from "./pages/help/CreditSystem";
 import { AIBestPractices } from "./pages/help/AIBestPractices";
 import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
-import { supabase } from "./lib/supabase";
+import { AuthEventListener } from "./components/AuthEventListener";
 
 // Shared Loading Component
 function SubscriptionLoadingSpinner() {
@@ -124,21 +123,10 @@ function SubscriptionProtectedRoute({
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session, loading } = useAuth();
-  const navigate = useNavigate();
   const { profile } = useSelector((state: RootState) => state.profile);
   const { status: subscriptionStatus } = useSelector(
     (state: RootState) => state.subscription
   );
-  useEffect(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event == "PASSWORD_RECOVERY") {
-        navigate(
-          `/workspace/reset-password?access_token=${session?.access_token}&refresh_token=${session?.refresh_token}&type=recovery`,
-          { replace: true }
-        );
-      }
-    });
-  }, [])
 
   useEffect(() => {
     if (session && !profile) {
@@ -180,6 +168,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <Navigation />
+          <AuthEventListener />
           <main>
             <Routes>
               <Route path="/" element={<Landing />} />
