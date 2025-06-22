@@ -195,7 +195,7 @@ export function Landing() {
                         {item.problem}
                       </h3>
                       <div className="flex items-center mt-2">
-                        <CheckCircle className="w-5 h-5 text-state-success mr-2" />
+                        <CheckCircle className="w-5 h-5 text-state-success mr-2 shrink-0" />
                         <p className="text-base text-state-success font-medium">{item.solution}</p>
                       </div>
                     </div>
