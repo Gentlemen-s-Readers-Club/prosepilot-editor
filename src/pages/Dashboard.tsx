@@ -15,7 +15,7 @@ import { AppDispatch, RootState } from '../store';
 import type { Book, Category, Language, Status } from '../store/types';
 import { BOOK_STATES, TEAM_ROLES } from '../lib/consts';
 import { CustomSelect, SelectOption } from '../components/ui/select';
-import { NewBookModal } from '../components/NewBookModal';
+import { NewBookDrawer } from '../components/NewBookDrawer';
 import { Helmet } from 'react-helmet';
 import Footer from '../components/Footer';
 import { useCredits } from '../hooks/useCredits';
@@ -48,7 +48,7 @@ export function Dashboard() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [showNewBookModal, setShowNewBookModal] = useState(false);
+  const [showNewBookDrawer, setShowNewBookDrawer] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
@@ -273,7 +273,7 @@ export function Dashboard() {
       return;
     }
 
-    setShowNewBookModal(true);
+    setShowNewBookDrawer(true);
   };
 
   if (loading || booksStatus === 'loading') {
@@ -281,9 +281,9 @@ export function Dashboard() {
       <div className="h-full">
         <div className="max-w-[1600px] mx-auto px-6 py-8">
           <div className="animate-pulse">
-            <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
-            <div className="flex gap-8">
-              <div className="w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
+            <div className="h-20 w-full lg:h-8 lg:w-48 bg-gray-200 rounded mb-8"></div>
+            <div className="flex gap-8 flex-col lg:flex-row">
+              <div className="w-full lg:w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-1">
                 {[1, 2, 3, 4].map((n) => (
                   <div key={n} className="aspect-[2/3] bg-gray-200 rounded-lg"></div>
@@ -647,9 +647,9 @@ export function Dashboard() {
         </div>
       </div>
 
-      <NewBookModal
-        isOpen={showNewBookModal}
-        onClose={() => setShowNewBookModal(false)}
+      <NewBookDrawer
+        isOpen={showNewBookDrawer}
+        onClose={() => setShowNewBookDrawer(false)}
       />
 
       <NoCreditsModal

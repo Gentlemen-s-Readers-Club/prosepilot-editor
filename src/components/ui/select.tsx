@@ -67,6 +67,10 @@ const customStyles: StylesConfig<SelectOption, boolean, GroupBase<SelectOption>>
       color: '#FFFFFF',
     },
   }),
+  menu: (styles) => ({
+    ...styles,
+    zIndex: 10,
+  }),
 } as StylesConfig<SelectOption, boolean, GroupBase<SelectOption>>;
 
 export function CustomSelect({ 
