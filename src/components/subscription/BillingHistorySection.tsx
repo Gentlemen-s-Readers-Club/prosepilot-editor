@@ -1,5 +1,7 @@
 import { useBillingHistory } from "../../hooks/useBillingHistory";
 import { Loader2, Download } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 export function BillingHistorySection() {
   const {
@@ -10,6 +12,14 @@ export function BillingHistorySection() {
     formatDate,
     fetchInvoiceUrl,
   } = useBillingHistory();
+  
+  // Get subscription status to determine if billing history should be shown
+  const { subscription } = useSelector((state: RootState) => state.subscription);
+
+  // Don't show billing history if user has no active subscription
+  if (!subscription?.status || subscription.status === 'canceled' || subscription.status === 'trialing') {
+    return null;
+  }
 
   if (loading) {
     return (
@@ -24,7 +34,7 @@ export function BillingHistorySection() {
     );
   }
 
-  if (error?.includes("No subscription found")) {
+  if (error?.includes("No subscription found") || error?.includes("non-2xx status code")) {
     return null;
   }
 
