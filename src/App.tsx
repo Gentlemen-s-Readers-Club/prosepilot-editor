@@ -174,22 +174,12 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
 
-<<<<<<< HEAD
 
               <Route  path="/login"
                 element={<AnonymousRoute><Login /></AnonymousRoute>}
               />
               <Route path="/signup"
                 element={<AnonymousRoute><Signup /></AnonymousRoute>}
-=======
-              <Route
-                path="/login"
-                element={session ? <Navigate to="/workspace" /> : <Login />}
-              />
-              <Route
-                path="/signup"
-                element={session ? <Navigate to="/workspace" /> : <Signup />}
->>>>>>> f2c9c62a9ef98a00f2ca73d5b4e19640514ebcc9
               />
               <Route
                 path="/forgot-password"
@@ -219,18 +209,13 @@ function App() {
 
               <Route
                 path="/workspace"
-<<<<<<< HEAD
                 element={
                   <ProtectedRoute><Dashboard /></ProtectedRoute>
                 }
-=======
-                element={session ? <Dashboard /> : <Navigate to="/login" />}
->>>>>>> f2c9c62a9ef98a00f2ca73d5b4e19640514ebcc9
               />
 
               <Route
                 path="/workspace/book/:id"
-<<<<<<< HEAD
                 element={
                   <ProtectedRoute><BookDetails /></ProtectedRoute>
                 }
@@ -252,21 +237,6 @@ function App() {
                 element={
                   <ProtectedRoute><Subscription /></ProtectedRoute>
                 }
-=======
-                element={session ? <BookDetails /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/workspace/chapter/:id"
-                element={session ? <ChapterEditor /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/workspace/profile"
-                element={session ? <EditProfile /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/workspace/subscription"
-                element={session ? <Subscription /> : <Navigate to="/login" />}
->>>>>>> f2c9c62a9ef98a00f2ca73d5b4e19640514ebcc9
               />
 
               {/* Studio Plan Protected Routes */}
