@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
@@ -33,9 +33,10 @@ import {
   fetchUserSubscription,
   setupRealtimeSubscriptions,
   clearRealtimeSubscription,
-  hasStudioPlan
+  hasStudioPlan,
 } from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
+import { useNewUserHandler } from "./hooks/useNewUserHandler";
 
 // Help Articles
 import { CreateFirstBook } from "./pages/help/CreateFirstBook";
@@ -126,6 +127,9 @@ function App() {
     (state: RootState) => state.subscription
   );
 
+  // Initialize the new user handler
+  useNewUserHandler();
+
   useEffect(() => {
     if (session && !profile) {
       dispatch(fetchProfile());
@@ -175,19 +179,24 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
 
-
-              <Route  path="/login"
+              <Route
+                path="/login"
                 element={session ? <Navigate to="/workspace" /> : <Login />}
               />
-              <Route path="/signup"
+              <Route
+                path="/signup"
                 element={session ? <Navigate to="/workspace" /> : <Signup />}
               />
-              <Route path="/forgot-password"
+              <Route
+                path="/forgot-password"
                 element={
                   session ? <Navigate to="/workspace" /> : <ForgotPassword />
                 }
               />
-              <Route path="/reset-password" element={session ? <ResetPassword /> : <Navigate to="/login" />} />
+              <Route
+                path="/reset-password"
+                element={session ? <ResetPassword /> : <Navigate to="/login" />}
+              />
 
               {/* Help Articles */}
               <Route
@@ -206,50 +215,24 @@ function App() {
 
               <Route
                 path="/workspace"
-                element={
-                  session ? (
-                    <Dashboard />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
+                element={session ? <Dashboard /> : <Navigate to="/login" />}
               />
 
               <Route
                 path="/workspace/book/:id"
-                element={
-                  session ? (
-                    <BookDetails />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
+                element={session ? <BookDetails /> : <Navigate to="/login" />}
               />
               <Route
                 path="/workspace/chapter/:id"
-                element={
-                  session ? (
-                    <ChapterEditor />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
+                element={session ? <ChapterEditor /> : <Navigate to="/login" />}
               />
               <Route
                 path="/workspace/profile"
-                element={
-                  session ? <EditProfile /> : <Navigate to="/login" />
-                }
+                element={session ? <EditProfile /> : <Navigate to="/login" />}
               />
               <Route
                 path="/workspace/subscription"
-                element={
-                  session ? (
-                    <Subscription />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
+                element={session ? <Subscription /> : <Navigate to="/login" />}
               />
 
               {/* Studio Plan Protected Routes */}

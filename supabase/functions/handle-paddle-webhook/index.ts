@@ -1,5 +1,48 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
+// Deno runtime API
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
+  serve(handler: (req: Request) => Promise<Response>): void;
+};
+
+// Paddle API types
+interface PaddleCustomer {
+  id: string;
+}
+
+interface PaddleSubscriptionResponse {
+  data?: {
+    customer?: PaddleCustomer;
+  };
+}
+
+interface PaddleWebhookEvent {
+  event_type: string;
+  data?: {
+    id?: string;
+    items?: Array<{
+      price?: {
+        id?: string;
+      };
+    }>;
+    status?: string;
+    customer?: PaddleCustomer;
+    custom_data?: {
+      user_id?: string;
+      environment?: string;
+      purchase_id?: string;
+      type?: string;
+    };
+    current_billing_period?: {
+      starts_at?: string;
+      ends_at?: string;
+    };
+  };
+}
+
 // Get the appropriate webhook secret based on environment
 function getWebhookSecret(environment: string) {
   return environment === "production"
@@ -169,7 +212,7 @@ Deno.serve(async (req) => {
 
 // Handle subscription-related events
 async function handleSubscriptionEvent(
-  eventData: any,
+  eventData: PaddleWebhookEvent,
   supabaseUrl: string,
   serviceRoleKey: string
 ) {
@@ -183,7 +226,7 @@ async function handleSubscriptionEvent(
   const subscriptionId = eventData.data?.id;
   const priceId = eventData.data?.items?.[0]?.price?.id;
   const status = eventData.data?.status;
-  const customerId = eventData.data?.customer?.id;
+  let customerId = eventData.data?.customer?.id;
 
   // Handle billing period data safely (may be null for some events)
   const currentPeriodStart =
@@ -192,8 +235,8 @@ async function handleSubscriptionEvent(
     eventData.data?.current_billing_period?.ends_at || null;
   const userId = eventData.data?.custom_data?.user_id;
 
-  // Validate required fields
-  if (!subscriptionId || !priceId || !status || !userId || !customerId) {
+  // Validate required fields (customer_id is not required)
+  if (!subscriptionId || !priceId || !status || !userId) {
     console.error("Missing required fields in subscription webhook data:", {
       subscriptionId,
       priceId,
@@ -207,7 +250,87 @@ async function handleSubscriptionEvent(
     });
   }
 
+  // If customer_id is missing, try to fetch it from Paddle
+  if (!customerId) {
+    console.log(
+      "Customer ID missing in webhook data, fetching from Paddle API"
+    );
+    try {
+      const paddleApiKey = Deno.env.get("PADDLE_API_KEY");
+      const paddleApiBaseUrl =
+        environment === "production"
+          ? "https://api.paddle.com"
+          : "https://sandbox-api.paddle.com";
+
+      if (!paddleApiKey) {
+        throw new Error("PADDLE_API_KEY is not set");
+      }
+
+      const subscriptionResponse = await fetch(
+        `${paddleApiBaseUrl}/subscriptions/${subscriptionId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${paddleApiKey}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (subscriptionResponse.ok) {
+        const subscriptionData =
+          (await subscriptionResponse.json()) as PaddleSubscriptionResponse;
+        customerId = subscriptionData.data?.customer?.id;
+        if (customerId) {
+          console.log(
+            "Successfully fetched customer ID from Paddle:",
+            customerId
+          );
+        }
+      } else {
+        console.warn("Failed to fetch customer ID from Paddle API");
+      }
+    } catch (error) {
+      console.error("Error fetching customer ID from Paddle:", error);
+    }
+  }
+
+  // If we still don't have a customer ID, check existing subscriptions
+  if (!customerId) {
+    console.log("Checking existing subscriptions for customer ID");
+    const existingSubResponse = await fetch(
+      `${supabaseUrl}/rest/v1/subscriptions?user_id=eq.${userId}&environment=eq.${environment}&select=customer_id`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${serviceRoleKey}`,
+          "Content-Type": "application/json",
+          apikey: serviceRoleKey,
+        },
+      }
+    );
+
+    if (existingSubResponse.ok) {
+      const existingSubs = await existingSubResponse.json();
+      if (
+        existingSubs &&
+        existingSubs.length > 0 &&
+        existingSubs[0].customer_id
+      ) {
+        customerId = existingSubs[0].customer_id;
+        console.log(
+          "Found customer ID from existing subscription:",
+          customerId
+        );
+      }
+    }
+  }
+
   // Check if the user exists
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
   const userCheckResponse = await fetch(
     `${supabaseUrl}/auth/v1/admin/users/${userId}`,
     {
@@ -228,6 +351,10 @@ async function handleSubscriptionEvent(
   }
 
   // Check for existing active subscriptions for this user
+  if (!environment) {
+    throw new Error("Environment is required");
+  }
+
   const existingSubscriptionsResponse = await fetch(
     `${supabaseUrl}/rest/v1/subscriptions?user_id=eq.${userId}&status=in.(active,trialing)&environment=eq.${environment}&select=*`,
     {
@@ -403,7 +530,7 @@ async function handleSubscriptionEvent(
 
 // Handle transaction-related events (for credit purchases)
 async function handleTransactionEvent(
-  eventData: any,
+  eventData: PaddleWebhookEvent,
   supabaseUrl: string,
   serviceRoleKey: string
 ) {
