@@ -6,7 +6,6 @@ import narratorsReducer from './slices/narratorsSlice';
 import literatureStylesReducer from './slices/literatureStylesSlice';
 import profileReducer from './slices/profileSlice';
 import booksReducer from './slices/booksSlice';
-import teamsReducer from './slices/teamsSlice';
 import subscriptionReducer from './slices/subscriptionSlice';
 import authReducer from './slices/authSlice';
 import creditPurchasesReducer from './slices/creditPurchasesSlice';
@@ -19,7 +18,6 @@ const rootReducer = combineReducers({
   literatureStyles: literatureStylesReducer,
   profile: profileReducer,
   books: booksReducer,
-  teams: teamsReducer,
   subscription: subscriptionReducer,
   auth: authReducer,
   creditPurchases: creditPurchasesReducer,

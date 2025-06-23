@@ -3,14 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { clearProfile } from "../store/slices/profileSlice";
-import { hasStudioPlan } from "../store/slices/subscriptionSlice";
 import {
   LayoutDashboard,
   BookOpen,
   MessageCircle,
   User,
   CreditCard,
-  Users,
   LogOut,
   Menu,
   X,
@@ -31,7 +29,6 @@ export function Navigation() {
   const dispatch = useDispatch<AppDispatch>();
   const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
-  const hasStudio = useSelector(hasStudioPlan);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -172,15 +169,6 @@ export function Navigation() {
                       Manage Subscription
                     </span>
                   </DropdownMenuItem>
-                  {hasStudio && (
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={() => navigate("/workspace/teams")}
-                    >
-                      <Users className="mr-2 h-4 w-4 text-brand-accent" />
-                      <span className="text-base-paragraph">Manage Teams</span>
-                    </DropdownMenuItem>
-                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
@@ -288,19 +276,6 @@ export function Navigation() {
           ) : (
             session && (
               <>
-                {hasStudio && (
-                  <button
-                    onClick={() => {
-                      navigate("/workspace/teams");
-                      closeMobileMenu();
-                    }}
-                    className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
-                  >
-                    <Users className="h-5 w-5 text-brand-accent" />
-                    <span>Teams</span>
-                  </button>
-                )}
-
                 {profile && (
                   <>
                     <div className="border-t border-gray-200 my-2 pt-2">

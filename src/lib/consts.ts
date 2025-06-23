@@ -10,12 +10,6 @@ export const BOOK_STATES: Record<Status, string> = {
   'error': 'Error'
 };
 
-export const TEAM_ROLES: Record<string, string> = {
-  'admin': 'Admin',
-  'editor': 'Editor',
-  'viewer': 'Viewer'
-};
-
 export type Plan = {
   id: string;
   name: string;

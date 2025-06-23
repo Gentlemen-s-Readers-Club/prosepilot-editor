@@ -343,12 +343,18 @@ export function EditProfile() {
       if (!session?.user.id) {
         throw new Error('User ID not found');
       }
-      
-      const { error } = await supabase.auth.admin.deleteUser(
-        session.user.id
-      );
 
-      if (error) throw error;
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
 
       await supabase.auth.signOut();
       navigate('/');
@@ -754,16 +760,16 @@ export function EditProfile() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="bg-state-error-light border border-state-error rounded-lg p-4">
                 <div className="flex">
                   <div className="shrink-0">
-                    <AlertCircle className="h-5 w-5 text-red-400" />
+                    <AlertCircle className="h-5 w-5 text-state-error" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
+                    <h3 className="text-sm font-medium text-state-error">
                       Warning
                     </h3>
-                    <div className="mt-2 text-sm text-red-700">
+                    <div className="mt-2 text-sm text-state-error">
                       <ul className="list-disc pl-5 space-y-1">
                         <li>All your books and writing will be permanently deleted</li>
                         <li>Your subscription will be cancelled immediately</li>
@@ -774,8 +780,8 @@ export function EditProfile() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="deleteConfirmation">
-                  Type your email <span className="font-medium">{profile?.email}</span> to confirm
+                <Label htmlFor="deleteConfirmation" className='font-normal text-base-paragraph'>
+                  Type your email <span className="font-bold text-base-heading">{profile?.email}</span> to confirm
                 </Label>
                 <Input
                   id="deleteConfirmation"

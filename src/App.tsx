@@ -15,8 +15,6 @@ import { ChapterEditor } from "./pages/ChapterEditor";
 import { EditProfile } from "./pages/EditProfile";
 import { Subscription } from "./pages/Subscription";
 import { Documentation } from "./pages/Documentation";
-import { Teams } from "./pages/Teams";
-import { TeamDetails } from "./pages/TeamDetails";
 import { Landing } from "./pages/Landing";
 import { Pricing } from "./pages/Pricing";
 import { Support } from "./pages/Support";
@@ -33,7 +31,6 @@ import {
   fetchUserSubscription,
   setupRealtimeSubscriptions,
   clearRealtimeSubscription,
-  hasStudioPlan,
 } from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
 
@@ -83,33 +80,33 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 // Protected Route Component for Studio Plan
-function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
-  const hasStudio = useSelector(hasStudioPlan);
-  const { status: subscriptionStatus } = useSelector(
-    (state: RootState) => state.subscription
-  );
+// function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
+//   const hasStudio = useSelector(hasStudioPlan);
+//   const { status: subscriptionStatus } = useSelector(
+//     (state: RootState) => state.subscription
+//   );
 
-  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-  if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
-    return <LoadingSpinner message="Checking subscription..." />;
-  }
+//   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
+//   if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
+//     return <LoadingSpinner message="Checking subscription..." />;
+//   }
 
-  // If there was an error loading subscription data, still allow access
-  // This prevents users from being locked out due to temporary API issues
-  if (subscriptionStatus === "error") {
-    console.warn(
-      "Subscription data failed to load, allowing access to prevent lockout"
-    );
-    return <>{children}</>;
-  }
+//   // If there was an error loading subscription data, still allow access
+//   // This prevents users from being locked out due to temporary API issues
+//   if (subscriptionStatus === "error") {
+//     console.warn(
+//       "Subscription data failed to load, allowing access to prevent lockout"
+//     );
+//     return <>{children}</>;
+//   }
 
-  // Only redirect if subscription data has been successfully loaded and user doesn't have Studio plan
-  if (subscriptionStatus === "success" && !hasStudio) {
-    return <Navigate to="/workspace/subscription" replace />;
-  }
+//   // Only redirect if subscription data has been successfully loaded and user doesn't have Studio plan
+//   if (subscriptionStatus === "success" && !hasStudio) {
+//     return <Navigate to="/workspace/subscription" replace />;
+//   }
 
-  return <>{children}</>;
-}
+//   return <>{children}</>;
+// }
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -242,20 +239,6 @@ function App() {
                 path="/workspace/subscription"
                 element={
                   <ProtectedRoute><Subscription /></ProtectedRoute>
-                }
-              />
-
-              {/* Studio Plan Protected Routes */}
-              <Route
-                path="/workspace/teams"
-                element={
-                  <ProtectedRoute><StudioProtectedRoute><Teams /></StudioProtectedRoute></ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/teams/:teamId"
-                element={
-                  <ProtectedRoute><StudioProtectedRoute><TeamDetails /></StudioProtectedRoute></ProtectedRoute>
                 }
               />
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, AlertCircle, Loader2, BookOpen, Lightbulb, Sparkles, Globe } from 'lucide-react';
 import { 
   Drawer, 
@@ -11,13 +11,12 @@ import { Label } from './ui/label';
 import { CustomSelect, SelectOption, mapToSelectOptions } from './ui/select';
 import { useToast } from '../hooks/use-toast';
 import { AppDispatch, RootState } from '../store';
-import type { Category, Language, Tone, Narrator, LiteratureStyle, Team } from '../store/types';
+import type { Category, Language, Tone, Narrator, LiteratureStyle } from '../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTones } from '../store/slices/tonesSlice';
 import { fetchNarrators } from '../store/slices/narratorsSlice';
 import { fetchLiteratureStyles } from '../store/slices/literatureStylesSlice';
-import { fetchUserTeams } from '../store/slices/teamsSlice';
-import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
+import { hasProOrStudioPlan } from '../store/slices/subscriptionSlice';
 
 interface ValidationIssue {
   type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration' | 'content_coherence';
@@ -27,11 +26,6 @@ interface ValidationIssue {
 interface NewBookDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-interface OwnerOption extends SelectOption {
-  type: 'user' | 'team';
-  team?: Team;
 }
 
 export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
@@ -49,45 +43,24 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
   const [promptCharCount, setPromptCharCount] = useState(0);
   
   // Add validation error states
-  const [ownerError, setOwnerError] = useState<string | null>(null);
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
   const [languageError, setLanguageError] = useState<string | null>(null);
   
   // Get form options from Redux store
   const userHasProPlan = useSelector(hasProOrStudioPlan);
-  const userHasStudioPlan = useSelector(hasStudioPlan);
   const { items: categories } = useSelector((state: RootState) => state.categories);
   const { items: languages } = useSelector((state: RootState) => state.languages);
   const { items: tones, status: tonesStatus } = useSelector((state: RootState) => state.tones);
   const { items: narrators, status: narratorsStatus } = useSelector((state: RootState) => state.narrators);
   const { items: literatureStyles, status: literatureStylesStatus } = useSelector((state: RootState) => state.literatureStyles);
-  const { teams, status: teamsStatus } = useSelector((state: RootState) => state.teams);
   const { profile } = useSelector((state: RootState) => state.profile);
 
   // Selection states
-  const [selectedOwner, setSelectedOwner] = useState<OwnerOption | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<SelectOption[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<SelectOption | null>(null);
   const [selectedNarrator, setSelectedNarrator] = useState<SelectOption | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<SelectOption | null>(null);
   const [selectedTone, setSelectedTone] = useState<SelectOption | null>(null);
-
-  // Create owner options (user + teams where user can create books)
-  const ownerOptions: OwnerOption[] = useMemo(() => [
-    {
-      value: 'user',
-      label: `Personal (${profile?.full_name || 'Me'})`,
-      type: 'user'
-    },
-    ...teams
-      .filter(team => team.user_role === 'admin' || team.user_role === 'editor')
-      .map(team => ({
-        value: team.id,
-        label: team.name,
-        type: 'team' as const,
-        team
-      }))
-  ], [profile?.full_name, teams]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -101,9 +74,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
         }
         if (literatureStylesStatus === 'idle') {
           promises.push(dispatch(fetchLiteratureStyles()).unwrap());
-        }
-        if (teamsStatus === 'idle') {
-          promises.push(dispatch(fetchUserTeams()).unwrap());
         }
 
         await Promise.all(promises);
@@ -121,15 +91,13 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
     };
 
     loadData();
-  }, [dispatch, literatureStylesStatus, narratorsStatus, teamsStatus, toast, tonesStatus, onClose]);
+  }, [dispatch, literatureStylesStatus, narratorsStatus, toast, tonesStatus, onClose]);
 
   useEffect(() => {
     if (!isOpen) {
       resetForm();
-    } else {
-      setSelectedOwner(ownerOptions[0]);  
     }
-  }, [isOpen, ownerOptions]);
+  }, [isOpen]);
 
   // Update character count
   useEffect(() => {
@@ -138,7 +106,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
 
   const resetForm = () => {
     setPrompt('');
-    setSelectedOwner(null);
     setSelectedCategories([]);
     setSelectedLanguage(null);
     setSelectedNarrator(null);
@@ -150,7 +117,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
   };
   
   const handleSubmit = async () => {
-    if (!selectedLanguage || !selectedOwner) return;
+    if (!selectedLanguage) return;
     
     setIsSubmitting(true);
     setError(null);
@@ -165,13 +132,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
         narrator: selectedNarrator?.narrator as Narrator | undefined,
         tone: selectedTone?.tone as Tone | undefined,
         literatureStyle: selectedStyle?.style as LiteratureStyle | undefined,
-        author_name: profile?.full_name || 'Anonymous',
-        // Add owner information
-        owner: {
-          type: selectedOwner.type,
-          id: selectedOwner.type === 'user' ? session?.user.id : selectedOwner.value,
-          team_id: selectedOwner.type === 'team' ? selectedOwner.value : null
-        }
+        author_name: profile?.full_name || 'Anonymous'
       };
       
       // Call the API to generate the book
@@ -189,8 +150,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
       }
 
       const result = await response.json();
-
-      console.log(result);
 
       if (!result.success) {
         setError(result.message || "Failed to create book. Please try again later or contact support.");
@@ -229,16 +188,10 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
 
     if (currentStep === 2) {
       // Reset validation errors
-      setOwnerError(null);
       setCategoriesError(null);
       setLanguageError(null);
       
       let hasErrors = false;
-      
-      if (!selectedOwner) {
-        setOwnerError("Please select a book owner");
-        hasErrors = true;
-      }
       
       if (selectedCategories.length === 0) {
         setCategoriesError("Please select at least one category");
@@ -262,7 +215,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
     setCurrentStep(currentStep - 1);
   };
 
-  const canSubmit = prompt && selectedLanguage && selectedCategories.length > 0 && selectedOwner;
+  const canSubmit = prompt && selectedLanguage && selectedCategories.length > 0;
 
   return (
     <Drawer open={isOpen} onOpenChange={(open: boolean) => {
@@ -406,35 +359,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                   </div>
 
                   <div className="space-y-4">
-                    {userHasStudioPlan && ownerOptions.length > 0 && (
-                      <div className="space-y-2">
-                        <Label htmlFor="owner" className="text-gray-700 flex items-center gap-1">
-                          Book Owner
-                          <span className="text-state-error">*</span>
-                        </Label>
-                        <CustomSelect
-                          id="owner"
-                          value={selectedOwner}
-                          onChange={(newValue) => {
-                            setSelectedOwner(newValue as OwnerOption);
-                            setOwnerError(null);
-                          }}
-                          options={ownerOptions}
-                          placeholder="Select who will own this book"
-                          isDisabled={isSubmitting}
-                        />
-                        {ownerError && (
-                          <p className="text-sm text-red-600 mt-1">{ownerError}</p>
-                        )}
-                        <p className="text-xs text-gray-500">
-                          {selectedOwner?.type === 'team' 
-                            ? `This book will be created for the team "${selectedOwner.team?.name}" and can be edited by team admins and editors.`
-                            : 'This book will be created as a personal book that only you can edit.'
-                          }
-                        </p>
-                      </div>
-                    )}
-
                     <div className="space-y-2">
                       <Label htmlFor="categories" className="text-gray-700 flex items-center gap-1">
                         Categories
