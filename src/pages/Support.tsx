@@ -64,7 +64,7 @@ export function Support() {
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('sent-support-email', {
+      const { error } = await supabase.functions.invoke('sent-support-email', {
         body: {
           name: formData.name,
           email: formData.email,
@@ -82,12 +82,16 @@ export function Support() {
           variant: "destructive",
         });
       } else {
-        console.log('Support email sent:', data);
         toast({
           title: "Success",
           description: "Support email sent successfully.",
           variant: "default",
         });
+        setSelectedSubject(subjectOptions[0]);
+        setValue('subject', '');
+        setValue('name', '');
+        setValue('email', '');
+        setValue('message', '');
       }
     } catch (error) {
       console.error('Error sending support email:', error);
