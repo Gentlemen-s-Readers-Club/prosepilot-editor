@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '../../lib/supabase';
 import { ApiState } from '../types';
+import { RootState } from '../index';
 
 export interface Profile {
   id: string;
@@ -24,10 +25,14 @@ const initialState: ProfileState = {
   error: null,
 };
 
-export const fetchProfile = createAsyncThunk(
+export const fetchProfile = createAsyncThunk<
+  Profile,
+  void,
+  { state: RootState }
+>(
   'profile/fetchProfile',
   async (_, { getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
     
     if (!session?.user) {
@@ -86,10 +91,14 @@ export const fetchProfile = createAsyncThunk(
   }
 );
 
-export const updateProfile = createAsyncThunk(
+export const updateProfile = createAsyncThunk<
+  Profile,
+  Partial<Profile>,
+  { state: RootState }
+>(
   'profile/updateProfile',
-  async (updates: Partial<Profile>, { getState }) => {
-    const state = getState() as any;
+  async (updates, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
     
     if (!session?.user) {
@@ -147,14 +156,18 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-export const updateNewsletterPreferences = createAsyncThunk(
-  'profile/updateNewsletterPreferences',
-  async (preferences: {
+export const updateNewsletterPreferences = createAsyncThunk<
+  Profile,
+  {
     newsletter_product?: boolean;
     newsletter_marketing?: boolean;
     newsletter_writing?: boolean;
-  }, { getState }) => {
-    const state = getState() as any;
+  },
+  { state: RootState }
+>(
+  'profile/updateNewsletterPreferences',
+  async (preferences, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
     
     if (!session?.user) {

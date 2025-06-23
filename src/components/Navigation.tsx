@@ -25,7 +25,6 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { supabase } from "../lib/supabase";
-import { clearSession } from "../store/slices/authSlice";
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -42,8 +41,6 @@ export function Navigation() {
       if (error) {
         throw new Error(error.message);
       }
-
-      dispatch(clearSession());
       dispatch(clearProfile());
       navigate("/login");
     } catch (error) {

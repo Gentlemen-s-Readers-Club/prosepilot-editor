@@ -27,7 +27,7 @@ import { Toaster } from "./components/Toaster";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
-import { setSession } from './store/slices/authSlice';
+import { setSession, setStatus } from './store/slices/authSlice';
 import { fetchProfile } from "./store/slices/profileSlice";
 import {
   fetchUserSubscription,
@@ -60,14 +60,24 @@ function LoadingSpinner({ message }: { message: string }) {
 
 // Protected Route For Anonymous Users
 function AnonymousRoute({ children }: { children: React.ReactNode }) {
-  const { session } = useSelector((state: RootState) => (state.auth));
+  const { session, status } = useSelector((state: RootState) => (state.auth));
+  
+  // Show loading while session is being fetched or if it hasn't been fetched yet
+  if(status === "loading") {
+    return <LoadingSpinner message="Checking session..." />;
+  }
 
   return session ? <Navigate to="/workspace" /> : <>{children}</>;
 }
 
 // Protected Route For Logged In Users
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session } = useSelector((state: RootState) => (state.auth));
+  const { session, status } = useSelector((state: RootState) => (state.auth));
+
+  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
+  if (status === "loading") {
+    return <LoadingSpinner message="Checking session..." />;
+  }
 
   return !session ? <Navigate to="/login" /> : <>{children}</>;
 }
@@ -112,8 +122,12 @@ function App() {
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      dispatch(setSession(session))
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if(event === "INITIAL_SESSION") {
+        dispatch(setStatus("ready"))
+      } else {
+        dispatch(setSession(session))
+      }
     })
     return () => subscription.unsubscribe()
   }, [dispatch]);

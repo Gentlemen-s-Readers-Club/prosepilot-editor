@@ -87,7 +87,7 @@ export function EditProfile() {
     };
 
     fetchUserIdentities();
-  }, []);
+  }, [session?.user.identities]);
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -127,11 +127,8 @@ export function EditProfile() {
     try {
       setLoading(true);
       await dispatch(updateProfile({
-        updates: {
-          full_name: profileData.full_name,
-          avatar_url: profileData.avatar_url
-        },
-        session
+        full_name: profileData.full_name,
+        avatar_url: profileData.avatar_url
       }));
       toast({
         title: "Success",
@@ -152,7 +149,7 @@ export function EditProfile() {
   async function handleNewsletterSave() {
     try {
       setLoading(true);
-      await dispatch(updateNewsletterPreferences({ preferences: newsletterPreferences, session }));
+      await dispatch(updateNewsletterPreferences(newsletterPreferences));
       toast({
         title: "Success",
         description: "Newsletter preferences updated successfully",

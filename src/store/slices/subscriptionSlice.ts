@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { supabase } from "../../lib/supabase";
 import { ApiState } from "../types";
 import { getPaddleConfig } from "../../lib/paddle-config";
+import { RootState } from "../index";
 
 const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
 
@@ -138,11 +139,19 @@ const calculateCurrentPlan = (subscriptions: Subscription[]): string | null => {
   return null;
 };
 
-export const fetchUserSubscription = createAsyncThunk(
+export const fetchUserSubscription = createAsyncThunk<
+  Subscription[],
+  void,
+  { state: RootState }
+>(
   "subscription/fetchUserSubscription",
   async (_, { getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
+
+    if (!session?.user) {
+      throw new Error("No authenticated user");
+    }
 
     console.log("🌍 Fetching subscriptions for environment:", environment);
 
@@ -178,11 +187,19 @@ export const fetchUserSubscription = createAsyncThunk(
   }
 );
 
-export const setupRealtimeSubscriptions = createAsyncThunk(
+export const setupRealtimeSubscriptions = createAsyncThunk<
+  any,
+  void,
+  { state: RootState; dispatch: any }
+>(
   "subscription/setupRealtimeSubscriptions",
   async (_, { dispatch, getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
+    
+    if (!session?.user) {
+      throw new Error("No authenticated user");
+    }
     
     console.log(
       "🌍 Setting up realtime subscriptions for environment:",

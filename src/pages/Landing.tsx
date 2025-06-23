@@ -107,13 +107,12 @@ export function Landing() {
                 <div className="lg:flex-1 shrink-0">
                   <div className="relative max-md:pt-4 md:mx-4 lg:mx-0">
                     <video
-                      className="w-full rounded-lg shadow-2xl"
+                      className="w-full rounded-lg shadow-2xl aspect-video object-cover"
                       src="/videos/masthead.mp4"
                       autoPlay
                       muted
                       loop
                       playsInline
-                      poster="/images/masthead.jpg"
                     />
                     {/* Bolt.new Logo Top Right */}
                     <a

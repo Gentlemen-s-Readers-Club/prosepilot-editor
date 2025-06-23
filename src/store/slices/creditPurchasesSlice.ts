@@ -45,10 +45,14 @@ const initialState: CreditPurchasesState = {
 };
 
 // Async thunks
-export const fetchCreditPackages = createAsyncThunk(
+export const fetchCreditPackages = createAsyncThunk<
+  CreditPackage[],
+  void,
+  { state: RootState }
+>(
   "creditPurchases/fetchPackages",
   async (_, { getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
 
     const { data, error } = await supabase.functions.invoke(
@@ -89,10 +93,14 @@ export const fetchCreditPackages = createAsyncThunk(
   }
 );
 
-export const fetchUserPurchases = createAsyncThunk(
+export const fetchUserPurchases = createAsyncThunk<
+  CreditPurchase[],
+  void,
+  { state: RootState }
+>(
   "creditPurchases/fetchPurchases",
   async (_, { getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user) {
@@ -120,10 +128,14 @@ export const fetchUserPurchases = createAsyncThunk(
   }
 );
 
-export const createCreditPurchase = createAsyncThunk(
+export const createCreditPurchase = createAsyncThunk<
+  CreditPurchase,
+  string,
+  { state: RootState }
+>(
   "creditPurchases/createPurchase",
-  async (packageId: string, { getState }) => {
-    const state = getState() as any;
+  async (packageId, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user) {

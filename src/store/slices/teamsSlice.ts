@@ -11,6 +11,7 @@ import {
   UpdateMemberData,
   TeamRole
 } from '../types';
+import { RootState } from '../index';
 
 interface TeamsState extends ApiState {
   teams: Team[];
@@ -31,10 +32,14 @@ const initialState: TeamsState = {
 };
 
 // Fetch user's teams
-export const fetchUserTeams = createAsyncThunk(
+export const fetchUserTeams = createAsyncThunk<
+  Team[],
+  void,
+  { state: RootState }
+>(
   'teams/fetchUserTeams',
   async (_, { getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
 
     const { data, error } = await supabase
@@ -60,10 +65,14 @@ export const fetchUserTeams = createAsyncThunk(
 );
 
 // Create new team
-export const createTeam = createAsyncThunk(
+export const createTeam = createAsyncThunk<
+  Team,
+  CreateTeamData,
+  { state: RootState }
+>(
   'teams/createTeam',
-  async (teamData: CreateTeamData, { getState }) => {
-    const state = getState() as any;
+  async (teamData, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     // Get the current user
@@ -105,10 +114,14 @@ export const updateTeam = createAsyncThunk(
 );
 
 // Delete team
-export const deleteTeam = createAsyncThunk(
+export const deleteTeam = createAsyncThunk<
+  string,
+  string,
+  { state: RootState }
+>(
   'teams/deleteTeam',
-  async (teamId: string, { getState }) => {
-    const state = getState() as any;
+  async (teamId, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user.id) {
@@ -145,10 +158,14 @@ export const fetchTeamMembers = createAsyncThunk(
 );
 
 // Invite members
-export const inviteMembers = createAsyncThunk(
+export const inviteMembers = createAsyncThunk<
+  TeamInvitation[],
+  { teamId: string; inviteData: InviteMembersData },
+  { state: RootState }
+>(
   'teams/inviteMembers',
-  async ({ teamId, inviteData }: { teamId: string; inviteData: InviteMembersData }, { getState }) => {
-    const state = getState() as any;
+  async ({ teamId, inviteData }, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     // Get the current user
@@ -195,11 +212,15 @@ export const updateTeamMember = createAsyncThunk(
 );
 
 // Remove team member
-export const removeTeamMember = createAsyncThunk(
+export const removeTeamMember = createAsyncThunk<
+  string,
+  string,
+  { state: RootState }
+>(
   'teams/removeTeamMember',
-    async (memberId: string, { getState }) => {
-      const state = getState() as any;
-      const session = state.auth.session;
+  async (memberId, { getState }) => {
+    const state = getState();
+    const session = state.auth.session;
 
     if (!session?.user.id) {
       throw new Error('User not authenticated');
@@ -216,10 +237,14 @@ export const removeTeamMember = createAsyncThunk(
 );
 
 // Fetch team invitations
-export const fetchTeamInvitations = createAsyncThunk(
+export const fetchTeamInvitations = createAsyncThunk<
+  TeamInvitation[],
+  string,
+  { state: RootState }
+>(
   'teams/fetchTeamInvitations',
-  async (teamId: string, { getState }) => {
-    const state = getState() as any;
+  async (teamId, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user.id) {
@@ -243,10 +268,14 @@ export const fetchTeamInvitations = createAsyncThunk(
 );
 
 // Cancel invitation
-export const cancelInvitation = createAsyncThunk(
+export const cancelInvitation = createAsyncThunk<
+  string,
+  string,
+  { state: RootState }
+>(
   'teams/cancelInvitation',
-  async (invitationId: string, { getState }) => {
-    const state = getState() as any;
+  async (invitationId, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user.id) {
@@ -264,10 +293,14 @@ export const cancelInvitation = createAsyncThunk(
 );
 
 // Accept invitation
-export const acceptInvitation = createAsyncThunk(
+export const acceptInvitation = createAsyncThunk<
+  any,
+  string,
+  { state: RootState }
+>(
   'teams/acceptInvitation',
-  async (token: string, { getState }) => {
-    const state = getState() as any;
+  async (token, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user.id) {  
@@ -286,10 +319,14 @@ export const acceptInvitation = createAsyncThunk(
 );
 
 // Fetch team activity logs
-export const fetchTeamActivity = createAsyncThunk(
+export const fetchTeamActivity = createAsyncThunk<
+  TeamActivityLog[],
+  { teamId: string; limit?: number },
+  { state: RootState }
+>(
   'teams/fetchTeamActivity',
-  async ({ teamId, limit = 50 }: { teamId: string; limit?: number }, { getState }) => {
-    const state = getState() as any;
+  async ({ teamId, limit = 50 }, { getState }) => {
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user.id) {  
@@ -312,10 +349,14 @@ export const fetchTeamActivity = createAsyncThunk(
 );
 
 // Get user's pending invitations
-export const fetchUserInvitations = createAsyncThunk(
+export const fetchUserInvitations = createAsyncThunk<
+  TeamInvitation[],
+  void,
+  { state: RootState }
+>(
   'teams/fetchUserInvitations',
   async (_, { getState }) => {
-    const state = getState() as any;
+    const state = getState();
     const session = state.auth.session;
 
     if (!session?.user.id) {
