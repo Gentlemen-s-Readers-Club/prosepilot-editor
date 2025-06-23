@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
@@ -33,9 +33,10 @@ import {
   fetchUserSubscription,
   setupRealtimeSubscriptions,
   clearRealtimeSubscription,
-  hasStudioPlan
+  hasStudioPlan,
 } from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
+import { useNewUserHandler } from "./hooks/useNewUserHandler";
 
 // Help Articles
 import { CreateFirstBook } from "./pages/help/CreateFirstBook";
@@ -118,6 +119,9 @@ function App() {
     (state: RootState) => state.subscription
   );
 
+  // Initialize the new user handler
+  useNewUserHandler();
+
   useEffect(() => {
     dispatch(getSession());
 
@@ -170,19 +174,33 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
 
+<<<<<<< HEAD
 
               <Route  path="/login"
                 element={<AnonymousRoute><Login /></AnonymousRoute>}
               />
               <Route path="/signup"
                 element={<AnonymousRoute><Signup /></AnonymousRoute>}
+=======
+              <Route
+                path="/login"
+                element={session ? <Navigate to="/workspace" /> : <Login />}
               />
-              <Route path="/forgot-password"
+              <Route
+                path="/signup"
+                element={session ? <Navigate to="/workspace" /> : <Signup />}
+>>>>>>> f2c9c62a9ef98a00f2ca73d5b4e19640514ebcc9
+              />
+              <Route
+                path="/forgot-password"
                 element={
                   <AnonymousRoute><ForgotPassword /></AnonymousRoute>
                 }
               />
-              <Route path="/reset-password" element={session ? <ResetPassword /> : <Navigate to="/login" />} />
+              <Route
+                path="/reset-password"
+                element={session ? <ResetPassword /> : <Navigate to="/login" />}
+              />
 
               {/* Help Articles */}
               <Route
@@ -201,13 +219,18 @@ function App() {
 
               <Route
                 path="/workspace"
+<<<<<<< HEAD
                 element={
                   <ProtectedRoute><Dashboard /></ProtectedRoute>
                 }
+=======
+                element={session ? <Dashboard /> : <Navigate to="/login" />}
+>>>>>>> f2c9c62a9ef98a00f2ca73d5b4e19640514ebcc9
               />
 
               <Route
                 path="/workspace/book/:id"
+<<<<<<< HEAD
                 element={
                   <ProtectedRoute><BookDetails /></ProtectedRoute>
                 }
@@ -229,6 +252,21 @@ function App() {
                 element={
                   <ProtectedRoute><Subscription /></ProtectedRoute>
                 }
+=======
+                element={session ? <BookDetails /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/workspace/chapter/:id"
+                element={session ? <ChapterEditor /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/workspace/profile"
+                element={session ? <EditProfile /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/workspace/subscription"
+                element={session ? <Subscription /> : <Navigate to="/login" />}
+>>>>>>> f2c9c62a9ef98a00f2ca73d5b4e19640514ebcc9
               />
 
               {/* Studio Plan Protected Routes */}

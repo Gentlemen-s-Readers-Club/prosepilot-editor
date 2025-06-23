@@ -24,6 +24,10 @@ export function BillingHistorySection() {
     );
   }
 
+  if (error?.includes("No subscription found")) {
+    return null;
+  }
+
   if (error) {
     return (
       <div className="space-y-4">
@@ -38,16 +42,7 @@ export function BillingHistorySection() {
   }
 
   if (!transactions.length) {
-    return (
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading">
-          Billing History
-        </h2>
-        <div className="text-base-muted text-center py-8">
-          No billing history available
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
