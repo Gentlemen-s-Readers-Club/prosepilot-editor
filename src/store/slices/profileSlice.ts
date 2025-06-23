@@ -88,8 +88,9 @@ export const fetchProfile = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
   'profile/updateProfile',
-  async (updates: Partial<Profile>) => {
-    const { data: { session } } = await supabase.auth.getSession();
+  async (updates: Partial<Profile>, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
     
     if (!session?.user) {
       throw new Error('No authenticated user');
@@ -152,8 +153,9 @@ export const updateNewsletterPreferences = createAsyncThunk(
     newsletter_product?: boolean;
     newsletter_marketing?: boolean;
     newsletter_writing?: boolean;
-  }) => {
-    const { data: { session } } = await supabase.auth.getSession();
+  }, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
     
     if (!session?.user) {
       throw new Error('No authenticated user');

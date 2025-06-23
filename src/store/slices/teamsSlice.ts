@@ -11,7 +11,6 @@ import {
   UpdateMemberData,
   TeamRole
 } from '../types';
-import { Session } from '@supabase/supabase-js';
 
 interface TeamsState extends ApiState {
   teams: Team[];
@@ -34,7 +33,10 @@ const initialState: TeamsState = {
 // Fetch user's teams
 export const fetchUserTeams = createAsyncThunk(
   'teams/fetchUserTeams',
-  async (session: Session | null) => {
+  async (_, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     const { data, error } = await supabase
       .from('teams')
       .select(`
@@ -60,7 +62,10 @@ export const fetchUserTeams = createAsyncThunk(
 // Create new team
 export const createTeam = createAsyncThunk(
   'teams/createTeam',
-  async ({ teamData, session }: { teamData: CreateTeamData; session: Session | null }) => {
+  async (teamData: CreateTeamData, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     // Get the current user
     if (!session?.user.id) {
       throw new Error('User not authenticated');
@@ -102,7 +107,10 @@ export const updateTeam = createAsyncThunk(
 // Delete team
 export const deleteTeam = createAsyncThunk(
   'teams/deleteTeam',
-  async ({ teamId, session }: { teamId: string; session: Session | null }) => {
+  async (teamId: string, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     if (!session?.user.id) {
       throw new Error('User not authenticated');
     }
@@ -120,7 +128,7 @@ export const deleteTeam = createAsyncThunk(
 // Fetch team members
 export const fetchTeamMembers = createAsyncThunk(
   'teams/fetchTeamMembers',
-  async ({ teamId, session }: { teamId: string; session: Session | null }) => {
+  async (teamId: string) => {
     const { data, error } = await supabase
       .from('team_members')
       .select(`
@@ -139,7 +147,10 @@ export const fetchTeamMembers = createAsyncThunk(
 // Invite members
 export const inviteMembers = createAsyncThunk(
   'teams/inviteMembers',
-  async ({ teamId, inviteData, session }: { teamId: string; inviteData: InviteMembersData; session: Session | null }) => {
+  async ({ teamId, inviteData }: { teamId: string; inviteData: InviteMembersData }, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     // Get the current user
     if (!session?.user.id) {
       throw new Error('User not authenticated');
@@ -186,7 +197,10 @@ export const updateTeamMember = createAsyncThunk(
 // Remove team member
 export const removeTeamMember = createAsyncThunk(
   'teams/removeTeamMember',
-  async ({ memberId, session }: { memberId: string; session: Session | null }) => {
+    async (memberId: string, { getState }) => {
+      const state = getState() as any;
+      const session = state.auth.session;
+
     if (!session?.user.id) {
       throw new Error('User not authenticated');
     }
@@ -204,7 +218,10 @@ export const removeTeamMember = createAsyncThunk(
 // Fetch team invitations
 export const fetchTeamInvitations = createAsyncThunk(
   'teams/fetchTeamInvitations',
-  async ({ teamId, session }: { teamId: string; session: Session | null }) => {
+  async (teamId: string, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     if (!session?.user.id) {
       throw new Error('User not authenticated');
     }
@@ -228,7 +245,10 @@ export const fetchTeamInvitations = createAsyncThunk(
 // Cancel invitation
 export const cancelInvitation = createAsyncThunk(
   'teams/cancelInvitation',
-  async ({ invitationId, session }: { invitationId: string; session: Session | null }) => {
+  async (invitationId: string, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     if (!session?.user.id) {
       throw new Error('User not authenticated');
     }
@@ -246,8 +266,11 @@ export const cancelInvitation = createAsyncThunk(
 // Accept invitation
 export const acceptInvitation = createAsyncThunk(
   'teams/acceptInvitation',
-  async ({ token, session }: { token: string; session: Session | null }) => {
-    if (!session?.user.id) {
+  async (token: string, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
+    if (!session?.user.id) {  
       throw new Error('User not authenticated');
     }
 
@@ -265,8 +288,11 @@ export const acceptInvitation = createAsyncThunk(
 // Fetch team activity logs
 export const fetchTeamActivity = createAsyncThunk(
   'teams/fetchTeamActivity',
-  async ({ teamId, limit = 50, session }: { teamId: string; limit?: number; session: Session | null }) => {
-    if (!session?.user.id) {
+  async ({ teamId, limit = 50 }: { teamId: string; limit?: number }, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
+    if (!session?.user.id) {  
       throw new Error('User not authenticated');
     }
 
@@ -288,7 +314,10 @@ export const fetchTeamActivity = createAsyncThunk(
 // Get user's pending invitations
 export const fetchUserInvitations = createAsyncThunk(
   'teams/fetchUserInvitations',
-  async ({ session }: { session: Session | null }) => {
+  async (_, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
+
     if (!session?.user.id) {
       throw new Error('User not authenticated');
     }

@@ -27,7 +27,7 @@ import { Toaster } from "./components/Toaster";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
-import { getSession, setSession } from './store/slices/authSlice';
+import { setSession } from './store/slices/authSlice';
 import { fetchProfile } from "./store/slices/profileSlice";
 import {
   fetchUserSubscription,
@@ -60,24 +60,14 @@ function LoadingSpinner({ message }: { message: string }) {
 
 // Protected Route For Anonymous Users
 function AnonymousRoute({ children }: { children: React.ReactNode }) {
-  const { session, status: sessionStatus } = useSelector((state: RootState) => (state.auth));
-
-  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-  if (sessionStatus === "loading" || sessionStatus === "idle") {
-    return <LoadingSpinner message="Checking session..." />;
-  }
+  const { session } = useSelector((state: RootState) => (state.auth));
 
   return session ? <Navigate to="/workspace" /> : <>{children}</>;
 }
 
 // Protected Route For Logged In Users
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session, status: sessionStatus } = useSelector((state: RootState) => (state.auth));
-
-  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-  if (sessionStatus === "loading" || sessionStatus === "idle") {
-    return <LoadingSpinner message="Checking session..." />;
-  }
+  const { session } = useSelector((state: RootState) => (state.auth));
 
   return !session ? <Navigate to="/login" /> : <>{children}</>;
 }
@@ -118,12 +108,8 @@ function App() {
   const { status: subscriptionStatus } = useSelector(
     (state: RootState) => state.subscription
   );
-
-
-
+  
   useEffect(() => {
-    dispatch(getSession());
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -147,14 +133,14 @@ function App() {
 
   useEffect(() => {
     if (session && subscriptionStatus === "idle") {
-      dispatch(fetchUserSubscription(session));
+      dispatch(fetchUserSubscription());
     }
   }, [dispatch, session, subscriptionStatus]);
 
   // Set up real-time subscriptions when user is authenticated
   useEffect(() => {
     if (session) {
-      dispatch(setupRealtimeSubscriptions(session));
+      dispatch(setupRealtimeSubscriptions());
     }
 
     // Clean up real-time subscription when component unmounts or session changes

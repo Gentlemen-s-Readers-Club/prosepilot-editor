@@ -10,8 +10,6 @@ import { Eye, EyeOff } from "lucide-react";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import useAnalytics from "../hooks/useAnalytics";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
 import { checkAndCreatePaddleCustomer } from "../hooks/useNewUserHandler";
 
 interface LoginFormData {
@@ -26,7 +24,6 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { status } = useSelector((state: RootState) => state.auth);
 
   const {
     register,

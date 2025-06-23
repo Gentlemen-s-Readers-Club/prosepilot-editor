@@ -30,11 +30,8 @@ import { clearSession } from "../store/slices/authSlice";
 export function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
-  const { session, status } = useSelector((state: RootState) => ({
-    session: state.auth.session,
-    status: state.auth.status,
-  }));
   const hasStudio = useSelector(hasStudioPlan);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -88,7 +85,7 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
-            {status === 'idle' && !session ? (
+            {!session ? (
               <button
                 onClick={() => navigate("/pricing")}
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -122,7 +119,7 @@ export function Navigation() {
               <span>Support</span>
             </button>
 
-            {status === 'success' && !session && (
+            {!session && (
               <>
                 <button
                   onClick={() => navigate("/login")}
@@ -222,7 +219,7 @@ export function Navigation() {
       {/* Mobile menu */}
       <div className={`md:hidden ${mobileMenuOpen ? "block" : "hidden"}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-          {status === 'success' && !!session && (
+          {!!session && (
             <button
               onClick={() => {
                 navigate("/workspace");
@@ -245,7 +242,7 @@ export function Navigation() {
             <span>Support</span>
           </button>
 
-          {status !== 'success' || !session && (
+          {!session && (
             <button
               onClick={() => {
                 navigate("/pricing");
@@ -269,7 +266,7 @@ export function Navigation() {
             <span>Documentation</span>
           </button>
 
-          {status !== 'success' || !session ? (
+          {!session ? (
             <>
               <button
                 onClick={() => {
@@ -292,7 +289,6 @@ export function Navigation() {
               </button>
             </>
           ) : (
-            status === 'success' &&
             session && (
               <>
                 {hasStudio && (

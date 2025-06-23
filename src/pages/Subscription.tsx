@@ -183,7 +183,7 @@ export function Subscription() {
         description: "Your subscription has been activated successfully.",
       });
       // Refresh subscription data
-      dispatch(fetchUserSubscription(session));
+      dispatch(fetchUserSubscription());
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (creditPurchaseSuccess === "true") {
@@ -408,7 +408,7 @@ export function Subscription() {
 
       if (result.success) {
         // Refresh subscription data to reflect the cancellation
-        dispatch(fetchUserSubscription(session));
+        dispatch(fetchUserSubscription());
       }
     } catch (error) {
       console.error("Error in handleCancel:", error);

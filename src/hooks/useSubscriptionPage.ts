@@ -150,7 +150,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
         title: "Success!",
         description: "Your subscription has been activated successfully.",
       });
-      dispatch(fetchUserSubscription(session));
+      dispatch(fetchUserSubscription());
       window.history.replaceState({}, "", window.location.pathname);
     } else if (creditPurchaseSuccess === "true") {
       toast({
@@ -329,7 +329,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
       );
 
       if (result.success) {
-        dispatch(fetchUserSubscription(session));
+        dispatch(fetchUserSubscription());
       }
     } catch (error) {
       console.error("Error in handleCancel:", error);

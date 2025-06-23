@@ -77,8 +77,8 @@ export function useSubscriptions(): UseSubscriptionsReturn {
   };
 
   // Refetch subscriptions
-  const refetch = async (session: Session | null): Promise<void> => {
-    await dispatch(fetchUserSubscription(session));
+  const refetch = async (): Promise<void> => {
+    await dispatch(fetchUserSubscription());
   };
 
   return {

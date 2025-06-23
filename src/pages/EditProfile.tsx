@@ -127,8 +127,11 @@ export function EditProfile() {
     try {
       setLoading(true);
       await dispatch(updateProfile({
-        full_name: profileData.full_name,
-        avatar_url: profileData.avatar_url
+        updates: {
+          full_name: profileData.full_name,
+          avatar_url: profileData.avatar_url
+        },
+        session
       }));
       toast({
         title: "Success",
@@ -149,7 +152,7 @@ export function EditProfile() {
   async function handleNewsletterSave() {
     try {
       setLoading(true);
-      await dispatch(updateNewsletterPreferences(newsletterPreferences));
+      await dispatch(updateNewsletterPreferences({ preferences: newsletterPreferences, session }));
       toast({
         title: "Success",
         description: "Newsletter preferences updated successfully",

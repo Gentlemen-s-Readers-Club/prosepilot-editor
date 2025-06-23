@@ -47,10 +47,9 @@ const initialState: CreditPurchasesState = {
 // Async thunks
 export const fetchCreditPackages = createAsyncThunk(
   "creditPurchases/fetchPackages",
-  async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  async (_, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
 
     const { data, error } = await supabase.functions.invoke(
       "handle-credit-purchase",
@@ -92,10 +91,9 @@ export const fetchCreditPackages = createAsyncThunk(
 
 export const fetchUserPurchases = createAsyncThunk(
   "creditPurchases/fetchPurchases",
-  async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  async (_, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
 
     if (!session?.user) {
       throw new Error("No authenticated user");
@@ -125,9 +123,8 @@ export const fetchUserPurchases = createAsyncThunk(
 export const createCreditPurchase = createAsyncThunk(
   "creditPurchases/createPurchase",
   async (packageId: string, { getState }) => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const state = getState() as any;
+    const session = state.auth.session;
 
     if (!session?.user) {
       throw new Error("User not authenticated");
