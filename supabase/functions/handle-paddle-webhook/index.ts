@@ -216,316 +216,105 @@ async function handleSubscriptionEvent(
   supabaseUrl: string,
   serviceRoleKey: string
 ) {
-  console.log("🔄 Processing subscription event:", eventData.event_type);
+  console.log("📅 Processing subscription event:", eventData.event_type);
+  console.log("📦 Raw event data:", eventData);
 
-  // Get the environment from custom data
-  const environment = eventData.data?.custom_data?.environment || "sandbox";
-  console.log("🌍 Processing subscription in environment:", environment);
-
-  // Extract relevant fields from the event data with safety checks
+  // Extract subscription data
   const subscriptionId = eventData.data?.id;
-  const priceId = eventData.data?.items?.[0]?.price?.id;
-  const status = eventData.data?.status;
-  let customerId = eventData.data?.customer?.id;
-
-  // Handle billing period data safely (may be null for some events)
-  const currentPeriodStart =
-    eventData.data?.current_billing_period?.starts_at || null;
-  const currentPeriodEnd =
-    eventData.data?.current_billing_period?.ends_at || null;
   const userId = eventData.data?.custom_data?.user_id;
+  const environment = eventData.data?.custom_data?.environment || "sandbox";
+  const status = eventData.data?.status;
+  const priceId = eventData.data?.items?.[0]?.price?.id;
+  const customerId = eventData.data?.customer?.id;
+  const currentPeriodStart = eventData.data?.current_billing_period?.starts_at;
+  const currentPeriodEnd = eventData.data?.current_billing_period?.ends_at;
 
-  // Validate required fields (customer_id is not required)
-  if (!subscriptionId || !priceId || !status || !userId) {
-    console.error("Missing required fields in subscription webhook data:", {
+  console.log("🔍 Extracted subscription data:", {
+    subscriptionId,
+    userId,
+    environment,
+    status,
+    priceId,
+    customerId,
+    currentPeriodStart,
+    currentPeriodEnd,
+  });
+
+  // Validate required fields
+  if (!subscriptionId || !userId || !status || !priceId) {
+    console.error("❌ Missing required fields in webhook data:", {
       subscriptionId,
-      priceId,
-      status,
       userId,
-      customerId,
-      eventType: eventData.event_type,
+      status,
+      priceId,
     });
-    return new Response("Missing required webhook data", {
+    return new Response("Missing required subscription data", {
       status: 400,
     });
   }
 
-  // If customer_id is missing, try to fetch it from Paddle
-  if (!customerId) {
-    console.log(
-      "Customer ID missing in webhook data, fetching from Paddle API"
-    );
-    try {
-      const paddleApiKey = Deno.env.get("PADDLE_API_KEY");
-      const paddleApiBaseUrl =
-        environment === "production"
-          ? "https://api.paddle.com"
-          : "https://sandbox-api.paddle.com";
+  try {
+    // Initialize Supabase client
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-      if (!paddleApiKey) {
-        throw new Error("PADDLE_API_KEY is not set");
-      }
+    // Check if subscription already exists
+    const { data: existingSubscription, error: checkError } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("subscription_id", subscriptionId)
+      .single();
 
-      const subscriptionResponse = await fetch(
-        `${paddleApiBaseUrl}/subscriptions/${subscriptionId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${paddleApiKey}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (subscriptionResponse.ok) {
-        const subscriptionData =
-          (await subscriptionResponse.json()) as PaddleSubscriptionResponse;
-        customerId = subscriptionData.data?.customer?.id;
-        if (customerId) {
-          console.log(
-            "Successfully fetched customer ID from Paddle:",
-            customerId
-          );
-        }
-      } else {
-        console.warn("Failed to fetch customer ID from Paddle API");
-      }
-    } catch (error) {
-      console.error("Error fetching customer ID from Paddle:", error);
-    }
-  }
-
-  // If we still don't have a customer ID, check existing subscriptions
-  if (!customerId) {
-    console.log("Checking existing subscriptions for customer ID");
-    const existingSubResponse = await fetch(
-      `${supabaseUrl}/rest/v1/subscriptions?user_id=eq.${userId}&environment=eq.${environment}&select=customer_id`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          "Content-Type": "application/json",
-          apikey: serviceRoleKey,
-        },
-      }
-    );
-
-    if (existingSubResponse.ok) {
-      const existingSubs = await existingSubResponse.json();
-      if (
-        existingSubs &&
-        existingSubs.length > 0 &&
-        existingSubs[0].customer_id
-      ) {
-        customerId = existingSubs[0].customer_id;
-        console.log(
-          "Found customer ID from existing subscription:",
-          customerId
-        );
-      }
-    }
-  }
-
-  // Check if the user exists
-  if (!userId) {
-    throw new Error("User ID is required");
-  }
-
-  const userCheckResponse = await fetch(
-    `${supabaseUrl}/auth/v1/admin/users/${userId}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${serviceRoleKey}`,
-        "Content-Type": "application/json",
-        apikey: serviceRoleKey,
-      },
-    }
-  );
-
-  if (!userCheckResponse.ok) {
-    console.error("User does not exist for uid:", userId);
-    return new Response("User does not exist", {
-      status: 404,
+    console.log("🔍 Existing subscription check:", {
+      exists: !!existingSubscription,
+      data: existingSubscription,
+      error: checkError,
     });
-  }
 
-  // Check for existing active subscriptions for this user
-  if (!environment) {
-    throw new Error("Environment is required");
-  }
+    // Prepare subscription data
+    const subscriptionData = {
+      user_id: userId,
+      subscription_id: subscriptionId,
+      price_id: priceId,
+      status,
+      current_period_start: currentPeriodStart,
+      current_period_end: currentPeriodEnd,
+      environment,
+    };
 
-  const existingSubscriptionsResponse = await fetch(
-    `${supabaseUrl}/rest/v1/subscriptions?user_id=eq.${userId}&status=in.(active,trialing)&environment=eq.${environment}&select=*`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${serviceRoleKey}`,
-        "Content-Type": "application/json",
-        apikey: serviceRoleKey,
-      },
+    let response;
+    if (existingSubscription) {
+      // Update existing subscription
+      console.log("🔄 Updating existing subscription:", subscriptionId);
+      response = await supabase
+        .from("subscriptions")
+        .update(subscriptionData)
+        .eq("subscription_id", subscriptionId)
+        .select();
+    } else {
+      // Insert new subscription
+      console.log("➕ Creating new subscription:", subscriptionId);
+      response = await supabase
+        .from("subscriptions")
+        .insert([subscriptionData])
+        .select();
     }
-  );
 
-  if (!existingSubscriptionsResponse.ok) {
-    const errorData = await existingSubscriptionsResponse.text();
-    console.error("Error checking existing subscriptions:", errorData);
-    return new Response("Failed to check existing subscriptions", {
+    if (response.error) {
+      console.error("❌ Error saving subscription:", response.error);
+      throw response.error;
+    }
+
+    console.log("✅ Subscription saved successfully:", response.data);
+
+    return new Response("Subscription webhook processed successfully", {
+      status: 200,
+    });
+  } catch (error) {
+    console.error("💥 Error processing subscription webhook:", error);
+    return new Response("Error processing subscription", {
       status: 500,
     });
   }
-
-  const existingSubscriptions = await existingSubscriptionsResponse.json();
-
-  // Prepare the subscription data for insertion or update
-  const subscriptionData = {
-    user_id: userId,
-    subscription_id: subscriptionId,
-    customer_id: customerId,
-    price_id: priceId,
-    status: status,
-    current_period_start: currentPeriodStart,
-    current_period_end: currentPeriodEnd,
-    environment: environment,
-  };
-
-  console.log("Subscription data to be processed:", subscriptionData);
-
-  // Special handling for canceled subscriptions
-  if (
-    status === "canceled" ||
-    eventData.event_type === "subscription.canceled"
-  ) {
-    console.log("Processing canceled subscription event");
-
-    // Update the subscription status
-    const response = await fetch(
-      `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}&environment=eq.${environment}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          "Content-Type": "application/json",
-          apikey: serviceRoleKey,
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify({
-          status: "canceled",
-          current_period_start: currentPeriodStart,
-          current_period_end: currentPeriodEnd,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Error updating canceled subscription:", errorData);
-      return new Response("Failed to update canceled subscription", {
-        status: 500,
-      });
-    }
-
-    console.log("Canceled subscription processed successfully");
-    return new Response(
-      "Canceled subscription webhook processed successfully",
-      {
-        status: 200,
-      }
-    );
-  }
-
-  // Insert or update the subscription
-  let response;
-  if (existingSubscriptions.length > 0) {
-    console.log("Attempting to UPDATE existing subscription");
-    response = await fetch(
-      `${supabaseUrl}/rest/v1/subscriptions?subscription_id=eq.${subscriptionId}&environment=eq.${environment}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${serviceRoleKey}`,
-          "Content-Type": "application/json",
-          apikey: serviceRoleKey,
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify({
-          status: status,
-          current_period_start: currentPeriodStart,
-          current_period_end: currentPeriodEnd,
-        }),
-      }
-    );
-  } else {
-    console.log("Attempting to INSERT new subscription");
-    response = await fetch(`${supabaseUrl}/rest/v1/subscriptions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${serviceRoleKey}`,
-        "Content-Type": "application/json",
-        apikey: serviceRoleKey,
-        Prefer: "return=representation",
-      },
-      body: JSON.stringify(subscriptionData),
-    });
-  }
-
-  // Handle the response from the Supabase API
-  if (!response.ok) {
-    const errorData = await response.text();
-    console.error("Error updating subscriptions table:", errorData);
-    return new Response("Failed to update subscriptions", {
-      status: 500,
-    });
-  }
-
-  // Auto-refill credits for new or reactivated subscriptions
-  if (
-    status === "active" &&
-    (eventData.event_type === "subscription.created" ||
-      eventData.event_type === "subscription.activated" ||
-      eventData.event_type === "subscription.updated")
-  ) {
-    console.log(
-      `✅ Subscription saved. Now attempting to refill credits for user ${userId}`
-    );
-
-    // Small delay to ensure database consistency
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    try {
-      const refillResponse = await fetch(
-        `${supabaseUrl}/functions/v1/handle-credits`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${serviceRoleKey}`,
-            "Content-Type": "application/json",
-            apikey: serviceRoleKey,
-          },
-          body: JSON.stringify({
-            action: "refill_monthly",
-            user_id: userId,
-            environment: environment,
-          }),
-        }
-      );
-
-      if (refillResponse.ok) {
-        const refillData = await refillResponse.json();
-        console.log("💰 Credits refilled successfully:", refillData);
-      } else {
-        const errorText = await refillResponse.text();
-        console.error("❌ Failed to refill credits:", errorText);
-      }
-    } catch (refillError) {
-      console.error("💥 Error refilling credits:", refillError);
-    }
-  }
-
-  console.log("Subscription event processed successfully");
-  return new Response("Subscription webhook processed successfully", {
-    status: 200,
-  });
 }
 
 // Handle transaction-related events (for credit purchases)

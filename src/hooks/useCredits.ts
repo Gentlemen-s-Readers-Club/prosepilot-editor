@@ -180,7 +180,7 @@ export function useCredits(): UseCreditsReturn {
     const setupRealtimeSubscriptions = async () => {
       if (!session?.user.id) return;
 
-      console.log("Setting up realtime subscriptions for user:", session.user.id);
+      // console.log("Setting up realtime subscriptions for user:", session.user.id);
 
       // Subscribe to credit balance changes
       balanceSubscription = supabase
@@ -194,13 +194,12 @@ export function useCredits(): UseCreditsReturn {
             filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log("Credit balance changed:", payload);
+            // console.log("Credit balance changed:", payload);
             refreshBalance();
           }
         )
-        .subscribe((status) => {
-          console.log("Credit balance subscription status:", status);
-        });
+        .subscribe();
+          // console.log("Credit balance subscription status:", status);
 
       // Subscribe to new transactions
       transactionsSubscription = supabase
@@ -214,15 +213,14 @@ export function useCredits(): UseCreditsReturn {
             filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log("New credit transaction:", payload);
+            // console.log("New credit transaction:", payload);
             refreshTransactions();
             // Also refresh balance when new transaction is logged
             refreshBalance();
           }
         )
-        .subscribe((status) => {
-          console.log("Credit transactions subscription status:", status);
-        });
+        .subscribe();
+          // console.log("Credit transactions subscription status:", status);
 
       // Subscribe to book generation updates
       generationsSubscription = supabase
@@ -236,22 +234,21 @@ export function useCredits(): UseCreditsReturn {
             filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log("Book generation updated:", payload);
+            // console.log("Book generation updated:", payload);
             refreshBookGenerations();
             // Refresh balance when book generation status changes (credit consumption)
             refreshBalance();
           }
         )
-        .subscribe((status) => {
-          console.log("Book generations subscription status:", status);
-        });
+        .subscribe();
+          // console.log("Book generations subscription status:", status);
     };
 
     setupRealtimeSubscriptions();
 
     return () => {
       if (balanceSubscription) {
-        console.log("Unsubscribing from realtime subscriptions");
+        // console.log("Unsubscribing from realtime subscriptions");
         balanceSubscription.unsubscribe();
       }
       if (transactionsSubscription) {

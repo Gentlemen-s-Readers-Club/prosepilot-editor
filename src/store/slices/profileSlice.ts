@@ -26,8 +26,9 @@ const initialState: ProfileState = {
 
 export const fetchProfile = createAsyncThunk(
   'profile/fetchProfile',
-  async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+  async (_, { getState }) => {
+    const state = getState() as any;
+    const session = state.auth.session;
     
     if (!session?.user) {
       throw new Error('No authenticated user');

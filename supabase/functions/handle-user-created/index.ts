@@ -53,18 +53,17 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Create profile with Paddle customer ID
+    // Create profile without Paddle customer ID
     const { error: profileError } = await supabaseClient
       .from("profiles")
       .insert({
         id: record.id,
         email: record.email,
-        paddle_customer_id: customer.data.id,
       });
 
     if (profileError) {
       console.error("❌ Error creating profile:", profileError);
-      throw new Error("Failed to create profile with Paddle customer ID");
+      throw new Error("Failed to create profile");
     }
 
     // Initialize user credits

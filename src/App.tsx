@@ -36,7 +36,6 @@ import {
   hasStudioPlan,
 } from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
-import { useNewUserHandler } from "./hooks/useNewUserHandler";
 
 // Help Articles
 import { CreateFirstBook } from "./pages/help/CreateFirstBook";
@@ -45,6 +44,7 @@ import { AIBestPractices } from "./pages/help/AIBestPractices";
 import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
 import { supabase } from "./lib/supabase";
+import { checkAndCreatePaddleCustomer } from "./hooks/useNewUserHandler";
 
 // Shared Loading Component
 function LoadingSpinner({ message }: { message: string }) {
@@ -119,8 +119,7 @@ function App() {
     (state: RootState) => state.subscription
   );
 
-  // Initialize the new user handler
-  useNewUserHandler();
+
 
   useEffect(() => {
     dispatch(getSession());
@@ -138,6 +137,13 @@ function App() {
       dispatch(fetchProfile());
     }
   }, [dispatch, session, profile]);
+
+  // Check for new users when session is first established (for OAuth redirects)
+  useEffect(() => {
+    if (session) {
+      checkAndCreatePaddleCustomer(session);
+    }
+  }, [session]);
 
   useEffect(() => {
     if (session && subscriptionStatus === "idle") {

@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet";
 import useAnalytics from "../hooks/useAnalytics";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { checkAndCreatePaddleCustomer } from "../hooks/useNewUserHandler";
 
 interface LoginFormData {
   email: string;
@@ -37,12 +38,17 @@ export function Login() {
 
   const onSubmit = async ({ email, password }: LoginFormData) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
+
+      // Check and create Paddle customer for new users
+      if (data.session) {
+        await checkAndCreatePaddleCustomer(data.session);
+      }
 
       trackEvent({
         category: "authentication",

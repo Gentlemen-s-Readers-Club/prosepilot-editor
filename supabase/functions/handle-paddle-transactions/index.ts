@@ -177,6 +177,7 @@ Deno.serve(async (req) => {
           headers: {
             Authorization: `Bearer ${paddleApiKey}`,
             "Content-Type": "application/json",
+            "Paddle-Version": "2"
           },
         }
       );
@@ -255,13 +256,18 @@ Deno.serve(async (req) => {
     // Fetch transactions from Paddle
     console.log("🔄 Fetching transactions from Paddle API for customer:", customerId);
     const response = await fetch(
-      `${paddleApiBaseUrl}/transactions?customer_id=${customerId}&order_by=created_at[desc]`,
+      `${paddleApiBaseUrl}/transactions`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${paddleApiKey}`,
           "Content-Type": "application/json",
+          "Paddle-Version": "2"
         },
+        body: JSON.stringify({
+          customer_id: [customerId],  // API expects an array of customer IDs
+          order_by: "created_at[DESC]"  // Correct format for ordering
+        })
       }
     );
 
