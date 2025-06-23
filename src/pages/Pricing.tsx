@@ -77,7 +77,6 @@ const plans: Plan[] = [
       '75 credits/month (15 books)',
       'All Pro features',
       'AI-generated illustrations',
-      'Cover generation',
       'Advanced Metadata management',
       'Team access (up to 3 users)',
       'More features coming soon'
