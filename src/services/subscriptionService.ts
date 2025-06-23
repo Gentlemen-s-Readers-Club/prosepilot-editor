@@ -1,3 +1,4 @@
+import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
 /**
@@ -26,19 +27,16 @@ export async function getSubscriptionUsage(subscriptionId: string) {
 /**
  * Check if user has multiple active subscriptions and get cleanup actions
  */
-export async function checkSubscriptionHealth() {
+export async function checkSubscriptionHealth(session: Session | null) {
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    if (!session?.user) {
       throw new Error("User not authenticated");
     }
 
     const { data: subscriptions, error } = await supabase
       .from("subscriptions")
       .select("*")
-      .eq("user_id", user.id);
+      .eq("user_id", session.user.id);
 
     if (error) {
       throw error;
@@ -66,12 +64,9 @@ export async function checkSubscriptionHealth() {
 /**
  * Get user's current active subscription
  */
-export async function getCurrentSubscription() {
+export async function getCurrentSubscription(session: Session | null) {
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    if (!session?.user) {
       return null;
     }
 
@@ -85,7 +80,7 @@ export async function getCurrentSubscription() {
     const { data: subscriptions, error } = await supabase
       .from("subscriptions")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", session.user.id)
       .eq("environment", environment)
       .in("status", ["active", "trialing"])
       .order("created_at", { ascending: false })

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '../../lib/supabase';
 import { ApiState, Book } from '../types';
-import { RootState } from '..';
 
 interface BooksState extends ApiState {
   items: Book[];

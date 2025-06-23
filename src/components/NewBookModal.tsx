@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { X, AlertCircle, Loader2, BookOpen, Lightbulb, Sparkles, Globe } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { supabase } from '../lib/supabase';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { CustomSelect, SelectOption, mapToSelectOptions } from './ui/select';
@@ -33,6 +32,8 @@ interface OwnerOption extends SelectOption {
 export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
+  
+  const { session } = useSelector((state: RootState) => (state.auth));
   
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(true);
@@ -142,7 +143,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
     setError(null);
     setIssues(null);
   };
-
+  
   const handleSubmit = async () => {
     if (!selectedLanguage || !selectedOwner) return;
     
@@ -151,12 +152,6 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
     setIssues(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No session found');
-      
       // Prepare the request payload
       const requestPayload = {
         prompt,
@@ -169,7 +164,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
         // Add owner information
         owner: {
           type: selectedOwner.type,
-          id: selectedOwner.type === 'user' ? user.id : selectedOwner.value,
+          id: selectedOwner.type === 'user' ? session?.user.id : selectedOwner.value,
           team_id: selectedOwner.type === 'team' ? selectedOwner.value : null
         }
       };
@@ -179,7 +174,7 @@ export function NewBookModal({ isOpen, onClose }: NewBookModalProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          'Authorization': `Bearer ${session?.access_token}`
         },
         body: JSON.stringify(requestPayload)
       });

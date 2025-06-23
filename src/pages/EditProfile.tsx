@@ -19,12 +19,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { updateProfile, updateNewsletterPreferences } from '../store/slices/profileSlice';
 import { Helmet } from 'react-helmet';
+import { UserIdentity } from '@supabase/supabase-js';
 
 export function EditProfile() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  
+  const { session } = useSelector((state: RootState) => (state.auth));
   const { profile } = useSelector((state: RootState) => state.profile);
 
   const [loading, setLoading] = useState(false);
@@ -72,11 +74,9 @@ export function EditProfile() {
     const fetchUserIdentities = async () => {
       try {
         setLoadingProviders(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user && user.identities) {
+        if (session?.user.identities) {
           // Extract provider names from identities
-          const providers = user.identities.map(identity => identity.provider);
+          const providers = session?.user.identities.map((identity: UserIdentity) => identity.provider);
           setConnectedProviders(providers);
         }
       } catch (error) {
@@ -170,13 +170,10 @@ export function EditProfile() {
     try {
       setIsFileLoading(true);
       const file = event.target.files?.[0];
-      if (!file) return;
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
+      if (!file) return;  
 
       const fileExt = file.name.split('.').pop();
-      const filePath = `${session.user.id}/${Date.now()}.${fileExt}`;
+      const filePath = `${session?.user.id}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -283,12 +280,11 @@ export function EditProfile() {
 
   async function handleSocialUnlink(provider: string) {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
 
       setLoading(true);
       
       // Check if this is the only auth method
-      if (!user?.identities?.length) {
+      if (!session?.user.identities?.length) {
         toast({
           variant: "destructive",
           title: "Error",
@@ -298,8 +294,8 @@ export function EditProfile() {
       }
 
       // find the identity
-      const identity = user?.identities?.find(
-        identity => identity.provider === provider
+      const identity = session?.user.identities?.find(
+        (identity: UserIdentity) => identity.provider === provider
       )
 
       if(!identity) {
@@ -344,8 +340,12 @@ export function EditProfile() {
 
     try {
       setLoading(true);
+      if (!session?.user.id) {
+        throw new Error('User ID not found');
+      }
+      
       const { error } = await supabase.auth.admin.deleteUser(
-        (await supabase.auth.getUser()).data.user?.id || ''
+        session.user.id
       );
 
       if (error) throw error;

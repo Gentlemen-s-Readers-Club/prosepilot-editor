@@ -10,6 +10,8 @@ import { Eye, EyeOff } from "lucide-react";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import useAnalytics from "../hooks/useAnalytics";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 interface LoginFormData {
   email: string;
@@ -21,9 +23,9 @@ export function Login() {
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { status } = useSelector((state: RootState) => state.auth);
 
   const {
     register,
@@ -33,13 +35,11 @@ export function Login() {
     mode: 'onSubmit',
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
-
+  const onSubmit = async ({ email, password }: LoginFormData) => {
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
+        email,
+        password,
       });
 
       if (error) throw error;
@@ -49,16 +49,13 @@ export function Login() {
         action: "login",
         label: "email",
       });
-
       navigate("/workspace");
-    } catch (error: unknown) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Unknown error",
+        description: error instanceof Error ? error.message : "Sign in failed",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -190,8 +187,8 @@ export function Login() {
                 </Button>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing in..." : "Sign in"}
+              <Button type="submit" className="w-full" disabled={status === "loading"}>
+                {status === "loading" ? "Signing in..." : "Sign in"}
               </Button>
 
               <div className="text-center">

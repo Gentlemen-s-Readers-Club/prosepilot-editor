@@ -4,11 +4,14 @@ import { Helmet } from 'react-helmet';
 import { Button } from '../components/ui/button';
 import { Home, Search, BookOpen, ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
-import { useAuth } from '../hooks/useAuth';
 import useAnalytics from '../hooks/useAnalytics';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 export function NotFound() {
-  const { session } = useAuth();
+  const { session } = useSelector((state: RootState) => ({
+    session: state.auth.session,
+  })); 
   const { trackPageView } = useAnalytics({
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });

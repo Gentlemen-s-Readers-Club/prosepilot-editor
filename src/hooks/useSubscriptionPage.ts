@@ -13,7 +13,7 @@ import { usePaddle } from "../contexts/PaddleContext";
 import { usePaddlePrices } from "./usePaddlePrices";
 import { useSubscriptionManagement } from "./useSubscriptionManagement";
 import { useToast } from "./use-toast";
-import { supabase } from "../lib/supabase";
+import { Session } from "@supabase/supabase-js";
 
 interface Plan {
   id: string;
@@ -42,7 +42,7 @@ interface UseSubscriptionPageReturn {
   billingHistory: any[];
 
   // Plan management
-  handleSubscribe: (plan: any) => Promise<void>;
+  handleSubscribe: (plan: any, session: Session | null) => Promise<void>;
   handleUpgrade: (plan: Plan) => void;
   confirmUpgrade: () => Promise<void>;
   hasActivePlanForPrice: (priceId: string) => boolean;
@@ -66,8 +66,9 @@ interface UseSubscriptionPageReturn {
 export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
   const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
-
+  
   // Redux state
+  const { session } = useSelector((state: RootState) => (state.auth));
   const subscriptions = useSelector(selectSubscriptions);
   const activeSubscriptions = useSelector(selectActiveSubscriptions);
   const currentPlan = useSelector(selectCurrentPlan);
@@ -149,7 +150,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
         title: "Success!",
         description: "Your subscription has been activated successfully.",
       });
-      dispatch(fetchUserSubscription());
+      dispatch(fetchUserSubscription(session));
       window.history.replaceState({}, "", window.location.pathname);
     } else if (creditPurchaseSuccess === "true") {
       toast({
@@ -170,7 +171,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
 
   // Handle subscription
   const handleSubscribe = useCallback(
-    async (plan: any) => {
+    async (plan: any, session: Session | null) => {
       if (!plan.priceId || !paddle) return;
 
       if (!profile?.email) {
@@ -182,10 +183,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
         return;
       }
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user?.id) {
+      if (!session?.user.id) {
         toast({
           title: "Error",
           description: "Authentication required to subscribe",
@@ -254,7 +252,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
             successUrl: `${window.location.origin}/workspace/subscription?success=true`,
           },
           customData: {
-            user_id: user.id,
+            user_id: session?.user.id || '',
             type: "subscription",
           },
         });
@@ -303,10 +301,10 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
       (p) => p.id === selectedPlan.id
     );
     if (planWithPrices) {
-      await handleSubscribe(planWithPrices);
+      await handleSubscribe(planWithPrices, session);
     }
     setShowUpgradeDialog(false);
-  }, [selectedPlan, plans, availablePrices, handleSubscribe]);
+  }, [selectedPlan, plans, availablePrices, handleSubscribe, session]);
 
   // Handle cancel
   const handleCancel = useCallback(async () => {
@@ -331,7 +329,7 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
       );
 
       if (result.success) {
-        dispatch(fetchUserSubscription());
+        dispatch(fetchUserSubscription(session));
       }
     } catch (error) {
       console.error("Error in handleCancel:", error);

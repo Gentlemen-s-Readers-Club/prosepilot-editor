@@ -32,7 +32,6 @@ import {
   selectCanSubscribeToNewPlan,
   fetchUserSubscription,
 } from "../store/slices/subscriptionSlice";
-import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import { CreditPurchase } from "../components/CreditPurchase";
@@ -136,6 +135,7 @@ const plans: Plan[] = [
 export function Subscription() {
   const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
+  const { session } = useSelector((state: RootState) => (state.auth));
   const { profile, status: profileStatus } = useSelector(
     (state: RootState) => state.profile
   );
@@ -183,7 +183,7 @@ export function Subscription() {
         description: "Your subscription has been activated successfully.",
       });
       // Refresh subscription data
-      dispatch(fetchUserSubscription());
+      dispatch(fetchUserSubscription(session));
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     } else if (creditPurchaseSuccess === "true") {
@@ -274,19 +274,6 @@ export function Subscription() {
       return;
     }
 
-    // Get the current authenticated user ID
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user?.id) {
-      toast({
-        title: "Error",
-        description: "Authentication required to subscribe",
-        variant: "destructive",
-      });
-      return;
-    }
-
     // Enhanced subscription validation
     if (hasActivePlanForPrice(plan.priceId)) {
       toast({
@@ -358,7 +345,7 @@ export function Subscription() {
           successUrl: `${window.location.origin}/workspace/subscription?success=true`,
         },
         customData: {
-          user_id: user.id,
+          user_id: session?.user.id || '',
           type: "subscription",
           environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
         },
@@ -421,7 +408,7 @@ export function Subscription() {
 
       if (result.success) {
         // Refresh subscription data to reflect the cancellation
-        dispatch(fetchUserSubscription());
+        dispatch(fetchUserSubscription(session));
       }
     } catch (error) {
       console.error("Error in handleCancel:", error);

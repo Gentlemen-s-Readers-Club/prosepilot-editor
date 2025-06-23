@@ -6,6 +6,8 @@ import { Label } from '../ui/label';
 import { FileUpload } from '../ui/file-upload';
 import { useToast } from '../../hooks/use-toast';
 import { supabase } from '../../lib/supabase';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 interface CreateTeamModalProps {
   open: boolean;
@@ -15,6 +17,7 @@ interface CreateTeamModalProps {
 
 export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeamModalProps) {
   const { toast } = useToast();
+  const { session } = useSelector((state: RootState) => (state.auth));
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -37,12 +40,9 @@ export function CreateTeamModal({ open, onOpenChange, onCreateTeam }: CreateTeam
   const handleLogoUpload = async (file: File) => {
     try {
       setIsUploadingLogo(true);
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
 
       const fileExt = file.name.split('.').pop();
-      const fileName = `team-logos/${user.id}/${Date.now()}.${fileExt}`;
+      const fileName = `team-logos/${session?.user.id}/${Date.now()}.${fileExt}`;
 
       // Use avatars bucket as the primary bucket for team logos
       const { error: uploadError } = await supabase.storage

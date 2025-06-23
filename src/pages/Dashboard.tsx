@@ -355,8 +355,8 @@ export function Dashboard() {
               )}
 
               {/* Filters */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
+                <div className="flex items-center justify-between lg:mb-4">
                   <h2 className="text-lg font-semibold text-base-heading">Filters</h2>
                   <Button 
                     variant="ghost" 

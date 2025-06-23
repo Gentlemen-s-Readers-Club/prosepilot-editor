@@ -71,7 +71,8 @@ export function BookDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  
+  const { session } = useSelector((state: RootState) => (state.auth));
   const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
@@ -196,9 +197,6 @@ export function BookDetails() {
   const handleFileSelect = async (file: File) => {
     try {
       setCoverLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
-
       const fileExt = file.name.split('.').pop();
       const fileName = `${id}/cover.${fileExt}`;
 
@@ -516,14 +514,11 @@ export function BookDetails() {
       // Call the appropriate API endpoint based on the format
       const endpoint = `${import.meta.env.VITE_API_URL}/generate-${format}`;
       
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('No active session');
-      
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          'Authorization': `Bearer ${session?.access_token}`
         },
         body: JSON.stringify({ bookId: id })
       });

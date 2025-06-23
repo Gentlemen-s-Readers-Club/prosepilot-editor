@@ -25,9 +25,9 @@ import { TermsOfService } from "./pages/TermsOfService";
 import { NotFound } from "./pages/NotFound";
 import { Toaster } from "./components/Toaster";
 import { ScrollToTop } from "./components/ScrollToTop";
-import { useAuth } from "./hooks/useAuth";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
+import { getSession, setSession } from './store/slices/authSlice';
 import { fetchProfile } from "./store/slices/profileSlice";
 import {
   fetchUserSubscription,
@@ -43,17 +43,42 @@ import { CreditSystem } from "./pages/help/CreditSystem";
 import { AIBestPractices } from "./pages/help/AIBestPractices";
 import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
+import { supabase } from "./lib/supabase";
 
 // Shared Loading Component
-function SubscriptionLoadingSpinner() {
+function LoadingSpinner({ message }: { message: string }) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Checking subscription...</p>
+        <p className="text-muted-foreground">{message}</p>
       </div>
     </div>
   );
+}
+
+// Protected Route For Anonymous Users
+function AnonymousRoute({ children }: { children: React.ReactNode }) {
+  const { session, status: sessionStatus } = useSelector((state: RootState) => (state.auth));
+
+  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
+  if (sessionStatus === "loading" || sessionStatus === "idle") {
+    return <LoadingSpinner message="Checking session..." />;
+  }
+
+  return session ? <Navigate to="/workspace" /> : <>{children}</>;
+}
+
+// Protected Route For Logged In Users
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { session, status: sessionStatus } = useSelector((state: RootState) => (state.auth));
+
+  // Show loading while subscription data is being fetched or if it hasn't been fetched yet
+  if (sessionStatus === "loading" || sessionStatus === "idle") {
+    return <LoadingSpinner message="Checking session..." />;
+  }
+
+  return !session ? <Navigate to="/login" /> : <>{children}</>;
 }
 
 // Protected Route Component for Studio Plan
@@ -65,7 +90,7 @@ function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
 
   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
   if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
-    return <SubscriptionLoadingSpinner />;
+    return <LoadingSpinner message="Checking subscription..." />;
   }
 
   // If there was an error loading subscription data, still allow access
@@ -85,46 +110,24 @@ function StudioProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-// Protected Route Component for Active Subscription
-// function SubscriptionProtectedRoute({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const hasActiveSubscription = useSelector(selectHasActiveSubscription);
-//   const { status: subscriptionStatus } = useSelector(
-//     (state: RootState) => state.subscription
-//   );
-
-//   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
-//   if (subscriptionStatus === "loading" || subscriptionStatus === "idle") {
-//     return <SubscriptionLoadingSpinner />;
-//   }
-
-//   // If there was an error loading subscription data, still allow access
-//   // This prevents users from being locked out due to temporary API issues
-//   if (subscriptionStatus === "error") {
-//     console.warn(
-//       "Subscription data failed to load, allowing access to prevent lockout"
-//     );
-//     return <>{children}</>;
-//   }
-
-//   // Only redirect if subscription data has been successfully loaded and user doesn't have an active subscription
-//   if (subscriptionStatus === "success" && !hasActiveSubscription) {
-//     return <Navigate to="/workspace/subscription" replace />;
-//   }
-
-//   return <>{children}</>;
-// }
-
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const { session, loading } = useAuth();
+  const { session } = useSelector((state: RootState) => (state.auth));
   const { profile } = useSelector((state: RootState) => state.profile);
   const { status: subscriptionStatus } = useSelector(
     (state: RootState) => state.subscription
   );
+
+  useEffect(() => {
+    dispatch(getSession());
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      dispatch(setSession(session))
+    })
+    return () => subscription.unsubscribe()
+  }, [dispatch]);
 
   useEffect(() => {
     if (session && !profile) {
@@ -134,14 +137,14 @@ function App() {
 
   useEffect(() => {
     if (session && subscriptionStatus === "idle") {
-      dispatch(fetchUserSubscription());
+      dispatch(fetchUserSubscription(session));
     }
   }, [dispatch, session, subscriptionStatus]);
 
   // Set up real-time subscriptions when user is authenticated
   useEffect(() => {
     if (session) {
-      dispatch(setupRealtimeSubscriptions());
+      dispatch(setupRealtimeSubscriptions(session));
     }
 
     // Clean up real-time subscription when component unmounts or session changes
@@ -151,14 +154,6 @@ function App() {
       }
     };
   }, [dispatch, session]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-base-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-accent"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-base-background pt-16 min-h-screen">
@@ -177,14 +172,14 @@ function App() {
 
 
               <Route  path="/login"
-                element={session ? <Navigate to="/workspace" /> : <Login />}
+                element={<AnonymousRoute><Login /></AnonymousRoute>}
               />
               <Route path="/signup"
-                element={session ? <Navigate to="/workspace" /> : <Signup />}
+                element={<AnonymousRoute><Signup /></AnonymousRoute>}
               />
               <Route path="/forgot-password"
                 element={
-                  session ? <Navigate to="/workspace" /> : <ForgotPassword />
+                  <AnonymousRoute><ForgotPassword /></AnonymousRoute>
                 }
               />
               <Route path="/reset-password" element={session ? <ResetPassword /> : <Navigate to="/login" />} />
@@ -207,48 +202,32 @@ function App() {
               <Route
                 path="/workspace"
                 element={
-                  session ? (
-                    <Dashboard />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  <ProtectedRoute><Dashboard /></ProtectedRoute>
                 }
               />
 
               <Route
                 path="/workspace/book/:id"
                 element={
-                  session ? (
-                    <BookDetails />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  <ProtectedRoute><BookDetails /></ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/chapter/:id"
                 element={
-                  session ? (
-                    <ChapterEditor />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  <ProtectedRoute><ChapterEditor /></ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/profile"
                 element={
-                  session ? <EditProfile /> : <Navigate to="/login" />
+                  <ProtectedRoute><EditProfile /></ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/subscription"
                 element={
-                  session ? (
-                    <Subscription />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  <ProtectedRoute><Subscription /></ProtectedRoute>
                 }
               />
 
@@ -256,25 +235,13 @@ function App() {
               <Route
                 path="/workspace/teams"
                 element={
-                  session ? (
-                    <StudioProtectedRoute>
-                      <Teams />
-                    </StudioProtectedRoute>
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  <ProtectedRoute><StudioProtectedRoute><Teams /></StudioProtectedRoute></ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/teams/:teamId"
                 element={
-                  session ? (
-                    <StudioProtectedRoute>
-                      <TeamDetails />
-                    </StudioProtectedRoute>
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  <ProtectedRoute><StudioProtectedRoute><TeamDetails /></StudioProtectedRoute></ProtectedRoute>
                 }
               />
 

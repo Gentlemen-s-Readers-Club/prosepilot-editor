@@ -9,6 +9,7 @@ import {
   selectCanSubscribeToNewPlan,
   fetchUserSubscription
 } from '../store/slices/subscriptionSlice';
+import { Session } from '@supabase/supabase-js';
 
 export interface Subscription {
   id: string;
@@ -45,7 +46,7 @@ interface UseSubscriptionsReturn {
   canSubscribeToNewPlan: boolean;
   getCurrentPlan: () => string | null;
   getSubscriptionStatus: () => SubscriptionStatus;
-  refetch: () => Promise<void>;
+  refetch: (session: Session | null) => Promise<void>;
 }
 
 export function useSubscriptions(): UseSubscriptionsReturn {
@@ -76,8 +77,8 @@ export function useSubscriptions(): UseSubscriptionsReturn {
   };
 
   // Refetch subscriptions
-  const refetch = async (): Promise<void> => {
-    await dispatch(fetchUserSubscription());
+  const refetch = async (session: Session | null): Promise<void> => {
+    await dispatch(fetchUserSubscription(session));
   };
 
   return {

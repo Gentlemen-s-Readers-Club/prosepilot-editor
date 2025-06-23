@@ -18,6 +18,8 @@ import {
   DialogTitle,
 } from '../components/ui/dialog';
 import { Book, Chapter } from '../store/types';
+import { RootState } from '../store';
+import { useSelector } from 'react-redux';
 
 interface Version {
   id: string;
@@ -30,6 +32,7 @@ function ChapterEditorContent() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { session } = useSelector((state: RootState) => (state.auth));
   const [content, setContent] = useState('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -152,15 +155,12 @@ function ChapterEditorContent() {
     if (!id) return;
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
-
       const { data: newVersion, error: versionError } = await supabase
         .from('chapter_versions')
         .insert({
           chapter_id: id,
           content: versionContent,
-          created_by: user.id
+          created_by: session?.user.id
         })
         .select()
         .single();

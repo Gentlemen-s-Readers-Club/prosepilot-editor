@@ -10,6 +10,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet';
 import useAnalytics from '../hooks/useAnalytics';
+import { RootState } from '../store';
+import { useSelector } from 'react-redux';
 
 interface SignupFormData {
   fullName: string;
@@ -20,12 +22,12 @@ interface SignupFormData {
 export function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { trackEvent } = useAnalytics({
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
+  const { status } = useSelector((state: RootState) => state.auth);
 
   const {
     register,
@@ -76,39 +78,15 @@ export function Signup() {
     }
   };
 
-  const createProfile = async (userId: string, userData: { full_name?: string; avatar_url?: string | null }) => {
+  const onSubmit = async ({ email, password }: SignupFormData) => {
     try {
-      const { error } = await supabase.from('profiles').insert([
-        {
-          id: userId,
-          full_name: userData.full_name || 'Anonymous User',
-          avatar_url: userData.avatar_url || null,
-        },
-      ]);
-      if (error) throw error;
-    } catch (error: unknown) {
-      console.error('Error creating profile:', error instanceof Error ? error.message : 'Unknown error');
-    }
-  };
-
-  const onSubmit = async (data: SignupFormData) => {
-    setLoading(true);
-
-    try {
-      const { data: { user }, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            full_name: data.fullName,
-          },
-        },
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
       });
-
-      if (error) throw error;
-
-      if (user) {
-        await createProfile(user.id, { full_name: data.fullName });
+  
+      if (error) {
+        throw new Error(error.message);
       }
 
       trackEvent({
@@ -123,14 +101,12 @@ export function Signup() {
       });
       
       navigate('/login');
-    } catch (error: unknown) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Unknown error",
+        description: error instanceof Error ? error.message : "Sign up failed",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -304,9 +280,9 @@ export function Signup() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={loading || passwordStrength < 3}
+                disabled={status === "loading" || passwordStrength < 3}
               >
-                {loading ? 'Creating account...' : 'Create account'}
+                {status === "loading" ? 'Creating account...' : 'Create account'}
               </Button>
 
               <div className="text-center">

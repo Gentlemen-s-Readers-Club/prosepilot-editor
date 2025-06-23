@@ -5,8 +5,8 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { FileUpload } from '../ui/file-upload';
 import { useToast } from '../../hooks/use-toast';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store';
 import { updateTeam, deleteTeam } from '../../store/slices/teamsSlice';
 import { supabase } from '../../lib/supabase';
 import { Team } from '../../store/types';
@@ -31,6 +31,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
   const navigate = useNavigate();
   const { toast } = useToast();
   
+  const { session } = useSelector((state: RootState) => (state.auth));
   const [formData, setFormData] = useState({
     name: team.name,
     description: team.description || '',
@@ -55,10 +56,6 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
   const handleLogoUpload = async (file: File) => {
     try {
       setIsUploadingLogo(true);
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
-
       // Delete old logo if exists
       if (formData.logo_url) {
         try {
@@ -66,7 +63,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
           if (oldFileName) {
             await supabase.storage
               .from('avatars')
-              .remove([`team-logos/${user.id}/${oldFileName}`]);
+              .remove([`team-logos/${session?.user.id}/${oldFileName}`]);
           }
         } catch (error) {
           // Ignore deletion errors for old files
@@ -75,7 +72,7 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       }
 
       const fileExt = file.name.split('.').pop();
-      const fileName = `team-logos/${user.id}/${Date.now()}.${fileExt}`;
+      const fileName = `team-logos/${session?.user.id}/${Date.now()}.${fileExt}`;
 
       // Use avatars bucket for team logo uploads
       const { error: uploadError } = await supabase.storage
@@ -115,14 +112,9 @@ export function TeamSettingsModal({ open, onOpenChange, team }: TeamSettingsModa
       if (formData.logo_url) {
         try {
           const fileName = formData.logo_url.split('/').pop();
-          if (fileName) {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-              await supabase.storage
-                .from('avatars')
-                .remove([`team-logos/${user.id}/${fileName}`]);
-            }
-          }
+          await supabase.storage
+            .from('avatars')
+            .remove([`team-logos/${session?.user.id}/${fileName}`]);
         } catch (error) {
           // Ignore deletion errors
           console.warn('Could not delete logo file:', error);

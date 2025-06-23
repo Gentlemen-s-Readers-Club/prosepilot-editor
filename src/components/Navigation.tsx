@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import {
-  LogOut,
-  User,
-  CreditCard,
-  BookOpen,
-  Users,
-  MessageCircle,
-  Menu,
-  X,
-  LayoutDashboard,
-} from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
 import { clearProfile } from "../store/slices/profileSlice";
 import { hasStudioPlan } from "../store/slices/subscriptionSlice";
-import type { RootState, AppDispatch } from "../store";
+import {
+  LayoutDashboard,
+  BookOpen,
+  MessageCircle,
+  User,
+  CreditCard,
+  Users,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,20 +24,34 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabase";
+import { clearSession } from "../store/slices/authSlice";
 
 export function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { profile } = useSelector((state: RootState) => state.profile);
-  const { session, loading } = useAuth();
+  const { session, status } = useSelector((state: RootState) => ({
+    session: state.auth.session,
+    status: state.auth.status,
+  }));
   const hasStudio = useSelector(hasStudioPlan);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    dispatch(clearProfile());
-    navigate("/login");
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      dispatch(clearSession());
+      dispatch(clearProfile());
+      navigate("/login");
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -75,7 +88,7 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
-            {!loading && !session ? (
+            {status === 'idle' && !session ? (
               <button
                 onClick={() => navigate("/pricing")}
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -109,7 +122,7 @@ export function Navigation() {
               <span>Support</span>
             </button>
 
-            {!loading && !session && (
+            {status === 'success' && !session && (
               <>
                 <button
                   onClick={() => navigate("/login")}
@@ -209,7 +222,7 @@ export function Navigation() {
       {/* Mobile menu */}
       <div className={`md:hidden ${mobileMenuOpen ? "block" : "hidden"}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-          {!loading && !!session && (
+          {status === 'success' && !!session && (
             <button
               onClick={() => {
                 navigate("/workspace");
@@ -232,7 +245,7 @@ export function Navigation() {
             <span>Support</span>
           </button>
 
-          {!loading && !session && (
+          {status !== 'success' || !session && (
             <button
               onClick={() => {
                 navigate("/pricing");
@@ -256,7 +269,7 @@ export function Navigation() {
             <span>Documentation</span>
           </button>
 
-          {!loading && !session ? (
+          {status !== 'success' || !session ? (
             <>
               <button
                 onClick={() => {
@@ -279,7 +292,7 @@ export function Navigation() {
               </button>
             </>
           ) : (
-            !loading &&
+            status === 'success' &&
             session && (
               <>
                 {hasStudio && (

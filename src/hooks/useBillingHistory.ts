@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "./useAuth";
 import { supabase } from "../lib/supabase";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export interface Transaction {
   id: string;
@@ -32,8 +34,10 @@ export interface Transaction {
   }>;
 }
 
-export function useBillingHistory() {
-  const { session } = useAuth();
+export function useBillingHistory() { 
+  const { session } = useSelector((state: RootState) => ({
+    session: state.auth.session,
+  }));  
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

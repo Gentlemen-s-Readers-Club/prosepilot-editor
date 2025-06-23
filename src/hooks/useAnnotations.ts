@@ -8,8 +8,11 @@ import {
   CreateReplyData,
   AnnotationFilters 
 } from '../types/annotations';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 export function useAnnotations(chapterId: string) {
+  const { session } = useSelector((state: RootState) => (state.auth));
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<AnnotationFilters>({ status: 'open' });
@@ -65,14 +68,11 @@ export function useAnnotations(chapterId: string) {
 
   const createAnnotation = async (data: CreateAnnotationData): Promise<Annotation | null> => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
-
       const { data: newAnnotation, error } = await supabase
         .from('annotations')
         .insert({
           ...data,
-          user_id: user.id,
+          user_id: session?.user.id || '',
           status: 'open'
         })
         .select(`
@@ -148,14 +148,11 @@ export function useAnnotations(chapterId: string) {
 
   const createReply = async (data: CreateReplyData): Promise<AnnotationReply | null> => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
-
       const { data: newReply, error } = await supabase
         .from('annotation_replies')
         .insert({
           ...data,
-          user_id: user.id
+          user_id: session?.user.id || ''
         })
         .select(`
           *,

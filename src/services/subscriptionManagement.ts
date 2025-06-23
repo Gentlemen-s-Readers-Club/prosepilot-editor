@@ -1,5 +1,7 @@
 import { supabase } from "../lib/supabase";
 import { getPaddleConfig } from "../lib/paddle-config";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export interface SubscriptionManagementResponse {
   success: boolean;
@@ -27,6 +29,8 @@ export async function handleSubscription({
   effectiveFrom,
 }: HandleSubscriptionParams): Promise<SubscriptionManagementResponse> {
   try {
+    const { session } = useSelector((state: RootState) => (state.auth));
+
     // Get the Supabase URL and anon key for the edge function call
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
@@ -35,22 +39,13 @@ export async function handleSubscription({
       throw new Error("Supabase URL not configured");
     }
 
-    // Get the current session for authentication
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      throw new Error("User not authenticated");
-    }
-
     const response = await fetch(
       `${supabaseUrl}/functions/v1/handle-paddle-subscription`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${session?.access_token}`,
         },
         body: JSON.stringify({
           action,

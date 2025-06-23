@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
-import { useAuth } from "./useAuth";
 import { useToast } from "./use-toast";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export interface SubscriptionManagementResponse {
   success: boolean;
@@ -11,7 +12,9 @@ export interface SubscriptionManagementResponse {
 }
 
 export const useSubscriptionManagement = () => {
-  const { session } = useAuth();
+  const { session } = useSelector((state: RootState) => ({
+    session: state.auth.session,
+  })); 
   const { toast } = useToast();
   const user = session?.user;
   const [loading, setLoading] = useState(false);

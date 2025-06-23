@@ -141,7 +141,7 @@ export function Landing() {
                     </div>
                     <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border max-md:hidden">
                       <div className="flex items-center">
-                        <Clock className="w-8 h-8 text-state-success mr-3" />
+                        <Clock className="w-8 h-8 text-brand-accent mr-3" />
                         <div>
                           <div className="text-2xl font-bold text-base-heading">72hrs</div>
                           <div className="text-sm text-base-paragraph">Avg. Completion</div>

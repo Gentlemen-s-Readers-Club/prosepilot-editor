@@ -11,6 +11,7 @@ import {
   UpdateMemberData,
   TeamRole
 } from '../types';
+import { Session } from '@supabase/supabase-js';
 
 interface TeamsState extends ApiState {
   teams: Team[];
@@ -33,7 +34,7 @@ const initialState: TeamsState = {
 // Fetch user's teams
 export const fetchUserTeams = createAsyncThunk(
   'teams/fetchUserTeams',
-  async () => {
+  async (session: Session | null) => {
     const { data, error } = await supabase
       .from('teams')
       .select(`
@@ -41,7 +42,7 @@ export const fetchUserTeams = createAsyncThunk(
         team_members!inner(role, status),
         _team_member_count:team_members(count)
       `)
-      .eq('team_members.user_id', (await supabase.auth.getUser()).data.user?.id)
+      .eq('team_members.user_id', session?.user.id || '')
       .eq('team_members.status', 'active')
       .eq('is_active', true)
       .order('updated_at', { ascending: false });
@@ -59,17 +60,16 @@ export const fetchUserTeams = createAsyncThunk(
 // Create new team
 export const createTeam = createAsyncThunk(
   'teams/createTeam',
-  async (teamData: CreateTeamData) => {
+  async ({ teamData, session }: { teamData: CreateTeamData; session: Session | null }) => {
     // Get the current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
+    if (!session?.user.id) {
       throw new Error('User not authenticated');
     }
 
     // Add the created_by field to the team data
     const teamDataWithCreator = {
       ...teamData,
-      created_by: user.id
+      created_by: session.user.id
     };
 
     const { data, error } = await supabase
@@ -102,7 +102,11 @@ export const updateTeam = createAsyncThunk(
 // Delete team
 export const deleteTeam = createAsyncThunk(
   'teams/deleteTeam',
-  async (teamId: string) => {
+  async ({ teamId, session }: { teamId: string; session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
+
     const { error } = await supabase
       .from('teams')
       .delete()
@@ -116,7 +120,7 @@ export const deleteTeam = createAsyncThunk(
 // Fetch team members
 export const fetchTeamMembers = createAsyncThunk(
   'teams/fetchTeamMembers',
-  async (teamId: string) => {
+  async ({ teamId, session }: { teamId: string; session: Session | null }) => {
     const { data, error } = await supabase
       .from('team_members')
       .select(`
@@ -135,10 +139,9 @@ export const fetchTeamMembers = createAsyncThunk(
 // Invite members
 export const inviteMembers = createAsyncThunk(
   'teams/inviteMembers',
-  async ({ teamId, inviteData }: { teamId: string; inviteData: InviteMembersData }) => {
+  async ({ teamId, inviteData, session }: { teamId: string; inviteData: InviteMembersData; session: Session | null }) => {
     // Get the current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
+    if (!session?.user.id) {
       throw new Error('User not authenticated');
     }
 
@@ -147,7 +150,7 @@ export const inviteMembers = createAsyncThunk(
       email,
       role: inviteData.role,
       message: inviteData.message,
-      invited_by: user.id
+      invited_by: session.user.id
     }));
 
     const { data, error } = await supabase
@@ -183,7 +186,11 @@ export const updateTeamMember = createAsyncThunk(
 // Remove team member
 export const removeTeamMember = createAsyncThunk(
   'teams/removeTeamMember',
-  async (memberId: string) => {
+  async ({ memberId, session }: { memberId: string; session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
+
     const { error } = await supabase
       .from('team_members')
       .delete()
@@ -197,7 +204,11 @@ export const removeTeamMember = createAsyncThunk(
 // Fetch team invitations
 export const fetchTeamInvitations = createAsyncThunk(
   'teams/fetchTeamInvitations',
-  async (teamId: string) => {
+  async ({ teamId, session }: { teamId: string; session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
+
     const { data, error } = await supabase
       .from('team_invitations')
       .select(`
@@ -217,7 +228,11 @@ export const fetchTeamInvitations = createAsyncThunk(
 // Cancel invitation
 export const cancelInvitation = createAsyncThunk(
   'teams/cancelInvitation',
-  async (invitationId: string) => {
+  async ({ invitationId, session }: { invitationId: string; session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
+
     const { error } = await supabase
       .from('team_invitations')
       .delete()
@@ -231,7 +246,11 @@ export const cancelInvitation = createAsyncThunk(
 // Accept invitation
 export const acceptInvitation = createAsyncThunk(
   'teams/acceptInvitation',
-  async (token: string) => {
+  async ({ token, session }: { token: string; session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
+
     const { data, error } = await supabase.rpc('accept_team_invitation', {
       invitation_token: token
     });
@@ -246,7 +265,11 @@ export const acceptInvitation = createAsyncThunk(
 // Fetch team activity logs
 export const fetchTeamActivity = createAsyncThunk(
   'teams/fetchTeamActivity',
-  async ({ teamId, limit = 50 }: { teamId: string; limit?: number }) => {
+  async ({ teamId, limit = 50, session }: { teamId: string; limit?: number; session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
+
     const { data, error } = await supabase
       .from('team_activity_logs')
       .select(`
@@ -265,9 +288,10 @@ export const fetchTeamActivity = createAsyncThunk(
 // Get user's pending invitations
 export const fetchUserInvitations = createAsyncThunk(
   'teams/fetchUserInvitations',
-  async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user?.email) throw new Error('No user email found');
+  async ({ session }: { session: Session | null }) => {
+    if (!session?.user.id) {
+      throw new Error('User not authenticated');
+    }
 
     const { data, error } = await supabase
       .from('team_invitations')
@@ -276,7 +300,7 @@ export const fetchUserInvitations = createAsyncThunk(
         team:team_id(id, name, description, logo_url),
         invited_by_user:users(id, email)
       `)
-      .eq('email', user.email)
+      .eq('email', session.user.email)
       .is('accepted_at', null)
       .gt('expires_at', new Date().toISOString())
       .order('created_at', { ascending: false });
