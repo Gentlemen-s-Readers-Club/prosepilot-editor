@@ -130,7 +130,7 @@ export function Navigation() {
 
             {profile && (
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center space-x-3 hover:bg-gray-50 rounded-full p-1 -mr-1 transition-colors focus:border-base-border focus:ring-1 focus:ring-brand-primary">
+                <DropdownMenuTrigger className="flex items-center space-x-3 hover:bg-gray-50 rounded-full p-1 pr-3 -mr-1 transition-colors focus:border-base-border focus:ring-1 focus:ring-brand-primary">
                   {profile.avatar_url ? (
                     <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                       <img
