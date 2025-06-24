@@ -1,21 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { clearProfile } from "../store/slices/profileSlice";
 import {
-  LogOut,
+  LayoutDashboard,
+  BookOpen,
+  MessageCircle,
   User,
   CreditCard,
-  BookOpen,
-  Users,
-  MessageCircle,
+  LogOut,
   Menu,
   X,
-  LayoutDashboard,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
-import { useDispatch, useSelector } from "react-redux";
-import { clearProfile } from "../store/slices/profileSlice";
-import { hasStudioPlan } from "../store/slices/subscriptionSlice";
-import type { RootState, AppDispatch } from "../store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,20 +22,27 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
-import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabase";
 
 export function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
-  const { session, loading } = useAuth();
-  const hasStudio = useSelector(hasStudioPlan);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    dispatch(clearProfile());
-    navigate("/login");
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      dispatch(clearProfile());
+      navigate("/login");
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -75,7 +79,7 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
-            {!loading && !session ? (
+            {!session ? (
               <button
                 onClick={() => navigate("/pricing")}
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -109,7 +113,7 @@ export function Navigation() {
               <span className="font-copy">Support</span>
             </button>
 
-            {!loading && !session && (
+            {!session && (
               <>
                 <button
                   onClick={() => navigate("/login")}
@@ -165,15 +169,6 @@ export function Navigation() {
                       Manage Subscription
                     </span>
                   </DropdownMenuItem>
-                  {hasStudio && (
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={() => navigate("/workspace/teams")}
-                    >
-                      <Users className="mr-2 h-4 w-4 text-brand-accent" />
-                      <span className="font-copy">Manage Teams</span>
-                    </DropdownMenuItem>
-                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
@@ -209,7 +204,7 @@ export function Navigation() {
       {/* Mobile menu */}
       <div className={`md:hidden ${mobileMenuOpen ? "block" : "hidden"}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-          {!loading && !!session && (
+          {!!session && (
             <button
               onClick={() => {
                 navigate("/workspace");
@@ -232,7 +227,7 @@ export function Navigation() {
             <span className="font-copy">Support</span>
           </button>
 
-          {!loading && !session && (
+          {!session && (
             <button
               onClick={() => {
                 navigate("/pricing");
@@ -256,7 +251,7 @@ export function Navigation() {
             <span className="font-copy">Documentation</span>
           </button>
 
-          {!loading && !session ? (
+          {!session ? (
             <>
               <button
                 onClick={() => {
@@ -279,22 +274,8 @@ export function Navigation() {
               </button>
             </>
           ) : (
-            !loading &&
             session && (
               <>
-                {hasStudio && (
-                  <button
-                    onClick={() => {
-                      navigate("/workspace/teams");
-                      closeMobileMenu();
-                    }}
-                    className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
-                  >
-                    <Users className="h-5 w-5 text-brand-accent" />
-                    <span className="font-copy">Teams</span>
-                  </button>
-                )}
-
                 {profile && (
                   <>
                     <div className="border-t border-gray-200 my-2 pt-2">

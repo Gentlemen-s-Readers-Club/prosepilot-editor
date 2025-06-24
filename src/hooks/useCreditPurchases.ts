@@ -1,129 +1,47 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { useAuth } from "./useAuth";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { usePaddle } from "../contexts/PaddleContext";
-
-export interface CreditPackage {
-  id: string;
-  name: string;
-  product_id: string;
-  price_id: string;
-  credits_amount: number;
-  price_cents: number;
-  currency: string;
-  discount_percentage: number;
-  is_active: boolean;
-}
-
-export interface CreditPurchase {
-  id: string;
-  user_id: string;
-  credit_package_id: string;
-  paddle_transaction_id?: string;
-  status: "pending" | "completed" | "failed" | "refunded";
-  credits_amount: number;
-  price_paid_cents: number;
-  currency: string;
-  paddle_checkout_id?: string;
-  completed_at?: string;
-  created_at: string;
-  credit_packages?: CreditPackage;
-}
+import {
+  fetchCreditPackages,
+  fetchUserPurchases,
+  createCreditPurchase,
+  setPaddleLoading,
+  selectCreditPackages,
+  selectCreditPurchases,
+  selectCreditPurchasesLoading,
+  selectCreditPurchasesError,
+  formatPrice,
+} from "../store/slices/creditPurchasesSlice";
+import { AppDispatch, RootState } from "../store";
 
 export const useCreditPurchases = () => {
-  const { session } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+  const { session } = useSelector((state: RootState) => ({
+    session: state.auth.session,
+  })); 
   const { paddle, loading: paddleLoading } = usePaddle();
   const user = session?.user;
-  const [packages, setPackages] = useState<CreditPackage[]>([]);
-  const [purchases, setPurchases] = useState<CreditPurchase[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // Selectors
+  const packages = useSelector(selectCreditPackages);
+  const purchases = useSelector(selectCreditPurchases);
+  const loading = useSelector(selectCreditPurchasesLoading);
+  const error = useSelector(selectCreditPurchasesError);
+
+  // Update paddle loading state in Redux
+  useEffect(() => {
+    dispatch(setPaddleLoading(paddleLoading));
+  }, [paddleLoading, dispatch]);
 
   // Fetch available credit packages
-  const fetchPackages = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const { data, error } = await supabase.functions.invoke(
-        "handle-credit-purchase",
-        {
-          body: {
-            action: "get_packages",
-            user_id: user?.id,
-            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
-          },
-        }
-      );
-
-      if (error) throw error;
-
-      if (data.success) {
-        setPackages(data.packages);
-        console.log("✅ Fetched packages from database:", data.packages);
-      } else {
-        throw new Error(data.error);
-      }
-
-      // If no packages from database, add a test package for debugging
-      if (data.packages.length === 0) {
-        console.log("⚠️ No packages from database, adding test package");
-        const testPackage = {
-          id: "test-package",
-          name: "Test Package",
-          product_id: "pro_01jxxajygrq55gpvpcr40fsnhj", // Use the credit packages product ID
-          price_id: "pri_01jxben1kf0pfntb8162sfxhba", // Use a known working subscription price ID for testing
-          credits_amount: 10,
-          price_cents: 2000,
-          currency: "USD",
-          discount_percentage: 0,
-          is_active: true,
-        };
-        setPackages([testPackage]);
-      }
-    } catch (err) {
-      console.error("Error fetching credit packages:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch credit packages"
-      );
-    } finally {
-      setLoading(false);
-    }
+  const fetchPackages = () => {
+    dispatch(fetchCreditPackages());
   };
 
   // Fetch user's purchase history
-  const fetchPurchases = async () => {
-    if (!user) return;
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const { data, error } = await supabase.functions.invoke(
-        "handle-credit-purchase",
-        {
-          body: {
-            action: "get_user_purchases",
-            user_id: user.id,
-            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
-          },
-        }
-      );
-
-      if (error) throw error;
-
-      if (data.success) {
-        setPurchases(data.purchases);
-      } else {
-        throw new Error(data.error);
-      }
-    } catch (err) {
-      console.error("Error fetching purchases:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch purchases"
-      );
-    } finally {
-      setLoading(false);
+  const fetchPurchases = () => {
+    if (user) {
+      dispatch(fetchUserPurchases());
     }
   };
 
@@ -151,9 +69,6 @@ export const useCreditPurchases = () => {
     }
 
     try {
-      setLoading(true);
-      setError(null);
-
       console.log("📦 Available packages:", packages);
 
       const selectedPackage = packages.find((pkg) => pkg.id === packageId);
@@ -167,31 +82,16 @@ export const useCreditPurchases = () => {
 
       console.log("✅ Selected package:", selectedPackage);
 
-      // Create purchase record
+      // Create purchase record using Redux thunk
       console.log("🔄 Creating purchase record...");
-      const { data, error } = await supabase.functions.invoke(
-        "handle-credit-purchase",
-        {
-          body: {
-            action: "create_purchase",
-            user_id: user.id,
-            package_id: packageId,
-            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
-          },
-        }
-      );
-
-      if (error) {
-        console.error("❌ Supabase function error:", error);
-        throw error;
+      const purchaseResult = await dispatch(createCreditPurchase(packageId));
+      
+      if (createCreditPurchase.rejected.match(purchaseResult)) {
+        console.error("❌ Purchase creation failed:", purchaseResult.error);
+        throw new Error(purchaseResult.error?.message || "Failed to create purchase");
       }
 
-      if (!data.success) {
-        console.error("❌ Purchase creation failed:", data.error);
-        throw new Error(data.error);
-      }
-
-      const purchase = data.purchase;
+      const purchase = purchaseResult.payload;
       console.log("✅ Purchase record created:", purchase);
 
       // Ensure Paddle is available
@@ -253,22 +153,8 @@ export const useCreditPurchases = () => {
       console.error("❌ Error purchasing credits:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to purchase credits";
-      setError(errorMessage);
       return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
     }
-  };
-
-  // Note: Success handling is now done through webhook + success URL redirect
-  // instead of eventCallback since we're using the proper Paddle context
-
-  // Format price for display
-  const formatPrice = (cents: number, currency: string = "USD") => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency,
-    }).format(cents / 100);
   };
 
   // Load packages on mount
@@ -286,11 +172,11 @@ export const useCreditPurchases = () => {
   return {
     packages,
     purchases,
-    loading: loading || paddleLoading, // Include paddle loading state
+    loading,
     error,
     purchaseCredits,
     fetchPackages,
     fetchPurchases,
     formatPrice,
   };
-};
+}; 

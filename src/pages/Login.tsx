@@ -10,6 +10,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import useAnalytics from "../hooks/useAnalytics";
+import { checkAndCreatePaddleCustomer } from "../hooks/useNewUserHandler";
 
 interface LoginFormData {
   email: string;
@@ -21,7 +22,6 @@ export function Login() {
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -33,32 +33,32 @@ export function Login() {
     mode: 'onSubmit',
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
-
+  const onSubmit = async ({ email, password }: LoginFormData) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
       if (error) throw error;
+
+      // Check and create Paddle customer for new users
+      if (data.session) {
+        await checkAndCreatePaddleCustomer(data.session);
+      }
 
       trackEvent({
         category: "authentication",
         action: "login",
         label: "email",
       });
-
       navigate("/workspace");
-    } catch (error: unknown) {
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Unknown error",
+        description: error instanceof Error ? error.message : "Sign in failed",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -94,7 +94,7 @@ export function Login() {
       </Helmet>
       <div className="flex flex-col min-h-[calc(100vh-64px)]">
         <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
-          <div className="max-w-md w-full space-y-8">
+          <div className="max-w-md w-full space-y-8 bg-white rounded-lg p-8 shadow-md">
             <div>
               <h2 className="mt-6 text-center text-3xl font-bold text-base-heading font-heading">
                 Sign in to ProsePilot
@@ -128,7 +128,7 @@ export function Login() {
                   <div className="w-full border-t border-brand-accent" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-base-background text-brand-accent">
+                  <span className="px-2 bg-white text-brand-accent">
                     Or continue with email
                   </span>
                 </div>
@@ -190,8 +190,8 @@ export function Login() {
                 </Button>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing in..." : "Sign in"}
+              <Button type="submit" className="w-full" disabled={status === "loading"}>
+                {status === "loading" ? "Signing in..." : "Sign in"}
               </Button>
 
               <div className="text-center">

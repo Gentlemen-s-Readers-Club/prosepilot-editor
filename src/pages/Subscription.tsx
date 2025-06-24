@@ -32,13 +32,12 @@ import {
   selectCanSubscribeToNewPlan,
   fetchUserSubscription,
 } from "../store/slices/subscriptionSlice";
-import { supabase } from "../lib/supabase";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import { CreditPurchase } from "../components/CreditPurchase";
 import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
-import { getPaddleConfig } from "../lib/paddle-config";
 import { BillingHistorySection } from "../components/subscription/BillingHistorySection";
+import { Plan, plans } from "../lib/consts";
 
 
 // Utility function to format price
@@ -55,87 +54,13 @@ const formatPrice = (
     : (numericAmount / 100).toFixed(2);
 };
 
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  icon: JSX.Element;
-  color: string;
-  description: string;
-  features: string[];
-  credits: number;
-  priceId: string;
-  isPopular?: boolean;
-  comingSoon?: boolean;
-}
-
-const plans: Plan[] = [
-  {
-    id: "starter",
-    name: "Starter",
-    price: 9,
-    credits: 5, // 1 book
-    icon: <FileText className="w-6 h-6" />,
-    color: "bg-state-success",
-    description: "Perfect for hobbyists and first-time authors",
-    features: [
-      "5 credits/month (1 book)",
-      "Basic genre selection",
-      "AI-generated outline + simple chapter flow",
-      "Plot and character consistency checker",
-      "Export to ePub",
-      "Community support",
-    ],
-    priceId: getPaddleConfig().subscriptionPrices.starter,
-  },
-  {
-    id: "pro",
-    name: "Pro Author",
-    price: 29,
-    credits: 25, // 5 books
-    icon: <Crown className="w-6 h-6" />,
-    color: "bg-state-info",
-    description: "For aspiring writers ready to go deeper",
-    features: [
-      "25 credits/month (5 books)",
-      "All Starter features",
-      "Unlock more genres",
-      "Advanced book properties: narrator, tone, style",
-      "Export to PDF, ePub, and Docx formats",
-      "Annotations system",
-      "Priority email support",
-    ],
-    priceId: getPaddleConfig().subscriptionPrices.pro,
-    isPopular: true,
-  },
-  {
-    id: "studio",
-    name: "Studio",
-    price: 79,
-    credits: 75, // 15 books
-    icon: <Users className="w-6 h-6" />,
-    color: "bg-state-warning",
-    description: "For professionals and small studios",
-    features: [
-      "75 credits/month (15 books)",
-      "All Pro features",
-      "AI-generated illustrations",
-      "Cover generation",
-      'Advanced Metadata management',
-      "Team access (up to 3 users)",
-      'More features coming soon'
-    ],
-    priceId: getPaddleConfig().subscriptionPrices.studio,
-    comingSoon: true,
-  },
-];
-
 // Credit packages are now handled by the CreditPurchase component
 // which fetches real packages from the database with valid Paddle price IDs
 
 export function Subscription() {
   const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
+  const { session } = useSelector((state: RootState) => (state.auth));
   const { profile, status: profileStatus } = useSelector(
     (state: RootState) => state.profile
   );
@@ -274,19 +199,6 @@ export function Subscription() {
       return;
     }
 
-    // Get the current authenticated user ID
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user?.id) {
-      toast({
-        title: "Error",
-        description: "Authentication required to subscribe",
-        variant: "destructive",
-      });
-      return;
-    }
-
     // Enhanced subscription validation
     if (hasActivePlanForPrice(plan.priceId)) {
       toast({
@@ -358,7 +270,7 @@ export function Subscription() {
           successUrl: `${window.location.origin}/workspace/subscription?success=true`,
         },
         customData: {
-          user_id: user.id,
+          user_id: session?.user.id || '',
           type: "subscription",
           environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
         },
@@ -435,6 +347,19 @@ export function Subscription() {
   const currentSubscription = subscriptions.find(
     (s) => s.status === "active" || s.status === "trialing"
   );
+
+  const getPlanIcon = (icon: string) => {
+    switch (icon) {
+      case 'FileText':
+        return <FileText className="w-6 h-6" />;
+      case 'Crown':
+        return <Crown className="w-6 h-6" />;
+      case 'Users':
+        return <Users className="w-6 h-6" />;
+      default:
+        return null;
+    }
+  }
 
   return (
     <>
@@ -595,7 +520,7 @@ export function Subscription() {
                           <div
                             className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}
                           >
-                            {plan.icon}
+                            {getPlanIcon(plan.icon)}
                           </div>
                           <h3 className="text-2xl font-bold text-base-heading">
                             {plan.name}

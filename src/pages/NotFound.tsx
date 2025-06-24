@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import Footer from '../components/Footer';
 import { SEOHead } from '../components/SEOHead';
+import useAnalytics from '../hooks/useAnalytics';
 
 export function NotFound() {
+  const { trackPageView } = useAnalytics({
+    measurementId: import.meta.env.VITE_ANALYTICS_ID,
+  });
+
+  useEffect(() => {
+    trackPageView('/404', 'Page Not Found');
+  }, [trackPageView]);
+
   return (
     <>
       <SEOHead 

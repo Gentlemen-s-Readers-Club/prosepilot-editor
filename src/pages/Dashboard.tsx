@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Search, Users, User, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X, Pencil, Archive, Rocket, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Search, BookOpen, Filter, Clock, Bookmark, LayoutGrid, List, X, Pencil, Archive, Rocket, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BookList } from '../components/BookList';
 import { Input } from '../components/ui/input';
@@ -8,14 +8,13 @@ import { toast } from '../hooks/use-toast';
 import { fetchBooks } from '../store/slices/booksSlice';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
-import { fetchUserTeams } from '../store/slices/teamsSlice';
 import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
 import { supabase } from '../lib/supabase';
 import { AppDispatch, RootState } from '../store';
 import type { Book, Category, Language, Status } from '../store/types';
-import { BOOK_STATES, TEAM_ROLES } from '../lib/consts';
+import { BOOK_STATES } from '../lib/consts';
 import { CustomSelect, SelectOption } from '../components/ui/select';
-import { NewBookModal } from '../components/NewBookModal';
+import { NewBookDrawer } from '../components/NewBookDrawer';
 import { Helmet } from 'react-helmet';
 import Footer from '../components/Footer';
 import { useCredits } from '../hooks/useCredits';
@@ -48,14 +47,12 @@ export function Dashboard() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [showNewBookModal, setShowNewBookModal] = useState(false);
+  const [showNewBookDrawer, setShowNewBookDrawer] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [workspaceOptions, setWorkspaceOptions] = useState<SelectOption[]>([]);
-  const [selectedWorkspace, setSelectedWorkspace] = useState<SelectOption>();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -66,41 +63,11 @@ export function Dashboard() {
   const { items: books, status: booksStatus } = useSelector((state: RootState) => state.books);
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
-  const { teams, status: teamsStatus } = useSelector((state: RootState) => state.teams);
-  const { profile } = useSelector((state: RootState) => state.profile);
   const hasStudio = useSelector(hasStudioPlan);
   const hasPro = useSelector(hasProOrStudioPlan);
 
   // Book creation credits
   const BOOK_CREATION_CREDITS = 5;
-
-  // Check if user has any teams
-  const hasTeams = teams.length > 0;
-
-  // Set workspace options and default workspace
-  useEffect(() => {
-    if (profile?.full_name) {
-      const options: SelectOption[] = [
-        {
-          value: 'personal',
-          label: `Personal (${profile?.full_name})`
-        }
-      ];
-      
-      teams.forEach(team => {
-        options.push({
-          value: team.id,
-          label: team.name
-        });
-      });
-      setWorkspaceOptions(options);
-
-      if (!selectedWorkspace && options.length > 0) {
-        setSelectedWorkspace(options[0]);
-      }
-    }
-    
-  }, [profile, selectedWorkspace, teams]);
 
   // Load data
   useEffect(() => {
@@ -117,9 +84,6 @@ export function Dashboard() {
         }
         if (languagesStatus === 'idle') {
           promises.push(dispatch(fetchLanguages()).unwrap());
-        }
-        if (teamsStatus === 'idle' && hasStudio) {
-          promises.push(dispatch(fetchUserTeams()).unwrap());
         }
 
         await Promise.all(promises);
@@ -138,7 +102,7 @@ export function Dashboard() {
     if (subscriptionStatus === 'success') {
       loadData();
     }
-  }, [dispatch, booksStatus, categoriesStatus, languagesStatus, teamsStatus, hasStudio, hasPro, subscriptionStatus]);
+  }, [dispatch, booksStatus, categoriesStatus, languagesStatus, hasStudio, hasPro, subscriptionStatus]);
 
   // Subscribe to real-time changes
   useEffect(() => {
@@ -162,21 +126,8 @@ export function Dashboard() {
     };
   }, [dispatch]);
 
-  // Filter books based on selected workspace (only if user has teams and Studio plan)
-  const workspaceFilteredBooks = useMemo(() => {
-    if (!hasTeams || !hasStudio || !selectedWorkspace) return books;
-
-    if (selectedWorkspace.value === 'personal') {
-      // Show personal books (no team_id)
-      return books.filter((book: Book) => !book.team_id);
-    } else {
-      // Show team books for selected team
-      return books.filter((book: Book) => book.team_id === selectedWorkspace.value);
-    }
-  }, [books, selectedWorkspace, hasTeams, hasStudio]);
-
   const filteredBooks = useMemo(() => {
-    return workspaceFilteredBooks.filter((book: Book) => {
+    return books.filter((book: Book) => {
       const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === '' || book.categories.some(cat => cat.id === selectedCategory);
       const matchesLanguage = selectedLanguage === '' || book.languages.id === selectedLanguage;
@@ -189,7 +140,7 @@ export function Dashboard() {
       
       return matchesSearch && matchesCategory && matchesLanguage && matchesStatus;
     });
-  }, [workspaceFilteredBooks, searchQuery, selectedCategory, selectedLanguage, selectedStatus]);
+  }, [books, searchQuery, selectedCategory, selectedLanguage, selectedStatus]);
 
   // Sort books
   const sortedBooks = useMemo(() => {
@@ -229,7 +180,7 @@ export function Dashboard() {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus, selectedWorkspace, sortBy]);
+  }, [searchQuery, selectedCategory, selectedLanguage, selectedStatus, sortBy]);
 
   // Update active filters
   useEffect(() => {
@@ -273,7 +224,7 @@ export function Dashboard() {
       return;
     }
 
-    setShowNewBookModal(true);
+    setShowNewBookDrawer(true);
   };
 
   if (loading || booksStatus === 'loading') {
@@ -281,9 +232,9 @@ export function Dashboard() {
       <div className="h-full">
         <div className="max-w-[1600px] mx-auto px-6 py-8">
           <div className="animate-pulse">
-            <div className="h-8 w-48 bg-gray-200 rounded mb-8"></div>
-            <div className="flex gap-8">
-              <div className="w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
+            <div className="h-20 w-full lg:h-8 lg:w-48 bg-gray-200 rounded mb-8"></div>
+            <div className="flex gap-8 flex-col lg:flex-row">
+              <div className="w-full lg:w-72 bg-gray-200 rounded-lg shrink-0 h-[500px]"></div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-1">
                 {[1, 2, 3, 4].map((n) => (
                   <div key={n} className="aspect-[2/3] bg-gray-200 rounded-lg"></div>
@@ -323,41 +274,10 @@ export function Dashboard() {
           {/* Sidebar */}
           <div className="w-full lg:w-72 lg:shrink-0">
             <div className="space-y-6">
-              {/* Workspace Selector - Only show if user has Studio plan and teams */}
-              {hasStudio && hasTeams && (
-                <div className="bg-white rounded-lg shadow-md p-6 text-base-heading">
-                  <h2 className="text-lg font-semibold mb-4 font-heading">Workspace</h2>
-                  <div className="relative">
-                    <CustomSelect
-                      value={selectedWorkspace}
-                      onChange={(newValue) => {setSelectedWorkspace(newValue as SelectOption)}}
-                      options={workspaceOptions}
-                      placeholder="Select workspace" />
-                  </div>
-                  
-                  {/* Workspace Info */}
-                  <div className="mt-4 pt-4 border-t border-brand-accent">
-                    <div className="flex items-center gap-2 text-sm">
-                      {selectedWorkspace?.value === 'personal' ? (
-                        <User className="w-4 h-4" />
-                      ) : (
-                        <Users className="w-4 h-4" />
-                      )}
-                      <span className="opacity-90 font-copy">
-                        {selectedWorkspace?.value === 'personal' 
-                          ? 'Personal workspace' 
-                          : `Team workspace • ${TEAM_ROLES[teams.find(team => team.id === selectedWorkspace?.value)?.user_role || 'Member']}`
-                        }
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Filters */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-base-heading font-heading">Filters</h2>
+              <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
+                <div className="flex items-center justify-between lg:mb-4">
+                  <h2 className="text-lg font-bold text-base-heading font-heading">Filters</h2>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -370,7 +290,7 @@ export function Dashboard() {
                 
                 <div className={`space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-base-heading font-heading">Category</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading font-copy">Category</label>
                     <CustomSelect
                       value={{
                         value: selectedCategory,
@@ -388,7 +308,7 @@ export function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-base-heading font-heading">Language</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading font-copy">Language</label>
                     <CustomSelect
                       value={{
                         value: selectedLanguage,
@@ -406,7 +326,7 @@ export function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-base-heading font-heading">Status</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading font-copy">Status</label>
                     <CustomSelect
                       value={{
                         value: selectedStatus,
@@ -425,7 +345,7 @@ export function Dashboard() {
 
                   {/* Quick Links */}
                   <div className="pt-4 border-t border-brand-accent">
-                    <h3 className="text-sm font-medium text-base-heading mb-3 font-heading">Quick Filters</h3>
+                    <h3 className="text-sm font-semibold text-base-heading mb-3 font-heading">Quick Filters</h3>
                     <div className="space-y-2">
                       <button 
                         onClick={() => setSelectedStatus('published')}
@@ -585,37 +505,13 @@ export function Dashboard() {
                   <div className="bg-base-background rounded-full p-4 mb-4">
                     <BookOpen className="w-12 h-12 text-base-heading" />
                   </div>
-                  <h3 className="text-lg font-medium text-base-heading mb-2 font-heading">No books yet</h3>
+                  <h3 className="text-lg font-bold text-base-heading mb-2 font-heading">No books yet</h3>
                   <p className="text-base-paragraph max-w-md mb-6 font-copy">
                     Start your writing journey by creating your first book. Our AI will help you transform your ideas into compelling stories.
                   </p>
-                  <Button 
-                    className="bg-brand-primary hover:bg-brand-primary/90 text-white"
-                    onClick={openCreateModal}
-                  >
+                  <Button onClick={openCreateModal}>
                     <Plus className="mr-2 h-4 w-4" />
                     Create Your First Book
-                  </Button>
-                </div>
-              </div>
-            ) : hasTeams && workspaceFilteredBooks.length === 0 ? (
-              <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                <div className="flex flex-col items-center">
-                  <div className="bg-base-background rounded-full p-4 mb-4">
-                    <BookOpen className="w-12 h-12 text-base-heading" />
-                  </div>
-                  <h3 className="text-lg font-medium text-base-heading mb-2 font-heading">
-                    No books in {selectedWorkspace?.label}
-                  </h3>
-                  <p className="text-base-paragraph max-w-md mb-6 font-copy">
-                    {selectedWorkspace?.type === 'personal' 
-                      ? 'Create your first personal book to get started.'
-                      : 'This team doesn\'t have any books yet. Create the first one!'
-                    }
-                  </p>
-                  <Button  onClick={openCreateModal}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Book
                   </Button>
                 </div>
               </div>
@@ -647,9 +543,9 @@ export function Dashboard() {
         </div>
       </div>
 
-      <NewBookModal
-        isOpen={showNewBookModal}
-        onClose={() => setShowNewBookModal(false)}
+      <NewBookDrawer
+        isOpen={showNewBookDrawer}
+        onClose={() => setShowNewBookDrawer(false)}
       />
 
       <NoCreditsModal

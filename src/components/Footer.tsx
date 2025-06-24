@@ -5,9 +5,9 @@ const Footer = () => {
   return (
     <footer className="bg-brand-primary border-t">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-8">
           <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center rounded-md bg-white p-2">
+            <div className="flex items-center justify-center rounded-md bg-white p-2 shrink-0">
               <img src="/logo.png" alt="ProsePilot Logo" className="h-9 w-9" />
             </div>
             <span className="ml-2 text-xl font-bold text-white font-heading">

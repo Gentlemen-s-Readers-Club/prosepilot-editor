@@ -146,27 +146,103 @@ Deno.serve(async (req) => {
     }
 
     // Get customer ID for the user
-    console.log("🔍 Looking up customer ID for user:", user_id);
+    console.log("🔍 Starting customer ID lookup for user:", user_id);
+    
+    // First check subscriptions table for subscription_id
     const { data: subscriptions, error: subError } = await supabase
       .from("subscriptions")
-      .select("customer_id, subscription_id")
+      .select("subscription_id, customer_id")
       .eq("user_id", user_id)
       .eq("environment", environment)
       .order("created_at", { ascending: false })
       .limit(1);
 
-    console.log("📦 Found subscriptions:", subscriptions);
-
     if (subError) {
       console.error("❌ Error fetching subscriptions:", subError);
     }
 
-    if (subError || !subscriptions?.length) {
-      console.log("❌ No subscription found for user:", user_id);
+    console.log("📦 Raw subscriptions data:", JSON.stringify(subscriptions, null, 2));
+
+    let customerId = null;
+    const subscriptionId = subscriptions?.[0]?.subscription_id;
+
+    // If we have a subscription ID, use it to get customer info from Paddle
+    if (subscriptionId) {
+      console.log("🔄 Found subscription ID, fetching customer info from Paddle:", subscriptionId);
+      
+      const subscriptionResponse = await fetch(
+        `${paddleApiBaseUrl}/subscriptions/${subscriptionId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${paddleApiKey}`,
+            "Content-Type": "application/json",
+            "Paddle-Version": "2"
+          },
+        }
+      );
+
+      console.log("🔄 Paddle API response status:", subscriptionResponse.status);
+
+      if (!subscriptionResponse.ok) {
+        console.error("❌ Failed to fetch subscription details from Paddle");
+      } else {
+        const subscriptionData = await subscriptionResponse.json();
+        console.log("📦 Raw Paddle subscription data:", JSON.stringify(subscriptionData, null, 2));
+        
+        customerId = subscriptionData.data?.customer_id;
+        console.log("🔍 Found customer ID from Paddle API:", customerId);
+
+        if (customerId) {
+          // Update subscription record with customer ID if it's missing
+          if (!subscriptions[0].customer_id) {
+            console.log("📝 Updating subscription record with customer ID");
+            const { error: updateError } = await supabase
+              .from("subscriptions")
+              .update({ customer_id: customerId })
+              .eq("subscription_id", subscriptionId)
+              .eq("environment", environment);
+
+            if (updateError) {
+              console.error("❌ Failed to update subscription with customer ID:", updateError);
+            } else {
+              console.log("✅ Updated subscription with customer ID:", customerId);
+            }
+          }
+        }
+      }
+    }
+
+    // If no customer ID from subscription, check profiles table as fallback
+    if (!customerId) {
+      console.log("🔍 No customer ID from subscription, checking profiles table");
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("paddle_customer_id")
+        .eq("id", user_id)
+        .single();
+
+      if (profileError) {
+        console.error("❌ Error fetching profile:", profileError);
+      } else if (profile?.paddle_customer_id) {
+        customerId = profile.paddle_customer_id;
+        console.log("✅ Found customer ID from profiles:", customerId);
+      }
+    }
+
+    if (!customerId) {
+      console.error("❌ No customer ID found after checking all sources:", {
+        checkedSubscriptionAPI: subscriptionId ? true : false,
+        checkedProfiles: true,
+        userId: user_id,
+        environment: environment,
+        subscriptionId: subscriptionId
+      });
       return new Response(
         JSON.stringify({
           success: false,
-          error: "No subscription found for user",
+          error: "Customer ID not found",
+          details: "Could not find customer ID in Paddle API or profiles"
         }),
         {
           status: 404,
@@ -175,91 +251,23 @@ Deno.serve(async (req) => {
       );
     }
 
-    let customerId = subscriptions[0].customer_id;
-
-    if (!customerId) {
-      console.log(
-        "⚠️ No customer ID found, fetching from Paddle API using subscription ID"
-      );
-
-      // Fetch subscription details from Paddle to get customer ID
-      const subscriptionResponse = await fetch(
-        `${paddleApiBaseUrl}/subscriptions/${subscriptions[0].subscription_id}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${paddleApiKey}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!subscriptionResponse.ok) {
-        console.error("❌ Failed to fetch subscription details from Paddle");
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: "Failed to fetch customer ID",
-          }),
-          {
-            status: subscriptionResponse.status,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
-      }
-
-      const subscriptionData = await subscriptionResponse.json();
-      const paddleCustomerId = subscriptionData.data?.customer?.id;
-
-      if (!paddleCustomerId) {
-        console.error("❌ No customer ID found in Paddle subscription data");
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: "Customer ID not found",
-          }),
-          {
-            status: 404,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
-      }
-
-      // Update subscription record with customer ID
-      const { error: updateError } = await supabase
-        .from("subscriptions")
-        .update({ customer_id: paddleCustomerId })
-        .eq("subscription_id", subscriptions[0].subscription_id)
-        .eq("environment", environment);
-
-      if (updateError) {
-        console.error(
-          "❌ Failed to update subscription with customer ID:",
-          updateError
-        );
-      } else {
-        console.log(
-          "✅ Updated subscription with customer ID:",
-          paddleCustomerId
-        );
-      }
-
-      // Use the fetched customer ID
-      customerId = paddleCustomerId;
-    }
-
-    console.log("✅ Using customer ID:", customerId);
+    console.log("✅ Final customer ID being used:", customerId);
 
     // Fetch transactions from Paddle
-    console.log("🔄 Fetching transactions from Paddle API...");
+    console.log("🔄 Fetching transactions from Paddle API for customer:", customerId);
     const response = await fetch(
-      `${paddleApiBaseUrl}/transactions?customer_id=${customerId}&order_by=created_at[desc]`,
+      `${paddleApiBaseUrl}/transactions`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${paddleApiKey}`,
           "Content-Type": "application/json",
+          "Paddle-Version": "2"
         },
+        body: JSON.stringify({
+          customer_id: [customerId],  // API expects an array of customer IDs
+          order_by: "created_at[DESC]"  // Correct format for ordering
+        })
       }
     );
 

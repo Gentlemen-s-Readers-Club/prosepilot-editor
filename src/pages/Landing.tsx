@@ -156,13 +156,12 @@ export function Landing() {
                 <div className="lg:flex-1 shrink-0">
                   <div className="relative max-md:pt-4 md:mx-4 lg:mx-0">
                     <video
-                      className="w-full rounded-lg shadow-2xl"
+                      className="w-full rounded-lg shadow-2xl aspect-video object-cover"
                       src="/videos/masthead.mp4"
                       autoPlay
                       muted
                       loop
                       playsInline
-                      poster="/images/masthead.jpg"
                     />
                     {/* Bolt.new Logo Top Right */}
                     <a
@@ -190,7 +189,7 @@ export function Landing() {
                     </div>
                     <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 border max-md:hidden">
                       <div className="flex items-center">
-                        <Clock className="w-8 h-8 text-state-success mr-3" aria-hidden="true" />
+                        <Clock className="w-8 h-8 text-brand-accent mr-3" aria-hidden="true"  />
                         <div>
                           <div className="text-2xl font-bold text-base-heading font-heading">72hrs</div>
                           <div className="text-sm text-base-paragraph font-copy">Avg. Completion</div>
@@ -244,7 +243,7 @@ export function Landing() {
                         {item.problem}
                       </h3>
                       <div className="flex items-center mt-2">
-                        <CheckCircle className="w-5 h-5 text-state-success mr-2" aria-hidden="true" />
+                        <CheckCircle className="w-5 h-5 text-state-success mr-2 shrink-0" aria-hidden="true"  />
                         <p className="text-base text-state-success font-medium font-copy">{item.solution}</p>
                       </div>
                     </div>

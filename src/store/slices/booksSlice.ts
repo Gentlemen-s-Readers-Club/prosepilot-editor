@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '../../lib/supabase';
 import { ApiState, Book } from '../types';
-import { RootState } from '..';
 
 interface BooksState extends ApiState {
   items: Book[];
@@ -27,7 +26,6 @@ export const fetchBooks = createAsyncThunk(
         synopsis,
         created_at,
         updated_at,
-        team_id,
         languages (
           id,
           name,
@@ -56,7 +54,6 @@ export const fetchBooks = createAsyncThunk(
       synopsis: book.synopsis,
       created_at: book.created_at,
       updated_at: book.updated_at,
-      team_id: book.team_id,
       languages: book.languages,
       categories: book.book_categories?.map((bc: any) => bc.categories) || []
     })) || [];

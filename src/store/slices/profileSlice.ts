@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { supabase } from '../../lib/supabase';
 import { ApiState } from '../types';
+import { RootState } from '../index';
 
 export interface Profile {
   id: string;
@@ -24,10 +25,15 @@ const initialState: ProfileState = {
   error: null,
 };
 
-export const fetchProfile = createAsyncThunk(
+export const fetchProfile = createAsyncThunk<
+  Profile,
+  void,
+  { state: RootState }
+>(
   'profile/fetchProfile',
-  async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+  async (_, { getState }) => {
+    const state = getState();
+    const session = state.auth.session;
     
     if (!session?.user) {
       throw new Error('No authenticated user');
@@ -43,7 +49,6 @@ export const fetchProfile = createAsyncThunk(
     if (error && error.code === 'PGRST116') {
       const fallbackProfile = {
         id: session.user.id,
-        email: session.user.email,
         full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
         avatar_url: session.user.user_metadata?.avatar_url || null,
         newsletter_product: true,
@@ -86,61 +91,137 @@ export const fetchProfile = createAsyncThunk(
   }
 );
 
-export const updateProfile = createAsyncThunk(
+export const updateProfile = createAsyncThunk<
+  Profile,
+  Partial<Profile>,
+  { state: RootState }
+>(
   'profile/updateProfile',
-  async (updates: Partial<Profile>) => {
-    const { data: { session } } = await supabase.auth.getSession();
+  async (updates, { getState }) => {
+    const state = getState();
+    const session = state.auth.session;
     
     if (!session?.user) {
       throw new Error('No authenticated user');
     }
 
-    const { data, error } = await supabase
+    // First try to update existing profile
+    const { data: updateData, error: updateError } = await supabase
       .from('profiles')
       .update(updates)
       .eq('id', session.user.id)
       .select()
       .single();
 
-    if (error) {
-      throw new Error(error.message);
+    // If update succeeded, return the data
+    if (!updateError) {
+      return {
+        ...updateData,
+        email: session.user.email,
+      };
     }
 
-    return {
-      ...data,
-      email: session.user.email,
-    };
+    // If update failed because no record exists, create a new profile
+    if (updateError.code === 'PGRST116') {
+      const newProfile = {
+        id: session.user.id,
+        full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+        avatar_url: session.user.user_metadata?.avatar_url || null,
+        newsletter_product: true,
+        newsletter_marketing: true,
+        newsletter_writing: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        ...updates // Apply the updates to the new profile
+      };
+
+      const { data: insertData, error: insertError } = await supabase
+        .from('profiles')
+        .insert([newProfile])
+        .select()
+        .single();
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
+
+      return {
+        ...insertData,
+        email: session.user.email,
+      };
+    }
+
+    // If it's a different error, throw it
+    throw new Error(updateError.message);
   }
 );
 
-export const updateNewsletterPreferences = createAsyncThunk(
-  'profile/updateNewsletterPreferences',
-  async (preferences: {
+export const updateNewsletterPreferences = createAsyncThunk<
+  Profile,
+  {
     newsletter_product?: boolean;
     newsletter_marketing?: boolean;
     newsletter_writing?: boolean;
-  }) => {
-    const { data: { session } } = await supabase.auth.getSession();
+  },
+  { state: RootState }
+>(
+  'profile/updateNewsletterPreferences',
+  async (preferences, { getState }) => {
+    const state = getState();
+    const session = state.auth.session;
     
     if (!session?.user) {
       throw new Error('No authenticated user');
     }
 
-    const { data, error } = await supabase
+    // First try to update existing profile
+    const { data: updateData, error: updateError } = await supabase
       .from('profiles')
       .update(preferences)
       .eq('id', session.user.id)
       .select()
       .single();
 
-    if (error) {
-      throw new Error(error.message);
+    // If update succeeded, return the data
+    if (!updateError) {
+      return {
+        ...updateData,
+        email: session.user.email,
+      };
     }
 
-    return {
-      ...data,
-      email: session.user.email,
-    };
+    // If update failed because no record exists, create a new profile
+    if (updateError.code === 'PGRST116') {
+      const newProfile = {
+        id: session.user.id,
+        full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+        avatar_url: session.user.user_metadata?.avatar_url || null,
+        newsletter_product: true,
+        newsletter_marketing: true,
+        newsletter_writing: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        ...preferences // Apply the newsletter preferences to the new profile
+      };
+
+      const { data: insertData, error: insertError } = await supabase
+        .from('profiles')
+        .insert([newProfile])
+        .select()
+        .single();
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
+
+      return {
+        ...insertData,
+        email: session.user.email,
+      };
+    }
+
+    // If it's a different error, throw it
+    throw new Error(updateError.message);
   }
 );
 

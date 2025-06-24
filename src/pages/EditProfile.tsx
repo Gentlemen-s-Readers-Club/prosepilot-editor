@@ -19,12 +19,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { updateProfile, updateNewsletterPreferences } from '../store/slices/profileSlice';
 import { Helmet } from 'react-helmet';
+import { UserIdentity } from '@supabase/supabase-js';
 
 export function EditProfile() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  
+  const { session } = useSelector((state: RootState) => (state.auth));
   const { profile } = useSelector((state: RootState) => state.profile);
 
   const [loading, setLoading] = useState(false);
@@ -72,11 +74,9 @@ export function EditProfile() {
     const fetchUserIdentities = async () => {
       try {
         setLoadingProviders(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user && user.identities) {
+        if (session?.user.identities) {
           // Extract provider names from identities
-          const providers = user.identities.map(identity => identity.provider);
+          const providers = session?.user.identities.map((identity: UserIdentity) => identity.provider);
           setConnectedProviders(providers);
         }
       } catch (error) {
@@ -87,7 +87,7 @@ export function EditProfile() {
     };
 
     fetchUserIdentities();
-  }, []);
+  }, [session?.user.identities]);
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -170,13 +170,10 @@ export function EditProfile() {
     try {
       setIsFileLoading(true);
       const file = event.target.files?.[0];
-      if (!file) return;
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
+      if (!file) return;  
 
       const fileExt = file.name.split('.').pop();
-      const filePath = `${session.user.id}/${Date.now()}.${fileExt}`;
+      const filePath = `${session?.user.id}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -283,12 +280,11 @@ export function EditProfile() {
 
   async function handleSocialUnlink(provider: string) {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
 
       setLoading(true);
       
       // Check if this is the only auth method
-      if (!user?.identities?.length) {
+      if (!session?.user.identities?.length) {
         toast({
           variant: "destructive",
           title: "Error",
@@ -298,8 +294,8 @@ export function EditProfile() {
       }
 
       // find the identity
-      const identity = user?.identities?.find(
-        identity => identity.provider === provider
+      const identity = session?.user.identities?.find(
+        (identity: UserIdentity) => identity.provider === provider
       )
 
       if(!identity) {
@@ -344,11 +340,21 @@ export function EditProfile() {
 
     try {
       setLoading(true);
-      const { error } = await supabase.auth.admin.deleteUser(
-        (await supabase.auth.getUser()).data.user?.id || ''
-      );
+      if (!session?.user.id) {
+        throw new Error('User ID not found');
+      }
 
-      if (error) throw error;
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
 
       await supabase.auth.signOut();
       navigate('/');
@@ -754,16 +760,16 @@ export function EditProfile() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="bg-state-error-light border border-state-error rounded-lg p-4">
                 <div className="flex">
                   <div className="shrink-0">
-                    <AlertCircle className="h-5 w-5 text-red-400" />
+                    <AlertCircle className="h-5 w-5 text-state-error" />
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800 font-heading">
+                    <h3 className="text-sm font-medium text-state-error font-heading">
                       Warning
                     </h3>
-                    <div className="mt-2 text-sm text-red-700">
+                    <div className="mt-2 text-sm text-state-error">
                       <ul className="list-disc pl-5 space-y-1">
                         <li>All your books and writing will be permanently deleted</li>
                         <li>Your subscription will be cancelled immediately</li>
@@ -774,8 +780,8 @@ export function EditProfile() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="deleteConfirmation">
-                  Type your email <span className="font-medium">{profile?.email}</span> to confirm
+                <Label htmlFor="deleteConfirmation" className='font-normal text-base-paragraph'>
+                  Type your email <span className="font-bold text-base-heading">{profile?.email}</span> to confirm
                 </Label>
                 <Input
                   id="deleteConfirmation"

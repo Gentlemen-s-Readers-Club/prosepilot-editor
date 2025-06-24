@@ -56,7 +56,7 @@ export function ForgotPassword() {
       </Helmet>
       <div className='flex flex-col min-h-[calc(100vh-64px)]'>
         <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
-          <div className="max-w-md w-full space-y-8">
+          <div className="max-w-md w-full space-y-8 bg-white rounded-lg p-8 shadow-md">
             {success ? (
               <div className="text-center">
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading font-heading">

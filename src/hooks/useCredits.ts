@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import type { RealtimeChannel } from "@supabase/supabase-js";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 interface CreditBalance {
   current_balance: number;
@@ -46,6 +48,7 @@ interface UseCreditsReturn {
 }
 
 export function useCredits(): UseCreditsReturn {
+  const { session } = useSelector((state: RootState) => (state.auth));
   const [balance, setBalance] = useState<CreditBalance | null>(null);
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [bookGenerations, setBookGenerations] = useState<BookGeneration[]>([]);
@@ -55,10 +58,7 @@ export function useCredits(): UseCreditsReturn {
   // Fetch user's credit balance
   const refreshBalance = useCallback(async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      if (!session?.user.id) {
         setError("User not authenticated");
         return;
       }
@@ -68,7 +68,7 @@ export function useCredits(): UseCreditsReturn {
         .select(
           "current_balance, total_earned, total_consumed, last_refill_date"
         )
-        .eq("user_id", user.id)
+        .eq("user_id", session.user.id)
         .single();
 
       if (balanceError) {
@@ -96,15 +96,12 @@ export function useCredits(): UseCreditsReturn {
   // Fetch user's credit transactions
   const refreshTransactions = useCallback(async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!session?.user.id) return;
 
       const { data, error: transactionsError } = await supabase
         .from("credit_transactions")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", session.user.id)
         .order("created_at", { ascending: false })
         .limit(50);
 
@@ -122,15 +119,12 @@ export function useCredits(): UseCreditsReturn {
   // Fetch user's book generations
   const refreshBookGenerations = useCallback(async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!session?.user.id) return;
 
       const { data, error: generationsError } = await supabase
         .from("book_generations")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", session.user.id)
         .order("created_at", { ascending: false })
         .limit(20);
 
@@ -148,13 +142,10 @@ export function useCredits(): UseCreditsReturn {
   // Quick balance check (returns just the number)
   const checkBalance = useCallback(async (): Promise<number | null> => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return null;
+      if (!session?.user.id) return null;
 
       const { data } = await supabase.rpc("get_user_credits", {
-        p_user_id: user.id,
+        p_user_id: session.user.id,
         p_environment: import.meta.env.VITE_PADDLE_ENV,
       });
 
@@ -187,84 +178,77 @@ export function useCredits(): UseCreditsReturn {
     let generationsSubscription: RealtimeChannel | null = null;
 
     const setupRealtimeSubscriptions = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      if (!session?.user.id) return;
 
-      if (!user) return;
-
-      console.log("Setting up realtime subscriptions for user:", user.id);
+      // console.log("Setting up realtime subscriptions for user:", session.user.id);
 
       // Subscribe to credit balance changes
       balanceSubscription = supabase
-        .channel(`user_credits_${user.id}`)
+        .channel(`user_credits_${session.user.id}`)
         .on(
           "postgres_changes",
           {
             event: "*",
             schema: "public",
             table: "user_credits",
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log("Credit balance changed:", payload);
+            // console.log("Credit balance changed:", payload);
             refreshBalance();
           }
         )
-        .subscribe((status) => {
-          console.log("Credit balance subscription status:", status);
-        });
+        .subscribe();
+          // console.log("Credit balance subscription status:", status);
 
       // Subscribe to new transactions
       transactionsSubscription = supabase
-        .channel(`credit_transactions_${user.id}`)
+        .channel(`credit_transactions_${session.user.id}`)
         .on(
           "postgres_changes",
           {
             event: "INSERT",
             schema: "public",
             table: "credit_transactions",
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log("New credit transaction:", payload);
+            // console.log("New credit transaction:", payload);
             refreshTransactions();
             // Also refresh balance when new transaction is logged
             refreshBalance();
           }
         )
-        .subscribe((status) => {
-          console.log("Credit transactions subscription status:", status);
-        });
+        .subscribe();
+          // console.log("Credit transactions subscription status:", status);
 
       // Subscribe to book generation updates
       generationsSubscription = supabase
-        .channel(`book_generations_${user.id}`)
+        .channel(`book_generations_${session.user.id}`)
         .on(
           "postgres_changes",
           {
             event: "*",
             schema: "public",
             table: "book_generations",
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${session.user.id}`,
           },
           (payload) => {
-            console.log("Book generation updated:", payload);
+            // console.log("Book generation updated:", payload);
             refreshBookGenerations();
             // Refresh balance when book generation status changes (credit consumption)
             refreshBalance();
           }
         )
-        .subscribe((status) => {
-          console.log("Book generations subscription status:", status);
-        });
+        .subscribe();
+          // console.log("Book generations subscription status:", status);
     };
 
     setupRealtimeSubscriptions();
 
     return () => {
       if (balanceSubscription) {
-        console.log("Unsubscribing from realtime subscriptions");
+        // console.log("Unsubscribing from realtime subscriptions");
         balanceSubscription.unsubscribe();
       }
       if (transactionsSubscription) {
@@ -274,7 +258,7 @@ export function useCredits(): UseCreditsReturn {
         generationsSubscription.unsubscribe();
       }
     };
-  }, [refreshBalance, refreshTransactions, refreshBookGenerations]);
+  }, [refreshBalance, refreshTransactions, refreshBookGenerations, session]);
 
   return {
     balance,

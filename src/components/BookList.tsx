@@ -58,7 +58,7 @@ export function BookList({ books, currentPage, totalPages, onPageChange, viewMod
               className={`group ${book.status !== 'writing' ? 'cursor-pointer' : 'cursor-default'}`}
             >
               <div className="relative aspect-[10/16] rounded-lg overflow-hidden bg-gray-100 shadow-md group-hover:shadow-xl transition-all duration-300">
-                <div className="absolute top-2 left-2 z-10">
+                <div className="absolute top-2 left-2 z-[1]">
                   <StatusBadge status={book.status} />
                 </div>
                 {book.cover_url ? (
