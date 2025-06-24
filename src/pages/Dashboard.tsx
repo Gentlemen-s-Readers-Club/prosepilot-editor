@@ -8,7 +8,7 @@ import { toast } from '../hooks/use-toast';
 import { fetchBooks } from '../store/slices/booksSlice';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
-import { hasProOrStudioPlan, hasStudioPlan } from '../store/slices/subscriptionSlice';
+import { hasProOrStudioPlan, hasStudioPlan, selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
 import { supabase } from '../lib/supabase';
 import { AppDispatch, RootState } from '../store';
 import type { Book, Category, Language, Status } from '../store/types';
@@ -19,6 +19,7 @@ import { Helmet } from 'react-helmet';
 import Footer from '../components/Footer';
 import { useCredits } from '../hooks/useCredits';
 import { NoCreditsModal } from '../components/NoCreditsModal';
+import { SubscriptionModal } from '../components/SubscriptionModal';
 
 const BOOKS_PER_PAGE = 30;
 
@@ -49,6 +50,7 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showNewBookDrawer, setShowNewBookDrawer] = useState(false);
   const [showNoCreditsModal, setShowNoCreditsModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('');
@@ -65,6 +67,7 @@ export function Dashboard() {
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
   const hasStudio = useSelector(hasStudioPlan);
   const hasPro = useSelector(hasProOrStudioPlan);
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
 
   // Book creation credits
   const BOOK_CREATION_CREDITS = 5;
@@ -103,6 +106,39 @@ export function Dashboard() {
       loadData();
     }
   }, [dispatch, booksStatus, categoriesStatus, languagesStatus, hasStudio, hasPro, subscriptionStatus]);
+
+  // Show subscription modal if user doesn't have an active subscription
+  useEffect(() => {
+    if (subscriptionStatus === 'success' && !hasActiveSubscription && !loading) {
+      setShowSubscriptionModal(true);
+    }
+  }, [subscriptionStatus, hasActiveSubscription, loading]);
+
+  // Handle URL parameters for subscription checkout success/cancel
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get("success");
+    const cancelled = urlParams.get("cancelled");
+
+    if (success === "true") {
+      toast({
+        title: "Success!",
+        description: "Your subscription has been activated successfully.",
+      });
+      setShowSubscriptionModal(false);
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (cancelled === "true") {
+      toast({
+        title: "Cancelled",
+        description: "Your checkout was cancelled.",
+        variant: "destructive",
+      });
+      setShowSubscriptionModal(false);
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, [toast]);
 
   // Subscribe to real-time changes
   useEffect(() => {
@@ -217,6 +253,12 @@ export function Dashboard() {
   };
 
   const openCreateModal = async () => {
+    // If user doesn't have an active subscription, show subscription modal
+    if (!hasActiveSubscription) {
+      setShowSubscriptionModal(true);
+      return;
+    }
+
     const balance = await checkBalance();
 
     if (balance && balance < BOOK_CREATION_CREDITS) {
@@ -511,7 +553,13 @@ export function Dashboard() {
                   </p>
                   <Button 
                     className="bg-brand-primary hover:bg-brand-primary/90 text-white"
-                    onClick={openCreateModal}
+                    onClick={() => {
+                      if (!hasActiveSubscription) {
+                        setShowSubscriptionModal(true);
+                      } else {
+                        openCreateModal();
+                      }
+                    }}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Create Your First Book
@@ -556,6 +604,11 @@ export function Dashboard() {
         onClose={() => setShowNoCreditsModal(false)}
         requiredCredits={BOOK_CREATION_CREDITS}
         action="create a book"
+      />
+
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
       />
 
       {/* Footer */}
