@@ -20,6 +20,7 @@ import { AppDispatch, RootState } from '../store';
 import { updateProfile, updateNewsletterPreferences } from '../store/slices/profileSlice';
 import { Helmet } from 'react-helmet';
 import { UserIdentity } from '@supabase/supabase-js';
+import { clearProfile } from "../store/slices/profileSlice";
 
 export function EditProfile() {
   const dispatch = useDispatch<AppDispatch>();
@@ -357,6 +358,8 @@ export function EditProfile() {
       }
 
       await supabase.auth.signOut();
+
+      dispatch(clearProfile());
       navigate('/');
       
       toast({
