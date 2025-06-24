@@ -107,7 +107,7 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
       <Dialog.Root open={isOpen} onOpenChange={onClose}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg">
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary">
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary mx-auto mb-4"></div>
@@ -124,17 +124,20 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg">
+        <Dialog.Content 
+          className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+          onPointerDownOutside={(e) => e.preventDefault()}
+        >
           <div className="flex items-center justify-between mb-6">
             <div>
-              <Dialog.Title className="text-2xl font-bold text-base-heading">
+              <Dialog.Title className="text-2xl font-bold text-base-heading font-heading">
                 Choose Your Plan
               </Dialog.Title>
-              <Dialog.Description className="text-base-paragraph mt-1">
+              <Dialog.Description className="text-base-paragraph mt-1 font-copy">
                 Select a subscription plan to unlock AI-powered writing features
               </Dialog.Description>
             </div>
-            <Dialog.Close className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+            <Dialog.Close className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </Dialog.Close>
@@ -154,12 +157,12 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
                   } ${isComingSoon ? "opacity-75" : ""}`}
                 >
                   {isPopular && (
-                    <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                    <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg font-copy">
                       Most Popular
                     </div>
                   )}
                   {isComingSoon && (
-                    <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                    <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg font-copy">
                       Coming Soon
                     </div>
                   )}
@@ -172,10 +175,10 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
                         >
                           {getPlanIcon(plan.icon)}
                         </div>
-                        <h3 className="text-xl font-bold text-base-heading">
+                        <h3 className="text-xl font-bold text-base-heading font-heading">
                           {plan.name}
                         </h3>
-                        <p className="text-base-paragraph mt-2 text-sm">
+                        <p className="text-base-paragraph mt-2 text-sm font-copy">
                           {plan.description}
                         </p>
                       </div>
@@ -183,14 +186,14 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
                       {/* Pricing */}
                       <div className="text-center mb-6">
                         <div className="flex items-baseline justify-center">
-                          <span className="text-4xl font-extrabold text-base-heading">
+                          <span className="text-4xl font-extrabold text-base-heading font-heading">
                             ${formatPrice(plan.paddlePrice?.unitPrice.amount)}
                           </span>
                           <span className="text-lg text-gray-500 ml-1">
                             /month
                           </span>
                         </div>
-                        <div className="mt-2 text-sm text-gray-500">
+                        <div className="mt-2 text-sm text-gray-500 font-copy">
                           {plan.credits === -1
                             ? "Unlimited credits"
                             : `${plan.credits} credits included`}

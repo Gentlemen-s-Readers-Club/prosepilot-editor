@@ -110,9 +110,28 @@ export function Dashboard() {
   // Show subscription modal if user doesn't have an active subscription
   useEffect(() => {
     if (subscriptionStatus === 'success' && !hasActiveSubscription && !loading) {
+      // Check if user has dismissed the modal in the last 24 hours
+      const dismissedAt = localStorage.getItem('subscription_modal_dismissed');
+      if (dismissedAt) {
+        const dismissedTime = new Date(dismissedAt).getTime();
+        const now = new Date().getTime();
+        const hoursSinceDismissed = (now - dismissedTime) / (1000 * 60 * 60);
+        
+        if (hoursSinceDismissed < 24) {
+          return; // Don't show modal if dismissed less than 24 hours ago
+        }
+      }
+      
       setShowSubscriptionModal(true);
     }
   }, [subscriptionStatus, hasActiveSubscription, loading]);
+
+  // Handle modal dismissal
+  const handleSubscriptionModalClose = () => {
+    setShowSubscriptionModal(false);
+    // Store dismissal time in localStorage for 24 hours
+    localStorage.setItem('subscription_modal_dismissed', new Date().toISOString());
+  };
 
   // Handle URL parameters for subscription checkout success/cancel
   useEffect(() => {
@@ -255,6 +274,24 @@ export function Dashboard() {
   const openCreateModal = async () => {
     // If user doesn't have an active subscription, show subscription modal
     if (!hasActiveSubscription) {
+      // Check if user has dismissed the modal in the last 24 hours
+      const dismissedAt = localStorage.getItem('subscription_modal_dismissed');
+      if (dismissedAt) {
+        const dismissedTime = new Date(dismissedAt).getTime();
+        const now = new Date().getTime();
+        const hoursSinceDismissed = (now - dismissedTime) / (1000 * 60 * 60);
+        
+        if (hoursSinceDismissed < 24) {
+          // Show a toast message instead
+          toast({
+            title: "Subscription Required",
+            description: "You need an active subscription to create books. Please visit the subscription page to upgrade.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+      
       setShowSubscriptionModal(true);
       return;
     }
@@ -455,7 +492,7 @@ export function Dashboard() {
                     placeholder="Search by title"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-white border-gray-200 text-gray-900 focus:border-base-border focus:ring-1 focus:ring-brand-primary"
+                    className="pl-10 bg-white border-gray-200 text-gray-900 focus-visible:border-base-border focus-visible:ring-1 focus-visible:ring-brand-primary"
                   />
                 </div>
                 
@@ -608,7 +645,7 @@ export function Dashboard() {
 
       <SubscriptionModal
         isOpen={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
+        onClose={handleSubscriptionModalClose}
       />
 
       {/* Footer */}
