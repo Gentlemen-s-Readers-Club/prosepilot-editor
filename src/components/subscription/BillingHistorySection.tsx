@@ -14,10 +14,10 @@ export function BillingHistorySection() {
   } = useBillingHistory();
   
   // Get subscription status to determine if billing history should be shown
-  const { subscription } = useSelector((state: RootState) => state.subscription);
+  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
 
   // Don't show billing history if user has no active subscription
-  if (!subscription?.status || subscription.status === 'canceled' || subscription.status === 'trialing') {
+  if (!subscriptionStatus || subscriptionStatus === 'error') {
     return null;
   }
 
