@@ -274,24 +274,6 @@ export function Dashboard() {
   const openCreateModal = async () => {
     // If user doesn't have an active subscription, show subscription modal
     if (!hasActiveSubscription) {
-      // Check if user has dismissed the modal in the last 24 hours
-      const dismissedAt = localStorage.getItem('subscription_modal_dismissed');
-      if (dismissedAt) {
-        const dismissedTime = new Date(dismissedAt).getTime();
-        const now = new Date().getTime();
-        const hoursSinceDismissed = (now - dismissedTime) / (1000 * 60 * 60);
-        
-        if (hoursSinceDismissed < 24) {
-          // Show a toast message instead
-          toast({
-            title: "Subscription Required",
-            description: "You need an active subscription to create books. Please visit the subscription page to upgrade.",
-            variant: "destructive",
-          });
-          return;
-        }
-      }
-      
       setShowSubscriptionModal(true);
       return;
     }
