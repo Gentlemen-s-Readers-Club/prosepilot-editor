@@ -69,6 +69,7 @@ export function useCredits(): UseCreditsReturn {
           "current_balance, total_earned, total_consumed, last_refill_date"
         )
         .eq("user_id", session.user.id)
+        .eq("environment", import.meta.env.VITE_PADDLE_ENV || "sandbox")
         .single();
 
       if (balanceError) {
@@ -180,26 +181,36 @@ export function useCredits(): UseCreditsReturn {
     const setupRealtimeSubscriptions = async () => {
       if (!session?.user.id) return;
 
-      // console.log("Setting up realtime subscriptions for user:", session.user.id);
-
-      // Subscribe to credit balance changes
+      const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
+      
+      // Subscribe to credit balance changes with proper filter
       balanceSubscription = supabase
-        .channel(`user_credits_${session.user.id}`)
+        .channel(`user_credits_${session.user.id}_${environment}`)
         .on(
           "postgres_changes",
           {
             event: "*",
             schema: "public",
             table: "user_credits",
-            filter: `user_id=eq.${session.user.id}`,
+            filter: `user_id=eq.${session.user.id} AND environment=eq.'${environment}'`,
           },
-          (payload) => {
-            // console.log("Credit balance changed:", payload);
-            refreshBalance();
+          async (payload) => {
+            console.log("Credit balance changed:", payload);
+            if (payload.new) {
+              // Directly update the balance state with the new data
+              setBalance({
+                current_balance: payload.new.current_balance,
+                total_earned: payload.new.total_earned,
+                total_consumed: payload.new.total_consumed,
+                last_refill_date: payload.new.last_refill_date,
+              });
+            } else {
+              // Fallback to refreshing the balance if payload.new is not available
+              await refreshBalance();
+            }
           }
         )
         .subscribe();
-          // console.log("Credit balance subscription status:", status);
 
       // Subscribe to new transactions
       transactionsSubscription = supabase
@@ -210,17 +221,14 @@ export function useCredits(): UseCreditsReturn {
             event: "INSERT",
             schema: "public",
             table: "credit_transactions",
-            filter: `user_id=eq.${session.user.id}`,
+            filter: `user_id=eq.${session.user.id} AND environment=eq.'${environment}'`,
           },
-          (payload) => {
-            // console.log("New credit transaction:", payload);
-            refreshTransactions();
-            // Also refresh balance when new transaction is logged
-            refreshBalance();
+          async (payload) => {
+            console.log("New credit transaction:", payload);
+            await refreshTransactions();
           }
         )
         .subscribe();
-          // console.log("Credit transactions subscription status:", status);
 
       // Subscribe to book generation updates
       generationsSubscription = supabase
@@ -233,22 +241,22 @@ export function useCredits(): UseCreditsReturn {
             table: "book_generations",
             filter: `user_id=eq.${session.user.id}`,
           },
-          (payload) => {
-            // console.log("Book generation updated:", payload);
-            refreshBookGenerations();
-            // Refresh balance when book generation status changes (credit consumption)
-            refreshBalance();
+          async (payload) => {
+            console.log("Book generation updated:", payload);
+            await refreshBookGenerations();
+            // Only refresh balance if the status indicates credit consumption
+            if (payload.new && (payload.new.status === "completed" || payload.new.status === "failed")) {
+              await refreshBalance();
+            }
           }
         )
         .subscribe();
-          // console.log("Book generations subscription status:", status);
     };
 
     setupRealtimeSubscriptions();
 
     return () => {
       if (balanceSubscription) {
-        // console.log("Unsubscribing from realtime subscriptions");
         balanceSubscription.unsubscribe();
       }
       if (transactionsSubscription) {
