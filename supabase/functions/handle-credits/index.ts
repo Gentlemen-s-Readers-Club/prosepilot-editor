@@ -429,7 +429,7 @@ async function refundCredits(
       {
         p_user_id: user_id,
         p_amount: bookGen.credits_reserved,
-        p_transaction_type: "refund",
+        p_operation: "refund",
         p_reference_id: book_generation_id,
         p_reference_type: "book_generation",
         p_description:
@@ -577,7 +577,7 @@ async function refillMonthlyCredits(supabase, user_id, environment) {
       {
         p_user_id: user_id,
         p_amount: creditsToAdd,
-        p_transaction_type: "earn",
+        p_operation: "earn",
         p_reference_id: crypto.randomUUID(),
         p_reference_type: "subscription_refill",
         p_description: `Monthly credit refill: ${creditsToAdd} credits`,
