@@ -99,7 +99,9 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
         description: "Failed to open checkout. Please try again.",
         variant: "destructive",
       });
-    }
+    } finally {
+      onClose();
+    } 
   };
 
   if (paddleLoading || pricesLoading) {
