@@ -13,6 +13,7 @@ interface UserCreditsState {
   balance: CreditBalance;
   loading: boolean;
   error: string | null;
+  realtimeCredits: any | null;
 }
 
 const initialState: UserCreditsState = {
@@ -24,6 +25,7 @@ const initialState: UserCreditsState = {
   },
   loading: false,
   error: null,
+  realtimeCredits: null,
 };
 
 // Async thunk to fetch user credit balance
@@ -61,6 +63,35 @@ export const fetchUserCredits = createAsyncThunk(
   }
 );
 
+// Subscribe to real-time changes
+export const setupRealtimeCredits = createAsyncThunk<
+  any,
+  string,
+  { state: RootState; dispatch: any }
+>(
+  "userCredits/setupRealtimeCredits",
+  async (userId: string, { dispatch }) => {
+    const subscription = supabase
+    .channel('schema-db-changes')
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "user_credits",
+          filter: `user_id=eq.${userId} and environment=eq.${import.meta.env.VITE_PADDLE_ENV}`,
+        },
+        () => {
+          console.log("Real-time subscription change detected");
+          dispatch(fetchUserCredits(userId));
+        }
+      )
+      .subscribe();
+
+    return subscription;
+  }
+);
+
 const userCreditsSlice = createSlice({
   name: 'userCredits',
   initialState,
@@ -76,6 +107,12 @@ const userCreditsSlice = createSlice({
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
+    },
+    clearRealtimeCredits: (state) => {
+      if (state.realtimeCredits) {
+        state.realtimeCredits.unsubscribe();
+        state.realtimeCredits = null;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -97,12 +134,13 @@ const userCreditsSlice = createSlice({
   },
 });
 
-export const { clearCredits, setError } = userCreditsSlice.actions;
+export const { clearCredits, setError, clearRealtimeCredits } = userCreditsSlice.actions;
 
 // Selectors
 export const selectUserCredits = (state: RootState) => state.userCredits.balance;
 export const selectUserCreditsLoading = (state: RootState) => state.userCredits.loading;
 export const selectUserCreditsError = (state: RootState) => state.userCredits.error;
 export const selectCurrentBalance = (state: RootState) => state.userCredits.balance?.current_balance ?? 0;
+export const selectRealtimeCredits = (state: RootState) => state.userCredits.realtimeCredits;
 
 export default userCreditsSlice.reducer;

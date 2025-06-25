@@ -45,7 +45,7 @@ import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
 import { supabase } from "./lib/supabase";
 import { checkAndCreatePaddleCustomer } from "./hooks/useNewUserHandler";
-import { fetchUserCredits } from "./store/slices/userCreditsSlice";
+import { clearRealtimeCredits, fetchUserCredits, setupRealtimeCredits } from "./store/slices/userCreditsSlice";
 
 // Shared Loading Component
 function LoadingSpinner({ message }: { message: string }) {
@@ -130,10 +130,6 @@ function OTPExpiredRedirect() {
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session } = useSelector((state: RootState) => state.auth);
-  const { profile } = useSelector((state: RootState) => state.profile);
-  const { status: subscriptionStatus } = useSelector(
-    (state: RootState) => state.subscription
-  );
 
   useEffect(() => {
     const {
@@ -151,38 +147,25 @@ function App() {
   useEffect(() => {
     if (session) {
       dispatch(fetchUserCredits(session.user.id));
-    }
-  }, [dispatch, session]);
-
-  useEffect(() => {
-    if (session && !profile) {
       dispatch(fetchProfile());
-    }
-  }, [dispatch, session, profile]);
-
-  // Check for new users when session is first established (for OAuth redirects)
-  useEffect(() => {
-    if (session) {
+      dispatch(fetchUserSubscription());
+      // Check for new users when session is first established (for OAuth redirects)
       checkAndCreatePaddleCustomer(session);
     }
-  }, [session]);
-
-  useEffect(() => {
-    if (session && subscriptionStatus === "idle") {
-      dispatch(fetchUserSubscription());
-    }
-  }, [dispatch, session, subscriptionStatus]);
+  }, [dispatch, session]);
 
   // Set up real-time subscriptions when user is authenticated
   useEffect(() => {
     if (session) {
-      dispatch(setupRealtimeSubscriptions());
+      dispatch(setupRealtimeSubscriptions(session.user.id));
+      dispatch(setupRealtimeCredits(session.user.id));
     }
 
     // Clean up real-time subscription when component unmounts or session changes
     return () => {
       if (session) {
         dispatch(clearRealtimeSubscription());
+        dispatch(clearRealtimeCredits());
       }
     };
   }, [dispatch, session]);
