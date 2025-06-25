@@ -23,7 +23,7 @@ import {
   Info,
 } from "lucide-react";
 import Footer from "../components/Footer";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useSelector } from "react-redux";
 import {
   hasProOrStudioPlan,

@@ -32,7 +32,7 @@ import {
   updateProfile,
   updateNewsletterPreferences,
 } from "../store/slices/profileSlice";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { UserIdentity } from "@supabase/supabase-js";
 import { clearProfile } from "../store/slices/profileSlice";
 

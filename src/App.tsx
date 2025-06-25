@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { ForgotPassword } from "./pages/ForgotPassword";
@@ -182,119 +183,121 @@ function App() {
   return (
     <div className="bg-base-background pt-16 min-h-screen">
       <PaddleProvider>
-        <Router>
-          <ScrollToTop />
-          <Navigation />
-          <OTPExpiredRedirect />
-          <main>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/docs" element={<Documentation />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
+        <HelmetProvider>
+          <Router>
+            <ScrollToTop />
+            <Navigation />
+            <OTPExpiredRedirect />
+            <main>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/docs" element={<Documentation />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
 
-              <Route
-                path="/login"
-                element={
-                  <AnonymousRoute>
-                    <Login />
-                  </AnonymousRoute>
-                }
-              />
-              <Route
-                path="/signup"
-                element={
-                  <AnonymousRoute>
-                    <Signup />
-                  </AnonymousRoute>
-                }
-              />
-              <Route
-                path="/forgot-password"
-                element={
-                  <AnonymousRoute>
-                    <ForgotPassword />
-                  </AnonymousRoute>
-                }
-              />
-              <Route
-                path="/reset-password"
-                element={session ? <ResetPassword /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/resend-verification-email"
-                element={
-                  <AnonymousRoute>
-                    <ResendVerificationEmail />
-                  </AnonymousRoute>
-                }
-              />
+                <Route
+                  path="/login"
+                  element={
+                    <AnonymousRoute>
+                      <Login />
+                    </AnonymousRoute>
+                  }
+                />
+                <Route
+                  path="/signup"
+                  element={
+                    <AnonymousRoute>
+                      <Signup />
+                    </AnonymousRoute>
+                  }
+                />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <AnonymousRoute>
+                      <ForgotPassword />
+                    </AnonymousRoute>
+                  }
+                />
+                <Route
+                  path="/reset-password"
+                  element={session ? <ResetPassword /> : <Navigate to="/login" />}
+                />
+                <Route
+                  path="/resend-verification-email"
+                  element={
+                    <AnonymousRoute>
+                      <ResendVerificationEmail />
+                    </AnonymousRoute>
+                  }
+                />
 
-              {/* Help Articles */}
-              <Route
-                path="/help/create-first-book"
-                element={<CreateFirstBook />}
-              />
-              <Route path="/help/credit-system" element={<CreditSystem />} />
-              <Route
-                path="/help/ai-best-practices"
-                element={<AIBestPractices />}
-              />
-              <Route
-                path="/help/team-collaboration"
-                element={<TeamCollaboration />}
-              />
+                {/* Help Articles */}
+                <Route
+                  path="/help/create-first-book"
+                  element={<CreateFirstBook />}
+                />
+                <Route path="/help/credit-system" element={<CreditSystem />} />
+                <Route
+                  path="/help/ai-best-practices"
+                  element={<AIBestPractices />}
+                />
+                <Route
+                  path="/help/team-collaboration"
+                  element={<TeamCollaboration />}
+                />
 
-              <Route
-                path="/workspace"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/workspace"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/workspace/book/:id"
-                element={
-                  <ProtectedRoute>
-                    <BookDetails />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/chapter/:id"
-                element={
-                  <ProtectedRoute>
-                    <ChapterEditor />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/profile"
-                element={
-                  <ProtectedRoute>
-                    <EditProfile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/subscription"
-                element={
-                  <ProtectedRoute>
-                    <Subscription />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/workspace/book/:id"
+                  element={
+                    <ProtectedRoute>
+                      <BookDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/workspace/chapter/:id"
+                  element={
+                    <ProtectedRoute>
+                      <ChapterEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/workspace/profile"
+                  element={
+                    <ProtectedRoute>
+                      <EditProfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/workspace/subscription"
+                  element={
+                    <ProtectedRoute>
+                      <Subscription />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Catch-all route for 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Toaster />
-        </Router>
+                {/* Catch-all route for 404 */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Toaster />
+          </Router>
+        </HelmetProvider>
       </PaddleProvider>
     </div>
   );

@@ -57,7 +57,7 @@ import { updateBookInList } from "../store/slices/booksSlice";
 import { hasProOrStudioPlan } from "../store/slices/subscriptionSlice";
 import { formatDistanceToNow } from "date-fns";
 import { getCoverUrl } from "../lib/utils/covers";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface BookFormData {
   title: string;

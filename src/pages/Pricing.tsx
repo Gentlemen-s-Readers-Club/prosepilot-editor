@@ -12,7 +12,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Footer from '../components/Footer';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import useAnalytics from '../hooks/useAnalytics';
 
 interface Plan {

@@ -15,7 +15,7 @@ import type { Book, Category, Language, Status } from '../store/types';
 import { BOOK_STATES } from '../lib/consts';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { NewBookDrawer } from '../components/NewBookDrawer';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import Footer from '../components/Footer';
 import { useCredits } from '../hooks/useCredits';
 import { NoCreditsModal } from '../components/NoCreditsModal';

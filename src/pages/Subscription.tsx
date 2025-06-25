@@ -33,7 +33,7 @@ import {
   fetchUserSubscription,
 } from "../store/slices/subscriptionSlice";
 import Footer from "../components/Footer";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { CreditPurchase } from "../components/CreditPurchase";
 import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
 import { BillingHistorySection } from "../components/subscription/BillingHistorySection";

@@ -1,6 +1,12 @@
 import React from 'react';
-import { FileText, Crown, Users, X } from 'lucide-react';
-import * as Dialog from '@radix-ui/react-dialog';
+import { FileText, Crown, Users } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { Button } from './ui/button';
 import { usePaddle } from '../contexts/PaddleContext';
 import { usePaddlePrices } from '../hooks/usePaddlePrices';
@@ -106,43 +112,31 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
 
   if (paddleLoading || pricesLoading) {
     return (
-      <Dialog.Root open={isOpen} onOpenChange={onClose}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary">
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent>
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary mx-auto mb-4"></div>
                 <p className="text-base-paragraph">Loading subscription plans...</p>
               </div>
             </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+        </DialogContent>
+      </Dialog>
     );
   }
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onClose}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content 
-          className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg focus:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
-          onPointerDownOutside={(e) => e.preventDefault()}
-        >
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="w-full max-w-4xl">
           <div className="flex items-center justify-between mb-6">
-            <div>
-              <Dialog.Title className="text-2xl font-bold text-base-heading font-heading">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-base-heading font-heading">
                 Choose Your Plan
-              </Dialog.Title>
-              <Dialog.Description className="text-base-paragraph mt-1 font-copy">
+              </DialogTitle>
+              <DialogDescription className="text-base-paragraph mt-1 font-copy">
                 Select a subscription plan to unlock AI-powered writing features
-              </Dialog.Description>
-            </div>
-            <Dialog.Close className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Dialog.Close>
+              </DialogDescription>
+            </DialogHeader>
           </div>
 
           {/* Pricing Plans */}
@@ -236,8 +230,7 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
               Maybe Later
             </Button>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+      </Dialog>
   );
 } 

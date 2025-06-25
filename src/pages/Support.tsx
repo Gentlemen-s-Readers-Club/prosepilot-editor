@@ -6,7 +6,7 @@ import { Label } from '../components/ui/label';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import useAnalytics from '../hooks/useAnalytics';
 import { supabase } from '../lib/supabase';
 import { toast } from '../hooks/use-toast';

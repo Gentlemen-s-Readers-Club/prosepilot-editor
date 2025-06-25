@@ -7,7 +7,7 @@ import { Label } from "../components/ui/label";
 import { supabase } from "../lib/supabase";
 import { useToast } from "../hooks/use-toast";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import Footer from "../components/Footer";
 
 interface ResendEmailFormData {
