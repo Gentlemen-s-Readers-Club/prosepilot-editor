@@ -17,7 +17,6 @@ import { CustomSelect, SelectOption } from '../components/ui/select';
 import { NewBookDrawer } from '../components/NewBookDrawer';
 import { Helmet } from 'react-helmet-async';
 import Footer from '../components/Footer';
-import { useCredits } from '../hooks/useCredits';
 import { NoCreditsModal } from '../components/NoCreditsModal';
 import { SubscriptionModal } from '../components/SubscriptionModal';
 
@@ -44,7 +43,6 @@ const sortOptions: SortOption[] = [
 
 export function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
-  const { checkBalance } = useCredits();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -60,11 +58,15 @@ export function Dashboard() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>(sortOptions[0]);
 
-
+  // Redux state
+  const { session } = useSelector((state: RootState) => state.auth);
   const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
+  const { balance: {current_balance} } = useSelector((state: RootState) => state.userCredits);
   const { items: books, status: booksStatus } = useSelector((state: RootState) => state.books);
   const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
   const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
+
+  // Selectors
   const hasStudio = useSelector(hasStudioPlan);
   const hasPro = useSelector(hasProOrStudioPlan);
   const hasActiveSubscription = useSelector(selectHasActiveSubscription);
@@ -157,10 +159,11 @@ export function Dashboard() {
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     }
-  }, [toast]);
+  }, []);
 
   // Subscribe to real-time changes
   useEffect(() => {
+    if (session) {
     const subscription = supabase
       .channel('schema-db-changes')
       .on(
@@ -168,7 +171,8 @@ export function Dashboard() {
         {
           event: '*',
           schema: 'public',
-          table: 'books'
+          table: 'books',
+          filter: `user_id=eq.${session.user.id}`,
         },
         () => {
           dispatch(fetchBooks());
@@ -176,10 +180,11 @@ export function Dashboard() {
       )
       .subscribe();
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [dispatch]);
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [dispatch, session]);
 
   const filteredBooks = useMemo(() => {
     return books.filter((book: Book) => {
@@ -278,9 +283,7 @@ export function Dashboard() {
       return;
     }
 
-    const balance = await checkBalance();
-
-    if (balance && balance < BOOK_CREATION_CREDITS) {
+    if (current_balance < BOOK_CREATION_CREDITS) {
       setShowNoCreditsModal(true);
       return;
     }

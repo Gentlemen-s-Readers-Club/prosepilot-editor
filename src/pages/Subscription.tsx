@@ -21,7 +21,6 @@ import {
 import { usePaddle } from "../contexts/PaddleContext";
 import { usePaddlePrices } from "../hooks/usePaddlePrices";
 import { useToast } from "../hooks/use-toast";
-import { useCredits } from "../hooks/useCredits";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store";
 import {
@@ -61,10 +60,10 @@ export function Subscription() {
   const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
   const { session } = useSelector((state: RootState) => (state.auth));
+  const { balance } = useSelector((state: RootState) => state.userCredits);
   const { profile, status: profileStatus } = useSelector(
     (state: RootState) => state.profile
   );
-  const { balance: creditBalance } = useCredits();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
@@ -414,9 +413,9 @@ export function Subscription() {
                     <div className="text-base-heading">Credit Balance</div>
                     {(() => {
                       const currentCredits =
-                        creditBalance?.current_balance || 0;
-                      const totalEarned = creditBalance?.total_earned || 0;
-                      const totalConsumed = creditBalance?.total_consumed || 0;
+                      balance?.current_balance || 0;
+                      const totalEarned = balance?.total_earned || 0;
+                      const totalConsumed = balance?.total_consumed || 0;
 
                       // Calculate total credits ever available in account
                       const totalAccountCredits = totalEarned;

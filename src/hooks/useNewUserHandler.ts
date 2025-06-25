@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
 // Utility function to check and create Paddle customer for new users
@@ -9,14 +8,14 @@ export const checkAndCreatePaddleCustomer = async (session: any) => {
 
   try {
     // Check if user already has credits initialized
+    console.log("🔍 Checking if user already has credits initialized:", session.user.id);
     const { data: userCredits, error: creditsError } = await supabase
       .from('user_credits')
       .select('current_balance')
       .eq('user_id', session.user.id)
-      .single();
+      .maybeSingle();
 
-    if (creditsError && creditsError.code !== 'PGRST116') {
-      // Only log real errors, not "no rows returned"
+    if (creditsError) {
       console.error("❌ Error checking user credits:", creditsError);
       return;
     }

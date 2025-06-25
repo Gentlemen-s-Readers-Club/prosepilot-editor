@@ -45,6 +45,7 @@ import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
 import { supabase } from "./lib/supabase";
 import { checkAndCreatePaddleCustomer } from "./hooks/useNewUserHandler";
+import { fetchUserCredits } from "./store/slices/userCreditsSlice";
 
 // Shared Loading Component
 function LoadingSpinner({ message }: { message: string }) {
@@ -146,6 +147,12 @@ function App() {
     });
     return () => subscription.unsubscribe();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (session) {
+      dispatch(fetchUserCredits(session.user.id));
+    }
+  }, [dispatch, session]);
 
   useEffect(() => {
     if (session && !profile) {
