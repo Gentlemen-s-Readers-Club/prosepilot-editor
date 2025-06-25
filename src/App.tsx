@@ -4,11 +4,13 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
+import { ResendEmail } from "./pages/ResendEmail";
 import { Dashboard } from "./pages/Dashboard";
 import { BookDetails } from "./pages/BookDetails";
 import { ChapterEditor } from "./pages/ChapterEditor";
@@ -108,21 +110,32 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 //   return <>{children}</>;
 // }
 
-function App() {
-  console.log("Environment Variables:", {
-    VITE_PYTHON_API_URL: import.meta.env.VITE_PYTHON_API_URL,
-    MODE: import.meta.env,
-    DEV: import.meta.env.DEV,
-  });
+// Component to handle OTP expired redirect
+function OTPExpiredRedirect() {
+  const location = useLocation();
+  
+  // Check for hash fragment parameters (e.g., #error=access_denied&error_code=otp_expired)
+  const hashParams = new URLSearchParams(location.hash.substring(1));
+  const errorCode = hashParams.get('error_code');
+  
+  // Also check for regular query parameters as fallback
+  const searchParams = new URLSearchParams(location.search);
+  const queryErrorCode = searchParams.get('error_code');
+  
+  if (errorCode === 'otp_expired' || queryErrorCode === 'otp_expired') {
+    return <Navigate to="/resend-email" replace />;
+  }
+  
+  return null;
+}
 
+function App() {
   const dispatch = useDispatch<AppDispatch>();
   const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
   const { status: subscriptionStatus } = useSelector(
     (state: RootState) => state.subscription
   );
-
-  console.log("session", session?.access_token);
 
   useEffect(() => {
     const {
@@ -176,6 +189,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <Navigation />
+          <OTPExpiredRedirect />
           <main>
             <Routes>
               <Route path="/" element={<Landing />} />
@@ -212,6 +226,14 @@ function App() {
               <Route
                 path="/reset-password"
                 element={session ? <ResetPassword /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/resend-email"
+                element={
+                  <AnonymousRoute>
+                    <ResendEmail />
+                  </AnonymousRoute>
+                }
               />
 
               {/* Help Articles */}
