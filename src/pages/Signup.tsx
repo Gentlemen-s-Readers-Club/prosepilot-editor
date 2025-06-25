@@ -80,11 +80,16 @@ export function Signup() {
     }
   };
 
-  const onSubmit = async ({ email, password }: SignupFormData) => {
+  const onSubmit = async ({ email, password, fullName }: SignupFormData) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+        },
       });
   
       if (error) {
