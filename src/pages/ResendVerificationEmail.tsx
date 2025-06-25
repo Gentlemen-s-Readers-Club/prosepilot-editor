@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
@@ -14,11 +14,20 @@ interface ResendEmailFormData {
   email: string;
 }
 
-export function ResendEmail() {
+export function ResendVerificationEmail() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showExpiredMessage, setShowExpiredMessage] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Check for error_code in URL on component mount
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('error_code=otp_expired')) {
+      setShowExpiredMessage(true);
+    }
+  }, []);
 
   const {
     register,
@@ -63,7 +72,16 @@ export function ResendEmail() {
         <title>ProsePilot - Resend Verification Email</title>
       </Helmet>
       <div className="flex flex-col min-h-[calc(100vh-64px)]">
-        <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
+        <div className="flex flex-col gap-4 items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
+        {showExpiredMessage && (
+          <div className="flex items-center justify-center max-w-md">
+            <div className="mt-4 p-4 bg-state-error-light border border-state-error rounded-md">
+              <p className="text-sm text-state-error font-medium">
+                The verification code has expired. Please request a new one below.
+              </p>
+            </div>
+          </div>
+        )}
           <div className="max-w-md w-full space-y-8 bg-white rounded-lg p-8 shadow-md">
             <div>
               <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">

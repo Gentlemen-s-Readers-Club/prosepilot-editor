@@ -310,6 +310,21 @@ export function Signup() {
                 </form>
               </>
             )}
+            
+            <div className="text-center">
+              <p className="text-sm text-gray-500">
+                Didn't receive the email?{' '}
+                <Button
+                  variant="link"
+                  asChild
+                  className="p-0 h-auto text-sm"
+                >
+                  <Link to="/resend-verification-email">
+                    Resend verification email
+                  </Link>
+                </Button>
+              </p>
+            </div>
           </div>
         </div>  
         {/* Footer */}

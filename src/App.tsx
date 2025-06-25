@@ -10,7 +10,7 @@ import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
-import { ResendEmail } from "./pages/ResendEmail";
+import { ResendVerificationEmail } from "./pages/ResendVerificationEmail";
 import { Dashboard } from "./pages/Dashboard";
 import { BookDetails } from "./pages/BookDetails";
 import { ChapterEditor } from "./pages/ChapterEditor";
@@ -118,12 +118,8 @@ function OTPExpiredRedirect() {
   const hashParams = new URLSearchParams(location.hash.substring(1));
   const errorCode = hashParams.get('error_code');
   
-  // Also check for regular query parameters as fallback
-  const searchParams = new URLSearchParams(location.search);
-  const queryErrorCode = searchParams.get('error_code');
-  
-  if (errorCode === 'otp_expired' || queryErrorCode === 'otp_expired') {
-    return <Navigate to="/resend-email" replace />;
+  if (errorCode === 'otp_expired') {
+    return <Navigate to="/resend-verification-email#error_code=otp_expired" replace />;
   }
   
   return null;
@@ -228,10 +224,10 @@ function App() {
                 element={session ? <ResetPassword /> : <Navigate to="/login" />}
               />
               <Route
-                path="/resend-email"
+                path="/resend-verification-email"
                 element={
                   <AnonymousRoute>
-                    <ResendEmail />
+                    <ResendVerificationEmail />
                   </AnonymousRoute>
                 }
               />
