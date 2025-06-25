@@ -25,7 +25,7 @@ import { Toaster } from "./components/Toaster";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
-import { setSession, setStatus } from './store/slices/authSlice';
+import { setSession, setStatus } from "./store/slices/authSlice";
 import { fetchProfile } from "./store/slices/profileSlice";
 import {
   fetchUserSubscription,
@@ -57,10 +57,10 @@ function LoadingSpinner({ message }: { message: string }) {
 
 // Protected Route For Anonymous Users
 function AnonymousRoute({ children }: { children: React.ReactNode }) {
-  const { session, status } = useSelector((state: RootState) => (state.auth));
-  
+  const { session, status } = useSelector((state: RootState) => state.auth);
+
   // Show loading while session is being fetched or if it hasn't been fetched yet
-  if(status === "loading") {
+  if (status === "loading") {
     return <LoadingSpinner message="Checking session..." />;
   }
 
@@ -69,7 +69,7 @@ function AnonymousRoute({ children }: { children: React.ReactNode }) {
 
 // Protected Route For Logged In Users
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session, status } = useSelector((state: RootState) => (state.auth));
+  const { session, status } = useSelector((state: RootState) => state.auth);
 
   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
   if (status === "loading") {
@@ -109,24 +109,32 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 // }
 
 function App() {
+  console.log("Environment Variables:", {
+    VITE_PYTHON_API_URL: import.meta.env.VITE_PYTHON_API_URL,
+    MODE: import.meta.env,
+    DEV: import.meta.env.DEV,
+  });
+
   const dispatch = useDispatch<AppDispatch>();
-  const { session } = useSelector((state: RootState) => (state.auth));
+  const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
   const { status: subscriptionStatus } = useSelector(
     (state: RootState) => state.subscription
   );
-  
+
+  console.log("session", session?.access_token);
+
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if(event === "INITIAL_SESSION") {
-        dispatch(setStatus("ready"))
+      if (event === "INITIAL_SESSION") {
+        dispatch(setStatus("ready"));
       } else {
-        dispatch(setSession(session))
+        dispatch(setSession(session));
       }
-    })
-    return () => subscription.unsubscribe()
+    });
+    return () => subscription.unsubscribe();
   }, [dispatch]);
 
   useEffect(() => {
@@ -177,17 +185,28 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
 
-
-              <Route  path="/login"
-                element={<AnonymousRoute><Login /></AnonymousRoute>}
+              <Route
+                path="/login"
+                element={
+                  <AnonymousRoute>
+                    <Login />
+                  </AnonymousRoute>
+                }
               />
-              <Route path="/signup"
-                element={<AnonymousRoute><Signup /></AnonymousRoute>}
+              <Route
+                path="/signup"
+                element={
+                  <AnonymousRoute>
+                    <Signup />
+                  </AnonymousRoute>
+                }
               />
               <Route
                 path="/forgot-password"
                 element={
-                  <AnonymousRoute><ForgotPassword /></AnonymousRoute>
+                  <AnonymousRoute>
+                    <ForgotPassword />
+                  </AnonymousRoute>
                 }
               />
               <Route
@@ -213,32 +232,42 @@ function App() {
               <Route
                 path="/workspace"
                 element={
-                  <ProtectedRoute><Dashboard /></ProtectedRoute>
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
                 }
               />
 
               <Route
                 path="/workspace/book/:id"
                 element={
-                  <ProtectedRoute><BookDetails /></ProtectedRoute>
+                  <ProtectedRoute>
+                    <BookDetails />
+                  </ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/chapter/:id"
                 element={
-                  <ProtectedRoute><ChapterEditor /></ProtectedRoute>
+                  <ProtectedRoute>
+                    <ChapterEditor />
+                  </ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/profile"
                 element={
-                  <ProtectedRoute><EditProfile /></ProtectedRoute>
+                  <ProtectedRoute>
+                    <EditProfile />
+                  </ProtectedRoute>
                 }
               />
               <Route
                 path="/workspace/subscription"
                 element={
-                  <ProtectedRoute><Subscription /></ProtectedRoute>
+                  <ProtectedRoute>
+                    <Subscription />
+                  </ProtectedRoute>
                 }
               />
 
