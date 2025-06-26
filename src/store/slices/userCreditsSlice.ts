@@ -72,17 +72,16 @@ export const setupRealtimeCredits = createAsyncThunk<
   "userCredits/setupRealtimeCredits",
   async (userId: string, { dispatch }) => {
     const subscription = supabase
-    .channel('schema-db-changes')
+    .channel('credit-changes')
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: "user_credits",
-          filter: `user_id=eq.${userId} and environment=eq.${import.meta.env.VITE_PADDLE_ENV}`,
+          // filter: `user_id=eq.${userId} and environment=eq.${import.meta.env.VITE_PADDLE_ENV}`,
         },
         () => {
-          console.log("Real-time subscription change detected");
           dispatch(fetchUserCredits(userId));
         }
       )

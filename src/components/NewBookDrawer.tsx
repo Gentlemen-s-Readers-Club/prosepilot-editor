@@ -420,13 +420,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     />
                     <div className="flex justify-between text-xs text-gray-500">
                       <span>{promptCharCount} characters</span>
-                      <span>
-                        {promptCharCount < 50
-                          ? "Add more details for better results"
-                          : promptCharCount < 200
-                          ? "Good start, more details help"
-                          : "Great level of detail!"}
-                      </span>
                     </div>
                   </div>
 
@@ -660,7 +653,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                 <Button
                   onClick={handleSubmit}
                   disabled={isSubmitting || !canSubmit}
-                  className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">

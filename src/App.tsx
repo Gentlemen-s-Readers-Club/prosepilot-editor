@@ -146,8 +146,8 @@ function App() {
 
   useEffect(() => {
     if (session) {
-      dispatch(fetchUserCredits(session.user.id));
       dispatch(fetchProfile());
+      dispatch(fetchUserCredits(session.user.id));
       dispatch(fetchUserSubscription());
       // Check for new users when session is first established (for OAuth redirects)
       checkAndCreatePaddleCustomer(session);

@@ -1041,7 +1041,7 @@ export function BookDetails() {
                         )}
                       </div>
 
-                      <div>
+                      {/* <div>
                         <Label
                           htmlFor="isbn"
                           className="flex items-center gap-1 mb-1 text-gray-700"
@@ -1057,7 +1057,7 @@ export function BookDetails() {
                           className="bg-white"
                           placeholder="Enter ISBN (optional)"
                         />
-                      </div>
+                      </div> */}
 
                       <div>
                         <Label
@@ -1245,14 +1245,14 @@ export function BookDetails() {
                             </div>
                           </div>
 
-                          {formData.isbn && (
+                          {/* {formData.isbn && (
                             <div>
                               <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">
                                 ISBN
                               </h3>
                               <p className="text-gray-700">{formData.isbn}</p>
                             </div>
-                          )}
+                          )} */}
                         </div>
 
                         <div>

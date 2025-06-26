@@ -195,17 +195,16 @@ export const setupRealtimeSubscriptions = createAsyncThunk<
   "subscription/setupRealtimeSubscriptions",
   async (userId: string, { dispatch }) => {
     const subscription = supabase
-      .channel('schema-db-changes')
+      .channel('subscription-changes')
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: "subscriptions",
-          filter: `user_id=eq.${userId} and environment=eq.${environment}`,
+          // filter: `user_id=eq.${userId} and environment=eq.${environment}`,
         },
         () => {
-          console.log("Real-time subscription change detected");
           dispatch(fetchUserSubscription());
         }
       )

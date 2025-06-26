@@ -164,21 +164,21 @@ export function Dashboard() {
   // Subscribe to real-time changes
   useEffect(() => {
     if (session) {
-    const subscription = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'books',
-          filter: `user_id=eq.${session.user.id}`,
-        },
-        () => {
-          dispatch(fetchBooks());
-        }
-      )
-      .subscribe();
+      const subscription = supabase
+        .channel('book-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'books',
+            // filter: `user_id=eq.${session.user.id}`,
+          },
+          () => {
+            dispatch(fetchBooks());
+          }
+        )
+        .subscribe();
 
       return () => {
         subscription.unsubscribe();
