@@ -168,16 +168,11 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
       setChapters(chapters.map(chapter => 
         chapter.id === id ? { ...chapter, title: newTitle } : chapter
       ));
-
-      toast({
-        title: "Success",
-        description: "Title updated successfully",
-      });
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update title",
+        description: "Failed to update chapter title",
       });
     }
   };
@@ -193,11 +188,6 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
         if (error) throw error;
 
         setChapters(chapters.filter(chapter => chapter.id !== chapterToDelete.id));
-        
-        toast({
-          title: "Success",
-          description: `${chapterToDelete.type === 'chapter' ? 'Chapter' : 'Page'} deleted`,
-        });
       } catch (error: any) {
         toast({
           variant: "destructive",

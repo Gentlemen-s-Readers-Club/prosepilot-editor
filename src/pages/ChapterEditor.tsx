@@ -136,11 +136,6 @@ function ChapterEditorContent() {
             : chapter
         ));
       }
-
-      toast({
-        title: "Success",
-        description: "Chapter title updated successfully",
-      });
     } catch (error) {
       console.error('Error updating chapter title:', error);
       toast({

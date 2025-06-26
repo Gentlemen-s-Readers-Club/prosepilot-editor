@@ -216,11 +216,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
       }
 
       onClose();
-
-      toast({
-        title: "Success",
-        description: "Book created successfully",
-      });
     } catch (error) {
       console.error("Error creating book:", error);
       setError(
@@ -275,7 +270,8 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
       open={isOpen}
       onOpenChange={(open: boolean) => {
         // Only allow closing via the X button (which sets open to false)
-        if (!open) {
+        // Don't allow closing if currently submitting
+        if (!open && !isSubmitting) {
           onClose();
         }
       }}
@@ -603,10 +599,9 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                         </h4>
                         <p className="text-xs text-state-info">
                           When you click "Create Book", our AI will first
-                          generate the book structure based on your settings,
-                          which typically takes 2-5 minutes. After that, the AI
-                          will begin writing your complete book, which can take
-                          up to 30 minutes to complete.
+                          validate your prompt. If validation succeeds, the AI
+                          will begin writing your complete book, which takes
+                          around 30 minutes to complete.
                         </p>
                         <p className="text-xs text-state-info mt-1">
                           <strong>Note:</strong> This will use 5 credits from

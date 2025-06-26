@@ -53,7 +53,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { fetchCategories } from "../store/slices/categoriesSlice";
 import { fetchLanguages } from "../store/slices/languagesSlice";
-import { updateBookInList } from "../store/slices/booksSlice";
+import { updateBookInList, deleteBook } from "../store/slices/booksSlice";
 import { hasProOrStudioPlan } from "../store/slices/subscriptionSlice";
 import { formatDistanceToNow } from "date-fns";
 import { getCoverUrl } from "../lib/utils/covers";
@@ -612,14 +612,7 @@ export function BookDetails() {
 
   const handleDeleteBook = async () => {
     try {
-      const { error } = await supabase.from("books").delete().eq("id", id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Book deleted successfully",
-      });
+      await dispatch(deleteBook(id!)).unwrap();
       navigate("/workspace");
     } catch (error) {
       console.error("Error deleting book:", error);
