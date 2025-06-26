@@ -34,8 +34,9 @@ export interface Transaction {
 }
 
 export function useBillingHistory() { 
-  const { session } = useSelector((state: RootState) => ({
+  const { session, profile } = useSelector((state: RootState) => ({
     session: state.auth.session,
+    profile: state.profile.profile,
   }));  
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
