@@ -95,30 +95,8 @@ export function useSubscriptionPage(plans: Plan[]): UseSubscriptionPageReturn {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
-  // Mock billing history - in a real app, this would come from an API
-  const billingHistory = [
-    {
-      id: "1",
-      date: "2025-03-15",
-      amount: 29,
-      status: "paid",
-      description: "Pro Author Plan - Monthly",
-    },
-    {
-      id: "2",
-      date: "2025-02-15",
-      amount: 29,
-      status: "paid",
-      description: "Pro Author Plan - Monthly",
-    },
-    {
-      id: "3",
-      date: "2025-01-15",
-      amount: 9,
-      status: "paid",
-      description: "Starter Plan - Monthly",
-    },
-  ];
+  // Billing history is handled by the useBillingHistory hook and BillingHistorySection component
+  const billingHistory: any[] = [];
 
   // Loading state calculation
   const isInitialLoading =
