@@ -23,7 +23,7 @@ export function BillingHistorySection() {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 mt-12">
         <h2 className="text-xl font-semibold text-base-heading">
           Billing History
         </h2>
@@ -40,7 +40,7 @@ export function BillingHistorySection() {
 
   if (error) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 mt-12">
         <h2 className="text-xl font-semibold text-base-heading">
           Billing History
         </h2>
@@ -56,28 +56,28 @@ export function BillingHistorySection() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mt-12">
       <h2 className="text-xl font-semibold text-base-heading">
         Billing History
       </h2>
-      <div className="bg-base-background rounded-lg border">
+      <div className="rounded-lg border bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b">
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+              <tr className="border-b bg-brand-primary text-white">
+                <th className="text-left px-4 py-3 text-sm font-medium">
                   Date
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-left px-4 py-3 text-sm font-medium">
                   Description
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium">
                   Amount
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium">
                   Status
                 </th>
-                <th className="text-center px-4 py-3 text-sm font-medium text-base-muted">
+                <th className="text-center px-4 py-3 text-sm font-medium">
                   Invoice
                 </th>
               </tr>
@@ -105,10 +105,10 @@ export function BillingHistorySection() {
 
                   return (
                     <tr key={transaction.id} className="border-b last:border-0">
-                      <td className="text-center px-4 py-3 text-sm text-base-content">
+                      <td className="text-left px-4 py-3 text-sm text-base-content">
                         {formatDate(transaction.billed_at)}
                       </td>
-                      <td className="text-center px-4 py-3 text-sm text-base-content">
+                      <td className="text-left px-4 py-3 text-sm text-base-content">
                         {description}
                       </td>
                       <td className="text-center px-4 py-3 text-sm text-base-content">
