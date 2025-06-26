@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "./useAuth";
 import { supabase } from "../lib/supabase";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";

@@ -20,16 +20,16 @@ const productionConfig: PaddleEnvConfig = {
 
 export const getPaddleEnvConfig = (): PaddleEnvConfig => {
   const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
-  console.log("🔧 Paddle Environment:", environment);
+  // console.log("🔧 Paddle Environment:", environment);
   const config = environment === "sandbox" ? sandboxConfig : productionConfig;
-  console.log("🔧 Using Paddle config:", {
-    environment: config.environment,
-    vendorId: config.vendorId,
-    // Don't log the full token for security
-    tokenType: config.clientToken.startsWith("test_")
-      ? "sandbox"
-      : "production",
-  });
+  // console.log("🔧 Using Paddle config:", {
+  //   environment: config.environment,
+  //   vendorId: config.vendorId,
+  //   // Don't log the full token for security
+  //   tokenType: config.clientToken.startsWith("test_")
+  //     ? "sandbox"
+  //     : "production",
+  // });
   return config;
 };
 

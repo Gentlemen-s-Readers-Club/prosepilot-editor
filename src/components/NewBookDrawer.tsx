@@ -48,15 +48,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
   const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
 
-  // Verify environment variables
-  useEffect(() => {
-    console.log("All Vite env vars:", import.meta.env);
-    console.log("API URL specifically:", import.meta.env.VITE_PYTHON_API_URL);
-    if (!import.meta.env.VITE_PYTHON_API_URL) {
-      console.error("VITE_PYTHON_API_URL environment variable is not set!");
-    }
-  }, []);
-
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
