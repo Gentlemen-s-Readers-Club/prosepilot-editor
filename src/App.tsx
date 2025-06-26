@@ -45,7 +45,11 @@ import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
 import { supabase } from "./lib/supabase";
 import { checkAndCreatePaddleCustomer } from "./hooks/useNewUserHandler";
-import { clearRealtimeCredits, fetchUserCredits, setupRealtimeCredits } from "./store/slices/userCreditsSlice";
+import {
+  clearRealtimeCredits,
+  fetchUserCredits,
+  setupRealtimeCredits,
+} from "./store/slices/userCreditsSlice";
 
 // Shared Loading Component
 function LoadingSpinner({ message }: { message: string }) {
@@ -115,15 +119,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 // Component to handle OTP expired redirect
 function OTPExpiredRedirect() {
   const location = useLocation();
-  
+
   // Check for hash fragment parameters (e.g., #error=access_denied&error_code=otp_expired)
   const hashParams = new URLSearchParams(location.hash.substring(1));
-  const errorCode = hashParams.get('error_code');
-  
-  if (errorCode === 'otp_expired') {
-    return <Navigate to="/resend-verification-email#error_code=otp_expired" replace />;
+  const errorCode = hashParams.get("error_code");
+
+  if (errorCode === "otp_expired") {
+    return (
+      <Navigate
+        to="/resend-verification-email#error_code=otp_expired"
+        replace
+      />
+    );
   }
-  
+
   return null;
 }
 
@@ -213,7 +222,9 @@ function App() {
                 />
                 <Route
                   path="/reset-password"
-                  element={session ? <ResetPassword /> : <Navigate to="/login" />}
+                  element={
+                    session ? <ResetPassword /> : <Navigate to="/login" />
+                  }
                 />
                 <Route
                   path="/resend-verification-email"

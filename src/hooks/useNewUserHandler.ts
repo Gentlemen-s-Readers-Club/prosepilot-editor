@@ -1,10 +1,22 @@
 import { supabase } from "../lib/supabase";
 
+// Track users currently being processed to prevent duplicates
+const processingUsers = new Set<string>();
+
 // Utility function to check and create Paddle customer for new users
 export const checkAndCreatePaddleCustomer = async (session: any) => {
   if (!session?.user) return;
   
-  console.log("🔍 Checking if user needs Paddle setup:", session.user.id);
+  const userId = session.user.id;
+  
+  // Prevent duplicate processing for the same user
+  if (processingUsers.has(userId)) {
+    console.log("⏸️ Already processing user:", userId);
+    return;
+  }
+  
+  processingUsers.add(userId);
+  console.log("🔍 Checking if user needs Paddle setup:", userId);
 
   try {
     // Check if user already has credits initialized
@@ -24,10 +36,21 @@ export const checkAndCreatePaddleCustomer = async (session: any) => {
     if (!userCredits) {
       console.log("🔔 Creating Paddle customer for new user");
 
+      // Get the current session to ensure we have a valid token
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      
+      if (!currentSession) {
+        console.error("❌ No valid session found");
+        return;
+      }
+
       // Call the Edge Function to create Paddle customer and initialize credits
       const { data, error } = await supabase.functions.invoke(
         "handle-user-created",
         {
+          headers: {
+            Authorization: `Bearer ${currentSession.access_token}`,
+          },
           body: {
             record: {
               id: session.user.id,
@@ -49,6 +72,9 @@ export const checkAndCreatePaddleCustomer = async (session: any) => {
     }
   } catch (error) {
     console.error("❌ Error processing user:", error);
+  } finally {
+    // Always remove user from processing set when done
+    processingUsers.delete(userId);
   }
 };
 
