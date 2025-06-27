@@ -255,13 +255,13 @@ export function CreditSystem() {
                   Starter
                 </h4>
                 <div className="text-3xl font-bold text-brand-accent mb-2">
-                  5
+                  15
                 </div>
-                <div className="text-sm text-base-paragraph mb-3">
+                <div className="text-sm text-brand-accent mb-3">
                   credits/month
                 </div>
                 <div className="text-sm text-base-paragraph">
-                  = 1 book/month
+                  = 3 books
                 </div>
                 <div className="text-lg font-semibold text-base-heading mt-2">
                   $9/month
@@ -276,13 +276,13 @@ export function CreditSystem() {
                   Pro Author
                 </h4>
                 <div className="text-3xl font-bold text-brand-accent mb-2">
-                  25
+                  55
                 </div>
-                <div className="text-sm text-base-paragraph mb-3">
+                <div className="text-sm text-brand-accent mb-3">
                   credits/month
                 </div>
                 <div className="text-sm text-base-paragraph">
-                  = 5 books/month
+                  = 11 books
                 </div>
                 <div className="text-lg font-semibold text-base-heading mt-2">
                   $29/month
@@ -292,13 +292,13 @@ export function CreditSystem() {
               <div className="border rounded-lg p-6 text-center opacity-75 bg-white">
                 <h4 className="font-semibold text-base-heading mb-2">Studio</h4>
                 <div className="text-3xl font-bold text-brand-accent mb-2">
-                  75
+                  160
                 </div>
-                <div className="text-sm text-base-paragraph mb-3">
+                <div className="text-sm text-brand-accent mb-3">
                   credits/month
                 </div>
                 <div className="text-sm text-base-paragraph">
-                  = 15 books/month
+                  = 32 books
                 </div>
                 <div className="text-lg font-semibold text-base-heading mt-2">
                   $79/month
