@@ -3,11 +3,11 @@ import { AlertCircle, CreditCard, Plus, X } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from './ui/button';
 import { useCreditPurchases } from '../hooks/useCreditPurchases';
-import { useSubscriptions } from '../hooks/useSubscriptions';
 import { useToast } from '../hooks/use-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { CreditPackage, fetchCreditPackages, formatPrice } from '../store/slices/creditPurchasesSlice';
+import { selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
 
 interface NoCreditsModalProps {
   isOpen: boolean;
@@ -26,7 +26,7 @@ export function NoCreditsModal({
   const { balance: {current_balance} } = useSelector((state: RootState) => state.userCredits);
   const { packages, status: creditPackagesStatus } = useSelector((state: RootState) => state.creditPurchases);
   const { processCreditPurchase } = useCreditPurchases();
-  const { hasActiveSubscription } = useSubscriptions()
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
   const { toast } = useToast();
 
   useEffect(() => {

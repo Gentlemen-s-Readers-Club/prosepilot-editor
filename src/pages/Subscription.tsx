@@ -76,7 +76,6 @@ export function Subscription() {
     availablePrices,
   } = usePaddlePrices(paddle);
 
-  // Use Redux selectors instead of useSubscriptions hook
   const subscriptions = useSelector(selectSubscriptions);
   const activeSubscriptions = useSelector(selectActiveSubscriptions);
   const currentPlan = useSelector(selectCurrentPlan);

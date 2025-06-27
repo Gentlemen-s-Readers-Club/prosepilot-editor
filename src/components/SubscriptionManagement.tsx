@@ -16,7 +16,7 @@ import {
   changeSubscription,
   getAvailablePlanChanges,
 } from "../services/subscriptionManagement";
-import { Subscription } from "../hooks/useSubscriptions";
+import { Subscription } from "../store/slices/subscriptionSlice";
 
 interface SubscriptionManagementProps {
   subscription: Subscription;

@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
-import { useSubscriptions } from "../hooks/useSubscriptions";
 import { toast } from "../hooks/use-toast";
 import { Plus, CreditCard } from "lucide-react";
 import { CreditPackage, fetchCreditPackages, formatPrice } from "../store/slices/creditPurchasesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { useCreditPurchases } from "../hooks/useCreditPurchases";
+import { selectHasActiveSubscription } from "../store/slices/subscriptionSlice";
 
 export function CreditPurchase() {
   const dispatch = useDispatch<AppDispatch>();
   const { packages, status: creditPackagesStatus } = useSelector((state: RootState) => state.creditPurchases);
-  const { hasActiveSubscription } = useSubscriptions();
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription); 
   const { processCreditPurchase } = useCreditPurchases();
 
   useEffect(() => {

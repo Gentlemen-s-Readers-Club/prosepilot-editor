@@ -28,8 +28,8 @@ import { useSelector } from "react-redux";
 import {
   hasProOrStudioPlan,
   hasStudioPlan,
+  selectHasActiveSubscription,
 } from "../store/slices/subscriptionSlice";
-import { useSubscriptions } from "../hooks/useSubscriptions";
 import useAnalytics from "../hooks/useAnalytics";
 
 export function Documentation() {
@@ -45,7 +45,7 @@ export function Documentation() {
   }, [trackPageView]);
 
   // Check if user has Pro or Studio plan
-  const { hasActiveSubscription } = useSubscriptions();
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
   const hasProOrStudio = useSelector(hasProOrStudioPlan);
   const hasStudio = useSelector(hasStudioPlan);
 
