@@ -25,17 +25,21 @@ const faqs = [
   //   question: "Can I upgrade or downgrade my plan anytime?",
   //   answer: "Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at your next billing cycle."
   // },
-  // {
-  //   question: "Do you offer annual billing discounts?",
-  //   answer: "Yes! Annual subscribers save 20% compared to monthly billing. You can switch to annual billing from your subscription settings."
-  // },
+  {
+    question: "Can I buy additional credits?",
+    answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
+  },
+  {
+    question: "Can I cancel my subscription anytime?",
+    answer: "Yes! You can cancel your subscription anytime. You'll be able to use your credits until the end of your current billing period."
+  },
   {
     question: "What happens to my books if I cancel?",
     answer: "Your books remain accessible in read-only mode. You can still export them, but editing requires an active subscription."
   },
   {
-    question: "Can I buy additional credits?",
-    answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
+    question: "Can I get a refund?",
+    answer: "We do not offer refunds for our subscription services. However, you can cancel your subscription anytime."
   }
 ];
 
