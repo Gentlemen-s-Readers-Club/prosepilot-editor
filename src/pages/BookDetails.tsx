@@ -953,14 +953,14 @@ export function BookDetails() {
                         </Button>
                       )}
 
-                      {formData.status !== "published" && (
+                      {formData.status === "archived" && (
                         <Button
                           onClick={() => setShowDeleteDialog(true)}
                           variant="destructive"
                           className="w-full flex items-center justify-center gap-2"
                         >
                           <Trash2 className="w-4 h-4" />
-                          Delete Book
+                          Permanently Delete Book
                         </Button>
                       )}
                     </div>
