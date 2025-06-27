@@ -5,7 +5,7 @@ import { BookList } from '../components/BookList';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { toast } from '../hooks/use-toast';
-import { fetchBooks } from '../store/slices/booksSlice';
+import { fetchBooks, updateBookInList } from '../store/slices/booksSlice';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
 import { hasProOrStudioPlan, hasStudioPlan, selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
@@ -174,8 +174,16 @@ export function Dashboard() {
             table: 'books',
             // filter: `user_id=eq.${session.user.id}`,
           },
-          () => {
-            dispatch(fetchBooks());
+          (payload) => {
+            if (payload.eventType === 'INSERT') {
+              dispatch(fetchBooks());
+            }
+            if (payload.eventType === 'UPDATE') {
+              dispatch(updateBookInList({
+                bookId: payload.new.id,
+                updates: payload.new,
+              }));
+            }
           }
         )
         .subscribe();
