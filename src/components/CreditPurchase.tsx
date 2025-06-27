@@ -1,62 +1,44 @@
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
-import { useCreditPurchases } from "../hooks/useCreditPurchases";
 import { useSubscriptions } from "../hooks/useSubscriptions";
-import { useToast } from "../hooks/use-toast";
+import { toast } from "../hooks/use-toast";
 import { Plus, CreditCard } from "lucide-react";
+import { CreditPackage, fetchCreditPackages, formatPrice } from "../store/slices/creditPurchasesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { useCreditPurchases } from "../hooks/useCreditPurchases";
 
 export function CreditPurchase() {
-  const { packages, loading, error, purchaseCredits, formatPrice } =
-    useCreditPurchases();
+  const dispatch = useDispatch<AppDispatch>();
+  const { packages, status: creditPackagesStatus } = useSelector((state: RootState) => state.creditPurchases);
   const { hasActiveSubscription } = useSubscriptions();
-  const { toast } = useToast();
+  const { processCreditPurchase } = useCreditPurchases();
 
-  // Handle success/error from URL params (similar to subscription flow)
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const creditPurchaseSuccess = urlParams.get("credit_purchase_success");
-
-    if (creditPurchaseSuccess === "true") {
-      toast({
-        title: "Credit Purchase Successful!",
-        description:
-          "Your credits have been added to your account and are ready to use.",
-        variant: "default",
-      });
-
-      // Clean up URL params
-      const url = new URL(window.location.href);
-      url.searchParams.delete("credit_purchase_success");
-      window.history.replaceState({}, "", url);
+    console.log("🔄 CreditPurchase - creditPackagesStatus:", creditPackagesStatus);
+    if (creditPackagesStatus === "idle") {
+      dispatch(fetchCreditPackages());
     }
-  }, [toast]);
+  }, [dispatch, creditPackagesStatus]);
 
-  // Only show if user has an active subscription
-  if (!hasActiveSubscription) {
-    return null;
-  }
-
-  const handlePurchase = async (packageId: string) => {
-    console.log("🎯 CreditPurchase - handlePurchase called:", { packageId });
-    console.log("📦 Available packages:", packages);
-    console.log("🔄 Loading state:", loading);
-
-    const result = await purchaseCredits(packageId);
-    console.log("🔄 Purchase result:", result);
-
-    if (!result.success) {
-      console.error("Purchase failed:", result.error);
+  const handlePurchase = async (selectedPackage: CreditPackage) => {
+    try {
+      processCreditPurchase(selectedPackage);
+    } catch (error) {
+      console.error("Error purchasing credits:", error);
       toast({
         title: "Purchase Failed",
-        description:
-          result.error ||
-          "Unable to process your credit purchase. Please try again.",
+        description: "Unable to process your credit purchase. Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  if (loading) {
+  if (!packages.length || !hasActiveSubscription || creditPackagesStatus === "error") {
+    return null;
+  }
+
+  if (creditPackagesStatus !== "success") {
     return (
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-base-heading font-heading">
@@ -73,40 +55,6 @@ export function CreditPurchase() {
               <div className="h-10 bg-gray-200 rounded"></div>
             </div>
           ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading font-heading">
-          Buy More Credits
-        </h2>
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg font-copy">
-          Error loading credit packages: {error}
-        </div>
-      </div>
-    );
-  }
-
-  if (packages.length === 0 && !loading) {
-    return (
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-heading font-heading">
-          Buy More Credits
-        </h2>
-        <div className="bg-yellow-50 border border-yellow-200 text-yellow-600 px-4 py-3 rounded-lg font-copy">
-          <p>No credit packages available. This could mean:</p>
-          <ul className="list-disc list-inside mt-2 space-y-1 text-sm font-copy">
-            <li>Database schema not applied</li>
-            <li>Credit packages not inserted</li>
-            <li>Backend function not working</li>
-          </ul>
-          <pre className="mt-2 text-xs bg-yellow-100 p-2 rounded">
-            Debug: packages = {JSON.stringify(packages, null, 2)}
-          </pre>
         </div>
       </div>
     );
@@ -138,8 +86,7 @@ export function CreditPurchase() {
               {formatPrice(pkg.price_cents, pkg.currency)}
             </div>
             <Button
-              onClick={() => handlePurchase(pkg.id)}
-              disabled={loading}
+              onClick={() => handlePurchase(pkg)}
               className="w-full"
             >
               <Plus className="w-4 h-4 mr-2" />

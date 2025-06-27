@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AlertCircle, CreditCard, Plus, X } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from './ui/button';
 import { useCreditPurchases } from '../hooks/useCreditPurchases';
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import { useToast } from '../hooks/use-toast';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { CreditPackage, fetchCreditPackages, formatPrice } from '../store/slices/creditPurchasesSlice';
 
 interface NoCreditsModalProps {
   isOpen: boolean;
@@ -21,25 +22,28 @@ export function NoCreditsModal({
   requiredCredits = 1, 
   action = "perform this action"
 }: NoCreditsModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const { balance: {current_balance} } = useSelector((state: RootState) => state.userCredits);
-  const { packages, loading, purchaseCredits, formatPrice } = useCreditPurchases();
+  const { packages, status: creditPackagesStatus } = useSelector((state: RootState) => state.creditPurchases);
+  const { processCreditPurchase } = useCreditPurchases();
   const { hasActiveSubscription } = useSubscriptions()
   const { toast } = useToast();
 
-  const handlePurchase = async (packageId: string) => {
-    const result = await purchaseCredits(packageId);
-    
-    if (result.success) {
-      toast({
-        title: "Credits Purchased!",
-        description: "Your credits have been added to your account.",
-        variant: "default",
-      });
+  useEffect(() => {
+    if (creditPackagesStatus === "idle") {
+      dispatch(fetchCreditPackages());
+    }
+  }, [dispatch, creditPackagesStatus]);
+
+  const handlePurchase = async (selectedPackage: CreditPackage) => {
+    try {
       onClose();
-    } else {
+      processCreditPurchase(selectedPackage);
+    } catch (error) {
+      console.error("Error purchasing credits:", error);
       toast({
         title: "Purchase Failed",
-        description: result.error || "Unable to process your credit purchase. Please try again.",
+        description: "Unable to process your credit purchase. Please try again.",
         variant: "destructive",
       });
     }
@@ -112,11 +116,11 @@ export function NoCreditsModal({
             </div>
 
             {/* Purchase Options */}
-            {!hasActiveSubscription ? (
+            {hasActiveSubscription ? (
               <div className="space-y-3">
                 <h3 className="text-sm font-medium text-gray-900 font-heading">Purchase Credits</h3>
                 
-                {loading ? (
+                {creditPackagesStatus === "idle" ? (
                   <div className="space-y-2">
                     {[1, 2].map((i) => (
                       <div key={i} className="bg-gray-50 rounded-lg p-3 animate-pulse">
@@ -159,10 +163,7 @@ export function NoCreditsModal({
                               </div>
                             </div>
                           </div>
-                          <Button
-                            onClick={() => handlePurchase(pkg.id)}
-                            disabled={loading}
-                          >
+                          <Button onClick={() => handlePurchase(pkg)}>
                             Buy
                           </Button>
                         </div>
@@ -201,8 +202,7 @@ export function NoCreditsModal({
             </Button>
             {hasActiveSubscription && recommendedPackage && (
               <Button 
-                onClick={() => handlePurchase(recommendedPackage.id)}
-                disabled={loading}
+                onClick={() => handlePurchase(recommendedPackage)}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Buy {recommendedPackage.credits_amount} Credits
