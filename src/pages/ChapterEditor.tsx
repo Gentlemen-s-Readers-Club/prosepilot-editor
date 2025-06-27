@@ -5,7 +5,7 @@ import { EnhancedEditor } from '../components/Editor/EnhancedEditor';
 import { EditorSidebar } from '../components/Editor/EditorSidebar';
 import { ChapterToolbar } from '../components/Editor/ChapterToolbar';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle, CreditCard } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { supabase } from '../lib/supabase';
 import { ChapterProvider } from '../contexts/ChapterContext';
@@ -20,6 +20,7 @@ import {
 import { Book, Chapter } from '../store/types';
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
+import { selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
 
 interface Version {
   id: string;
@@ -33,6 +34,7 @@ function ChapterEditorContent() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { session } = useSelector((state: RootState) => (state.auth));
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
   const [content, setContent] = useState('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +44,9 @@ function ChapterEditorContent() {
   const [versions, setVersions] = useState<Version[]>([]);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
+
+  // Determine if editor should be read-only based on published status and subscription
+  const isReadOnly = isPublished || !hasActiveSubscription;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,7 +122,7 @@ function ChapterEditorContent() {
   }, [id, navigate, toast]);
 
   const handleTitleChange = async (newTitle: string) => {
-    if (!id || isPublished) return;
+    if (!id || isReadOnly) return;
 
     try {
       const { error } = await supabase
@@ -147,7 +152,7 @@ function ChapterEditorContent() {
   };
 
   const createNewVersion = async (versionContent: string) => {
-    if (!id) return;
+    if (!id || isReadOnly) return;
 
     try {
       const { data: newVersion, error: versionError } = await supabase
@@ -229,6 +234,7 @@ function ChapterEditorContent() {
               isCollapsed={isSidebarCollapsed}
               onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
               isPublished={isPublished}
+              hasActiveSubscription={hasActiveSubscription}
             />
           )}
           
@@ -244,7 +250,7 @@ function ChapterEditorContent() {
                   Back to Book Details
                 </button>
                   
-                  {!isPublished && (
+                  {!isReadOnly && (
                     <Button onClick={handleSave}>Save Changes</Button>
                   )}
               </div>
@@ -267,6 +273,24 @@ function ChapterEditorContent() {
                 </div>
               )}
 
+              {!hasActiveSubscription && !isPublished && (
+                <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <div className="flex">
+                    <div className="shrink-0">
+                      <CreditCard className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-amber-800 font-heading">
+                        Subscription Required
+                      </h3>
+                      <div className="mt-2 text-sm text-amber-700 font-copy">
+                        You need an active subscription to edit chapters. Please subscribe to continue writing.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {isLoading ? (
                 <div className="bg-white rounded-lg shadow-lg p-6 flex-1">
                   <div className="h-[calc(100vh-300px)] flex items-center justify-center">
@@ -283,7 +307,7 @@ function ChapterEditorContent() {
                     onTitleChange={handleTitleChange}
                     versions={versions}
                     onRestore={handleRestoreVersion}
-                    isPublished={isPublished}
+                    readOnly={isReadOnly}
                   />
                   <div className="bg-white rounded-lg shadow-lg p-6 flex-1">
                     <EnhancedEditor
@@ -291,7 +315,7 @@ function ChapterEditorContent() {
                       chapterTitle={chapterTitle}
                       initialContent={content}
                       onChange={setContent}
-                      readOnly={isPublished}
+                      readOnly={isReadOnly}
                     />
                   </div>
                 </div>

@@ -16,7 +16,7 @@ interface ChapterToolbarProps {
   onTitleChange: (newTitle: string) => void;
   versions: Version[];
   onRestore: (version: Version) => void;
-  isPublished?: boolean;
+  readOnly?: boolean;
 }
 
 export function ChapterToolbar({ 
@@ -24,7 +24,7 @@ export function ChapterToolbar({
   onTitleChange, 
   versions, 
   onRestore,
-  isPublished = false 
+  readOnly = false
 }: ChapterToolbarProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -82,7 +82,7 @@ export function ChapterToolbar({
           ) : (
             <>
               <h2 className="text-xl font-semibold text-gray-900 font-heading">{title}</h2>
-              {!isPublished && (
+              {!readOnly && (
                 <button
                   onClick={() => setIsEditing(true)}
                   className="p-1 text-brand-accent hover:text-base-heading rounded-md hover:bg-gray-100"

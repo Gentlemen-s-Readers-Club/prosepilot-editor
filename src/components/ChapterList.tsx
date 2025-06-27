@@ -29,6 +29,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog';
+import { selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
+import { useSelector } from 'react-redux';
 
 interface Chapter {
   id: string;
@@ -50,6 +52,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [chapterToDelete, setChapterToDelete] = useState<Chapter | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -204,7 +207,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-base-heading font-heading">Book Content</h2>
-        {!isPublished && (
+        {!isPublished && hasActiveSubscription && (
           <Button onClick={() => setShowAddDialog(true)} className="flex items-center gap-2">
             <Plus size={16} />
             Add New
@@ -243,7 +246,7 @@ export function ChapterList({ bookId, isPublished = false }: ChapterListProps) {
                   onCancel={() => setEditingId(null)}
                   onNavigate={() => navigate(`/workspace/chapter/${chapter.id}`)}
                   onDelete={() => setChapterToDelete(chapter)}
-                  disabled={isPublished}
+                  disabled={isPublished || !hasActiveSubscription}
                 />
               ))}
             </div>

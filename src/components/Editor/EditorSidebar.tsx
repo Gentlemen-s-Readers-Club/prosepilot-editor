@@ -16,9 +16,10 @@ interface EditorSidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
   isPublished?: boolean;
+  hasActiveSubscription?: boolean;
 }
 
-export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, onToggle, isPublished = false }: EditorSidebarProps) {
+export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, onToggle, isPublished = false, hasActiveSubscription = false }: EditorSidebarProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -102,7 +103,7 @@ export function EditorSidebar({ book, chapters, currentChapterId, isCollapsed, o
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-sm font-medium text-gray-500 font-heading">Chapters & Pages</h4>
-                {!isPublished && (
+                {!isPublished && hasActiveSubscription && (
                   <Button
                     variant="ghost"
                     size="sm"
