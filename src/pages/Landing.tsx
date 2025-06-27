@@ -259,10 +259,10 @@ export function Landing() {
       <section className="py-24 bg-base-background" aria-labelledby="features-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 id="features-heading" className="text-base text-brand-accent font-semibold tracking-wide uppercase font-heading">Everything You Need</h2>
-            <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-base-heading font-heading sm:text-4xl">
+            <p id="features-heading" className="text-base text-brand-accent font-semibold tracking-wide uppercase font-copy">Everything You Need</p>
+            <h2 className="mt-2 text-3xl leading-8 font-bold tracking-tight text-base-heading font-heading sm:text-4xl">
               From idea to published book in record time
-            </p>
+            </h2>
             <p className="mt-4 max-w-2xl text-xl text-base-paragraph font-copy lg:mx-auto">
               Our AI-powered platform handles the heavy lifting so you can focus on your creativity.
             </p>
@@ -354,7 +354,10 @@ export function Landing() {
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-base-heading font-heading sm:text-4xl">
+            <p id="features-heading" className="text-base text-brand-accent font-semibold tracking-wide uppercase font-copy">
+              Ready to write?
+            </p>
+            <h2 className="text-3xl font-bold text-base-heading font-heading sm:text-4xl mt-2">
               Join thousands of successful authors
             </h2>
             <p className="mt-4 text-xl text-base-paragraph font-copy">
