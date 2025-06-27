@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { 
   Check, 
-  FileText, 
-  Crown, 
+  FileText,
+  Crown,
   Users,
   ArrowRight,
   CreditCard,
@@ -14,75 +14,7 @@ import {
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet-async';
 import useAnalytics from '../hooks/useAnalytics';
-
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  icon: JSX.Element;
-  color: string;
-  description: string;
-  features: string[];
-  credits: number;
-  isPopular?: boolean;
-  comingSoon?: boolean;
-}
-
-const plans: Plan[] = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: 9,
-    credits: 5, // 1 book
-    icon: <FileText className="w-6 h-6" />,
-    color: 'bg-state-success',
-    description: 'Perfect for hobbyists and first-time authors',
-    features: [
-      '5 credits/month (1 book)',
-      'Basic genre selection',
-      'AI-generated outline + simple chapter flow',
-      'Plot and character consistency checker',
-      'Export to ePub',
-      'Community support'
-    ]
-  },
-  {
-    id: 'pro',
-    name: 'Pro Author',
-    price: 29,
-    credits: 25, // 5 books
-    icon: <Crown className="w-6 h-6" />,
-    color: 'bg-state-info',
-    description: 'For aspiring writers ready to go deeper',
-    features: [
-      '25 credits/month (5 books)',
-      'All Starter features',
-      'Unlock more genres',
-      'Advanced book properties: narrator, tone, style',
-      'Export to PDF, ePub, and Docx formats',
-      'Annotations system',
-      'Priority email support'
-    ],
-    isPopular: true
-  },
-  {
-    id: 'studio',
-    name: 'Studio',
-    price: 79,
-    credits: 75, // 15 books
-    icon: <Users className="w-6 h-6" />,
-    color: 'bg-state-warning',
-    description: 'For professionals and small studios',
-    features: [
-      '75 credits/month (15 books)',
-      'All Pro features',
-      'Advanced Metadata management',
-      'Team access (up to 3 users)',
-      'More features coming soon'
-    ],
-    comingSoon: true
-  }
-];
+import { plans } from '../lib/consts';
 
 const faqs = [
   {
@@ -106,6 +38,20 @@ const faqs = [
     answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
   }
 ];
+
+// Function to render icons based on string names
+const renderIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'FileText':
+      return <FileText className="w-6 h-6" />;
+    case 'Crown':
+      return <Crown className="w-6 h-6" />;
+    case 'Users':
+      return <Users className="w-6 h-6" />;
+    default:
+      return <FileText className="w-6 h-6" />;
+  }
+};
 
 export function Pricing() {
   const { trackPageView } = useAnalytics({
@@ -174,7 +120,7 @@ export function Pricing() {
                     {/* Plan Header */}
                   <div className="text-center mb-8">
                     <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
-                      {plan.icon}
+                      {renderIcon(plan.icon)}
                     </div>
                     <h3 className="text-2xl font-bold text-base-heading">{plan.name}</h3>
                     <p className="text-base-paragraph mt-2">{plan.description}</p>

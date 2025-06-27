@@ -29,12 +29,12 @@ export const plans: Plan[] = [
     id: "starter",
     name: "Starter",
     price: 9,
-    credits: 5, // 1 book
+    credits: 15, // 3 book
     icon: 'FileText',
     color: "bg-state-success",
     description: "Perfect for hobbyists and first-time authors",
     features: [
-      "5 credits/month (1 book)",
+      "15 credits/month (3 books)",
       "Basic genre selection",
       "AI-generated outline + simple chapter flow",
       "Plot and character consistency checker",
@@ -47,12 +47,12 @@ export const plans: Plan[] = [
     id: "pro",
     name: "Pro Author",
     price: 29,
-    credits: 25, // 5 books
+    credits: 55, // 11 books
     icon: 'Crown',
     color: "bg-state-info",
     description: "For aspiring writers ready to go deeper",
     features: [
-      "25 credits/month (5 books)",
+      "55 credits/month (11 books)",
       "All Starter features",
       "Unlock more genres",
       "Advanced book properties: narrator, tone, style",
@@ -67,12 +67,12 @@ export const plans: Plan[] = [
     id: "studio",
     name: "Studio",
     price: 79,
-    credits: 75, // 15 books
+    credits: 160, // 32 books
     icon: 'Users',
     color: "bg-state-warning",
     description: "For professionals and small studios",
     features: [
-      "75 credits/month (15 books)",
+      "160 credits/month (32 books)",
       "All Pro features",
       'Advanced Metadata management',
       "Team access (up to 3 users)",

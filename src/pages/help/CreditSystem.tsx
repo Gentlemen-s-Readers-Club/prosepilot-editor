@@ -313,15 +313,15 @@ export function CreditSystem() {
               </h4>
               <div className="text-state-success text-sm space-y-2">
                 <p>
-                  • <strong>Starter:</strong> $9.00 per book ($9 ÷ 5 credits)
+                  • <strong>Starter:</strong> $3.00 per book ($9 ÷ 15 credits)
                 </p>
                 <p>
-                  • <strong>Pro Author:</strong> $5.80 per book ($29 ÷ 25
-                  credits) - 35% savings!
+                  • <strong>Pro Author:</strong> $2.64 per book ($29 ÷ 55
+                  credits) - 12% savings!
                 </p>
                 <p>
-                  • <strong>Studio:</strong> $5.27 per book ($79 ÷ 75 credits) -
-                  42% savings!
+                  • <strong>Studio:</strong> $2.47 per book ($79 ÷ 160 credits) -
+                  17% savings!
                 </p>
               </div>
             </div>
@@ -395,17 +395,17 @@ export function CreditSystem() {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">Monthly credits used:</span>
-                    <span className="font-medium">15/25</span>
+                    <span className="font-medium">5/15</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-brand-primary h-2 rounded-full"
-                      style={{ width: "60%" }}
+                      style={{ width: "33.33%" }}
                     ></div>
                   </div>
                   <div className="flex justify-between text-base-paragraph">
                     <span>Remaining: 10 credits</span>
-                    <span>Resets: Jan 15, 2025</span>
+                    <span>Resets: Jun 15, 2025</span>
                   </div>
                 </div>
               </div>
@@ -434,10 +434,10 @@ export function CreditSystem() {
                   10 credits
                 </div>
                 <div className="text-lg font-semibold text-base-heading mb-3">
-                  $20
+                  $4.99
                 </div>
                 <div className="text-sm text-base-paragraph mb-4">
-                  $2.00 per credit
+                  $0.50 per credit
                 </div>
                 <div className="text-sm text-base-paragraph">
                   = 2 additional books
@@ -455,10 +455,10 @@ export function CreditSystem() {
                   25 credits
                 </div>
                 <div className="text-lg font-semibold text-base-heading mb-3">
-                  $45
+                  $11.99
                 </div>
                 <div className="text-sm text-base-paragraph mb-4">
-                  $1.80 per credit
+                  $0.48 per credit
                 </div>
                 <div className="text-sm text-base-paragraph">
                   = 5 additional books
@@ -474,10 +474,10 @@ export function CreditSystem() {
                   50 credits
                 </div>
                 <div className="text-lg font-semibold text-base-heading mb-3">
-                  $80
+                  $21.99
                 </div>
                 <div className="text-sm text-base-paragraph mb-4">
-                  $1.60 per credit
+                  $0.44 per credit
                 </div>
                 <div className="text-sm text-base-paragraph">
                   = 10 additional books
