@@ -157,10 +157,10 @@ export const useCreditPurchases = () => {
     }
   };
 
-  // Load packages on mount
+  // Load packages on mount - only if not already loaded
   useEffect(() => {
     fetchPackages();
-  }, []);
+  }, []); // Empty dependency array to run only once on mount
 
   // Load purchases when user changes
   useEffect(() => {
