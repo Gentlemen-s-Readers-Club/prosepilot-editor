@@ -190,9 +190,7 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
                           </span>
                         </div>
                         <div className="mt-2 text-sm text-gray-500 font-copy">
-                          {plan.credits === -1
-                            ? "Unlimited credits"
-                            : `${plan.credits} credits included`}
+                          {`${plan.credits} credits included`}
                         </div>
                       </div>
                     </div>
