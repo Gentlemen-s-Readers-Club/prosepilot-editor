@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AlertCircle, CreditCard, Plus, X } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from './ui/button';
 import { useCreditPurchases } from '../hooks/useCreditPurchases';
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import { useToast } from '../hooks/use-toast';
-import { useCredits } from '../hooks/useCredits';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 interface NoCreditsModalProps {
   isOpen: boolean;
@@ -20,19 +21,10 @@ export function NoCreditsModal({
   requiredCredits = 1, 
   action = "perform this action"
 }: NoCreditsModalProps) {
+  const { balance: {current_balance} } = useSelector((state: RootState) => state.userCredits);
   const { packages, loading, purchaseCredits, formatPrice } = useCreditPurchases();
   const { hasActiveSubscription } = useSubscriptions()
-  const { checkBalance } = useCredits();
-  const [currentCredits, setCurrentCredits] = useState<number | null>(0);
   const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const balance = await checkBalance();
-      setCurrentCredits(balance || 0);
-    };
-    fetchBalance();
-  }, [checkBalance]);
 
   const handlePurchase = async (packageId: string) => {
     const result = await purchaseCredits(packageId);
@@ -93,7 +85,7 @@ export function NoCreditsModal({
           </div>
 
           <Dialog.Description className="text-sm text-base-paragraph font-copy">
-            You need {requiredCredits} credit{requiredCredits !== 1 ? 's' : ''} to {action}, but you currently have {currentCredits} credit{currentCredits !== 1 ? 's' : ''}.
+            You need {requiredCredits} credit{requiredCredits !== 1 ? 's' : ''} to {action}, but you currently have {current_balance} credit{current_balance !== 1 ? 's' : ''}.
           </Dialog.Description>
 
           <div className="space-y-4">
@@ -105,13 +97,13 @@ export function NoCreditsModal({
                   <span className="text-sm font-medium text-state-warning font-copy">Credit Status</span>
                 </div>
 
-                {currentCredits && (
+                {current_balance && (
                   <div className="text-right">
                     <div className="text-sm text-state-warning font-copy">
-                        {currentCredits} / {requiredCredits} credits
+                        {current_balance} / {requiredCredits} credits
                     </div>
                     <div className="text-xs text-state-error font-copy">
-                        {requiredCredits - currentCredits} more needed
+                        {requiredCredits - current_balance} more needed
                     </div>
                   </div>  
                 )}

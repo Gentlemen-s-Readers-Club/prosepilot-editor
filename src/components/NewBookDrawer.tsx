@@ -1,25 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { X, AlertCircle, Loader2, BookOpen, Lightbulb, Sparkles, Globe } from 'lucide-react';
-import { 
-  Drawer, 
-  DrawerContent, 
-  DrawerTitle, 
-  DrawerClose 
-} from './ui/drawer';
-import { Button } from './ui/button';
-import { Label } from './ui/label';
-import { CustomSelect, SelectOption, mapToSelectOptions } from './ui/select';
-import { useToast } from '../hooks/use-toast';
-import { AppDispatch, RootState } from '../store';
-import type { Category, Language, Tone, Narrator, LiteratureStyle } from '../store/types';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTones } from '../store/slices/tonesSlice';
-import { fetchNarrators } from '../store/slices/narratorsSlice';
-import { fetchLiteratureStyles } from '../store/slices/literatureStylesSlice';
-import { hasProOrStudioPlan } from '../store/slices/subscriptionSlice';
+import React, { useState, useEffect } from "react";
+import {
+  X,
+  AlertCircle,
+  Loader2,
+  BookOpen,
+  Lightbulb,
+  Sparkles,
+  Globe,
+} from "lucide-react";
+import { Drawer, DrawerContent, DrawerTitle, DrawerClose } from "./ui/drawer";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
+import { CustomSelect, SelectOption, mapToSelectOptions } from "./ui/select";
+import { useToast } from "../hooks/use-toast";
+import { AppDispatch, RootState } from "../store";
+import type {
+  Category,
+  Language,
+  Tone,
+  Narrator,
+  LiteratureStyle,
+} from "../store/types";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTones } from "../store/slices/tonesSlice";
+import { fetchNarrators } from "../store/slices/narratorsSlice";
+import { fetchLiteratureStyles } from "../store/slices/literatureStylesSlice";
+import { hasProOrStudioPlan } from "../store/slices/subscriptionSlice";
 
 interface ValidationIssue {
-  type: 'prohibited_content' | 'sensitive_data' | 'content_appropriateness' | 'ethical_consideration' | 'content_coherence';
+  type:
+    | "prohibited_content"
+    | "sensitive_data"
+    | "content_appropriateness"
+    | "ethical_consideration"
+    | "content_coherence";
   description: string;
 }
 
@@ -31,34 +45,48 @@ interface NewBookDrawerProps {
 export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
-  
-  const { session } = useSelector((state: RootState) => (state.auth));
-  
-  const [prompt, setPrompt] = useState('');
+  const { session } = useSelector((state: RootState) => state.auth);
+  const { profile } = useSelector((state: RootState) => state.profile);
+
+  const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<ValidationIssue[] | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [promptCharCount, setPromptCharCount] = useState(0);
-  
+
   // Add validation error states
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
   const [languageError, setLanguageError] = useState<string | null>(null);
-  
+
   // Get form options from Redux store
   const userHasProPlan = useSelector(hasProOrStudioPlan);
-  const { items: categories } = useSelector((state: RootState) => state.categories);
-  const { items: languages } = useSelector((state: RootState) => state.languages);
-  const { items: tones, status: tonesStatus } = useSelector((state: RootState) => state.tones);
-  const { items: narrators, status: narratorsStatus } = useSelector((state: RootState) => state.narrators);
-  const { items: literatureStyles, status: literatureStylesStatus } = useSelector((state: RootState) => state.literatureStyles);
-  const { profile } = useSelector((state: RootState) => state.profile);
+  const { items: categories } = useSelector(
+    (state: RootState) => state.categories
+  );
+  const { items: languages } = useSelector(
+    (state: RootState) => state.languages
+  );
+  const { items: tones, status: tonesStatus } = useSelector(
+    (state: RootState) => state.tones
+  );
+  const { items: narrators, status: narratorsStatus } = useSelector(
+    (state: RootState) => state.narrators
+  );
+  const { items: literatureStyles, status: literatureStylesStatus } =
+    useSelector((state: RootState) => state.literatureStyles);
 
   // Selection states
-  const [selectedCategories, setSelectedCategories] = useState<SelectOption[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<SelectOption | null>(null);
-  const [selectedNarrator, setSelectedNarrator] = useState<SelectOption | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<SelectOption[]>(
+    []
+  );
+  const [selectedLanguage, setSelectedLanguage] = useState<SelectOption | null>(
+    null
+  );
+  const [selectedNarrator, setSelectedNarrator] = useState<SelectOption | null>(
+    null
+  );
   const [selectedStyle, setSelectedStyle] = useState<SelectOption | null>(null);
   const [selectedTone, setSelectedTone] = useState<SelectOption | null>(null);
 
@@ -66,20 +94,19 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
     const loadData = async () => {
       try {
         const promises = [];
-        if (tonesStatus === 'idle') {
+        if (tonesStatus === "idle") {
           promises.push(dispatch(fetchTones()).unwrap());
         }
-        if (narratorsStatus === 'idle') {
+        if (narratorsStatus === "idle") {
           promises.push(dispatch(fetchNarrators()).unwrap());
         }
-        if (literatureStylesStatus === 'idle') {
+        if (literatureStylesStatus === "idle") {
           promises.push(dispatch(fetchLiteratureStyles()).unwrap());
         }
 
         await Promise.all(promises);
-        
-      } catch(error) {
-        console.error('Error loading data:', error);
+      } catch (error) {
+        console.error("Error loading data:", error);
         toast({
           variant: "destructive",
           title: "Error",
@@ -91,7 +118,14 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
     };
 
     loadData();
-  }, [dispatch, literatureStylesStatus, narratorsStatus, toast, tonesStatus, onClose]);
+  }, [
+    dispatch,
+    literatureStylesStatus,
+    narratorsStatus,
+    toast,
+    tonesStatus,
+    onClose,
+  ]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -105,7 +139,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
   }, [prompt]);
 
   const resetForm = () => {
-    setPrompt('');
+    setPrompt("");
     setSelectedCategories([]);
     setSelectedLanguage(null);
     setSelectedNarrator(null);
@@ -115,10 +149,10 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
     setError(null);
     setIssues(null);
   };
-  
+
   const handleSubmit = async () => {
     if (!selectedLanguage) return;
-    
+
     setIsSubmitting(true);
     setError(null);
     setIssues(null);
@@ -128,53 +162,67 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
       const requestPayload = {
         prompt,
         language: selectedLanguage.language as Language,
-        categories: selectedCategories.map(c => c.category as Category),
+        categories: selectedCategories.map((c) => c.category as Category),
         narrator: selectedNarrator?.narrator as Narrator | undefined,
         tone: selectedTone?.tone as Tone | undefined,
         literatureStyle: selectedStyle?.style as LiteratureStyle | undefined,
-        author_name: profile?.full_name || 'Anonymous'
+        author_name: profile?.full_name || "Anonymous",
       };
-      
+
       // Call the API to generate the book
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-book`, {
-        method: 'POST',
+      const apiUrl =
+        import.meta.env.VITE_PYTHON_API_URL || process.env.VITE_PYTHON_API_URL;
+      console.log("API URL being used:", apiUrl);
+
+      const response = await fetch(`${apiUrl}/generate-book`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token}`,
         },
-        body: JSON.stringify(requestPayload)
+        body: JSON.stringify(requestPayload),
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
+
       if (!response.ok) {
-        throw new Error;
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        throw new Error(
+          `HTTP error! status: ${response.status}, body: ${errorText}`
+        );
       }
 
       const result = await response.json();
+      console.log("Response result:", result);
 
       if (!result.success) {
-        setError(result.message || "Failed to create book. Please try again later or contact support.");
+        setError(
+          result.message ||
+            "Failed to create book. Please try again later or contact support."
+        );
         return result;
       }
-      
+
       if (!result.is_valid) {
         setCurrentStep(1);
         setIssues(result.issues);
         return result;
       }
-      
+
       if (!result.book) {
-        throw new Error;
+        throw new Error("No book data returned from server");
       }
 
       onClose();
-
-      toast({
-        title: "Success",
-        description: 'Book created successfully',
-      });
     } catch (error) {
-      console.error('Error creating book:', error);
-      setError("Failed to create book. Please try again later or contact support.");
+      console.error("Error creating book:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to create book. Please try again later or contact support."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -190,19 +238,19 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
       // Reset validation errors
       setCategoriesError(null);
       setLanguageError(null);
-      
+
       let hasErrors = false;
-      
+
       if (selectedCategories.length === 0) {
         setCategoriesError("Please select at least one category");
         hasErrors = true;
       }
-      
+
       if (!selectedLanguage) {
         setLanguageError("Please select a language");
         hasErrors = true;
       }
-      
+
       if (hasErrors) {
         return;
       }
@@ -218,33 +266,67 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
   const canSubmit = prompt && selectedLanguage && selectedCategories.length > 0;
 
   return (
-    <Drawer open={isOpen} onOpenChange={(open: boolean) => {
-      // Only allow closing via the X button (which sets open to false)
-      if (!open) {
-        onClose();
-      }
-    }}>
-      <DrawerContent 
-        className="w-full max-w-2xl flex flex-col shadow-xl max-h-screen overflow-hidden"
-      >
+    <Drawer
+      open={isOpen}
+      onOpenChange={(open: boolean) => {
+        // Only allow closing via the X button (which sets open to false)
+        // Don't allow closing if currently submitting
+        if (!open && !isSubmitting) {
+          onClose();
+        }
+      }}
+    >
+      <DrawerContent className="w-full max-w-2xl flex flex-col shadow-xl max-h-screen overflow-hidden">
         {/* Header with progress indicator - Fixed */}
         <div className="flex justify-between items-center p-6 border-b bg-white sticky top-0 z-10">
           <div className="flex-1">
             <DrawerTitle className="text-2xl font-bold text-base-heading font-heading">Create New Book</DrawerTitle>
             <div className="flex items-center mt-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 1 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
-              <div className={`h-1 w-12 ${currentStep >= 2 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 2 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 1
+                    ? "bg-brand-primary text-white"
+                    : "bg-gray-200 text-gray-500"
+                }`}
+              >
+                1
+              </div>
+              <div
+                className={`h-1 w-12 ${
+                  currentStep >= 2 ? "bg-brand-primary" : "bg-gray-200"
+                }`}
+              ></div>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= 2
+                    ? "bg-brand-primary text-white"
+                    : "bg-gray-200 text-gray-500"
+                }`}
+              >
+                2
+              </div>
               {userHasProPlan && (
                 <>
-                  <div className={`h-1 w-12 ${currentStep >= 3 ? 'bg-brand-primary' : 'bg-gray-200'}`}></div>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep >= 3 ? 'bg-brand-primary text-white' : 'bg-gray-200 text-gray-500'}`}>3</div>
+                  <div
+                    className={`h-1 w-12 ${
+                      currentStep >= 3 ? "bg-brand-primary" : "bg-gray-200"
+                    }`}
+                  ></div>
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      currentStep >= 3
+                        ? "bg-brand-primary text-white"
+                        : "bg-gray-200 text-gray-500"
+                    }`}
+                  >
+                    3
+                  </div>
                 </>
               )}
             </div>
           </div>
           <DrawerClose asChild>
-            <button 
+            <button
               className="text-gray-400 hover:text-base-paragraph transition-colors"
               disabled={isSubmitting}
             >
@@ -327,7 +409,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     />
                     <div className="flex justify-between text-xs text-gray-500 font-copy">
                       <span>{promptCharCount} characters</span>
-                      <span>{promptCharCount < 50 ? 'Add more details for better results' : promptCharCount < 200 ? 'Good start, more details help' : 'Great level of detail!'}</span>
                     </div>
                   </div>
 
@@ -372,7 +453,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                           setSelectedCategories(newValue as SelectOption[]);
                           setCategoriesError(null);
                         }}
-                        options={mapToSelectOptions(categories, 'category')}
+                        options={mapToSelectOptions(categories, "category")}
                         placeholder="Select categories"
                         isDisabled={isSubmitting}
                       />
@@ -396,7 +477,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                           setSelectedLanguage(newValue as SelectOption);
                           setLanguageError(null);
                         }}
-                        options={mapToSelectOptions(languages, 'language')}
+                        options={mapToSelectOptions(languages, "language")}
                         placeholder="Select language"
                         isDisabled={isSubmitting}
                       />
@@ -430,8 +511,10 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       <CustomSelect
                         id="narrator"
                         value={selectedNarrator}
-                        onChange={(newValue) => setSelectedNarrator(newValue as SelectOption)}
-                        options={mapToSelectOptions(narrators, 'narrator')}
+                        onChange={(newValue) =>
+                          setSelectedNarrator(newValue as SelectOption)
+                        }
+                        options={mapToSelectOptions(narrators, "narrator")}
                         placeholder="Select narrator..."
                         isDisabled={isSubmitting}
                       />
@@ -442,8 +525,10 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       <CustomSelect
                         id="style"
                         value={selectedStyle}
-                        onChange={(newValue) => setSelectedStyle(newValue as SelectOption)}
-                        options={mapToSelectOptions(literatureStyles, 'style')}
+                        onChange={(newValue) =>
+                          setSelectedStyle(newValue as SelectOption)
+                        }
+                        options={mapToSelectOptions(literatureStyles, "style")}
                         placeholder="Select style..."
                         isDisabled={isSubmitting}
                       />
@@ -454,8 +539,10 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       <CustomSelect
                         id="tone"
                         value={selectedTone}
-                        onChange={(newValue) => setSelectedTone(newValue as SelectOption)}
-                        options={mapToSelectOptions(tones, 'tone')}
+                        onChange={(newValue) =>
+                          setSelectedTone(newValue as SelectOption)
+                        }
+                        options={mapToSelectOptions(tones, "tone")}
                         placeholder="Select tone..."
                         isDisabled={isSubmitting}
                       />
@@ -497,12 +584,16 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
               ) : (
                 <div></div>
               )}
-              
-              
-              {(currentStep < 3 && userHasProPlan) || (currentStep < 2 && !userHasProPlan) ? (
+
+              {(currentStep < 3 && userHasProPlan) ||
+              (currentStep < 2 && !userHasProPlan) ? (
                 <Button
                   onClick={nextStep}
-                  disabled={isSubmitting || (currentStep === 1 && (!prompt || prompt.trim().length < 10))}
+                  disabled={
+                    isSubmitting ||
+                    (currentStep === 1 &&
+                      (!prompt || prompt.trim().length < 10))
+                  }
                 >
                   Next
                 </Button>
@@ -510,7 +601,6 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                 <Button
                   onClick={handleSubmit}
                   disabled={isSubmitting || !canSubmit}
-                  className="bg-brand-primary hover:bg-brand-primary/90"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
@@ -518,7 +608,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       Creating Book...
                     </div>
                   ) : (
-                    'Create Book'
+                    "Create Book"
                   )}
                 </Button>
               )}

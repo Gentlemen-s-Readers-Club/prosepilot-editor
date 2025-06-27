@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { FileUpload } from '../components/ui/file-upload';
-import { ChapterList } from '../components/ChapterList';
-import { StatusBadge } from '../components/ui/status-badge';
-import { useToast } from '../hooks/use-toast';
-import { 
-  ArrowLeft, 
-  Trash2, 
-  Archive, 
-  Download, 
-  AlertCircle, 
-  BookOpen, 
-  Calendar, 
-  Clock, 
-  User, 
-  Globe, 
-  Tag, 
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { FileUpload } from "../components/ui/file-upload";
+import { ChapterList } from "../components/ChapterList";
+import { StatusBadge } from "../components/ui/status-badge";
+import { useToast } from "../hooks/use-toast";
+import {
+  ArrowLeft,
+  Trash2,
+  Archive,
+  Download,
+  AlertCircle,
+  BookOpen,
+  Calendar,
+  Clock,
+  User,
+  Globe,
+  Tag,
   Edit3,
   Save,
   X,
@@ -27,9 +27,13 @@ import {
   ChevronDown,
   FileText,
   BookText,
-  FileType
-} from 'lucide-react';
-import { CustomSelect, SelectOption, mapToSelectOptions } from '../components/ui/select';
+  FileType,
+} from "lucide-react";
+import {
+  CustomSelect,
+  SelectOption,
+  mapToSelectOptions,
+} from "../components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -37,23 +41,23 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../components/ui/dialog';
+} from "../components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu';
-import { BookCategory, Status } from '../store/types';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
-import { fetchCategories } from '../store/slices/categoriesSlice';
-import { fetchLanguages } from '../store/slices/languagesSlice';
-import { updateBookInList } from '../store/slices/booksSlice';
-import { hasProOrStudioPlan } from '../store/slices/subscriptionSlice';
-import { formatDistanceToNow } from 'date-fns';
-import { getCoverUrl } from '../lib/utils/covers';
-import { Helmet } from 'react-helmet';
+} from "../components/ui/dropdown-menu";
+import { BookCategory, Status } from "../store/types";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { fetchCategories } from "../store/slices/categoriesSlice";
+import { fetchLanguages } from "../store/slices/languagesSlice";
+import { updateBookInList, deleteBook } from "../store/slices/booksSlice";
+import { hasProOrStudioPlan } from "../store/slices/subscriptionSlice";
+import { formatDistanceToNow } from "date-fns";
+import { getCoverUrl } from "../lib/utils/covers";
+import { Helmet } from "react-helmet-async";
 
 interface BookFormData {
   title: string;
@@ -71,11 +75,17 @@ export function BookDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const { session } = useSelector((state: RootState) => (state.auth));
-  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
-  const { items: categories, status: categoriesStatus } = useSelector((state: RootState) => state.categories);
-  const { items: languages, status: languagesStatus } = useSelector((state: RootState) => state.languages);
+
+  const { session } = useSelector((state: RootState) => state.auth);
+  const { status: subscriptionStatus } = useSelector(
+    (state: RootState) => state.subscription
+  );
+  const { items: categories, status: categoriesStatus } = useSelector(
+    (state: RootState) => state.categories
+  );
+  const { items: languages, status: languagesStatus } = useSelector(
+    (state: RootState) => state.languages
+  );
   const hasProOrStudio = useSelector(hasProOrStudioPlan);
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -91,23 +101,23 @@ export function BookDetails() {
     categories: false,
     language: false,
   });
-  
+
   const [formData, setFormData] = useState<BookFormData>({
-    title: '',
-    authorName: '',
-    isbn: '',
-    cover_url: '',
-    synopsis: '',
+    title: "",
+    authorName: "",
+    isbn: "",
+    cover_url: "",
+    synopsis: "",
     categories: [],
     language: null,
-    status: 'draft'
+    status: "draft",
   });
 
   const [bookStats, setBookStats] = useState({
     chapterCount: 0,
     wordCount: 0,
-    createdAt: '',
-    updatedAt: ''
+    createdAt: "",
+    updatedAt: "",
   });
 
   const [isEditMode, setIsEditMode] = useState(false);
@@ -119,8 +129,9 @@ export function BookDetails() {
 
         const [bookData] = await Promise.all([
           supabase
-            .from('books')
-            .select(`
+            .from("books")
+            .select(
+              `
               *,
               languages (
                 id,
@@ -132,13 +143,20 @@ export function BookDetails() {
                   name
                 )
               )
-            `)
-            .eq('id', id)
+            `
+            )
+            .eq("id", id)
             .single(),
-          categoriesStatus === 'idle' ? dispatch(fetchCategories({
-            isPro: hasProOrStudio
-          })).unwrap() : Promise.resolve(),
-          languagesStatus === 'idle' ? dispatch(fetchLanguages()).unwrap() : Promise.resolve()
+          categoriesStatus === "idle"
+            ? dispatch(
+                fetchCategories({
+                  isPro: hasProOrStudio,
+                })
+              ).unwrap()
+            : Promise.resolve(),
+          languagesStatus === "idle"
+            ? dispatch(fetchLanguages()).unwrap()
+            : Promise.resolve(),
         ]);
 
         const { data: book, error: bookError } = bookData;
@@ -146,102 +164,113 @@ export function BookDetails() {
 
         // Get chapter count
         const { data: chapters, error: chaptersError } = await supabase
-          .from('chapters')
-          .select('id')
-          .eq('book_id', id);
-        
+          .from("chapters")
+          .select("id")
+          .eq("book_id", id);
+
         if (chaptersError) throw chaptersError;
 
         // Transform book data for form
         setFormData({
           title: book.title,
           authorName: book.author_name,
-          isbn: book.isbn || '',
-          cover_url: book.cover_url || '',
-          synopsis: book.synopsis || '',
+          isbn: book.isbn || "",
+          cover_url: book.cover_url || "",
+          synopsis: book.synopsis || "",
           status: book.status as Status,
           language: {
             value: book.languages.id,
-            label: book.languages.name
+            label: book.languages.name,
           },
           categories: book.book_categories.map((bc: BookCategory) => ({
             value: bc.categories.id,
-            label: bc.categories.name
-          }))
+            label: bc.categories.name,
+          })),
         });
 
         setBookStats({
           chapterCount: chapters?.length || 0,
           wordCount: 0, // This would need to be calculated from chapter content
           createdAt: book.created_at,
-          updatedAt: book.updated_at
+          updatedAt: book.updated_at,
         });
       } catch (err) {
-        console.error('Error loading book details:', err);
+        console.error("Error loading book details:", err);
         toast({
           variant: "destructive",
           title: "Error",
           description: "Failed to load book details",
         });
-        navigate('/workspace');
+        navigate("/workspace");
       } finally {
         setLoading(false);
       }
     }
 
-    if (subscriptionStatus === 'success') { 
+    if (subscriptionStatus === "success") {
       fetchData();
     }
-  }, [id, navigate, toast, categoriesStatus, languagesStatus, dispatch, hasProOrStudio, subscriptionStatus]);
+  }, [
+    id,
+    navigate,
+    toast,
+    categoriesStatus,
+    languagesStatus,
+    dispatch,
+    hasProOrStudio,
+    subscriptionStatus,
+  ]);
 
   const handleFileSelect = async (file: File) => {
     try {
       setCoverLoading(true);
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${id}/cover.${fileExt}`;
 
       // Delete existing cover if any
       if (formData.cover_url) {
-        const oldFileName = formData.cover_url.split('/').pop();
+        const oldFileName = formData.cover_url.split("/").pop();
         if (oldFileName) {
           await supabase.storage
-            .from('covers')
+            .from("covers")
             .remove([`${id}/${oldFileName}`]);
         }
       }
 
       // Upload new cover
       const { error: uploadError } = await supabase.storage
-        .from('covers')
-        .upload(fileName, file, { 
+        .from("covers")
+        .upload(fileName, file, {
           upsert: true,
-          contentType: file.type 
+          contentType: file.type,
         });
 
       if (uploadError) throw uploadError;
 
       // Update book cover URL in database
       const { error: updateError } = await supabase
-        .from('books')
+        .from("books")
         .update({ cover_url: fileName })
-        .eq('id', id);
+        .eq("id", id);
 
       if (updateError) throw updateError;
 
       setFormData({ ...formData, cover_url: fileName });
 
       // Update the book in the Redux store
-      dispatch(updateBookInList({
-        bookId: id!,
-        updates: { cover_url: fileName }
-      }));
-      
+      dispatch(
+        updateBookInList({
+          bookId: id!,
+          updates: { cover_url: fileName },
+        })
+      );
+
       toast({
         title: "Success",
         description: "Cover image updated successfully",
       });
     } catch (error) {
-      console.error('Error uploading cover image:', error);
+      console.error("Error uploading cover image:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -255,11 +284,11 @@ export function BookDetails() {
   const handleDeleteCover = async () => {
     try {
       if (formData.cover_url) {
-        const fileName = formData.cover_url.split('/').pop();
+        const fileName = formData.cover_url.split("/").pop();
         if (fileName) {
           // Delete file from storage
           const { error: deleteError } = await supabase.storage
-            .from('covers')
+            .from("covers")
             .remove([`${id}/${fileName}`]);
 
           if (deleteError) throw deleteError;
@@ -268,26 +297,28 @@ export function BookDetails() {
 
       // Update book cover URL in database
       const { error: updateError } = await supabase
-        .from('books')
+        .from("books")
         .update({ cover_url: null })
-        .eq('id', id);
+        .eq("id", id);
 
       if (updateError) throw updateError;
 
-      setFormData({ ...formData, cover_url: '' });
+      setFormData({ ...formData, cover_url: "" });
 
       // Update the book in the Redux store
-      dispatch(updateBookInList({
-        bookId: id!,
-        updates: { cover_url: null }
-      }));
-      
+      dispatch(
+        updateBookInList({
+          bookId: id!,
+          updates: { cover_url: null },
+        })
+      );
+
       toast({
         title: "Success",
         description: "Cover image removed successfully",
       });
     } catch (error) {
-      console.error('Error removing cover image:', error);
+      console.error("Error removing cover image:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -309,7 +340,7 @@ export function BookDetails() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       toast({
         variant: "destructive",
@@ -324,34 +355,34 @@ export function BookDetails() {
     try {
       // Update book details
       const { error: bookError } = await supabase
-        .from('books')
+        .from("books")
         .update({
           title: formData.title,
           author_name: formData.authorName,
           isbn: formData.isbn || null,
           synopsis: formData.synopsis || null,
           language_id: formData.language?.value,
-          status: formData.status
+          status: formData.status,
         })
-        .eq('id', id);
+        .eq("id", id);
 
       if (bookError) throw bookError;
 
       // Update categories
       const { error: deleteError } = await supabase
-        .from('book_categories')
+        .from("book_categories")
         .delete()
-        .eq('book_id', id);
+        .eq("book_id", id);
 
       if (deleteError) throw deleteError;
 
       if (formData.categories.length > 0) {
         const { error: categoriesError } = await supabase
-          .from('book_categories')
+          .from("book_categories")
           .insert(
-            formData.categories.map(category => ({
+            formData.categories.map((category) => ({
               book_id: id,
-              category_id: category.value
+              category_id: category.value,
             }))
           );
 
@@ -362,33 +393,37 @@ export function BookDetails() {
       const newUpdatedAt = new Date().toISOString();
       setBookStats({
         ...bookStats,
-        updatedAt: newUpdatedAt
+        updatedAt: newUpdatedAt,
       });
 
       // Update the book in the Redux store
-      dispatch(updateBookInList({
-        bookId: id!,
-        updates: {
-          title: formData.title,
-          author_name: formData.authorName,
-          synopsis: formData.synopsis || undefined,
-          status: formData.status,
-          languages: languages.find(lang => lang.id === formData.language?.value)!,
-          categories: formData.categories.map(cat => 
-            categories.find(category => category.id === cat.value)!
-          ),
-          updated_at: newUpdatedAt
-        }
-      }));
+      dispatch(
+        updateBookInList({
+          bookId: id!,
+          updates: {
+            title: formData.title,
+            author_name: formData.authorName,
+            synopsis: formData.synopsis || undefined,
+            status: formData.status,
+            languages: languages.find(
+              (lang) => lang.id === formData.language?.value
+            )!,
+            categories: formData.categories.map(
+              (cat) => categories.find((category) => category.id === cat.value)!
+            ),
+            updated_at: newUpdatedAt,
+          },
+        })
+      );
 
       setIsEditMode(false);
-      
+
       toast({
         title: "Success",
         description: "Book details updated successfully",
       });
     } catch (error) {
-      console.error('Error updating book details:', error);
+      console.error("Error updating book details:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -401,33 +436,39 @@ export function BookDetails() {
 
   const handleArchiveToggle = async () => {
     try {
-      const newStatus = formData.status === 'archived' ? 'draft' : 'archived';
-      
+      const newStatus = formData.status === "archived" ? "draft" : "archived";
+
       const { error } = await supabase
-        .from('books')
+        .from("books")
         .update({ status: newStatus })
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
 
       setFormData({ ...formData, status: newStatus });
 
       // Update the book in the Redux store
-      dispatch(updateBookInList({
-        bookId: id!,
-        updates: { status: newStatus }
-      }));
-      
+      dispatch(
+        updateBookInList({
+          bookId: id!,
+          updates: { status: newStatus },
+        })
+      );
+
       toast({
         title: "Success",
-        description: `Book ${newStatus === 'archived' ? 'archived' : 'unarchived'} successfully`,
+        description: `Book ${
+          newStatus === "archived" ? "archived" : "unarchived"
+        } successfully`,
       });
     } catch (error) {
-      console.error('Error archiving book:', error);
+      console.error("Error archiving book:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: `Failed to ${formData.status === 'archived' ? 'unarchive' : 'archive'} book`,
+        description: `Failed to ${
+          formData.status === "archived" ? "unarchive" : "archive"
+        } book`,
       });
     }
   };
@@ -435,26 +476,28 @@ export function BookDetails() {
   const handleStatusChange = async (newStatus: Status) => {
     try {
       const { error } = await supabase
-        .from('books')
+        .from("books")
         .update({ status: newStatus })
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
 
       setFormData({ ...formData, status: newStatus });
 
       // Update the book in the Redux store
-      dispatch(updateBookInList({
-        bookId: id!,
-        updates: { status: newStatus }
-      }));
-      
+      dispatch(
+        updateBookInList({
+          bookId: id!,
+          updates: { status: newStatus },
+        })
+      );
+
       toast({
         title: "Success",
         description: `Book status changed to ${newStatus} successfully`,
       });
     } catch (error) {
-      console.error('Error changing book status:', error);
+      console.error("Error changing book status:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -465,77 +508,89 @@ export function BookDetails() {
 
   const handlePublishBook = async () => {
     try {
-      await handleStatusChange('published');
+      await handleStatusChange("published");
       setShowPublishDialog(false);
     } catch (error) {
-      console.error('Error publishing book:', error);
+      console.error("Error publishing book:", error);
     }
   };
 
   const handleUnpublishBook = async () => {
     try {
-      await handleStatusChange('draft');
+      await handleStatusChange("draft");
       setShowUnpublishDialog(false);
     } catch (error) {
-      console.error('Error unpublishing book:', error);
+      console.error("Error unpublishing book:", error);
     }
   };
 
-  const downloadExportedFile = async (filePath: string, format: 'epub' | 'pdf' | 'docx') => {
-    const { data, error } = await supabase.storage.from('book-files').download(filePath);
-  
+  const downloadExportedFile = async (
+    filePath: string,
+    format: "epub" | "pdf" | "docx"
+  ) => {
+    const { data, error } = await supabase.storage
+      .from("book-files")
+      .download(filePath);
+
     if (error) {
-      console.error('Error downloading File', error);
-      throw new Error('Error downloading File');
+      console.error("Error downloading File", error);
+      throw new Error("Error downloading File");
     }
 
-    const blob = new Blob([data], { 
-      type: format === 'epub' ? 'application/epub+zip' : 
-            format === 'pdf' ? 'application/pdf' : 
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    const blob = new Blob([data], {
+      type:
+        format === "epub"
+          ? "application/epub+zip"
+          : format === "pdf"
+          ? "application/pdf"
+          : "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `${formData.title}.${format}`;
     link.click();
   };
 
-  const handleExport = async (format: 'epub' | 'pdf' | 'docx') => {
+  const handleExport = async (format: "epub" | "pdf" | "docx") => {
     if (!id) return;
-    
+
     try {
       setExporting(format);
-      
+
       toast({
         title: "Export Started",
         description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
       });
-      
+
       // Call the appropriate API endpoint based on the format
-      const endpoint = `${import.meta.env.VITE_API_URL}/generate-${format}`;
-      
+      const endpoint = `${
+        import.meta.env.VITE_PYTHON_API_URL
+      }/generate-${format}`;
+
       const response = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token}`,
         },
-        body: JSON.stringify({ bookId: id })
+        body: JSON.stringify({ bookId: id }),
       });
-      
+
       if (!response.ok) {
-        throw new Error(`Failed to generate ${format.toUpperCase()}: ${response.statusText}`);
+        throw new Error(
+          `Failed to generate ${format.toUpperCase()}: ${response.statusText}`
+        );
       }
-      
+
       const result = await response.json();
-      
+
       if (!result.fileUrl) {
-        throw new Error('No file URL returned from the server');
+        throw new Error("No file URL returned from the server");
       }
-      
+
       // Get the file from Supabase storage
       downloadExportedFile(result.fileUrl, format);
-      
+
       toast({
         title: "Export Complete",
         description: `Your book has been exported to ${format.toUpperCase()} format.`,
@@ -545,7 +600,10 @@ export function BookDetails() {
       toast({
         variant: "destructive",
         title: "Export Failed",
-        description: error instanceof Error ? error.message : `Failed to export to ${format.toUpperCase()}`,
+        description:
+          error instanceof Error
+            ? error.message
+            : `Failed to export to ${format.toUpperCase()}`,
       });
     } finally {
       setExporting(null);
@@ -554,20 +612,10 @@ export function BookDetails() {
 
   const handleDeleteBook = async () => {
     try {
-      const { error } = await supabase
-        .from('books')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Book deleted successfully",
-      });
-      navigate('/workspace');
+      await dispatch(deleteBook(id!)).unwrap();
+      navigate("/workspace");
     } catch (error) {
-      console.error('Error deleting book:', error);
+      console.error("Error deleting book:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -584,7 +632,7 @@ export function BookDetails() {
       categories: false,
       language: false,
     });
-    
+
     // Exit edit mode
     setIsEditMode(false);
   };
@@ -625,8 +673,8 @@ export function BookDetails() {
     );
   }
 
-  const isPublished = formData.status === 'published';
-  const hasError = formData.status === 'error';
+  const isPublished = formData.status === "published";
+  const hasError = formData.status === "error";
 
   return (
     <>
@@ -639,23 +687,23 @@ export function BookDetails() {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div className="flex items-center">
               <button
-                onClick={() => navigate('/workspace')}
+                onClick={() => navigate("/workspace")}
                 className="flex items-center text-base-heading hover:text-base-heading/80 transition-colors mr-4"
               >
                 <ArrowLeft className="mr-2" size={20} />
                 <span className="font-medium">Back to Books</span>
               </button>
             </div>
-              
-              {!isEditMode && !isPublished && (
-                <Button
-                  onClick={() => setIsEditMode(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Edit3 size={16} />
-                  Edit Book Details
-                </Button>
-              )}
+
+            {!isEditMode && !isPublished && (
+              <Button
+                onClick={() => setIsEditMode(true)}
+                className="flex items-center gap-2"
+              >
+                <Edit3 size={16} />
+                Edit Book Details
+              </Button>
+            )}
           </div>
 
           {/* Alert Banners */}
@@ -670,7 +718,8 @@ export function BookDetails() {
                     Published Book
                   </h3>
                   <div className="mt-2 text-sm text-state-success">
-                    This book is published and ready for export. To make changes, you need to unpublish it first.
+                    This book is published and ready for export. To make
+                    changes, you need to unpublish it first.
                   </div>
                 </div>
               </div>
@@ -688,7 +737,10 @@ export function BookDetails() {
                     Generation Error
                   </h3>
                   <div className="mt-2 text-sm text-red-700">
-                    We apologize, but there was an error generating your book. Please be assured that no credits have been deducted from your account. You can try generating the book again, or contact our support team if the issue persists.
+                    We apologize, but there was an error generating your book.
+                    Please be assured that no credits have been deducted from
+                    your account. You can try generating the book again, or
+                    contact our support team if the issue persists.
                   </div>
                 </div>
               </div>
@@ -721,10 +773,16 @@ export function BookDetails() {
                       )}
                     </div>
                   ) : (
-                    <div className={`${isPublished || isEditMode ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <div
+                      className={`${
+                        isPublished || isEditMode
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                    >
                       {isEditMode ? (
-                        <FileUpload 
-                          onFileSelect={handleFileSelect} 
+                        <FileUpload
+                          onFileSelect={handleFileSelect}
                           className="aspect-[10/16]"
                           loading={coverLoading}
                         />
@@ -742,136 +800,171 @@ export function BookDetails() {
 
                 {/* Book Stats */}
                 {!isEditMode && (
-                <div className="space-y-3 mb-6">
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">Book Stats</h3>
-                  <div className="flex flex-col gap-3">
-                    <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar className="w-4 h-4" />
-                        <span>Created</span>
+                  <div className="space-y-3 mb-6">
+                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">
+                      Book Stats
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="w-4 h-4" />
+                          <span>Created</span>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {formatDistanceToNow(new Date(bookStats.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </p>
                       </div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {formatDistanceToNow(new Date(bookStats.createdAt), { addSuffix: true })}
-                      </p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Clock className="w-4 h-4" />
-                        <span>Updated</span>
+                      <div className="bg-gray-50 p-3 rounded-lg flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Clock className="w-4 h-4" />
+                          <span>Updated</span>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {formatDistanceToNow(new Date(bookStats.updatedAt), {
+                            addSuffix: true,
+                          })}
+                        </p>
                       </div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {formatDistanceToNow(new Date(bookStats.updatedAt), { addSuffix: true })}
-                      </p>
                     </div>
                   </div>
-                </div>
                 )}
 
                 {/* Action Buttons */}
                 {!isEditMode && (
-                <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">Actions</h3>
-                  <div className="space-y-2">
-                    {/* Publish/Unpublish Button */}
-                    {formData.status !== 'published' && formData.status !== 'archived' && formData.status !== 'error' && (
-                      <Button
-                        onClick={() => setShowPublishDialog(true)}
-                        variant="outline"
-                        className="w-full flex items-center justify-center gap-2 bg-state-success-light text-state-success hover:bg-state-success-light hover:text-state-success border-state-success"
-                      >
-                        <BookOpen className="w-4 h-4" />
-                        Publish Book
-                      </Button>
-                    )}
-
-
-                    
-                    {/* Export Button - Only show when published */}
-                    {formData.status === 'published' && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">
+                      Actions
+                    </h3>
+                    <div className="space-y-2">
+                      {/* Publish/Unpublish Button */}
+                      {formData.status !== "published" &&
+                        formData.status !== "archived" &&
+                        formData.status !== "error" && (
                           <Button
+                            onClick={() => setShowPublishDialog(true)}
                             variant="outline"
-                            className="w-full flex items-center justify-center gap-2"
-                            disabled={!!exporting}
+                            className="w-full flex items-center justify-center gap-2 bg-state-success-light text-state-success hover:bg-state-success-light hover:text-state-success border-state-success"
                           >
-                            {exporting ? (
+                            <BookOpen className="w-4 h-4" />
+                            Publish Book
+                          </Button>
+                        )}
+
+                      {/* Export Button - Only show when published */}
+                      {formData.status === "published" && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full flex items-center justify-center gap-2"
+                              disabled={!!exporting}
+                            >
+                              {exporting ? (
+                                <>
+                                  <span className="animate-spin mr-2">
+                                    <svg
+                                      className="w-4 h-4"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                      ></circle>
+                                      <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      ></path>
+                                    </svg>
+                                  </span>
+                                  Exporting {exporting.toUpperCase()}...
+                                </>
+                              ) : (
+                                <>
+                                  <Download className="w-4 h-4" />
+                                  Export Book
+                                  <ChevronDown className="w-4 h-4 ml-auto" />
+                                </>
+                              )}
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuItem
+                              onClick={() => handleExport("epub")}
+                              className="cursor-pointer"
+                            >
+                              <BookText className="w-4 h-4 mr-2" />
+                              <span>Export as EPUB</span>
+                            </DropdownMenuItem>
+                            {hasProOrStudio && (
                               <>
-                                <span className="animate-spin mr-2">
-                                  <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                  </svg>
-                                </span>
-                                Exporting {exporting.toUpperCase()}...
-                              </>
-                            ) : (
-                              <>
-                                <Download className="w-4 h-4" />
-                                Export Book
-                                <ChevronDown className="w-4 h-4 ml-auto" />
+                                <DropdownMenuItem
+                                  onClick={() => handleExport("pdf")}
+                                  className="cursor-pointer"
+                                >
+                                  <FileText className="w-4 h-4 mr-2" />
+                                  <span>Export as PDF</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleExport("docx")}
+                                  className="cursor-pointer"
+                                >
+                                  <FileType className="w-4 h-4 mr-2" />
+                                  <span>Export as DOCX</span>
+                                </DropdownMenuItem>
                               </>
                             )}
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                          <DropdownMenuItem onClick={() => handleExport('epub')} className="cursor-pointer">
-                            <BookText className="w-4 h-4 mr-2" />
-                            <span>Export as EPUB</span>
-                          </DropdownMenuItem>
-                          {hasProOrStudio && (
-                            <>
-                              <DropdownMenuItem onClick={() => handleExport('pdf')} className="cursor-pointer">
-                                <FileText className="w-4 h-4 mr-2" />
-                                <span>Export as PDF</span>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleExport('docx')} className="cursor-pointer">
-                                <FileType className="w-4 h-4 mr-2" />
-                                <span>Export as DOCX</span>
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                    
-                    {formData.status === 'published' && (
-                      <Button
-                        onClick={() => setShowUnpublishDialog(true)}
-                        variant="outline"
-                        className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                        Unpublish for Editing
-                      </Button>
-                    )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
 
-                   {formData.status !== 'published' && (
-                    <Button
-                      onClick={handleArchiveToggle}
-                      variant="outline"
-                      className={`w-full flex items-center justify-center gap-2 ${
-                        formData.status === 'archived'
-                          && 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-700 border-blue-200'
-                      }`}
-                    >
-                      <Archive className="w-4 h-4" />
-                      {formData.status === 'archived' ? 'Unarchive Book' : 'Archive Book'}
-                    </Button>
-                    )}
+                      {formData.status === "published" && (
+                        <Button
+                          onClick={() => setShowUnpublishDialog(true)}
+                          variant="outline"
+                          className="w-full flex items-center justify-center gap-2 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 border-yellow-200"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                          Unpublish for Editing
+                        </Button>
+                      )}
 
-                    {formData.status !== 'published' && (
-                    <Button
-                      onClick={() => setShowDeleteDialog(true)}
-                      variant="destructive"
-                      className="w-full flex items-center justify-center gap-2"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete Book
-                    </Button>
-                    )}
+                      {formData.status !== "published" && (
+                        <Button
+                          onClick={handleArchiveToggle}
+                          variant="outline"
+                          className={`w-full flex items-center justify-center gap-2 ${
+                            formData.status === "archived" &&
+                            "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-700 border-blue-200"
+                          }`}
+                        >
+                          <Archive className="w-4 h-4" />
+                          {formData.status === "archived"
+                            ? "Unarchive Book"
+                            : "Archive Book"}
+                        </Button>
+                      )}
+
+                      {formData.status === "archived" && (
+                        <Button
+                          onClick={() => setShowDeleteDialog(true)}
+                          variant="destructive"
+                          className="w-full flex items-center justify-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Permanently Delete Book
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
                 )}
               </div>
             </div>
@@ -879,213 +972,305 @@ export function BookDetails() {
             {/* Right Column - Book Details and Chapters */}
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="p-6">
-                    {isEditMode ? (
-                      <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                          <Label htmlFor="title" className="flex items-center gap-1 mb-1 text-gray-700">
-                            Book Title
-                            <span className="text-state-error">*</span>
-                          </Label>
-                          <Input
-                            id="title"
-                            value={formData.title}
-                            onChange={(e) => {
-                              setFormData({ ...formData, title: e.target.value });
-                              setFormErrors({ ...formErrors, title: false });
-                            }}
-                            className={`bg-white ${formErrors.title ? 'border-state-error focus:ring-state-error' : ''}`}
-                          />
-                          {formErrors.title && (
-                            <p className="mt-1 text-sm text-state-error">Title is required</p>
-                          )}
-                        </div>
-
-                        <div>
-                          <Label htmlFor="authorName" className="flex items-center gap-1 mb-1 text-gray-700">
-                            Author Name
-                            <span className="text-state-error">*</span>
-                          </Label>
-                          <Input
-                            id="authorName"
-                            value={formData.authorName}
-                            onChange={(e) => {
-                              setFormData({ ...formData, authorName: e.target.value });
-                              setFormErrors({ ...formErrors, authorName: false });
-                            }}
-                            className={`bg-white ${formErrors.authorName ? 'border-state-error focus:ring-state-error' : ''}`}
-                          />
-                          {formErrors.authorName && (
-                            <p className="mt-1 text-sm text-state-error">Author name is required</p>
-                          )}
-                        </div>
-
-                        <div>
-                          <Label htmlFor="isbn" className="flex items-center gap-1 mb-1 text-gray-700">ISBN</Label>
-                          <Input
-                            id="isbn"
-                            value={formData.isbn}
-                            onChange={(e) => setFormData({ ...formData, isbn: e.target.value })}
-                            className="bg-white"
-                            placeholder="Enter ISBN (optional)"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="categories" className="flex items-center gap-1 mb-1 text-gray-700">
-                            Categories
-                            <span className="text-state-error">*</span>
-                          </Label>
-                          <CustomSelect
-                            id="categories"
-                            isMulti
-                            value={formData.categories}
-                            onChange={(newValue) => {
-                              setFormData({ ...formData, categories: newValue as SelectOption[] });
-                              setFormErrors({ ...formErrors, categories: false });
-                            }}
-                            options={mapToSelectOptions(categories, 'category')}
-                            placeholder="Select categories..."
-                            error={formErrors.categories ? 'At least one category is required' : undefined}
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="language" className="flex items-center gap-1 mb-1 text-gray-700">
-                            Language
-                            <span className="text-state-error">*</span>
-                          </Label>
-                          <CustomSelect
-                            id="language"
-                            value={formData.language}
-                            onChange={(newValue) => {
-                              setFormData({ ...formData, language: newValue as SelectOption });
-                              setFormErrors({ ...formErrors, language: false });
-                            }}
-                            options={mapToSelectOptions(languages, 'language')}
-                            placeholder="Select language..."
-                            error={formErrors.language ? 'Language is required' : undefined}
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="synopsis" className="flex items-center gap-1 mb-1 text-gray-700">Synopsis</Label>
-                          <textarea
-                            id="synopsis"
-                            value={formData.synopsis}
-                            onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-                            rows={6}
-                            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
-                            placeholder="Enter a brief summary of your book..."
-                          />
-                          <p className="text-xs text-gray-500 mt-1">
-                            {formData.synopsis.length}/2000 characters
+                <div className="p-6">
+                  {isEditMode ? (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div>
+                        <Label
+                          htmlFor="title"
+                          className="flex items-center gap-1 mb-1 text-gray-700"
+                        >
+                          Book Title
+                          <span className="text-state-error">*</span>
+                        </Label>
+                        <Input
+                          id="title"
+                          value={formData.title}
+                          onChange={(e) => {
+                            setFormData({ ...formData, title: e.target.value });
+                            setFormErrors({ ...formErrors, title: false });
+                          }}
+                          className={`bg-white ${
+                            formErrors.title
+                              ? "border-state-error focus:ring-state-error"
+                              : ""
+                          }`}
+                        />
+                        {formErrors.title && (
+                          <p className="mt-1 text-sm text-state-error">
+                            Title is required
                           </p>
-                        </div>
+                        )}
+                      </div>
 
-                        <div className="flex justify-end gap-3 pt-4 border-t">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={cancelEdit}
-                            className="flex items-center gap-2"
-                          >
-                            <X size={16} />
-                            Cancel
-                          </Button>
-                          <Button
-                            type="submit"
-                            className="flex items-center gap-2"
-                            disabled={saving}
-                          >
-                            {saving ? (
-                              <>
-                                <span className="animate-spin">
-                                  <svg className="w-4 h-4\" xmlns="http://www.w3.org/2000/svg\" fill="none\" viewBox="0 0 24 24">
-                                    <circle className="opacity-25\" cx="12\" cy="12\" r="10\" stroke="currentColor\" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                  </svg>
+                      <div>
+                        <Label
+                          htmlFor="authorName"
+                          className="flex items-center gap-1 mb-1 text-gray-700"
+                        >
+                          Author Name
+                          <span className="text-state-error">*</span>
+                        </Label>
+                        <Input
+                          id="authorName"
+                          value={formData.authorName}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              authorName: e.target.value,
+                            });
+                            setFormErrors({ ...formErrors, authorName: false });
+                          }}
+                          className={`bg-white ${
+                            formErrors.authorName
+                              ? "border-state-error focus:ring-state-error"
+                              : ""
+                          }`}
+                        />
+                        {formErrors.authorName && (
+                          <p className="mt-1 text-sm text-state-error">
+                            Author name is required
+                          </p>
+                        )}
+                      </div>
+
+                      {/* <div>
+                        <Label
+                          htmlFor="isbn"
+                          className="flex items-center gap-1 mb-1 text-gray-700"
+                        >
+                          ISBN
+                        </Label>
+                        <Input
+                          id="isbn"
+                          value={formData.isbn}
+                          onChange={(e) =>
+                            setFormData({ ...formData, isbn: e.target.value })
+                          }
+                          className="bg-white"
+                          placeholder="Enter ISBN (optional)"
+                        />
+                      </div> */}
+
+                      <div>
+                        <Label
+                          htmlFor="categories"
+                          className="flex items-center gap-1 mb-1 text-gray-700"
+                        >
+                          Categories
+                          <span className="text-state-error">*</span>
+                        </Label>
+                        <CustomSelect
+                          id="categories"
+                          isMulti
+                          value={formData.categories}
+                          onChange={(newValue) => {
+                            setFormData({
+                              ...formData,
+                              categories: newValue as SelectOption[],
+                            });
+                            setFormErrors({ ...formErrors, categories: false });
+                          }}
+                          options={mapToSelectOptions(categories, "category")}
+                          placeholder="Select categories..."
+                          error={
+                            formErrors.categories
+                              ? "At least one category is required"
+                              : undefined
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="language"
+                          className="flex items-center gap-1 mb-1 text-gray-700"
+                        >
+                          Language
+                          <span className="text-state-error">*</span>
+                        </Label>
+                        <CustomSelect
+                          id="language"
+                          value={formData.language}
+                          onChange={(newValue) => {
+                            setFormData({
+                              ...formData,
+                              language: newValue as SelectOption,
+                            });
+                            setFormErrors({ ...formErrors, language: false });
+                          }}
+                          options={mapToSelectOptions(languages, "language")}
+                          placeholder="Select language..."
+                          error={
+                            formErrors.language
+                              ? "Language is required"
+                              : undefined
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="synopsis"
+                          className="flex items-center gap-1 mb-1 text-gray-700"
+                        >
+                          Synopsis
+                        </Label>
+                        <textarea
+                          id="synopsis"
+                          value={formData.synopsis}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              synopsis: e.target.value,
+                            })
+                          }
+                          rows={6}
+                          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary"
+                          placeholder="Enter a brief summary of your book..."
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formData.synopsis.length}/2000 characters
+                        </p>
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-4 border-t">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={cancelEdit}
+                          className="flex items-center gap-2"
+                        >
+                          <X size={16} />
+                          Cancel
+                        </Button>
+                        <Button
+                          type="submit"
+                          className="flex items-center gap-2"
+                          disabled={saving}
+                        >
+                          {saving ? (
+                            <>
+                              <span className="animate-spin">
+                                <svg
+                                  className="w-4 h-4\"
+                                  xmlns="http://www.w3.org/2000/svg\"
+                                  fill="none\"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25\"
+                                    cx="12\"
+                                    cy="12\"
+                                    r="10\"
+                                    stroke="currentColor\"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
+                                </svg>
+                              </span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save size={16} />
+                              Save Changes
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div className="space-y-8">
+                      {/* Book Title and Author */}
+                      <div>
+                        <div className="flex items-start justify-between">
+                          <h1 className="text-3xl font-bold text-base-heading mb-2 font-heading">
+                            {formData.title}
+                          </h1>
+                          <StatusBadge status={formData.status} />
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <User className="w-4 h-4 mr-1" />
+                          <span>By {formData.authorName}</span>
+                        </div>
+                      </div>
+
+                      {/* Book Metadata */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">
+                              Categories
+                            </h3>
+                            <div className="flex flex-wrap gap-2">
+                              {formData.categories.length > 0 ? (
+                                formData.categories.map((category) => (
+                                  <span
+                                    key={category.value}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-base-heading"
+                                  >
+                                    <Tag className="w-3 h-3 mr-1" />
+                                    {category.label}
+                                  </span>
+                                ))
+                              ) : (
+                                <span className="text-gray-500 text-sm">
+                                  No categories selected
                                 </span>
-                                Saving...
-                              </>
-                            ) : (
-                              <>
-                                <Save size={16} />
-                                Save Changes
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </form>
-                    ) : (
-                      <div className="space-y-8">
-                        {/* Book Title and Author */}
-                        <div>
-                          <div className="flex items-start justify-between">
-                            <h1 className="text-3xl font-bold text-base-heading font-heading mb-2">{formData.title}</h1>
-                            <StatusBadge status={formData.status} />
-                          </div>
-                          <div className="flex items-center text-gray-600">
-                            <User className="w-4 h-4 mr-1" />
-                            <span>By {formData.authorName}</span>
-                          </div>
-                        </div>
-
-                        {/* Book Metadata */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="space-y-4">
-                            <div>
-                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading mb-2">Categories</h3>
-                              <div className="flex flex-wrap gap-2">
-                                {formData.categories.length > 0 ? (
-                                  formData.categories.map((category) => (
-                                    <span 
-                                      key={category.value} 
-                                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-base-heading"
-                                    >
-                                      <Tag className="w-3 h-3 mr-1" />
-                                      {category.label}
-                                    </span>
-                                  ))
-                                ) : (
-                                  <span className="text-gray-500 text-sm">No categories selected</span>
-                                )}
-                              </div>
+                              )}
                             </div>
-
-                            <div>
-                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading mb-2">Language</h3>
-                              <div className="flex items-center text-gray-700">
-                                <Globe className="w-4 h-4 mr-2" />
-                                <span>{formData.language?.label || 'Not specified'}</span>
-                              </div>
-                            </div>
-
-                            {formData.isbn && (
-                              <div>
-                                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading mb-2">ISBN</h3>
-                                <p className="text-gray-700">{formData.isbn}</p>
-                              </div>
-                            )}
                           </div>
 
                           <div>
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">Synopsis</h3>
-                            {formData.synopsis ? (
-                              <p className="text-gray-700 whitespace-pre-line">{formData.synopsis}</p>
-                            ) : (
-                              <div className="flex items-start gap-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <Info className="w-5 h-5 text-gray-400 mt-0.5" />
-                                <p className="text-sm text-gray-500">
-                                  No synopsis available. Click "Edit Book" to add a synopsis that will help readers understand what your book is about.
-                                </p>
-                              </div>
-                            )}
+                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">
+                              Language
+                            </h3>
+                            <div className="flex items-center text-gray-700">
+                              <Globe className="w-4 h-4 mr-2" />
+                              <span>
+                                {formData.language?.label || "Not specified"}
+                              </span>
+                            </div>
                           </div>
+
+                          {/* {formData.isbn && (
+                            <div>
+                              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">
+                                ISBN
+                              </h3>
+                              <p className="text-gray-700">{formData.isbn}</p>
+                            </div>
+                          )} */}
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">
+                            Synopsis
+                          </h3>
+                          {formData.synopsis ? (
+                            <p className="text-gray-700 whitespace-pre-line">
+                              {formData.synopsis}
+                            </p>
+                          ) : (
+                            <div className="flex items-start gap-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                              <Info className="w-5 h-5 text-gray-400 mt-0.5" />
+                              <p className="text-sm text-gray-500">
+                                No synopsis available. Click "Edit Book" to add
+                                a synopsis that will help readers understand
+                                what your book is about.
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {!isEditMode && (
@@ -1100,17 +1285,22 @@ export function BookDetails() {
               <DialogHeader>
                 <DialogTitle>Delete Book</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to delete "{formData.title}"? This action cannot be undone.
+                  Are you sure you want to delete "{formData.title}"? This
+                  action cannot be undone.
                 </DialogDescription>
               </DialogHeader>
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 my-4">
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-red-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800 font-heading">Warning</h3>
+                    <h3 className="text-sm font-medium text-red-800 font-heading">
+                      Warning
+                    </h3>
                     <div className="mt-2 text-sm text-red-700">
                       <ul className="list-disc pl-5 space-y-1">
-                        <li>All chapters and content will be permanently deleted</li>
+                        <li>
+                          All chapters and content will be permanently deleted
+                        </li>
                         <li>All annotations and comments will be lost</li>
                         <li>This action cannot be reversed</li>
                       </ul>
@@ -1143,19 +1333,27 @@ export function BookDetails() {
               <DialogHeader>
                 <DialogTitle>Publish Book</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to publish "{formData.title}"? Once published, the book will be locked for editing.
+                  Are you sure you want to publish "{formData.title}"? Once
+                  published, the book will be locked for editing.
                 </DialogDescription>
               </DialogHeader>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-4">
                 <div className="flex items-start">
                   <Info className="h-5 w-5 text-blue-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-blue-800 font-heading">Publishing Information</h3>
+                    <h3 className="text-sm font-medium text-blue-800 font-heading">
+                      Publishing Information
+                    </h3>
                     <div className="mt-2 text-sm text-blue-700">
                       <ul className="list-disc pl-5 space-y-1">
                         <li>Publishing will lock the book for editing</li>
-                        <li>You'll be able to export the book in various formats</li>
-                        <li>You can unpublish the book later if you need to make changes</li>
+                        <li>
+                          You'll be able to export the book in various formats
+                        </li>
+                        <li>
+                          You can unpublish the book later if you need to make
+                          changes
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -1180,21 +1378,31 @@ export function BookDetails() {
           </Dialog>
 
           {/* Unpublish Book Dialog */}
-          <Dialog open={showUnpublishDialog} onOpenChange={setShowUnpublishDialog}>
+          <Dialog
+            open={showUnpublishDialog}
+            onOpenChange={setShowUnpublishDialog}
+          >
             <DialogContent className="bg-white">
               <DialogHeader>
                 <DialogTitle>Unpublish Book</DialogTitle>
                 <DialogDescription>
-                  Are you sure you want to unpublish "{formData.title}"? This will allow you to make edits to the book.
+                  Are you sure you want to unpublish "{formData.title}"? This
+                  will allow you to make edits to the book.
                 </DialogDescription>
               </DialogHeader>
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 my-4">
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800 font-heading">Note</h3>
+                    <h3 className="text-sm font-medium text-yellow-800 font-heading">
+                      Note
+                    </h3>
                     <div className="mt-2 text-sm text-yellow-700">
-                      <p>Unpublishing will change the book status to "draft" and allow you to make changes. You'll need to publish it again when you're done editing.</p>
+                      <p>
+                        Unpublishing will change the book status to "draft" and
+                        allow you to make changes. You'll need to publish it
+                        again when you're done editing.
+                      </p>
                     </div>
                   </div>
                 </div>

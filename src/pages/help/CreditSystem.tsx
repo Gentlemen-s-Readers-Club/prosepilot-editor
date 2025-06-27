@@ -149,33 +149,186 @@ export function CreditSystem() {
                 <h4 className="font-semibold text-state-info font-heading mb-3">
                   Key credit concepts:
                 </h4>
-                <div className="space-y-3 text-state-info">
-                  <div className="flex items-start">
-                    <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
-                    <div>
-                      <strong>One book = 5 credits</strong> - This is our standard
-                      rate regardless of your plan
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h5 className="font-medium text-base-heading font-heading mb-2">
+                      Content Creation
+                    </h5>
+                    <ul className="text-gray-700 space-y-1 text-sm font-copy">
+                      <li>• Complete story outline</li>
+                      <li>• Character development</li>
+                      <li>• Chapter-by-chapter content</li>
+                      <li>• Dialogue and narrative</li>
+                    </ul>
                   </div>
-                  <div className="flex items-start">
-                    <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
-                    <div>
-                      <strong>Monthly allocation</strong> - Credits are included
-                      with your subscription and reset each month
-                    </div>
+                  <div>
+                    <h5 className="font-medium text-base-heading font-heading mb-2">
+                      Quality Assurance
+                    </h5>
+                    <ul className="text-gray-700 space-y-1 text-sm font-copy">
+                      <li>• Plot consistency checking</li>
+                      <li>• Character continuity</li>
+                      <li>• Style and tone consistency</li>
+                      <li>• Grammar and flow optimization</li>
+                    </ul>
                   </div>
-                  <div className="flex items-start">
-                    <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
-                    <div>
-                      <strong>Credits accumulate</strong> - Unused monthly credits
-                      carry over with no maximum limit
-                    </div>
+                </div>
+              </div>
+
+              <div className="bg-state-warning-light border border-state-warning rounded-lg p-6">
+                <h4 className="font-semibold text-state-warning mb-3 flex items-center font-heading">
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  Important: When credits are deducted
+                </h4>
+                <p className="text-state-warning text-sm mb-3 font-copy">
+                  Credits are deducted when you click "Create Book" and the
+                  generation process begins. If generation fails due to a system
+                  error, your credits will be automatically refunded.
+                </p>
+                <p className="text-state-warning text-sm font-copy">
+                  <strong>Note:</strong> Credits are not refunded if you're
+                  unsatisfied with the generated content, but you can always
+                  edit the book or generate a new version with different
+                  settings.
+                </p>
+              </div>
+            </section>
+
+            {/* Credit costs by plan */}
+            <section id="credit-costs" className="mb-12">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
+                <Package className="w-8 h-8 mr-4 text-brand-accent" />
+                Credit allocation by plan
+              </h2>
+
+              <p className="text-gray-700 mb-6">
+                Each subscription plan includes a different number of monthly
+                credits. Here's what you get with each plan:
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="border rounded-lg p-6 text-center bg-white">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
+                    Starter
+                  </h4>
+                  <div className="text-3xl font-bold text-brand-accent mb-2">
+                    15
                   </div>
-                  <div className="flex items-start">
-                    <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
-                    <div>
-                      <strong>Additional purchases</strong> - You can buy extra
-                      credits that never expire
+                  <div className="text-sm text-brand-accent mb-3">
+                    credits/month
+                  </div>
+                  <div className="text-sm text-base-paragraph">
+                    = 3 books
+                  </div>
+                  <div className="text-lg font-semibold text-base-heading mt-2">
+                    $9/month
+                  </div>
+                </div>
+
+                <div className="border-2 border-base-border rounded-lg p-6 text-center relative bg-white">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-medium">
+                    Most Popular
+                  </div>
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">
+                    Pro Author
+                  </h4>
+                  <div className="text-3xl font-bold text-brand-accent mb-2">
+                    55
+                  </div>
+                  <div className="text-sm text-brand-accent mb-3">
+                    credits/month
+                  </div>
+                  <div className="text-sm text-base-paragraph">
+                    = 11 books
+                  </div>
+                  <div className="text-lg font-semibold text-base-heading mt-2">
+                    $29/month
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-6 text-center opacity-75 bg-white">
+                  <h4 className="font-semibold text-base-heading font-heading mb-2">Studio</h4>
+                  <div className="text-3xl font-bold text-brand-accent mb-2">
+                    160
+                  </div>
+                  <div className="text-sm text-brand-accent mb-3">
+                    credits/month
+                  </div>
+                  <div className="text-sm text-base-paragraph">
+                    = 32 books
+                  </div>
+                  <div className="text-lg font-semibold text-base-heading mt-2">
+                    $79/month
+                  </div>
+                  <div className="text-xs text-blue-600 mt-2">Coming Soon</div>
+                </div>
+              </div>
+
+              <div className="bg-state-success-light border border-state-success rounded-lg p-6">
+                <h4 className="font-semibold text-state-success font-heading mb-3">
+                  💡 Value comparison
+                </h4>
+                <div className="text-state-success text-sm space-y-2">
+                  <p>
+                    • <strong>Starter:</strong> $3.00 per book ($9 ÷ 15 credits)
+                  </p>
+                  <p>
+                    • <strong>Pro Author:</strong> $2.64 per book ($29 ÷ 55
+                    credits) - 12% savings!
+                  </p>
+                  <p>
+                    • <strong>Studio:</strong> $2.47 per book ($79 ÷ 160 credits) -
+                    17% savings!
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Tracking usage */}
+            <section id="tracking-usage" className="mb-12">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
+                <TrendingUp className="w-8 h-8 mr-4 text-brand-accent" />
+                Tracking your usage
+              </h2>
+
+              <p className="text-gray-700 mb-6">
+                You can monitor your credit usage and remaining balance from
+                multiple places in your account.
+              </p>
+
+              <div className="space-y-6">
+                <div className="border rounded-lg p-6 bg-white">
+                  <h4 className="font-semibold text-base-heading font-heading mb-3">
+                    Where to check your credits:
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
+                      <div>
+                        <strong>One book = 5 credits</strong> - This is our standard
+                        rate regardless of your plan
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
+                      <div>
+                        <strong>Monthly allocation</strong> - Credits are included
+                        with your subscription and reset each month
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
+                      <div>
+                        <strong>Credits accumulate</strong> - Unused monthly credits
+                        carry over with no maximum limit
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <CheckCircle className="w-5 h-5 text-state-info mt-0.5 mr-3" />
+                      <div>
+                        <strong>Additional purchases</strong> - You can buy extra
+                        credits that never expire
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -247,181 +400,6 @@ export function CreditSystem() {
               </div>
             </section>
 
-            {/* Credit costs by plan */}
-            <section id="credit-costs" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
-                <Package className="w-8 h-8 mr-4 text-brand-accent" />
-                Credit allocation by plan
-              </h2>
-
-              <p className="text-gray-700 font-copy mb-6">
-                Each subscription plan includes a different number of monthly
-                credits. Here's what you get with each plan:
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="border rounded-lg p-6 text-center bg-white">
-                  <h4 className="font-semibold text-base-heading font-heading mb-2">
-                    Starter
-                  </h4>
-                  <div className="text-3xl font-bold text-brand-accent mb-2">
-                    5
-                  </div>
-                  <div className="text-sm text-base-paragraph mb-3">
-                    credits/month
-                  </div>
-                  <div className="text-sm text-base-paragraph">
-                    = 1 book/month
-                  </div>
-                  <div className="text-lg font-semibold text-base-heading mt-2">
-                    $9/month
-                  </div>
-                </div>
-
-                <div className="border-2 border-base-border rounded-lg p-6 text-center relative bg-white">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-medium">
-                    Most Popular
-                  </div>
-                  <h4 className="font-semibold text-base-heading font-heading mb-2">
-                    Pro Author
-                  </h4>
-                  <div className="text-3xl font-bold text-brand-accent mb-2">
-                    25
-                  </div>
-                  <div className="text-sm text-base-paragraph mb-3">
-                    credits/month
-                  </div>
-                  <div className="text-sm text-base-paragraph">
-                    = 5 books/month
-                  </div>
-                  <div className="text-lg font-semibold text-base-heading mt-2">
-                    $29/month
-                  </div>
-                </div>
-
-                <div className="border rounded-lg p-6 text-center opacity-75 bg-white">
-                  <h4 className="font-semibold text-base-heading font-heading mb-2">Studio</h4>
-                  <div className="text-3xl font-bold text-brand-accent mb-2">
-                    75
-                  </div>
-                  <div className="text-sm text-base-paragraph mb-3">
-                    credits/month
-                  </div>
-                  <div className="text-sm text-base-paragraph">
-                    = 15 books/month
-                  </div>
-                  <div className="text-lg font-semibold text-base-heading mt-2">
-                    $79/month
-                  </div>
-                  <div className="text-xs text-blue-600 mt-2">Coming Soon</div>
-                </div>
-              </div>
-
-              <div className="bg-state-success-light border border-state-success rounded-lg p-6">
-                <h4 className="font-semibold text-state-success font-heading mb-3">
-                  💡 Value comparison
-                </h4>
-                <div className="text-state-success text-sm space-y-2">
-                  <p>
-                    • <strong>Starter:</strong> $9.00 per book ($9 ÷ 5 credits)
-                  </p>
-                  <p>
-                    • <strong>Pro Author:</strong> $5.80 per book ($29 ÷ 25
-                    credits) - 35% savings!
-                  </p>
-                  <p>
-                    • <strong>Studio:</strong> $5.27 per book ($79 ÷ 75 credits) -
-                    42% savings!
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* Tracking usage */}
-            <section id="tracking-usage" className="mb-12">
-              <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
-                <TrendingUp className="w-8 h-8 mr-4 text-brand-accent" />
-                Tracking your usage
-              </h2>
-
-              <p className="text-gray-700 font-copy mb-6">
-                You can monitor your credit usage and remaining balance from
-                multiple places in your account.
-              </p>
-
-              <div className="space-y-6">
-                <div className="border rounded-lg p-6 bg-white">
-                  <h4 className="font-semibold text-base-heading font-heading mb-3">
-                    Where to check your credits:
-                  </h4>
-                  <div className="space-y-4">
-                    <div className="flex items-start">
-                      <div className="bg-brand-accent/15 text-brand-accent rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">
-                        1
-                      </div>
-                      <div>
-                        <h5 className="font-medium text-base-heading font-heading">
-                          Dashboard
-                        </h5>
-                        <p className="text-gray-700 text-sm">
-                          Your credit balance is displayed in the top navigation
-                          bar
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start">
-                      <div className="bg-brand-accent/15 text-brand-accent rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">
-                        2
-                      </div>
-                      <div>
-                        <h5 className="font-medium text-base-heading">
-                          Subscription page
-                        </h5>
-                        <p className="text-gray-700 text-sm">
-                          Detailed usage breakdown with monthly progress bar
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start">
-                      <div className="bg-brand-accent/15 text-brand-accent rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5">
-                        3
-                      </div>
-                      <div>
-                        <h5 className="font-medium text-base-heading">
-                          Book creation modal
-                        </h5>
-                        <p className="text-gray-700 text-sm">
-                          Shows current balance before you create a new book
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="font-semibold text-base-heading mb-3">
-                    Understanding your usage display:
-                  </h4>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Monthly credits used:</span>
-                      <span className="font-medium">15/25</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-brand-primary h-2 rounded-full"
-                        style={{ width: "60%" }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between text-base-paragraph">
-                      <span>Remaining: 10 credits</span>
-                      <span>Resets: Jan 15, 2025</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
             {/* Buying additional credits */}
             <section id="buying-credits" className="mb-12">
               <h2 className="text-3xl font-bold text-base-heading font-heading mb-6 flex items-center">
@@ -429,7 +407,7 @@ export function CreditSystem() {
                 Buying additional credits
               </h2>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 font-copy mb-6">
                 If you need more credits than your monthly allocation, you can
                 purchase additional credit packages that never expire and stack
                 with your monthly credits.
@@ -444,10 +422,10 @@ export function CreditSystem() {
                     10 credits
                   </div>
                   <div className="text-lg font-semibold text-base-heading mb-3">
-                    $20
+                    $4.99
                   </div>
                   <div className="text-sm text-base-paragraph mb-4">
-                    $2.00 per credit
+                    $0.50 per credit
                   </div>
                   <div className="text-sm text-base-paragraph">
                     = 2 additional books
@@ -465,10 +443,10 @@ export function CreditSystem() {
                     25 credits
                   </div>
                   <div className="text-lg font-semibold text-base-heading mb-3">
-                    $45
+                    $11.99
                   </div>
                   <div className="text-sm text-base-paragraph mb-4">
-                    $1.80 per credit
+                    $0.48 per credit
                   </div>
                   <div className="text-sm text-base-paragraph">
                     = 5 additional books
@@ -484,10 +462,10 @@ export function CreditSystem() {
                     50 credits
                   </div>
                   <div className="text-lg font-semibold text-base-heading mb-3">
-                    $80
+                    $21.99
                   </div>
                   <div className="text-sm text-base-paragraph mb-4">
-                    $1.60 per credit
+                    $0.44 per credit
                   </div>
                   <div className="text-sm text-base-paragraph">
                     = 10 additional books

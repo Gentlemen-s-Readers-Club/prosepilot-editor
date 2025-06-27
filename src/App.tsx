@@ -4,11 +4,14 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
+import { ResendVerificationEmail } from "./pages/ResendVerificationEmail";
 import { Dashboard } from "./pages/Dashboard";
 import { BookDetails } from "./pages/BookDetails";
 import { ChapterEditor } from "./pages/ChapterEditor";
@@ -25,7 +28,7 @@ import { Toaster } from "./components/Toaster";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppDispatch, RootState } from "./store";
 import { useDispatch, useSelector } from "react-redux";
-import { setSession, setStatus } from './store/slices/authSlice';
+import { setSession, setStatus } from "./store/slices/authSlice";
 import { fetchProfile } from "./store/slices/profileSlice";
 import {
   fetchUserSubscription,
@@ -42,6 +45,11 @@ import { TeamCollaboration } from "./pages/help/TeamCollaboration";
 import { Navigation } from "./components/Navigation";
 import { supabase } from "./lib/supabase";
 import { checkAndCreatePaddleCustomer } from "./hooks/useNewUserHandler";
+import {
+  clearRealtimeCredits,
+  fetchUserCredits,
+  setupRealtimeCredits,
+} from "./store/slices/userCreditsSlice";
 
 // Shared Loading Component
 function LoadingSpinner({ message }: { message: string }) {
@@ -57,10 +65,10 @@ function LoadingSpinner({ message }: { message: string }) {
 
 // Protected Route For Anonymous Users
 function AnonymousRoute({ children }: { children: React.ReactNode }) {
-  const { session, status } = useSelector((state: RootState) => (state.auth));
-  
+  const { session, status } = useSelector((state: RootState) => state.auth);
+
   // Show loading while session is being fetched or if it hasn't been fetched yet
-  if(status === "loading") {
+  if (status === "loading") {
     return <LoadingSpinner message="Checking session..." />;
   }
 
@@ -69,7 +77,7 @@ function AnonymousRoute({ children }: { children: React.ReactNode }) {
 
 // Protected Route For Logged In Users
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session, status } = useSelector((state: RootState) => (state.auth));
+  const { session, status } = useSelector((state: RootState) => state.auth);
 
   // Show loading while subscription data is being fetched or if it hasn't been fetched yet
   if (status === "loading") {
@@ -108,146 +116,189 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 //   return <>{children}</>;
 // }
 
+// Component to handle OTP expired redirect
+function OTPExpiredRedirect() {
+  const location = useLocation();
+
+  // Check for hash fragment parameters (e.g., #error=access_denied&error_code=otp_expired)
+  const hashParams = new URLSearchParams(location.hash.substring(1));
+  const errorCode = hashParams.get("error_code");
+
+  if (errorCode === "otp_expired") {
+    return (
+      <Navigate
+        to="/resend-verification-email#error_code=otp_expired"
+        replace
+      />
+    );
+  }
+
+  return null;
+}
+
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const { session } = useSelector((state: RootState) => (state.auth));
-  const { profile } = useSelector((state: RootState) => state.profile);
-  const { status: subscriptionStatus } = useSelector(
-    (state: RootState) => state.subscription
-  );
-  
+  const { session } = useSelector((state: RootState) => state.auth);
+
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if(event === "INITIAL_SESSION") {
-        dispatch(setStatus("ready"))
+      if (event === "INITIAL_SESSION") {
+        dispatch(setStatus("ready"));
       } else {
-        dispatch(setSession(session))
+        dispatch(setSession(session));
       }
-    })
-    return () => subscription.unsubscribe()
+    });
+    return () => subscription.unsubscribe();
   }, [dispatch]);
 
   useEffect(() => {
-    if (session && !profile) {
-      dispatch(fetchProfile());
-    }
-  }, [dispatch, session, profile]);
-
-  // Check for new users when session is first established (for OAuth redirects)
-  useEffect(() => {
     if (session) {
+      dispatch(fetchProfile());
+      dispatch(fetchUserCredits(session.user.id));
+      dispatch(fetchUserSubscription());
+      // Check for new users when session is first established (for OAuth redirects)
       checkAndCreatePaddleCustomer(session);
     }
-  }, [session]);
-
-  useEffect(() => {
-    if (session && subscriptionStatus === "idle") {
-      dispatch(fetchUserSubscription());
-    }
-  }, [dispatch, session, subscriptionStatus]);
+  }, [dispatch, session]);
 
   // Set up real-time subscriptions when user is authenticated
   useEffect(() => {
     if (session) {
-      dispatch(setupRealtimeSubscriptions());
+      dispatch(setupRealtimeSubscriptions(session.user.id));
+      dispatch(setupRealtimeCredits(session.user.id));
     }
 
     // Clean up real-time subscription when component unmounts or session changes
     return () => {
       if (session) {
         dispatch(clearRealtimeSubscription());
+        dispatch(clearRealtimeCredits());
       }
     };
   }, [dispatch, session]);
 
   return (
-    <div className="bg-base-background pt-16 min-h-screen">
+    <div className="bg-base-background pt-16 min-h-screen font-copy">
       <PaddleProvider>
-        <Router>
-          <ScrollToTop />
-          <Navigation />
-          <main>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/docs" element={<Documentation />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
+        <HelmetProvider>
+          <Router>
+            <ScrollToTop />
+            <Navigation />
+            <OTPExpiredRedirect />
+            <main>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/docs" element={<Documentation />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
 
+                <Route
+                  path="/login"
+                  element={
+                    <AnonymousRoute>
+                      <Login />
+                    </AnonymousRoute>
+                  }
+                />
+                <Route
+                  path="/signup"
+                  element={
+                    <AnonymousRoute>
+                      <Signup />
+                    </AnonymousRoute>
+                  }
+                />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <AnonymousRoute>
+                      <ForgotPassword />
+                    </AnonymousRoute>
+                  }
+                />
+                <Route
+                  path="/reset-password"
+                  element={
+                    session ? <ResetPassword /> : <Navigate to="/login" />
+                  }
+                />
+                <Route
+                  path="/resend-verification-email"
+                  element={
+                    <AnonymousRoute>
+                      <ResendVerificationEmail />
+                    </AnonymousRoute>
+                  }
+                />
 
-              <Route  path="/login"
-                element={<AnonymousRoute><Login /></AnonymousRoute>}
-              />
-              <Route path="/signup"
-                element={<AnonymousRoute><Signup /></AnonymousRoute>}
-              />
-              <Route
-                path="/forgot-password"
-                element={
-                  <AnonymousRoute><ForgotPassword /></AnonymousRoute>
-                }
-              />
-              <Route
-                path="/reset-password"
-                element={session ? <ResetPassword /> : <Navigate to="/login" />}
-              />
+                {/* Help Articles */}
+                <Route
+                  path="/help/create-first-book"
+                  element={<CreateFirstBook />}
+                />
+                <Route path="/help/credit-system" element={<CreditSystem />} />
+                <Route
+                  path="/help/ai-best-practices"
+                  element={<AIBestPractices />}
+                />
+                <Route
+                  path="/help/team-collaboration"
+                  element={<TeamCollaboration />}
+                />
 
-              {/* Help Articles */}
-              <Route
-                path="/help/create-first-book"
-                element={<CreateFirstBook />}
-              />
-              <Route path="/help/credit-system" element={<CreditSystem />} />
-              <Route
-                path="/help/ai-best-practices"
-                element={<AIBestPractices />}
-              />
-              <Route
-                path="/help/team-collaboration"
-                element={<TeamCollaboration />}
-              />
+                <Route
+                  path="/workspace"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/workspace"
-                element={
-                  <ProtectedRoute><Dashboard /></ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/workspace/book/:id"
+                  element={
+                    <ProtectedRoute>
+                      <BookDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/workspace/chapter/:id"
+                  element={
+                    <ProtectedRoute>
+                      <ChapterEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/workspace/profile"
+                  element={
+                    <ProtectedRoute>
+                      <EditProfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/workspace/subscription"
+                  element={
+                    <ProtectedRoute>
+                      <Subscription />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/workspace/book/:id"
-                element={
-                  <ProtectedRoute><BookDetails /></ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/chapter/:id"
-                element={
-                  <ProtectedRoute><ChapterEditor /></ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/profile"
-                element={
-                  <ProtectedRoute><EditProfile /></ProtectedRoute>
-                }
-              />
-              <Route
-                path="/workspace/subscription"
-                element={
-                  <ProtectedRoute><Subscription /></ProtectedRoute>
-                }
-              />
-
-              {/* Catch-all route for 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Toaster />
-        </Router>
+                {/* Catch-all route for 404 */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Toaster />
+          </Router>
+        </HelmetProvider>
       </PaddleProvider>
     </div>
   );

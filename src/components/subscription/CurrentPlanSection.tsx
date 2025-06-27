@@ -4,7 +4,6 @@ import { Clock } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { selectCurrentPlan } from "../../store/slices/subscriptionSlice";
-import { useCredits } from "../../hooks/useCredits";
 import { CreditPurchase } from "../CreditPurchase";
 import { CurrentPlanSkeleton } from "./SubscriptionSkeleton";
 
@@ -32,7 +31,7 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
   const subscriptions = useSelector(
     (state: RootState) => state.subscription.subscriptions
   );
-  const { balance: creditBalance } = useCredits();
+  const { balance } = useSelector((state: RootState) => state.userCredits);
 
   if (loading) {
     return <CurrentPlanSkeleton />;
@@ -44,9 +43,9 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
   );
 
   const renderCreditBalance = () => {
-    const currentCredits = creditBalance?.current_balance || 0;
-    const totalEarned = creditBalance?.total_earned || 0;
-    const totalConsumed = creditBalance?.total_consumed || 0;
+    const currentCredits = balance?.current_balance || 0;
+    const totalEarned = balance?.total_earned || 0;
+    const totalConsumed = balance?.total_consumed || 0;
     const totalAccountCredits = totalEarned;
     const accountUsageProgress =
       totalAccountCredits > 0 ? (totalConsumed / totalAccountCredits) * 100 : 0;

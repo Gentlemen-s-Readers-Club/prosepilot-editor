@@ -78,6 +78,22 @@ export const updateBook = createAsyncThunk(
   }
 );
 
+export const deleteBook = createAsyncThunk(
+  'books/deleteBook',
+  async (bookId: string) => {
+    const { error } = await supabase
+      .from('books')
+      .delete()
+      .eq('id', bookId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return bookId;
+  }
+);
+
 const booksSlice = createSlice({
   name: 'books',
   initialState,
@@ -121,6 +137,10 @@ const booksSlice = createSlice({
             updated_at: new Date().toISOString()
           };
         }
+      })
+      .addCase(deleteBook.fulfilled, (state, action) => {
+        const deletedBookId = action.payload;
+        state.items = state.items.filter(book => book.id !== deletedBookId);
       });
   },
 });

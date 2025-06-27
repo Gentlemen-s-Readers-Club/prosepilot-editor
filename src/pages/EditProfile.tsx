@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Checkbox } from '../components/ui/checkbox';
-import { useToast } from '../hooks/use-toast';
-import { Upload, Facebook, AlertCircle, User, CreditCard, Bell, Shield, AlertTriangle, Loader2, Mail } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Checkbox } from "../components/ui/checkbox";
+import { useToast } from "../hooks/use-toast";
+import {
+  Upload,
+  Facebook,
+  AlertCircle,
+  User,
+  CreditCard,
+  Bell,
+  Shield,
+  AlertTriangle,
+  Loader2,
+  Mail,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -14,34 +25,38 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../components/ui/dialog';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
-import { updateProfile, updateNewsletterPreferences } from '../store/slices/profileSlice';
-import { Helmet } from 'react-helmet';
-import { UserIdentity } from '@supabase/supabase-js';
+} from "../components/ui/dialog";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import {
+  updateProfile,
+  updateNewsletterPreferences,
+} from "../store/slices/profileSlice";
+import { Helmet } from "react-helmet-async";
+import { UserIdentity } from "@supabase/supabase-js";
+import { clearProfile } from "../store/slices/profileSlice";
 
 export function EditProfile() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const { session } = useSelector((state: RootState) => (state.auth));
+
+  const { session } = useSelector((state: RootState) => state.auth);
   const { profile } = useSelector((state: RootState) => state.profile);
 
   const [loading, setLoading] = useState(false);
   const [isFileLoading, setIsFileLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showUnlinkDialog, setShowUnlinkDialog] = useState<string | null>(null);
-  const [deleteConfirmation, setDeleteConfirmation] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [activeSection, setActiveSection] = useState('profile');
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [activeSection, setActiveSection] = useState("profile");
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   const [profileData, setProfileData] = useState({
-    full_name: profile?.full_name || '',
-    avatar_url: profile?.avatar_url || '',
+    full_name: profile?.full_name || "",
+    avatar_url: profile?.avatar_url || "",
   });
 
   const [newsletterPreferences, setNewsletterPreferences] = useState({
@@ -55,15 +70,15 @@ export function EditProfile() {
 
   useEffect(() => {
     setProfileData({
-      full_name: profile?.full_name || '',
-      avatar_url: profile?.avatar_url || '',
+      full_name: profile?.full_name || "",
+      avatar_url: profile?.avatar_url || "",
     });
     setNewsletterPreferences({
       newsletter_product: profile?.newsletter_product ?? true,
       newsletter_marketing: profile?.newsletter_marketing ?? true,
       newsletter_writing: profile?.newsletter_writing ?? true,
     });
-  }, [profile]);  
+  }, [profile]);
 
   useEffect(() => {
     setPasswordStrength(calculatePasswordStrength(newPassword));
@@ -76,11 +91,13 @@ export function EditProfile() {
         setLoadingProviders(true);
         if (session?.user.identities) {
           // Extract provider names from identities
-          const providers = session?.user.identities.map((identity: UserIdentity) => identity.provider);
+          const providers = session?.user.identities.map(
+            (identity: UserIdentity) => identity.provider
+          );
           setConnectedProviders(providers);
         }
       } catch (error) {
-        console.error('Error fetching user identities:', error);
+        console.error("Error fetching user identities:", error);
       } finally {
         setLoadingProviders(false);
       }
@@ -101,47 +118,63 @@ export function EditProfile() {
 
   const getStrengthColor = () => {
     switch (passwordStrength) {
-      case 0: return 'bg-state-error';
-      case 1: return 'bg-state-error';
-      case 2: return 'bg-orange-500';
-      case 3: return 'bg-yellow-500';
-      case 4: return 'bg-state-success';
-      case 5: return 'bg-state-success';
-      default: return 'bg-gray-200';
+      case 0:
+        return "bg-state-error";
+      case 1:
+        return "bg-state-error";
+      case 2:
+        return "bg-orange-500";
+      case 3:
+        return "bg-yellow-500";
+      case 4:
+        return "bg-state-success";
+      case 5:
+        return "bg-state-success";
+      default:
+        return "bg-gray-200";
     }
   };
 
   const getStrengthText = () => {
     switch (passwordStrength) {
-      case 0: return 'Very Weak';
-      case 1: return 'Weak';
-      case 2: return 'Fair';
-      case 3: return 'Good';
-      case 4: return 'Strong';
-      case 5: return 'Very Strong';
-      default: return '';
+      case 0:
+        return "Very Weak";
+      case 1:
+        return "Weak";
+      case 2:
+        return "Fair";
+      case 3:
+        return "Good";
+      case 4:
+        return "Strong";
+      case 5:
+        return "Very Strong";
+      default:
+        return "";
     }
   };
 
   async function handleProfileSave() {
     try {
       setLoading(true);
-      await dispatch(updateProfile({
-        full_name: profileData.full_name,
-        avatar_url: profileData.avatar_url
-      }));
+      await dispatch(
+        updateProfile({
+          full_name: profileData.full_name,
+          avatar_url: profileData.avatar_url,
+        })
+      );
       toast({
         title: "Success",
         description: "Profile updated successfully",
       });
     } catch (err) {
-      console.error('Error updating profile:', err);
+      console.error("Error updating profile:", err);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Error updating profile",
       });
-    } finally { 
+    } finally {
       setLoading(false);
     }
   }
@@ -155,45 +188,47 @@ export function EditProfile() {
         description: "Newsletter preferences updated successfully",
       });
     } catch (err) {
-      console.error('Error updating newsletter preferences:', err);
+      console.error("Error updating newsletter preferences:", err);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Error updating newsletter preferences",
       });
-    } finally { 
+    } finally {
       setLoading(false);
     }
   }
 
-  async function handleAvatarUpload(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleAvatarUpload(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
     try {
       setIsFileLoading(true);
       const file = event.target.files?.[0];
-      if (!file) return;  
+      if (!file) return;
 
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const filePath = `${session?.user.id}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from("avatars")
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-        
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
       console.log(publicUrl);
       setProfileData({ ...profileData, avatar_url: publicUrl });
-      
+
       toast({
         title: "Success",
         description: "Avatar uploaded successfully",
       });
     } catch (error) {
-      console.error('Error uploading avatar:', error);
+      console.error("Error uploading avatar:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -235,7 +270,7 @@ export function EditProfile() {
     try {
       setLoading(true);
       const { error } = await supabase.auth.updateUser({
-        password: newPassword
+        password: newPassword,
       });
 
       if (error) throw error;
@@ -244,21 +279,21 @@ export function EditProfile() {
         title: "Success",
         description: "Password updated successfully",
       });
-      setNewPassword('');
-      setConfirmPassword('');
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (error) {
-      console.error('Error updating password:', error);
+      console.error("Error updating password:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleSocialConnect(provider: 'google' | 'facebook') {
+  async function handleSocialConnect(provider: "google" | "facebook") {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -269,26 +304,26 @@ export function EditProfile() {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error signing in with social provider:', error);
+      console.error("Error signing in with social provider:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: error instanceof Error ? error.message : "Unknown error",
       });
     }
   }
 
   async function handleSocialUnlink(provider: string) {
     try {
-
       setLoading(true);
-      
+
       // Check if this is the only auth method
       if (!session?.user.identities?.length) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "You must have at least one login method. Add another method before removing this one.",
+          description:
+            "You must have at least one login method. Add another method before removing this one.",
         });
         return;
       }
@@ -296,32 +331,33 @@ export function EditProfile() {
       // find the identity
       const identity = session?.user.identities?.find(
         (identity: UserIdentity) => identity.provider === provider
-      )
+      );
 
-      if(!identity) {
-        throw new Error('Identity not found');
+      if (!identity) {
+        throw new Error("Identity not found");
       }
-      
+
       // Call the unlink endpoint
       const { error } = await supabase.auth.unlinkIdentity(identity);
 
       if (error) throw error;
 
       // Update the UI
-      setConnectedProviders(connectedProviders.filter(p => p !== provider));
-      
+      setConnectedProviders(connectedProviders.filter((p) => p !== provider));
+
       toast({
         title: "Success",
         description: `Successfully unlinked ${provider} account`,
       });
-      
+
       setShowUnlinkDialog(null);
     } catch (error) {
-      console.error('Error unlinking provider:', error);
+      console.error("Error unlinking provider:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : 'Failed to unlink account',
+        description:
+          error instanceof Error ? error.message : "Failed to unlink account",
       });
     } finally {
       setLoading(false);
@@ -341,30 +377,35 @@ export function EditProfile() {
     try {
       setLoading(true);
       if (!session?.user.id) {
-        throw new Error('User ID not found');
+        throw new Error("User ID not found");
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/user`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`
-        },
-      });
-      
+      const response = await fetch(
+        `${import.meta.env.VITE_PYTHON_API_URL}/user`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to delete account');
+        throw new Error("Failed to delete account");
       }
 
       await supabase.auth.signOut();
-      navigate('/');
-      
+
+      dispatch(clearProfile());
+      navigate("/");
+
       toast({
         title: "Success",
         description: "Your account has been deleted",
       });
     } catch (error) {
-      console.error('Error deleting account:', error);
+      console.error("Error deleting account:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -377,20 +418,39 @@ export function EditProfile() {
   }
 
   const sections = [
-    { id: 'profile', label: 'Profile Information', icon: <User className="w-4 h-4" /> },
-    { id: 'connected', label: 'Connected Accounts', icon: <CreditCard className="w-4 h-4" /> },
-    { id: 'newsletters', label: 'Newsletter Preferences', icon: <Bell className="w-4 h-4" /> },
-    { id: 'security', label: 'Security', icon: <Shield className="w-4 h-4" /> },
-    { id: 'danger', label: 'Danger Zone', icon: <AlertTriangle className="w-4 h-4" /> },
+    {
+      id: "profile",
+      label: "Profile Information",
+      icon: <User className="w-4 h-4" />,
+    },
+    {
+      id: "connected",
+      label: "Connected Accounts",
+      icon: <CreditCard className="w-4 h-4" />,
+    },
+    {
+      id: "newsletters",
+      label: "Newsletter Preferences",
+      icon: <Bell className="w-4 h-4" />,
+    },
+    { id: "security", label: "Security", icon: <Shield className="w-4 h-4" /> },
+    {
+      id: "danger",
+      label: "Danger Zone",
+      icon: <AlertTriangle className="w-4 h-4" />,
+    },
   ];
 
   const renderSection = () => {
     switch (activeSection) {
-      case 'profile':
+      case "profile":
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="avatar\" className="block text-sm font-medium text-base-heading">
+              <Label
+                htmlFor="avatar\"
+                className="block text-sm font-medium text-base-heading"
+              >
                 Profile Picture
               </Label>
               <div className="mt-2 flex items-center space-x-4">
@@ -408,14 +468,18 @@ export function EditProfile() {
                   )}
                 </div>
                 <label className="cursor-pointer">
-                  <span className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-base-heading bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isFileLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  <span
+                    className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-base-heading bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                      isFileLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  >
                     {isFileLoading ? (
                       <div className="flex items-center">
                         <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4 text-base-heading" />
                         Uploading...
                       </div>
                     ) : (
-                      'Change'
+                      "Change"
                     )}
                   </span>
                   <input
@@ -431,7 +495,12 @@ export function EditProfile() {
             </div>
 
             <div>
-              <Label htmlFor="email" className="block text-sm font-medium text-base-heading">Email Address</Label>
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-base-heading"
+              >
+                Email Address
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -442,12 +511,19 @@ export function EditProfile() {
             </div>
 
             <div>
-              <Label htmlFor="fullName" className="block text-sm font-medium text-base-heading">Full Name</Label>
+              <Label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-base-heading"
+              >
+                Full Name
+              </Label>
               <Input
                 id="fullName"
                 type="text"
                 value={profileData.full_name}
-                onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
+                onChange={(e) =>
+                  setProfileData({ ...profileData, full_name: e.target.value })
+                }
                 className="mt-1"
                 disabled={loading}
               />
@@ -458,31 +534,37 @@ export function EditProfile() {
               className="w-full"
               disabled={loading}
             >
-              {loading ? 'Saving...' : 'Save Changes'}
+              {loading ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         );
 
-      case 'connected':
+      case "connected":
         return (
           <div className="space-y-3">
             {loadingProviders ? (
               <div className="flex items-center justify-center py-6">
                 <Loader2 className="w-6 h-6 text-brand-primary animate-spin mr-2" />
-                <span className="text-base-paragraph">Loading connected accounts...</span>
+                <span className="text-base-paragraph">
+                  Loading connected accounts...
+                </span>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                    <img
+                      src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                      alt="Google"
+                      className="w-5 h-5"
+                    />
                     <span className="text-base-heading">Google</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    {connectedProviders.includes('google') ? (
+                    {connectedProviders.includes("google") ? (
                       <Button
                         variant="outline"
-                        onClick={() => setShowUnlinkDialog('google')}
+                        onClick={() => setShowUnlinkDialog("google")}
                         className="text-state-error border-state-error hover:bg-state-error"
                       >
                         Connected
@@ -490,7 +572,7 @@ export function EditProfile() {
                     ) : (
                       <Button
                         variant="outline"
-                        onClick={() => handleSocialConnect('google')}
+                        onClick={() => handleSocialConnect("google")}
                       >
                         Connect
                       </Button>
@@ -503,10 +585,10 @@ export function EditProfile() {
                     <span className="text-base-heading">Facebook</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    {connectedProviders.includes('facebook') ? (
+                    {connectedProviders.includes("facebook") ? (
                       <Button
                         variant="outline"
-                        onClick={() => setShowUnlinkDialog('facebook')}
+                        onClick={() => setShowUnlinkDialog("facebook")}
                         className="text-state-error border-state-error hover:bg-state-error"
                       >
                         Connected
@@ -514,31 +596,29 @@ export function EditProfile() {
                     ) : (
                       <Button
                         variant="outline"
-                        onClick={() => handleSocialConnect('facebook')}
+                        onClick={() => handleSocialConnect("facebook")}
                       >
                         Connect
                       </Button>
                     )}
                   </div>
                 </div>
-                
+
                 {/* Email provider is always connected since it's the primary auth method */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Mail className="w-6 h-6 text-brand-accent" />
                     <span className="text-base-heading">Email</span>
                   </div>
-                  <Button
-                    variant="outline"
-                    disabled={true}
-                  >
+                  <Button variant="outline" disabled={true}>
                     Connected
                   </Button>
                 </div>
-                
+
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600">
-                    Connecting social accounts allows for easier login and account recovery options.
+                    Connecting social accounts allows for easier login and
+                    account recovery options.
                   </p>
                 </div>
               </>
@@ -546,22 +626,32 @@ export function EditProfile() {
           </div>
         );
 
-      case 'newsletters':
+      case "newsletters":
         return (
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <Checkbox
                 id="newsletter_product"
                 checked={newsletterPreferences.newsletter_product}
-                onChange={(checked) => setNewsletterPreferences({ 
-                  ...newsletterPreferences, 
-                  newsletter_product: checked 
-                })}
+                onChange={(checked) =>
+                  setNewsletterPreferences({
+                    ...newsletterPreferences,
+                    newsletter_product: checked,
+                  })
+                }
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_product" className="font-medium text-base-heading">Product Updates</Label>
-                <p className="text-gray-500 text-sm">Be the first to know about new AI capabilities, tools, and improvements in the platform.</p>
+                <Label
+                  htmlFor="newsletter_product"
+                  className="font-medium text-base-heading"
+                >
+                  Product Updates
+                </Label>
+                <p className="text-gray-500 text-sm">
+                  Be the first to know about new AI capabilities, tools, and
+                  improvements in the platform.
+                </p>
               </div>
             </div>
 
@@ -569,15 +659,25 @@ export function EditProfile() {
               <Checkbox
                 id="newsletter_writing"
                 checked={newsletterPreferences.newsletter_writing}
-                onChange={(checked) => setNewsletterPreferences({ 
-                  ...newsletterPreferences, 
-                  newsletter_writing: checked 
-                })}
+                onChange={(checked) =>
+                  setNewsletterPreferences({
+                    ...newsletterPreferences,
+                    newsletter_writing: checked,
+                  })
+                }
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_writing" className="font-medium text-base-heading">Writing Tips & Resources</Label>
-                <p className="text-gray-500 text-sm">Get weekly inspiration, creative prompts, and storytelling advice to keep your writing flowing.</p>
+                <Label
+                  htmlFor="newsletter_writing"
+                  className="font-medium text-base-heading"
+                >
+                  Writing Tips & Resources
+                </Label>
+                <p className="text-gray-500 text-sm">
+                  Get weekly inspiration, creative prompts, and storytelling
+                  advice to keep your writing flowing.
+                </p>
               </div>
             </div>
 
@@ -585,15 +685,25 @@ export function EditProfile() {
               <Checkbox
                 id="newsletter_marketing"
                 checked={newsletterPreferences.newsletter_marketing}
-                onChange={(checked) => setNewsletterPreferences({ 
-                  ...newsletterPreferences, 
-                  newsletter_marketing: checked 
-                })}
+                onChange={(checked) =>
+                  setNewsletterPreferences({
+                    ...newsletterPreferences,
+                    newsletter_marketing: checked,
+                  })
+                }
                 className="mt-1"
               />
               <div>
-                <Label htmlFor="newsletter_marketing" className="font-medium text-base-heading">Publishing & Marketing Advice</Label>
-                <p className="text-gray-500 text-sm">Learn how to publish, promote, and sell your book—plus tips on reaching your audience.</p>
+                <Label
+                  htmlFor="newsletter_marketing"
+                  className="font-medium text-base-heading"
+                >
+                  Publishing & Marketing Advice
+                </Label>
+                <p className="text-gray-500 text-sm">
+                  Learn how to publish, promote, and sell your book—plus tips on
+                  reaching your audience.
+                </p>
               </div>
             </div>
 
@@ -602,24 +712,32 @@ export function EditProfile() {
               className="w-full mt-6"
               disabled={loading}
             >
-              {loading ? 'Saving...' : 'Save Preferences'}
+              {loading ? "Saving..." : "Save Preferences"}
             </Button>
           </div>
         );
 
-      case 'security':
+      case "security":
         return (
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-base-heading font-heading">Change Password</h3>
-              <p className="mt-1 text-sm text-base-paragraph">
-                Make sure your new password is at least 8 characters long and includes a mix of letters, numbers, and symbols.
+              <h3 className="text-sm font-medium text-base-heading font-heading">
+                Change Password
+              </h3>
+              <p className="mt-1 text-sm text-base-paragraph font-copy">
+                Make sure your new password is at least 8 characters long and
+                includes a mix of letters, numbers, and symbols.
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="newPassword" className="block text-sm font-medium text-base-heading">New Password</Label>
+                <Label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium text-base-heading"
+                >
+                  New Password
+                </Label>
                 <Input
                   id="newPassword"
                   type="password"
@@ -631,8 +749,12 @@ export function EditProfile() {
                 {newPassword && (
                   <div className="mt-2">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm text-base-paragraph">Password strength:</span>
-                      <span className="text-sm font-medium text-base-heading">{getStrengthText()}</span>
+                      <span className="text-sm text-base-paragraph">
+                        Password strength:
+                      </span>
+                      <span className="text-sm font-medium text-base-heading">
+                        {getStrengthText()}
+                      </span>
                     </div>
                     <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                       <div
@@ -641,18 +763,55 @@ export function EditProfile() {
                       />
                     </div>
                     <ul className="mt-2 text-sm text-base-paragraph space-y-1">
-                      <li className={newPassword.length >= 8 ? "text-state-success" : ""}>• At least 8 characters</li>
-                      <li className={newPassword.match(/[A-Z]/) ? "text-state-success" : ""}>• At least one uppercase letter</li>
-                      <li className={newPassword.match(/[a-z]/) ? "text-state-success" : ""}>• At least one lowercase letter</li>
-                      <li className={newPassword.match(/[0-9]/) ? "text-state-success" : ""}>• At least one number</li>
-                      <li className={newPassword.match(/[^A-Za-z0-9]/) ? "text-state-success" : ""}>• At least one special character</li>
+                      <li
+                        className={
+                          newPassword.length >= 8 ? "text-state-success" : ""
+                        }
+                      >
+                        • At least 8 characters
+                      </li>
+                      <li
+                        className={
+                          newPassword.match(/[A-Z]/) ? "text-state-success" : ""
+                        }
+                      >
+                        • At least one uppercase letter
+                      </li>
+                      <li
+                        className={
+                          newPassword.match(/[a-z]/) ? "text-state-success" : ""
+                        }
+                      >
+                        • At least one lowercase letter
+                      </li>
+                      <li
+                        className={
+                          newPassword.match(/[0-9]/) ? "text-state-success" : ""
+                        }
+                      >
+                        • At least one number
+                      </li>
+                      <li
+                        className={
+                          newPassword.match(/[^A-Za-z0-9]/)
+                            ? "text-state-success"
+                            : ""
+                        }
+                      >
+                        • At least one special character
+                      </li>
                     </ul>
                   </div>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-base-heading">Confirm Password</Label>
+                <Label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-base-heading"
+                >
+                  Confirm Password
+                </Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -665,21 +824,28 @@ export function EditProfile() {
 
               <Button
                 onClick={handlePasswordUpdate}
-                disabled={!newPassword || !confirmPassword || loading || passwordStrength < 3 || newPassword.length < 8}
+                disabled={
+                  !newPassword ||
+                  !confirmPassword ||
+                  loading ||
+                  passwordStrength < 3 ||
+                  newPassword.length < 8
+                }
                 className="w-full"
               >
-                {loading ? 'Updating...' : 'Update Password'}
+                {loading ? "Updating..." : "Update Password"}
               </Button>
             </div>
           </div>
         );
 
-      case 'danger':
+      case "danger":
         return (
           <div className="space-y-4">
             <div className="bg-red-50 rounded-lg p-4">
               <p className="text-sm text-red-700">
-                <strong>Warning:</strong> Once you delete your account, there is no going back. This action will permanently delete:
+                <strong>Warning:</strong> Once you delete your account, there is
+                no going back. This action will permanently delete:
               </p>
               <ul className="text-sm text-red-700 mt-2 ml-4 list-disc space-y-1">
                 <li>All your books and chapters</li>
@@ -689,7 +855,8 @@ export function EditProfile() {
                 <li>All associated data and files</li>
               </ul>
               <p className="text-sm text-red-700 mt-2">
-                This action cannot be undone. Please be absolutely certain before proceeding.
+                This action cannot be undone. Please be absolutely certain
+                before proceeding.
               </p>
             </div>
             <Button
@@ -718,7 +885,9 @@ export function EditProfile() {
             {/* Sidebar */}
             <div className="w-full md:w-64 shrink-0">
               <div className="md:sticky md:top-8">
-                <h2 className="text-2xl font-semibold text-base-heading mb-4 font-heading">Settings</h2>
+                <h2 className="text-2xl font-semibold text-base-heading mb-4 font-heading">
+                  Settings
+                </h2>
                 <nav className="flex flex-col gap-1">
                   {sections.map(({ id, label, icon }) => (
                     <button
@@ -726,8 +895,8 @@ export function EditProfile() {
                       onClick={() => setActiveSection(id)}
                       className={`flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors ${
                         activeSection === id
-                          ? 'bg-brand-primary text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
+                          ? "bg-brand-primary text-white"
+                          : "text-gray-600 hover:bg-gray-100"
                       }`}
                     >
                       {icon}
@@ -742,7 +911,7 @@ export function EditProfile() {
             <div className="flex-1">
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-lg font-semibold text-base-heading mb-6 font-heading">
-                  {sections.find(s => s.id === activeSection)?.label}
+                  {sections.find((s) => s.id === activeSection)?.label}
                 </h2>
                 {renderSection()}
               </div>
@@ -756,7 +925,8 @@ export function EditProfile() {
             <DialogHeader>
               <DialogTitle>Delete Account</DialogTitle>
               <DialogDescription>
-                This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -771,7 +941,9 @@ export function EditProfile() {
                     </h3>
                     <div className="mt-2 text-sm text-state-error">
                       <ul className="list-disc pl-5 space-y-1">
-                        <li>All your books and writing will be permanently deleted</li>
+                        <li>
+                          All your books and writing will be permanently deleted
+                        </li>
                         <li>Your subscription will be cancelled immediately</li>
                         <li>This action cannot be reversed</li>
                       </ul>
@@ -780,8 +952,15 @@ export function EditProfile() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="deleteConfirmation" className='font-normal text-base-paragraph'>
-                  Type your email <span className="font-bold text-base-heading">{profile?.email}</span> to confirm
+                <Label
+                  htmlFor="deleteConfirmation"
+                  className="font-normal text-base-paragraph"
+                >
+                  Type your email{" "}
+                  <span className="font-bold text-base-heading">
+                    {profile?.email}
+                  </span>{" "}
+                  to confirm
                 </Label>
                 <Input
                   id="deleteConfirmation"
@@ -797,7 +976,7 @@ export function EditProfile() {
                 variant="outline"
                 onClick={() => {
                   setShowDeleteDialog(false);
-                  setDeleteConfirmation('');
+                  setDeleteConfirmation("");
                 }}
               >
                 Cancel
@@ -814,12 +993,19 @@ export function EditProfile() {
         </Dialog>
 
         {/* Unlink Provider Dialog */}
-        <Dialog open={!!showUnlinkDialog} onOpenChange={() => setShowUnlinkDialog(null)}>
+        <Dialog
+          open={!!showUnlinkDialog}
+          onOpenChange={() => setShowUnlinkDialog(null)}
+        >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Unlink {showUnlinkDialog?.charAt(0).toUpperCase()}{showUnlinkDialog?.slice(1)} Account</DialogTitle>
+              <DialogTitle>
+                Unlink {showUnlinkDialog?.charAt(0).toUpperCase()}
+                {showUnlinkDialog?.slice(1)} Account
+              </DialogTitle>
               <DialogDescription>
-                Are you sure you want to unlink your {showUnlinkDialog} account? You will no longer be able to sign in using this method.
+                Are you sure you want to unlink your {showUnlinkDialog} account?
+                You will no longer be able to sign in using this method.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -833,9 +1019,15 @@ export function EditProfile() {
                       Important
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">
-                      <p>Make sure you have at least one other way to sign in to your account.</p>
+                      <p>
+                        Make sure you have at least one other way to sign in to
+                        your account.
+                      </p>
                       {connectedProviders.length <= 1 && (
-                        <p className="mt-1 font-semibold">You currently have only one sign-in method. You must add another method before you can remove this one.</p>
+                        <p className="mt-1 font-semibold">
+                          You currently have only one sign-in method. You must
+                          add another method before you can remove this one.
+                        </p>
                       )}
                     </div>
                   </div>
@@ -851,10 +1043,12 @@ export function EditProfile() {
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => showUnlinkDialog && handleSocialUnlink(showUnlinkDialog)}
+                onClick={() =>
+                  showUnlinkDialog && handleSocialUnlink(showUnlinkDialog)
+                }
                 disabled={loading || connectedProviders.length <= 1}
               >
-                {loading ? 'Unlinking...' : 'Unlink Account'}
+                {loading ? "Unlinking..." : "Unlink Account"}
               </Button>
             </DialogFooter>
           </DialogContent>

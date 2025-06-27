@@ -30,7 +30,7 @@ export default {
           },
           error: {
             DEFAULT: '#C53030',
-            light: '#FEE4E2',
+            light: '#FEF2F2',
           },
           warning: {
             DEFAULT: '#B45309',

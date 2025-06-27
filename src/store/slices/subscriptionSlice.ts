@@ -189,35 +189,22 @@ export const fetchUserSubscription = createAsyncThunk<
 
 export const setupRealtimeSubscriptions = createAsyncThunk<
   any,
-  void,
+  string,
   { state: RootState; dispatch: any }
 >(
   "subscription/setupRealtimeSubscriptions",
-  async (_, { dispatch, getState }) => {
-    const state = getState();
-    const session = state.auth.session;
-    
-    if (!session?.user) {
-      throw new Error("No authenticated user");
-    }
-    
-    console.log(
-      "🌍 Setting up realtime subscriptions for environment:",
-      environment
-    );
-
+  async (userId: string, { dispatch }) => {
     const subscription = supabase
-      .channel("subscriptions-changes")
+      .channel('subscription-changes')
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: "subscriptions",
-          filter: `user_id=eq.${session.user.id} and environment=eq.${environment}`,
+          // filter: `user_id=eq.${userId} and environment=eq.${environment}`,
         },
         () => {
-          console.log("Real-time subscription change detected");
           dispatch(fetchUserSubscription());
         }
       )

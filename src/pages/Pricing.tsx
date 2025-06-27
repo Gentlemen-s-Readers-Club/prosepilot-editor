@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { 
   Check, 
-  FileText, 
-  Crown, 
+  FileText,
+  Crown,
   Users,
   ArrowRight,
   CreditCard,
@@ -12,101 +12,46 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Footer from '../components/Footer';
-import { SEOHead, structuredData } from '../components/SEOHead';
+import { Helmet } from 'react-helmet-async';
 import useAnalytics from '../hooks/useAnalytics';
+import { plans } from '../lib/consts';
 
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  icon: JSX.Element;
-  color: string;
-  description: string;
-  features: string[];
-  credits: number;
-  isPopular?: boolean;
-  comingSoon?: boolean;
-}
-
-const plans: Plan[] = [
+const faqs = [
   {
-    id: 'starter',
-    name: 'Starter',
-    price: 9,
-    credits: 5, // 1 book
-    icon: <FileText className="w-6 h-6" />,
-    color: 'bg-state-success',
-    description: 'Perfect for hobbyists and first-time authors',
-    features: [
-      '5 credits/month (1 book)',
-      'Basic genre selection',
-      'AI-generated outline + simple chapter flow',
-      'Plot and character consistency checker',
-      'Export to ePub',
-      'Community support'
-    ]
+    question: "What are credits and how do they work?",
+    answer: "Credits are used to generate books. Each book costs 5 credits to create. Credits are included with your subscription and unused credits carry over with no maximum limit."
+  },
+  // {
+  //   question: "Can I upgrade or downgrade my plan anytime?",
+  //   answer: "Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at your next billing cycle."
+  // },
+  // {
+  //   question: "Do you offer annual billing discounts?",
+  //   answer: "Yes! Annual subscribers save 20% compared to monthly billing. You can switch to annual billing from your subscription settings."
+  // },
+  {
+    question: "What happens to my books if I cancel?",
+    answer: "Your books remain accessible in read-only mode. You can still export them, but editing requires an active subscription."
   },
   {
-    id: 'pro',
-    name: 'Pro Author',
-    price: 29,
-    credits: 25, // 5 books
-    icon: <Crown className="w-6 h-6" />,
-    color: 'bg-state-info',
-    description: 'For aspiring writers ready to go deeper',
-    features: [
-      '25 credits/month (5 books)',
-      'All Starter features',
-      'Unlock more genres',
-      'Advanced book properties: narrator, tone, style',
-      'Export to PDF, ePub, and Docx formats',
-      'Annotations system',
-      'Priority email support'
-    ],
-    isPopular: true
-  },
-  {
-    id: 'studio',
-    name: 'Studio',
-    price: 79,
-    credits: 75, // 15 books
-    icon: <Users className="w-6 h-6" />,
-    color: 'bg-state-warning',
-    description: 'For professionals and small studios',
-    features: [
-      '75 credits/month (15 books)',
-      'All Pro features',
-      'Advanced Metadata management',
-      'Team access (up to 3 users)',
-      'More features coming soon'
-    ],
-    comingSoon: true
+    question: "Can I buy additional credits?",
+    answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
   }
 ];
 
-// FAQ data for structured data
-const pricingFaqs = [
-  {
-    question: "How does the credit system work?",
-    answer: "Credits are used to generate AI content. Each book typically requires 5 credits. Credits refresh monthly with your subscription."
-  },
-  {
-    question: "Can I cancel my subscription anytime?",
-    answer: "Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period."
-  },
-  {
-    question: "What formats can I export my books in?",
-    answer: "Starter plan supports ePub export. Pro and Studio plans support PDF, ePub, and DOCX formats."
-  },
-  {
-    question: "Is there a free trial available?",
-    answer: "We offer a limited free trial to test our platform. Sign up to get started with basic features."
-  },
-  {
-    question: "Do you offer refunds?",
-    answer: "We don't offer refunds, but you can cancel anytime. Your subscription will remain active until the end of your billing period."
+// Function to render icons based on string names
+const renderIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'FileText':
+      return <FileText className="w-6 h-6" />;
+    case 'Crown':
+      return <Crown className="w-6 h-6" />;
+    case 'Users':
+      return <Users className="w-6 h-6" />;
+    default:
+      return <FileText className="w-6 h-6" />;
   }
-];
+};
 
 export function Pricing() {
   const { trackPageView } = useAnalytics({
@@ -117,52 +62,16 @@ export function Pricing() {
     trackPageView(window.location.pathname, 'Pricing');
   }, [trackPageView]);
   
-  // Structured data for pricing
-  const pricingStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "ProsePilot AI Writing Platform",
-    "description": "AI-powered book writing platform with multiple subscription tiers",
-    "offers": plans.map(plan => ({
-      "@type": "Offer",
-      "name": `${plan.name} Plan`,
-      "price": plan.price.toString(),
-      "priceCurrency": "USD",
-      "priceSpecification": {
-        "@type": "UnitPriceSpecification",
-        "price": plan.price.toString(),
-        "priceCurrency": "USD",
-        "billingIncrement": "P1M"
-      },
-      "description": plan.description,
-      "availability": plan.comingSoon ? "PreOrder" : "InStock"
-    })),
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1250"
-    }
-  };
-  
   return (
     <>
-      <SEOHead
-        title="Pricing Plans - AI Book Writing Platform"
-        description="Choose your ProsePilot plan: Starter ($9/month), Pro Author ($29/month), or Studio ($79/month). All plans include AI book generation, professional editing, and multiple export formats."
-        keywords="ProsePilot pricing, AI writing cost, book writing subscription, writing software pricing, AI author pricing"
-        structuredData={pricingStructuredData}
-      />
-      
-      {/* FAQ Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify(structuredData.faqPage(pricingFaqs))}
-      </script>
-      
+      <Helmet>
+        <title>ProsePilot - Pricing</title>
+      </Helmet>
       {/* Header */}
-      <section className="bg-white pt-16" aria-labelledby="pricing-heading">
+      <div className="bg-white pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 id="pricing-heading" className="text-4xl font-bold text-base-heading sm:text-5xl font-heading">
+            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl font-heading">
               Choose Your Writing Plan
             </h1>
             <p className="mt-4 text-xl text-base-paragraph max-w-3xl mx-auto">
@@ -172,88 +81,86 @@ export function Pricing() {
             {/* Trust Indicators */}
             <div className="mt-8 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
               <div className="flex items-center text-base-paragraph">
-                <CheckCircle className="w-4 h-4 mr-2 text-brand-accent" aria-hidden="true" />
+                <CheckCircle className="w-4 h-4 mr-2 text-brand-accent" />
                 Cancel anytime
               </div>
               <div className="flex items-center text-base-paragraph">
-                <CreditCard className="w-4 h-4 mr-2 text-brand-accent" aria-hidden="true" />
+                <CreditCard className="w-4 h-4 mr-2 text-brand-accent" />
                 Start from just $9/month
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Pricing Plans */}
-      <section className="py-16 bg-base-background" aria-labelledby="plans-heading">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 id="plans-heading" className="sr-only font-heading">Pricing Plans</h2>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="bg-gray-50 py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {plans.map((plan) => (
-              <article
+              <div
                 key={plan.id}
-                className={`relative bg-white rounded-2xl shadow-lg p-8 ${
-                  plan.isPopular ? 'ring-2 ring-brand-accent' : ''
-                }`}
+                className={`relative bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-105 ${
+                  plan.isPopular ? 'ring-2 ring-brand-accent scale-105' : ''
+                } ${plan.comingSoon ? 'opacity-75' : ''}`}
               >
                 {plan.isPopular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-brand-accent text-white px-4 py-1 rounded-full text-sm font-medium">
-                      Most Popular
-                    </span>
+                  <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                    Most Popular
+                  </div>
+                )}
+                {plan.comingSoon && (
+                  <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+                    Coming Soon
                   </div>
                 )}
                 
-                {plan.comingSoon && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-state-warning text-white px-4 py-1 rounded-full text-sm font-medium">
-                      Coming Soon
-                    </span>
-                  </div>
-                )}
-
-                <div className="text-center">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${plan.color} text-white mb-4`}>
-                    {plan.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold text-base-heading mb-2 font-heading">{plan.name}</h3>
-                  <p className="text-base-paragraph mb-6">{plan.description}</p>
-                  
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-base-heading">${plan.price}</span>
-                    <span className="text-base-paragraph">/month</span>
-                  </div>
-                  
-                  <div className="mb-8">
-                    <span className="text-sm text-base-paragraph">
-                      {plan.credits} credits/month ({Math.floor(plan.credits / 5)} books)
-                    </span>
+                <div className="p-8 flex flex-col h-full">
+                  <div className="flex-1">
+                    {/* Plan Header */}
+                  <div className="text-center mb-8">
+                    <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
+                      {renderIcon(plan.icon)}
+                    </div>
+                    <h3 className="text-2xl font-bold text-base-heading font-heading">{plan.name}</h3>
+                    <p className="text-base-paragraph mt-2">{plan.description}</p>
                   </div>
 
-                  <ul className="space-y-4 mb-8 text-left">
+                  {/* Pricing */}
+                  <div className="text-center mb-8">
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-5xl font-extrabold text-base-heading">${plan.price}</span>
+                      <span className="text-xl text-gray-500 ml-1">/month</span>
+                    </div>
+                    <div className="mt-2 text-sm text-gray-500">
+                      {plan.credits === -1 ? 'Unlimited credits' : `${plan.credits} credits included`}
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="space-y-4 mb-8">
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
-                        <Check className="w-5 h-5 text-state-success mr-3 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                        <span className="text-base-paragraph">{feature}</span>
+                        <Check className="h-5 w-5 text-state-success shrink-0 mt-0.5" />
+                        <span className="ml-3 text-gray-700 text-sm">{feature}</span>
                       </li>
                     ))}
                   </ul>
+                  </div>
 
-                  <Link to={plan.comingSoon ? "#" : "/signup"}>
+                  {/* CTA Button */}
+                  <Link to="/signup">
                     <Button
-                      className={`w-full ${
-                        plan.isPopular
-                          ? 'bg-brand-accent hover:bg-brand-accent/90'
-                          : ''
-                      }`}
+                      className={`w-full ${plan.isPopular && 'bg-brand-accent border-brand-accent text-white hover:bg-brand-accent/90 hover:border-brand-accent/90 hover:text-white'}`}
                       disabled={plan.comingSoon}
+                      variant={plan.isPopular ? 'default' : 'outline'}
                     >
                       {plan.comingSoon ? 'Coming Soon' : 'Get Started'}
-                      {!plan.comingSoon && <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />}
+                      {!plan.comingSoon && <ArrowRight className="ml-2 h-4 w-4" />}
                     </Button>
                   </Link>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
 
@@ -270,13 +177,13 @@ export function Pricing() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Credit Packages */}
-      <section className="bg-white py-16" aria-labelledby="credit-packages-heading">
+      <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 id="credit-packages-heading" className="text-3xl font-extrabold text-base-heading font-heading">Need More Credits?</h2>
+            <h2 className="text-3xl font-extrabold text-base-heading font-heading">Need More Credits?</h2>
             <p className="mt-4 text-xl text-base-paragraph">
               Purchase additional credits that never expire
             </p>
@@ -322,59 +229,43 @@ export function Pricing() {
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-white" aria-labelledby="faq-heading">
+      <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 id="faq-heading" className="text-3xl font-bold text-base-heading font-heading">
-              Frequently Asked Questions
-            </h2>
-            <p className="mt-4 text-lg text-base-paragraph">
-              Everything you need to know about ProsePilot pricing and plans
+            <h2 className="text-3xl font-extrabold text-base-heading font-heading">Frequently Asked Questions</h2>
+            <p className="mt-4 text-xl text-base-paragraph">
+              Everything you need to know about our pricing
             </p>
           </div>
-          
+
           <div className="space-y-8">
-            {pricingFaqs.map((faq, index) => (
-              <article key={index} className="bg-base-background rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-base-heading mb-3 font-heading">
+            {faqs.map((faq, index) => (
+              <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-base-heading mb-3 flex items-center font-heading">
+                  <HelpCircle className="w-5 h-5 text-base-heading mr-3" />
                   {faq.question}
                 </h3>
-                <p className="text-base-paragraph">{faq.answer}</p>
-              </article>
+                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-brand-accent/5">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-base-heading mb-4 font-heading">
-            Ready to Start Writing?
-          </h2>
-          <p className="text-lg text-base-paragraph mb-8">
-            Join thousands of writers who've transformed their ideas into published books with ProsePilot.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/signup">
-              <Button className="px-8 py-3 text-lg">
-                Start Your Free Trial
-                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-              </Button>
-            </Link>
+          <div className="text-center mt-12">
+            <p className="text-base-paragraph mb-4">Still have questions?</p>
             <Link to="/support">
-              <Button variant="outline" className="px-8 py-3 text-lg">
-                <HelpCircle className="mr-2 h-5 w-5" aria-hidden="true" />
-                Need Help?
+              <Button>
+                Contact Support
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
         </div>
-      </section>
+      </div>
 
+      {/* Footer */}
       <Footer />
     </>
   );

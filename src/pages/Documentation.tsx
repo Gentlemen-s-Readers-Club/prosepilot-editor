@@ -23,7 +23,7 @@ import {
   Info,
 } from "lucide-react";
 import Footer from "../components/Footer";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useSelector } from "react-redux";
 import {
   hasProOrStudioPlan,
@@ -1683,7 +1683,7 @@ export function Documentation() {
                   {
                     question: "How many books can I create?",
                     answer:
-                      "The number of books you can create depends on your subscription plan. The Starter plan includes 5 credits (1 book), Pro Author includes 25 credits (5 books), and Studio includes 75 credits (15 books). Each book requires 5 credits to generate. You can also purchase additional credit packs anytime to create more books beyond your monthly allowance.",
+                      "The number of books you can create depends on your subscription plan. The Starter plan includes 15 credits (3 books), Pro Author includes 55 credits (11 books), and Studio includes 160 credits (32 books). Each book requires 5 credits to generate. You can also purchase additional credit packs anytime to create more books beyond your monthly allowance.",
                   },
                   {
                     question: "Can I edit my book after it's generated?",

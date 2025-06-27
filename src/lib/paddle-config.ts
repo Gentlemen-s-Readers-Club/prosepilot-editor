@@ -43,12 +43,12 @@ const productionConfig: PaddleConfig = {
 
 export const getPaddleConfig = (): PaddleConfig => {
   const environment = import.meta.env.VITE_PADDLE_ENV || "sandbox";
-  console.log("🏷️ Getting Paddle price config for environment:", environment);
+  // console.log("🏷️ Getting Paddle price config for environment:", environment);
   const config = environment === "sandbox" ? sandboxConfig : productionConfig;
-  console.log("🏷️ Using price IDs:", {
-    subscriptionPrices: config.subscriptionPrices,
-    creditPrices: config.creditPrices,
-  });
+  // console.log("🏷️ Using price IDs:", {
+  //   subscriptionPrices: config.subscriptionPrices,
+  //   creditPrices: config.creditPrices,
+  // });
   return config;
 };
 

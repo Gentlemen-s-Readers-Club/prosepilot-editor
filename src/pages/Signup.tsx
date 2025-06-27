@@ -8,7 +8,7 @@ import { Label } from '../components/ui/label';
 import { useToast } from '../hooks/use-toast';
 import { Eye, EyeOff } from 'lucide-react';
 import Footer from '../components/Footer';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import useAnalytics from '../hooks/useAnalytics';
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
@@ -80,11 +80,16 @@ export function Signup() {
     }
   };
 
-  const onSubmit = async ({ email, password }: SignupFormData) => {
+  const onSubmit = async ({ email, password, fullName }: SignupFormData) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+        },
       });
   
       if (error) {
@@ -305,6 +310,21 @@ export function Signup() {
                 </form>
               </>
             )}
+            
+            <div className="text-center">
+              <p className="text-sm text-gray-500">
+                Didn't receive the email?{' '}
+                <Button
+                  variant="link"
+                  asChild
+                  className="p-0 h-auto text-sm"
+                >
+                  <Link to="/resend-verification-email">
+                    Resend verification email
+                  </Link>
+                </Button>
+              </p>
+            </div>
           </div>
         </div>  
         {/* Footer */}

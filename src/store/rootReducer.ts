@@ -9,6 +9,7 @@ import booksReducer from './slices/booksSlice';
 import subscriptionReducer from './slices/subscriptionSlice';
 import authReducer from './slices/authSlice';
 import creditPurchasesReducer from './slices/creditPurchasesSlice';
+import userCreditsReducer from './slices/userCreditsSlice';
 
 const rootReducer = combineReducers({
   categories: categoriesReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   subscription: subscriptionReducer,
   auth: authReducer,
   creditPurchases: creditPurchasesReducer,
+  userCredits: userCreditsReducer,
 });
 
 export default rootReducer;

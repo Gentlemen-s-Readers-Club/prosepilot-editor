@@ -1,4 +1,3 @@
-import { supabase } from "../lib/supabase";
 import { getPaddleConfig } from "../lib/paddle-config";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
