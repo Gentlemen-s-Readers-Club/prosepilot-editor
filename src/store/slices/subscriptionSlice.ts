@@ -341,10 +341,7 @@ export const selectSubscriptionStatus = (state: {
 }) => state.subscription.subscriptionStatus;
 export const selectHasActiveSubscription = (state: {
   subscription: SubscriptionState;
-}) => {
-  console.log(state.subscription.activeSubscriptions);
-  return state.subscription.activeSubscriptions.length > 0;
-};
+}) => state.subscription.activeSubscriptions.length > 0;
 export const selectCanSubscribeToNewPlan = (state: {
   subscription: SubscriptionState;
 }) => state.subscription.activeSubscriptions.length === 0;
