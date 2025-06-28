@@ -341,20 +341,13 @@ export const selectSubscriptionStatus = (state: {
 }) => state.subscription.subscriptionStatus;
 export const selectHasActiveSubscription = (state: {
   subscription: SubscriptionState;
-}) => state.subscription.activeSubscriptions.length > 0;
+}) => {
+  console.log(state.subscription.activeSubscriptions);
+  return state.subscription.activeSubscriptions.length > 0;
+};
 export const selectCanSubscribeToNewPlan = (state: {
   subscription: SubscriptionState;
 }) => state.subscription.activeSubscriptions.length === 0;
-
-// Helper functions
-export const hasActivePlan = (
-  state: { subscription: SubscriptionState },
-  priceId: string
-): boolean => {
-  return state.subscription.activeSubscriptions.some(
-    (sub) => sub.price_id === priceId
-  );
-};
 
 // Helper function to check if user has Studio plan
 export const hasStudioPlan = (state: {
