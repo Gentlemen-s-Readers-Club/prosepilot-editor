@@ -41,6 +41,7 @@ export const useCreditPurchases = () => {
         user_id: user.id,
         type: "credit_purchase",
         environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
+        credits_amount: selectedPackage.credits_amount
       },
       settings: {
         displayMode: "overlay" as const,
