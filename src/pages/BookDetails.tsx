@@ -558,11 +558,6 @@ export function BookDetails() {
     try {
       setExporting(format);
 
-      toast({
-        title: "Export Started",
-        description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
-      });
-
       // Call the appropriate API endpoint based on the format
       const endpoint = `${
         import.meta.env.VITE_PYTHON_API_URL
