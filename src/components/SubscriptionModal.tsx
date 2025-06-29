@@ -93,8 +93,8 @@ export function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
           },
         ],
         customerEmail: profile.email,
-        successUrl: `${window.location.origin}/workspace/dashboard?success=true`,
-        cancelUrl: `${window.location.origin}/workspace/dashboard?cancelled=true`,
+        // successUrl: `${window.location.origin}/workspace/dashboard?success=true`,
+        // cancelUrl: `${window.location.origin}/workspace/dashboard?cancelled=true`,
       };
 
       await paddle.Checkout.open(checkoutOptions);

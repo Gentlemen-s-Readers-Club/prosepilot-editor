@@ -265,7 +265,7 @@ export function Subscription() {
           allowLogout: false,
           showAddDiscounts: false,
           showAddTaxId: false,
-          successUrl: `${window.location.origin}/workspace/subscription?success=true`,
+          // successUrl: `${window.location.origin}/workspace/subscription?success=true`,
         },
         customData: {
           user_id: session?.user.id || '',

@@ -36,6 +36,7 @@ export const plans: Plan[] = [
     features: [
       "15 credits/month (3 books)",
       "Basic genre selection",
+      "Multiple languages supported",
       "AI-generated outline + simple chapter flow",
       "Plot and character consistency checker",
       "Export to ePub",

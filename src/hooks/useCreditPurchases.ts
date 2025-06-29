@@ -47,7 +47,7 @@ export const useCreditPurchases = () => {
         displayMode: "overlay" as const,
         theme: "light" as const,
         locale: "en" as const,
-        successUrl: `${window.location.origin}/workspace/subscription?credit_purchase_success=true`,
+        // successUrl: `${window.location.origin}/workspace/subscription?credit_purchase_success=true`,
       },
     };
 
