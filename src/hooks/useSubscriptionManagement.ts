@@ -45,6 +45,7 @@ export const useSubscriptionManagement = () => {
             user_id: user.id,
             subscription_id: subscriptionId,
             cancellation_reason: cancellationReason,
+            environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
           },
         }
       );
