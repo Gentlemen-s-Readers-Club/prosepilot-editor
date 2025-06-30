@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -33,6 +33,13 @@ export interface Transaction {
   }>;
 }
 
+// Cache to prevent duplicate API calls across component instances and StrictMode
+const transactionCache = new Map<string, { data: Transaction[], timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Global execution tracking to prevent concurrent calls across all instances
+const activeRequests = new Set<string>();
+
 export function useBillingHistory() { 
   const { session, profile } = useSelector((state: RootState) => ({
     session: state.auth.session,
@@ -41,6 +48,7 @@ export function useBillingHistory() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fetchingRef = useRef(false);
 
   const fetchTransactions = async () => {
     if (!session?.user) {
@@ -48,7 +56,26 @@ export function useBillingHistory() {
       return;
     }
 
+    // Check cache first
+    const cacheKey = `transactions_${session.user.id}`;
+    const cached = transactionCache.get(cacheKey);
+    const now = Date.now();
+    
+    if (cached && (now - cached.timestamp) < CACHE_DURATION) {
+      console.log("📋 Using cached billing history data");
+      setTransactions(cached.data);
+      return;
+    }
+
+    // Skip if already fetching globally (handles React StrictMode double calls)
+    if (loading || fetchingRef.current || activeRequests.has(cacheKey)) {
+      console.log("🔍 Already fetching billing history globally, skipping duplicate fetch");
+      return;
+    }
+
     try {
+      activeRequests.add(cacheKey);
+      fetchingRef.current = true;
       setLoading(true);
       setError(null);
 
@@ -79,7 +106,14 @@ export function useBillingHistory() {
       if (data.success) {
         console.log("✅ Raw transaction data:", data.data);
         console.log("📦 First transaction sample:", data.data.data?.[0]);
-        setTransactions(data.data.data || []);
+        const transactionData = data.data.data || [];
+        setTransactions(transactionData);
+        
+        // Cache the data
+        transactionCache.set(cacheKey, {
+          data: transactionData,
+          timestamp: now
+        });
       } else {
         console.error("❌ Edge function returned error:", data.error);
         throw new Error(data.error);
@@ -91,6 +125,8 @@ export function useBillingHistory() {
       );
     } finally {
       setLoading(false);
+      fetchingRef.current = false;
+      activeRequests.delete(cacheKey);
     }
   };
 
@@ -153,9 +189,19 @@ export function useBillingHistory() {
   useEffect(() => {
     console.log("👤 User session changed:", !!session?.user);
     if (session?.user) {
-      fetchTransactions();
+      // Check cache first before making API call
+      const cacheKey = `transactions_${session.user.id}`;
+      const cached = transactionCache.get(cacheKey);
+      const now = Date.now();
+      
+      if (cached && (now - cached.timestamp) < CACHE_DURATION) {
+        console.log("📋 Using cached billing history data on mount");
+        setTransactions(cached.data);
+      } else {
+        fetchTransactions();
+      }
     }
-  }, [session?.user]);
+  }, [session?.user?.id]); // Only trigger when user ID changes, not the whole session object
 
   return {
     transactions,

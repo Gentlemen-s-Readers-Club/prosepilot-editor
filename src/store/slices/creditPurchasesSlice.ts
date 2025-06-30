@@ -52,6 +52,20 @@ export const fetchCreditPackages = createAsyncThunk<
   async (_, { getState }) => {
     const state = getState();
     const session = state.auth.session;
+    
+    // Return cached packages if available and not in error state
+    if (state.creditPurchases.packages.length > 0 && state.creditPurchases.status === "success") {
+      console.log("📦 Using cached credit packages");
+      return state.creditPurchases.packages;
+    }
+    
+    console.log("🔄 Fetching credit packages from API");
+
+    console.log("📡 Calling handle-credit-purchase with:", {
+      action: "get_packages",
+      user_id: session?.user?.id,
+      environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
+    });
 
     const { data, error } = await supabase.functions.invoke(
       "handle-credit-purchase",
@@ -64,9 +78,15 @@ export const fetchCreditPackages = createAsyncThunk<
       }
     );
 
-    if (error) throw error;
+    console.log("📦 Response from handle-credit-purchase:", { data, error });
+
+    if (error) {
+      console.error("❌ Supabase function error:", error);
+      throw error;
+    }
 
     if (!data.success) {
+      console.error("❌ Function returned error:", data.error);
       throw new Error(data.error);
     }
 

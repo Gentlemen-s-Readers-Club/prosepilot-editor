@@ -12,12 +12,14 @@ export function BillingHistorySection() {
     formatDate,
     fetchInvoiceUrl,
   } = useBillingHistory();
-  
+
   // Get subscription status to determine if billing history should be shown
-  const { status: subscriptionStatus } = useSelector((state: RootState) => state.subscription);
+  const { status: subscriptionStatus } = useSelector(
+    (state: RootState) => state.subscription
+  );
 
   // Don't show billing history if user has no active subscription
-  if (!subscriptionStatus || subscriptionStatus === 'error') {
+  if (!subscriptionStatus || subscriptionStatus === "error") {
     return null;
   }
 
@@ -34,7 +36,10 @@ export function BillingHistorySection() {
     );
   }
 
-  if (error?.includes("No subscription found") || error?.includes("non-2xx status code")) {
+  if (
+    error?.includes("No subscription found") ||
+    error?.includes("non-2xx status code")
+  ) {
     return null;
   }
 
@@ -90,11 +95,7 @@ export function BillingHistorySection() {
                   const itemDetails = transaction.items?.[0];
                   const productName =
                     itemDetails?.price?.name || "Unknown Product";
-                  const priceDescription =
-                    itemDetails?.price?.description || "";
-                  const description = `${productName}${
-                    priceDescription ? ` - ${priceDescription}` : ""
-                  }`;
+                  const description = `${productName}`;
 
                   const handleInvoiceDownload = async () => {
                     const url = await fetchInvoiceUrl(transaction.id);
