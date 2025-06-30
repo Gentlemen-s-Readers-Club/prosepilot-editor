@@ -521,7 +521,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="style" className="text-base-heading font-heading">Literature Style</Label>
+                      <Label htmlFor="style" className="text-base-heading font-copy">Literature Style</Label>
                       <CustomSelect
                         id="style"
                         value={selectedStyle}
