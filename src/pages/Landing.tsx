@@ -5,12 +5,11 @@ import {
   Clock,
   TrendingUp,
   CheckCircle,
-  ArrowRight,
   Quote,
   Zap,
   Award,
   Target,
-  Rocket
+  Rocket,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { SubscribeForm } from '../components/SubscribeForm';
@@ -134,15 +133,15 @@ export function Landing() {
                     ))}
                   </div>
 
-                  <div className="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start">
-                    <div className="rounded-md shadow">
+                  <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4">
                       <Link to="/signup">
-                        <Button className="w-full flex items-center justify-center px-8 py-4 text-lg font-medium">
+                        <Button className="w-full text-lg font-medium border-2 md:py-5 md:px-8">
                           Start Writing Your Book
-                          <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                         </Button>
                       </Link>
-                    </div>
+                      <Button variant="outline" className="text-lg font-medium border-2 md:py-5 md:px-8">
+                        Watch Demo
+                      </Button>
                   </div>
 
                   {/* Trust Indicators */}
@@ -435,9 +434,8 @@ export function Landing() {
           
           <div className="mt-8">
             <Link to="/pricing">  
-              <Button variant="secondaryOutline" className="px-8 py-4 text-lg font-semibold border-2">
+              <Button variant="secondaryOutline" className="md:py-5 md:px-8 text-lg font-semibold border-2">
                 View All Plans
-                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -507,13 +505,12 @@ export function Landing() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <Link to="/signup">
-              <Button className="px-8 py-4 text-lg font-semibold border-2 transition-all">
+              <Button className="md:py-5 md:px-8 text-lg font-medium border-2">
                 Start Your Writing Journey
-                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link to="/pricing">
-              <Button variant="outline" className="px-8 py-4 text-lg font-semibold border-2 transition-all">
+              <Button variant="outline" className="md:py-5 md:px-8 text-lg font-medium border-2">
                 View Pricing Plans
               </Button>
             </Link>
