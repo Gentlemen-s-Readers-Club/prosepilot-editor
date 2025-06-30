@@ -28,8 +28,8 @@ import { useSelector } from "react-redux";
 import {
   hasProOrStudioPlan,
   hasStudioPlan,
+  selectHasActiveSubscription,
 } from "../store/slices/subscriptionSlice";
-import { useSubscriptions } from "../hooks/useSubscriptions";
 import useAnalytics from "../hooks/useAnalytics";
 
 export function Documentation() {
@@ -45,7 +45,7 @@ export function Documentation() {
   }, [trackPageView]);
 
   // Check if user has Pro or Studio plan
-  const { hasActiveSubscription } = useSubscriptions();
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
   const hasProOrStudio = useSelector(hasProOrStudioPlan);
   const hasStudio = useSelector(hasStudioPlan);
 
@@ -238,7 +238,7 @@ export function Documentation() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-base-heading mb-4">
+              <h1 className="text-4xl font-bold text-base-heading mb-4 font-heading">
                 Documentation
               </h1>
               <p className="text-xl text-base-paragraph leading-relaxed">
@@ -345,7 +345,7 @@ export function Documentation() {
           <div className="flex-1">
             {/* About */}
             <section id="about" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Info className="w-8 h-8 text-brand-accent mr-4" />
                 About ProsePilot
               </h2>
@@ -374,7 +374,7 @@ export function Documentation() {
                     <div className="flex items-start">
                       <Sparkles className="w-6 h-6 text-brand-accent mt-1 mr-3 shrink-0" />
                       <div>
-                        <h3 className="text-lg font-semibold text-base-heading mb-2">
+                        <h3 className="text-lg font-semibold text-base-heading mb-2 font-heading">
                           Our Mission
                         </h3>
                         <p className="text-base-paragraph text-sm">
@@ -392,7 +392,7 @@ export function Documentation() {
                     <div className="bg-white rounded-lg shadow-sm p-6">
                       <div className="flex items-center mb-4">
                         <BookOpen className="w-5 h-5 text-brand-accent mr-2" />
-                        <h3 className="font-semibold text-base-heading">
+                        <h3 className="font-semibold text-base-heading font-heading">
                           Complete Book Generation
                         </h3>
                       </div>
@@ -406,7 +406,7 @@ export function Documentation() {
                     <div className="bg-white rounded-lg shadow-sm p-6">
                       <div className="flex items-center mb-4">
                         <Users className="w-5 h-5 text-brand-accent mr-2" />
-                        <h3 className="font-semibold text-base-heading">
+                        <h3 className="font-semibold text-base-heading font-heading">
                           Team Collaboration (Coming soon)
                         </h3>
                       </div>
@@ -423,7 +423,7 @@ export function Documentation() {
 
             {/* Getting Started */}
             <section id="getting-started" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <BookOpen className="w-8 h-8 text-brand-accent mr-4" />
                 Getting Started
               </h2>
@@ -436,7 +436,7 @@ export function Documentation() {
                 </p>
 
                 <div className="bg-white rounded-lg shadow-md p-6 my-6">
-                  <h3 className="text-xl font-semibold text-base-heading mb-4">
+                  <h3 className="text-xl font-semibold text-base-heading mb-4 font-heading">
                     Quick Start Guide
                   </h3>
 
@@ -505,7 +505,7 @@ export function Documentation() {
 
             {/* Prompt Examples */}
             <section id="prompt-examples" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Lightbulb className="w-8 h-8 text-brand-accent mr-4" />
                 Prompt Examples
               </h2>
@@ -524,7 +524,7 @@ export function Documentation() {
                       className="bg-white rounded-lg shadow-md p-6"
                     >
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-xl font-semibold text-base-heading">
+                        <h3 className="text-xl font-semibold text-base-heading font-heading">
                           {example.title}
                         </h3>
                         <button
@@ -557,7 +557,7 @@ export function Documentation() {
                 </div>
 
                 <div className="bg-state-info-light border border-state-info rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-state-info mb-3 flex items-center">
+                  <h3 className="text-lg font-semibold text-state-info mb-3 flex items-center font-heading">
                     <Zap className="w-5 h-5 mr-2" />
                     Pro Tips for Effective Prompts
                   </h3>
@@ -601,7 +601,7 @@ export function Documentation() {
 
             {/* AI Settings Guide */}
             <section id="ai-settings" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Settings className="w-8 h-8 text-brand-accent mr-4" />
                 AI Settings Guide
               </h2>
@@ -621,7 +621,7 @@ export function Documentation() {
                         <BookText className="w-6 h-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-base-heading">
+                        <h3 className="text-xl font-semibold text-base-heading font-heading">
                           Narrator Perspective
                         </h3>
                         <p className="text-base-paragraph text-sm">
@@ -639,7 +639,7 @@ export function Documentation() {
                               key={index}
                               className="bg-gray-50 p-4 rounded-lg"
                             >
-                              <h4 className="font-medium text-gray-900 mb-1">
+                              <h4 className="font-medium text-gray-900 mb-1 font-heading">
                                 {option}
                               </h4>
                               <p className="text-sm text-base-paragraph">
@@ -663,7 +663,7 @@ export function Documentation() {
                               key={index}
                               className="bg-gray-50 p-4 rounded-lg"
                             >
-                              <h4 className="font-medium text-gray-900 mb-1">
+                              <h4 className="font-medium text-gray-900 mb-1 font-heading">
                                 {option}
                               </h4>
                               <p className="text-sm text-base-paragraph">
@@ -689,7 +689,7 @@ export function Documentation() {
                         <Palette className="w-6 h-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-base-heading">
+                        <h3 className="text-xl font-semibold text-base-heading font-heading">
                           Literature Style
                         </h3>
                         <p className="text-base-paragraph text-sm">
@@ -702,7 +702,7 @@ export function Documentation() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {literatureStyles.map((style, index) => (
                         <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                          <h4 className="font-medium text-gray-900 text-sm">
+                          <h4 className="font-medium text-gray-900 text-sm font-heading">
                             {style}
                           </h4>
                         </div>
@@ -711,7 +711,7 @@ export function Documentation() {
 
                     <div className="mt-6 space-y-4">
                       <div className="bg-state-info-light p-4 rounded-lg">
-                        <h4 className="font-medium text-state-info mb-2">
+                        <h4 className="font-medium text-state-info mb-2 font-heading">
                           Popular Styles Explained:
                         </h4>
                         <div className="space-y-2 text-sm text-state-info">
@@ -750,7 +750,7 @@ export function Documentation() {
                         <VolumeX className="w-6 h-6 text-brand-accent" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-base-heading">
+                        <h3 className="text-xl font-semibold text-base-heading font-heading">
                           Writing Tone
                         </h3>
                         <p className="text-base-paragraph text-sm">
@@ -763,7 +763,7 @@ export function Documentation() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                       {toneOptions.map((tone, index) => (
                         <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                          <h4 className="font-medium text-gray-900 text-sm">
+                          <h4 className="font-medium text-gray-900 text-sm font-heading">
                             {tone}
                           </h4>
                         </div>
@@ -773,7 +773,7 @@ export function Documentation() {
                 </div>
 
                 <div className="bg-state-info-light border border-state-info rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-state-info mb-3">
+                  <h3 className="text-lg font-semibold text-state-info mb-3 flex items-center font-heading">
                     💡 Setting selection tips:
                   </h3>
                   <ul className="text-state-info space-y-2 text-sm">
@@ -797,12 +797,12 @@ export function Documentation() {
                 </div>
 
                 <div className="bg-state-warning-light border border-state-warning rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-state-warning mb-3">
+                  <h3 className="text-lg font-semibold text-state-warning mb-3 font-heading">
                     Recommended Combinations
                   </h3>
                   <div className="space-y-3">
                     <div>
-                      <h4 className="font-medium text-state-warning">
+                      <h4 className="font-medium text-state-warning font-heading">
                         For Thrillers:
                       </h4>
                       <p className="text-state-warning text-sm">
@@ -811,7 +811,7 @@ export function Documentation() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-state-warning">
+                      <h4 className="font-medium text-state-warning font-heading">
                         For Romance:
                       </h4>
                       <p className="text-state-warning text-sm">
@@ -820,7 +820,7 @@ export function Documentation() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-state-warning">
+                      <h4 className="font-medium text-state-warning font-heading">
                         For Literary Fiction:
                       </h4>
                       <p className="text-state-warning text-sm">
@@ -829,7 +829,7 @@ export function Documentation() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-state-warning">
+                      <h4 className="font-medium text-state-warning font-heading">
                         For Science Fiction:
                       </h4>
                       <p className="text-state-warning text-sm">
@@ -838,7 +838,7 @@ export function Documentation() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-state-warning">
+                      <h4 className="font-medium text-state-warning font-heading">
                         For Magical Realism:
                       </h4>
                       <p className="text-state-warning text-sm">
@@ -850,13 +850,13 @@ export function Documentation() {
                 </div>
 
                 <div className="bg-state-success-light border border-state-success rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-state-success mb-3 flex items-center">
+                  <h3 className="text-lg font-semibold text-state-success mb-3 flex items-center font-heading">
                     <Sparkles className="w-5 h-5 mr-2" />
                     Advanced Setting Combinations
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-medium text-state-success">
+                      <h4 className="font-medium text-state-success font-heading">
                         Experimental Fiction:
                       </h4>
                       <p className="text-state-success text-sm">
@@ -873,7 +873,7 @@ export function Documentation() {
                       </p>
                     </div>
                     <div>
-                      <h4 className="font-medium text-state-success">
+                      <h4 className="font-medium text-state-success font-heading">
                         Psychological Horror:
                       </h4>
                       <p className="text-state-success text-sm">
@@ -897,7 +897,7 @@ export function Documentation() {
 
             {/* Pro & Studio Features */}
             <section id="pro-features" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Crown className="w-8 h-8 text-brand-accent mr-4" />
                 Pro & Studio Features
               </h2>
@@ -919,7 +919,7 @@ export function Documentation() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-xl font-semibold text-base-heading">
+                          <h3 className="text-xl font-semibold text-base-heading font-heading">
                             Annotations System
                           </h3>
                           <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">
@@ -934,7 +934,7 @@ export function Documentation() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           How to Use:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -947,7 +947,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Best Practices:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -987,7 +987,7 @@ export function Documentation() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-xl font-semibold text-base-heading">
+                          <h3 className="text-xl font-semibold text-base-heading font-heading">
                             Advanced Export Options
                           </h3>
                           <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">
@@ -1003,7 +1003,7 @@ export function Documentation() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Export Formats:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1022,7 +1022,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Benefits:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1057,7 +1057,7 @@ export function Documentation() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-xl font-semibold text-base-heading">
+                          <h3 className="text-xl font-semibold text-base-heading font-heading">
                             Team Collaboration (Coming soon)
                           </h3>
                           <span className="bg-brand-primary text-white px-2 py-1 rounded-full text-xs font-medium">
@@ -1073,7 +1073,7 @@ export function Documentation() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Team Features:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1084,7 +1084,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Collaboration Tools:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1116,7 +1116,7 @@ export function Documentation() {
 
             {/* Editing Tools */}
             <section id="editing-tools" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <FileText className="w-8 h-8 text-brand-accent mr-4" />
                 Editing Tools
               </h2>
@@ -1130,12 +1130,12 @@ export function Documentation() {
 
                 <div className="space-y-8 mt-8">
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-base-heading mb-4">
+                    <h3 className="text-xl font-semibold text-base-heading mb-4 font-heading">
                       Rich Text Editor
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Key Features:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1149,7 +1149,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Pro Tips:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1166,12 +1166,12 @@ export function Documentation() {
                   </div>
 
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-base-heading mb-4">
+                    <h3 className="text-xl font-semibold text-base-heading mb-4 font-heading">
                       Annotations System
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           How to Use:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1184,7 +1184,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Best Practices:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1203,12 +1203,12 @@ export function Documentation() {
                   </div>
 
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-base-heading mb-4">
+                    <h3 className="text-xl font-semibold text-base-heading mb-4 font-heading">
                       Version History
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Features:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1219,7 +1219,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           When to Use:
                         </h4>
                         <ul className="text-gray-700 space-y-1 text-sm">
@@ -1236,20 +1236,20 @@ export function Documentation() {
                 </div>
 
                 <div className="bg-state-success-light border border-state-success rounded-lg p-6 mt-8">
-                  <h3 className="text-lg font-semibold text-state-success mb-3 flex items-center">
+                  <h3 className="text-lg font-semibold text-state-success mb-3 flex items-center font-heading">
                     <Sparkles className="w-5 h-5 mr-2" />
                     Keyboard Shortcuts
                   </h3>
 
                   {/* Windows/Linux Shortcuts */}
                   <div className="mb-6">
-                    <h4 className="font-medium text-state-success mb-3 flex items-center">
+                    <h4 className="font-medium text-state-success mb-3 flex items-center font-heading">
                       <Grid2X2 className="w-4 h-4 mr-2" />
                       Windows & Linux
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+B
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1257,7 +1257,7 @@ export function Documentation() {
                         </span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+I
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1265,19 +1265,19 @@ export function Documentation() {
                         </span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+Z
                         </span>
                         <span className="text-base-paragraph ml-3">Undo</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+Y
                         </span>
                         <span className="text-base-paragraph ml-3">Redo</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+A
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1285,31 +1285,31 @@ export function Documentation() {
                         </span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+C
                         </span>
                         <span className="text-base-paragraph ml-3">Copy</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+V
                         </span>
                         <span className="text-base-paragraph ml-3">Paste</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+X
                         </span>
                         <span className="text-base-paragraph ml-3">Cut</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+F
                         </span>
                         <span className="text-base-paragraph ml-3">Find</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           Ctrl+S
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1320,7 +1320,7 @@ export function Documentation() {
                       {hasProOrStudio ? (
                         <>
                           <div className="bg-white p-3 rounded-md">
-                            <span className="font-medium text-base-heading">
+                            <span className="font-medium text-base-heading font-heading">
                               Ctrl+Shift+A
                             </span>
                             <span className="text-base-paragraph ml-3">
@@ -1328,7 +1328,7 @@ export function Documentation() {
                             </span>
                           </div>
                           <div className="bg-white p-3 rounded-md">
-                            <span className="font-medium text-base-heading">
+                            <span className="font-medium text-base-heading font-heading">
                               Ctrl+Shift+P
                             </span>
                             <span className="text-base-paragraph ml-3">
@@ -1339,18 +1339,18 @@ export function Documentation() {
                       ) : (
                         <>
                           <div className="bg-gray-100 p-3 rounded-md opacity-60">
-                            <span className="font-medium text-gray-500">
+                            <span className="font-medium text-gray-500 font-heading">
                               Ctrl+Shift+A
                             </span>
-                            <span className="text-gray-500 ml-3">
+                            <span className="text-gray-500 ml-3 font-heading">
                               Create annotation (Pro & Studio)
                             </span>
                           </div>
                           <div className="bg-gray-100 p-3 rounded-md opacity-60">
-                            <span className="font-medium text-gray-500">
+                            <span className="font-medium text-gray-500 font-heading">
                               Ctrl+Shift+P
                             </span>
-                            <span className="text-gray-500 ml-3">
+                            <span className="text-gray-500 ml-3 font-heading">
                               Toggle annotation panel (Pro & Studio)
                             </span>
                           </div>
@@ -1361,7 +1361,7 @@ export function Documentation() {
 
                   {/* Mac Shortcuts */}
                   <div>
-                    <h4 className="font-medium text-state-success mb-3 flex items-center">
+                    <h4 className="font-medium text-state-success mb-3 flex items-center font-heading">
                       <svg
                         className="w-4 h-4 mr-2"
                         fill="currentColor"
@@ -1373,7 +1373,7 @@ export function Documentation() {
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+B
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1381,7 +1381,7 @@ export function Documentation() {
                         </span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+I
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1389,19 +1389,19 @@ export function Documentation() {
                         </span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+Z
                         </span>
                         <span className="text-base-paragraph ml-3">Undo</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+Shift+Z
                         </span>
                         <span className="text-base-paragraph ml-3">Redo</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+A
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1409,31 +1409,31 @@ export function Documentation() {
                         </span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+C
                         </span>
                         <span className="text-base-paragraph ml-3">Copy</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+V
                         </span>
                         <span className="text-base-paragraph ml-3">Paste</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+X
                         </span>
                         <span className="text-base-paragraph ml-3">Cut</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+F
                         </span>
                         <span className="text-base-paragraph ml-3">Find</span>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           ⌘+S
                         </span>
                         <span className="text-base-paragraph ml-3">
@@ -1444,7 +1444,7 @@ export function Documentation() {
                       {hasProOrStudio ? (
                         <>
                           <div className="bg-white p-3 rounded-md">
-                            <span className="font-medium text-base-heading">
+                            <span className="font-medium text-base-heading font-heading">
                               ⌘+Shift+A
                             </span>
                             <span className="text-base-paragraph ml-3">
@@ -1452,7 +1452,7 @@ export function Documentation() {
                             </span>
                           </div>
                           <div className="bg-white p-3 rounded-md">
-                            <span className="font-medium text-base-heading">
+                            <span className="font-medium text-base-heading font-heading">
                               ⌘+Shift+P
                             </span>
                             <span className="text-base-paragraph ml-3">
@@ -1463,18 +1463,18 @@ export function Documentation() {
                       ) : (
                         <>
                           <div className="bg-gray-100 p-3 rounded-md opacity-60">
-                            <span className="font-medium text-gray-500">
+                            <span className="font-medium text-gray-500 font-heading">
                               ⌘+Shift+A
                             </span>
-                            <span className="text-gray-500 ml-3">
+                            <span className="text-gray-500 ml-3 font-heading">
                               Create annotation (Pro & Studio)
                             </span>
                           </div>
                           <div className="bg-gray-100 p-3 rounded-md opacity-60">
-                            <span className="font-medium text-gray-500">
+                            <span className="font-medium text-gray-500 font-heading">
                               ⌘+Shift+P
                             </span>
-                            <span className="text-gray-500 ml-3">
+                            <span className="text-gray-500 ml-3 font-heading">
                               Toggle annotation panel (Pro & Studio)
                             </span>
                           </div>
@@ -1503,7 +1503,7 @@ export function Documentation() {
 
             {/* Team Collaboration */}
             <section id="team-collaboration" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <MessageSquare className="w-8 h-8 text-brand-accent mr-4" />
                 Team Collaboration (Coming soon)
               </h2>
@@ -1517,7 +1517,7 @@ export function Documentation() {
 
                 <div className="space-y-6 mt-8">
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-base-heading mb-4">
+                    <h3 className="text-xl font-semibold text-base-heading mb-4 font-heading">
                       Team Roles
                     </h3>
                     <div className="space-y-4">
@@ -1537,7 +1537,7 @@ export function Documentation() {
                           </svg>
                         </div>
                         <div>
-                          <h4 className="font-medium text-base-heading">
+                          <h4 className="font-medium text-base-heading font-heading">
                             Admin
                           </h4>
                           <p className="text-base-paragraph text-sm">
@@ -1559,7 +1559,7 @@ export function Documentation() {
                           </svg>
                         </div>
                         <div>
-                          <h4 className="font-medium text-base-heading">
+                          <h4 className="font-medium text-base-heading font-heading">
                             Editor
                           </h4>
                           <p className="text-base-paragraph text-sm">
@@ -1586,7 +1586,7 @@ export function Documentation() {
                           </svg>
                         </div>
                         <div>
-                          <h4 className="font-medium text-base-heading">
+                          <h4 className="font-medium text-base-heading font-heading">
                             Reader
                           </h4>
                           <p className="text-base-paragraph text-sm">
@@ -1599,12 +1599,12 @@ export function Documentation() {
                   </div>
 
                   <div className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-xl font-semibold text-base-heading mb-4">
+                    <h3 className="text-xl font-semibold text-base-heading mb-4 font-heading">
                       Collaboration Features
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Team Management
                         </h4>
                         <ul className="text-base-paragraph space-y-1 text-sm">
@@ -1615,7 +1615,7 @@ export function Documentation() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-medium text-base-heading mb-2">
+                        <h4 className="font-medium text-base-heading mb-2 font-heading">
                           Collaborative Editing
                         </h4>
                         <ul className="text-base-paragraph space-y-1 text-sm">
@@ -1629,7 +1629,7 @@ export function Documentation() {
                   </div>
 
                   <div className="bg-state-info-light border border-state-info rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-state-info mb-3">
+                    <h3 className="text-lg font-semibold text-state-info mb-3 font-heading">
                       Best Practices for Team Collaboration
                     </h3>
                     <ul className="text-state-info space-y-2 text-sm">
@@ -1673,7 +1673,7 @@ export function Documentation() {
 
             {/* FAQ */}
             <section id="faq" className="mb-16">
-              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center">
+              <h2 className="text-3xl font-bold text-base-heading mb-6 flex items-center font-heading">
                 <Code className="w-8 h-8 text-brand-accent mr-4" />
                 Frequently Asked Questions
               </h2>
@@ -1716,7 +1716,7 @@ export function Documentation() {
                     key={index}
                     className="bg-white rounded-lg shadow-md p-6"
                   >
-                    <h3 className="text-xl font-semibold text-base-heading mb-3">
+                    <h3 className="text-xl font-semibold text-base-heading mb-3 font-heading">
                       {faq.question}
                     </h3>
                     <p className="text-base-paragraph">{faq.answer}</p>
@@ -1727,7 +1727,7 @@ export function Documentation() {
 
             {/* Help Articles */}
             <section className="border-t pt-8">
-              <h3 className="text-2xl font-bold text-base-heading mb-6">
+              <h3 className="text-2xl font-bold text-base-heading mb-6 font-heading">
                 Detailed Help Articles
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1735,7 +1735,7 @@ export function Documentation() {
                   to="/help/create-first-book"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors"
                 >
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading mb-2 font-heading">
                     How to create your first book with AI
                   </h4>
                   <p className="text-base-paragraph text-sm mb-3">
@@ -1752,7 +1752,7 @@ export function Documentation() {
                   to="/help/credit-system"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors"
                 >
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading mb-2 font-heading">
                     Understanding the credit system
                   </h4>
                   <p className="text-base-paragraph text-sm mb-3">
@@ -1769,7 +1769,7 @@ export function Documentation() {
                   to="/help/ai-best-practices"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors"
                 >
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading mb-2 font-heading">
                     Best practices for AI-generated content
                   </h4>
                   <p className="text-base-paragraph text-sm mb-3">
@@ -1786,7 +1786,7 @@ export function Documentation() {
                   to="/help/team-collaboration"
                   className="block bg-white shadow-md rounded-lg p-6 hover:bg-brand-secondary/30 transition-colors"
                 >
-                  <h4 className="font-semibold text-base-heading mb-2">
+                  <h4 className="font-semibold text-base-heading mb-2 font-heading">
                     Setting up team collaboration
                   </h4>
                   <p className="text-base-paragraph text-sm mb-3">

@@ -53,8 +53,8 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
     return (
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-700">Account credits used:</span>
-          <span className="text-sm font-semibold text-gray-900">
+          <span className="text-sm text-gray-700 font-copy">Account credits used:</span>
+          <span className="text-sm font-semibold text-gray-900 font-copy">
             {totalConsumed}/{totalAccountCredits}
           </span>
         </div>
@@ -67,7 +67,7 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
         </div>
 
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>
+          <span className="font-copy">
             {totalAccountCredits > 0
               ? `${Math.round(
                   (currentCredits / totalAccountCredits) * 100
@@ -82,13 +82,13 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-base-heading">
+        <h2 className="text-2xl font-bold text-base-heading font-heading">
           Current Subscription
         </h2>
         {currentPlan && (
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-base-paragraph" />
-            <span className="text-base-heading">
+            <span className="text-base-heading font-copy">
               Next billing date:{" "}
               {currentSubscription?.current_period_end
                 ? new Date(
@@ -102,15 +102,15 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-2">
-          <div className="text-base-heading">Current Plan</div>
-          <div className="text-lg font-bold text-base-paragraph">
+          <div className="text-base-heading font-copy">Current Plan</div>
+          <div className="text-lg font-bold text-base-paragraph font-copy">
             {currentPlanDetails?.name || "No Active Plan"}
           </div>
-          <div className="text-base-heading">
+          <div className="text-base-heading font-copy">
             {currentPlanDetails ? `$${currentPlanDetails.price}/month` : "Free"}
           </div>
           {currentPlan && (
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 font-copy">
               Monthly credits: {currentPlanDetails?.credits || 0}
             </div>
           )}
@@ -119,7 +119,7 @@ export const CurrentPlanSection: React.FC<CurrentPlanSectionProps> = ({
         {currentPlan && (
           <>
             <div className="space-y-2">
-              <div className="text-base-heading">Credit Balance</div>
+              <div className="text-base-heading font-copy">Credit Balance</div>
               {renderCreditBalance()}
             </div>
 

@@ -48,7 +48,7 @@ export const PricingPlansSection: React.FC<PricingPlansSectionProps> = ({
 
   return (
     <div className="space-y-12 mt-20">
-      <h2 className="text-3xl font-bold text-base-heading text-center">
+      <h2 className="text-3xl font-bold text-base-heading text-center font-heading">
         Available Plans
       </h2>
 
@@ -76,17 +76,17 @@ export const PricingPlansSection: React.FC<PricingPlansSectionProps> = ({
 
       {/* Additional Info */}
       <div className="mt-40 text-center">
-        <p className="text-base-paragraph mb-4">
+        <p className="text-base-paragraph mb-4 font-copy">
           All plans include our core AI writing features and export capabilities
         </p>
         <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-          <p className="text-base-paragraph">
+          <p className="text-base-paragraph font-copy">
             <span className="text-brand-accent">✓</span> AI story generation
           </p>
-          <p className="text-base-paragraph">
+          <p className="text-base-paragraph font-copy">
             <span className="text-brand-accent">✓</span> Character development
           </p>
-          <p className="text-base-paragraph">
+          <p className="text-base-paragraph font-copy">
             <span className="text-brand-accent">✓</span> Plot consistency
             checking
           </p>

@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AlertCircle, CreditCard, Plus, X } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from './ui/button';
 import { useCreditPurchases } from '../hooks/useCreditPurchases';
-import { useSubscriptions } from '../hooks/useSubscriptions';
 import { useToast } from '../hooks/use-toast';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
+import { CreditPackage, fetchCreditPackages, formatPrice } from '../store/slices/creditPurchasesSlice';
+import { selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
 
 interface NoCreditsModalProps {
   isOpen: boolean;
@@ -21,25 +22,28 @@ export function NoCreditsModal({
   requiredCredits = 1, 
   action = "perform this action"
 }: NoCreditsModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const { balance: {current_balance} } = useSelector((state: RootState) => state.userCredits);
-  const { packages, loading, purchaseCredits, formatPrice } = useCreditPurchases();
-  const { hasActiveSubscription } = useSubscriptions()
+  const { packages, status: creditPackagesStatus } = useSelector((state: RootState) => state.creditPurchases);
+  const { processCreditPurchase } = useCreditPurchases();
+  const hasActiveSubscription = useSelector(selectHasActiveSubscription);
   const { toast } = useToast();
 
-  const handlePurchase = async (packageId: string) => {
-    const result = await purchaseCredits(packageId);
-    
-    if (result.success) {
-      toast({
-        title: "Credits Purchased!",
-        description: "Your credits have been added to your account.",
-        variant: "default",
-      });
+  useEffect(() => {
+    if (creditPackagesStatus === "idle") {
+      dispatch(fetchCreditPackages());
+    }
+  }, [dispatch, creditPackagesStatus]);
+
+  const handlePurchase = async (selectedPackage: CreditPackage) => {
+    try {
       onClose();
-    } else {
+      processCreditPurchase(selectedPackage);
+    } catch (error) {
+      console.error("Error purchasing credits:", error);
       toast({
         title: "Purchase Failed",
-        description: result.error || "Unable to process your credit purchase. Please try again.",
+        description: "Unable to process your credit purchase. Please try again.",
         variant: "destructive",
       });
     }
@@ -74,7 +78,7 @@ export function NoCreditsModal({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <AlertCircle className="h-5 w-5 text-brand-accent" />
-              <Dialog.Title className="text-lg font-semibold leading-none tracking-tight text-base-heading">
+              <Dialog.Title className="text-lg font-semibold leading-none tracking-tight text-base-heading font-heading">
                 Insufficient Credits
               </Dialog.Title>
             </div>
@@ -84,7 +88,7 @@ export function NoCreditsModal({
             </Dialog.Close>
           </div>
 
-          <Dialog.Description className="text-sm text-base-paragraph">
+          <Dialog.Description className="text-sm text-base-paragraph font-copy">
             You need {requiredCredits} credit{requiredCredits !== 1 ? 's' : ''} to {action}, but you currently have {current_balance} credit{current_balance !== 1 ? 's' : ''}.
           </Dialog.Description>
 
@@ -94,15 +98,15 @@ export function NoCreditsModal({
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <CreditCard className="h-4 w-4 text-state-warning" />
-                  <span className="text-sm font-medium text-state-warning">Credit Status</span>
+                  <span className="text-sm font-medium text-state-warning font-copy">Credit Status</span>
                 </div>
 
                 {current_balance && (
                   <div className="text-right">
-                    <div className="text-sm text-state-warning">
+                    <div className="text-sm text-state-warning font-copy">
                         {current_balance} / {requiredCredits} credits
                     </div>
-                    <div className="text-xs text-state-error">
+                    <div className="text-xs text-state-error font-copy">
                         {requiredCredits - current_balance} more needed
                     </div>
                   </div>  
@@ -112,11 +116,11 @@ export function NoCreditsModal({
             </div>
 
             {/* Purchase Options */}
-            {!hasActiveSubscription ? (
+            {hasActiveSubscription ? (
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-900">Purchase Credits</h3>
+                <h3 className="text-sm font-medium text-gray-900 font-heading">Purchase Credits</h3>
                 
-                {loading ? (
+                {creditPackagesStatus === "idle" ? (
                   <div className="space-y-2">
                     {[1, 2].map((i) => (
                       <div key={i} className="bg-gray-50 rounded-lg p-3 animate-pulse">
@@ -140,29 +144,26 @@ export function NoCreditsModal({
                           <div className="flex items-center space-x-3">
                             <div className="flex-1">
                               <div className="flex items-center space-x-2">
-                                <span className="font-medium text-base-heading">
+                                <span className="font-medium text-base-heading font-copy">
                                   {pkg.credits_amount} Credits
                                 </span>
                                 {pkg.discount_percentage > 0 && (
-                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-copy">
                                     Save {pkg.discount_percentage}%
                                   </span>
                                 )}
                                 {recommendedPackage?.id === pkg.id && (
-                                  <span className="text-xs bg-brand-accent text-white px-2 py-1 rounded">
+                                  <span className="text-xs bg-brand-accent text-white px-2 py-1 rounded font-copy">
                                     Recommended
                                   </span>
                                 )}
                               </div>
-                              <div className="text-sm text-base-paragraph">
+                              <div className="text-sm text-base-paragraph font-copy">
                                 {formatPrice(pkg.price_cents, pkg.currency)}
                               </div>
                             </div>
                           </div>
-                          <Button
-                            onClick={() => handlePurchase(pkg.id)}
-                            disabled={loading}
-                          >
+                          <Button onClick={() => handlePurchase(pkg)}>
                             Buy
                           </Button>
                         </div>
@@ -174,7 +175,7 @@ export function NoCreditsModal({
             ) : (
               <div className="bg-state-info-light border border-state-info rounded-lg p-4">
                 <div className="flex items-start">
-                  <div className="text-sm text-state-info">
+                  <div className="text-sm text-state-info font-copy">
                     <strong>Subscription Required:</strong> You need an active subscription to purchase credits. 
                     Please upgrade your account to continue.
                   </div>
@@ -201,8 +202,7 @@ export function NoCreditsModal({
             </Button>
             {hasActiveSubscription && recommendedPackage && (
               <Button 
-                onClick={() => handlePurchase(recommendedPackage.id)}
-                disabled={loading}
+                onClick={() => handlePurchase(recommendedPackage)}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Buy {recommendedPackage.credits_amount} Credits

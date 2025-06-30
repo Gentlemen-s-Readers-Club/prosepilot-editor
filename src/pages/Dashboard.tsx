@@ -5,7 +5,7 @@ import { BookList } from '../components/BookList';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { toast } from '../hooks/use-toast';
-import { fetchBooks } from '../store/slices/booksSlice';
+import { fetchBooks, updateBookInList } from '../store/slices/booksSlice';
 import { fetchCategories } from '../store/slices/categoriesSlice';
 import { fetchLanguages } from '../store/slices/languagesSlice';
 import { hasProOrStudioPlan, hasStudioPlan, selectHasActiveSubscription } from '../store/slices/subscriptionSlice';
@@ -174,8 +174,16 @@ export function Dashboard() {
             table: 'books',
             // filter: `user_id=eq.${session.user.id}`,
           },
-          () => {
-            dispatch(fetchBooks());
+          (payload) => {
+            if (payload.eventType === 'INSERT') {
+              dispatch(fetchBooks());
+            }
+            if (payload.eventType === 'UPDATE') {
+              dispatch(updateBookInList({
+                bookId: payload.new.id,
+                updates: payload.new,
+              }));
+            }
           }
         )
         .subscribe();
@@ -321,8 +329,8 @@ export function Dashboard() {
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-base-heading">My Library</h1>
-              <p className="text-base-paragraph mt-1">Manage and organize your writing projects</p>
+              <h1 className="text-3xl font-bold text-base-heading font-heading">My Library</h1>
+              <p className="text-base-paragraph mt-1 font-copy">Manage and organize your writing projects</p>
             </div>
             <Button
               className="flex items-center gap-2"
@@ -341,7 +349,7 @@ export function Dashboard() {
               {/* Filters */}
               <div className="bg-white rounded-lg shadow-md p-4 lg:p-6">
                 <div className="flex items-center justify-between lg:mb-4">
-                  <h2 className="text-lg font-semibold text-base-heading">Filters</h2>
+                  <h2 className="text-lg font-bold text-base-heading font-heading">Filters</h2>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -354,7 +362,7 @@ export function Dashboard() {
                 
                 <div className={`space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-base-heading">Category</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading font-copy">Category</label>
                     <CustomSelect
                       value={{
                         value: selectedCategory,
@@ -372,7 +380,7 @@ export function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-base-heading">Language</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading font-copy">Language</label>
                     <CustomSelect
                       value={{
                         value: selectedLanguage,
@@ -390,7 +398,7 @@ export function Dashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-base-heading">Status</label>
+                    <label className="block text-sm font-medium mb-2 text-base-heading font-copy">Status</label>
                     <CustomSelect
                       value={{
                         value: selectedStatus,
@@ -409,42 +417,42 @@ export function Dashboard() {
 
                   {/* Quick Links */}
                   <div className="pt-4 border-t border-brand-accent">
-                    <h3 className="text-sm font-medium text-base-heading mb-3">Quick Filters</h3>
+                    <h3 className="text-sm font-semibold text-base-heading mb-3 font-heading">Quick Filters</h3>
                     <div className="space-y-2">
                       <button 
                         onClick={() => setSelectedStatus('published')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
                         <Rocket className="w-4 h-4 text-brand-accent" />
-                        <span>Published Books</span>
+                        <span className="font-copy">Published Books</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('writing')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
                         <Clock className="w-4 h-4 text-brand-accent" />
-                        <span>In Progress</span>
+                        <span className="font-copy">In Progress</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('draft')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
                         <Bookmark className="w-4 h-4 text-brand-accent" />
-                        <span>Drafts</span>
+                        <span className="font-copy">Drafts</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('reviewing')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
                         <Pencil className="w-4 h-4 text-brand-accent" />
-                        <span>Reviewing</span>
+                        <span className="font-copy">Reviewing</span>
                       </button>
                       <button 
                         onClick={() => setSelectedStatus('archived')}
                         className="flex items-center gap-2 w-full text-left px-3 py-2 text-sm text-base-paragraph rounded-md hover:bg-base-background"
                       >
                         <Archive className="w-4 h-4 text-brand-accent" />
-                        <span>Archived</span>
+                        <span className="font-copy">Archived</span>
                       </button>
                     </div>
                   </div>
@@ -526,13 +534,13 @@ export function Dashboard() {
               {/* Active Filters */}
               {activeFilters.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
-                  <span className="text-sm text-gray-500">Active filters:</span>
+                  <span className="text-sm text-gray-500 font-copy">Active filters:</span>
                   {activeFilters.map(filter => (
                     <div 
                       key={filter} 
                       className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs"
                     >
-                      <span>{filter}</span>
+                      <span className="font-copy">{filter}</span>
                       <button 
                         onClick={() => clearFilter(filter)}
                         className="text-gray-500 hover:text-base-heading"
@@ -543,7 +551,7 @@ export function Dashboard() {
                   ))}
                   <button 
                     onClick={clearAllFilters}
-                    className="text-xs text-base-heading hover:text-base-heading/80"
+                    className="text-xs text-base-heading hover:text-base-heading/80 font-copy"
                   >
                     Clear all
                   </button>
@@ -554,10 +562,10 @@ export function Dashboard() {
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <ArrowUpDown className="w-4 h-4" />
-                  <span>Sorted by {sortBy.label}</span>
+                  <span className="font-copy">Sorted by {sortBy.label}</span>
                   {getSortIcon()}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-500 font-copy">
                   {sortedBooks.length} book{sortedBooks.length !== 1 ? 's' : ''} found
                 </div>
               </div>
@@ -569,8 +577,8 @@ export function Dashboard() {
                   <div className="bg-base-background rounded-full p-4 mb-4">
                     <BookOpen className="w-12 h-12 text-base-heading" />
                   </div>
-                  <h3 className="text-lg font-medium text-base-heading mb-2">No books yet</h3>
-                  <p className="text-base-paragraph max-w-md mb-6">
+                  <h3 className="text-lg font-bold text-base-heading mb-2 font-heading">No books yet</h3>
+                  <p className="text-base-paragraph max-w-md mb-6 font-copy">
                     Start your writing journey by creating your first book. Our AI will help you transform your ideas into compelling stories.
                   </p>
                   <Button 
@@ -594,8 +602,8 @@ export function Dashboard() {
                   <div className="bg-base-background rounded-full p-4 mb-4">
                     <Search className="w-12 h-12 text-base-heading" />
                   </div>
-                  <h3 className="text-lg font-medium text-base-heading mb-2">No books found</h3>
-                  <p className="text-base-paragraph max-w-md mb-6">
+                  <h3 className="text-lg font-medium text-base-heading mb-2 font-heading">No books found</h3>
+                  <p className="text-base-paragraph max-w-md mb-6 font-copy">
                     We couldn't find any books matching your current filters. Try adjusting your search criteria or clear the filters to see all books.
                   </p>
                   <Button onClick={clearAllFilters}>

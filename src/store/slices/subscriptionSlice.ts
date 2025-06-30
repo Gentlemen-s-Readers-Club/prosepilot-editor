@@ -37,7 +37,6 @@ interface SubscriptionState extends ApiState {
   activeSubscriptions: Subscription[];
   currentPlan: string | null;
   subscriptionStatus: SubscriptionStatus;
-  realtimeSubscription: any; // Supabase realtime subscription
 }
 
 // Define plan hierarchy for upgrade/downgrade logic
@@ -60,7 +59,6 @@ const initialState: SubscriptionState = {
     hasMultipleSubscriptions: false,
     pendingCancellation: false,
   },
-  realtimeSubscription: null,
   status: "idle",
   error: null,
 };
@@ -187,33 +185,6 @@ export const fetchUserSubscription = createAsyncThunk<
   }
 );
 
-export const setupRealtimeSubscriptions = createAsyncThunk<
-  any,
-  string,
-  { state: RootState; dispatch: any }
->(
-  "subscription/setupRealtimeSubscriptions",
-  async (userId: string, { dispatch }) => {
-    const subscription = supabase
-      .channel('subscription-changes')
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "subscriptions",
-          // filter: `user_id=eq.${userId} and environment=eq.${environment}`,
-        },
-        () => {
-          dispatch(fetchUserSubscription());
-        }
-      )
-      .subscribe();
-
-    return subscription;
-  }
-);
-
 const subscriptionSlice = createSlice({
   name: "subscription",
   initialState,
@@ -286,12 +257,6 @@ const subscriptionSlice = createSlice({
         state.currentPlan
       );
     },
-    clearRealtimeSubscription: (state) => {
-      if (state.realtimeSubscription) {
-        state.realtimeSubscription.unsubscribe();
-        state.realtimeSubscription = null;
-      }
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -320,9 +285,6 @@ const subscriptionSlice = createSlice({
       .addCase(fetchUserSubscription.rejected, (state, action) => {
         state.status = "error";
         state.error = action.error.message || "Failed to fetch subscriptions";
-      })
-      .addCase(setupRealtimeSubscriptions.fulfilled, (state, action) => {
-        state.realtimeSubscription = action.payload;
       });
   },
 });
@@ -345,16 +307,6 @@ export const selectHasActiveSubscription = (state: {
 export const selectCanSubscribeToNewPlan = (state: {
   subscription: SubscriptionState;
 }) => state.subscription.activeSubscriptions.length === 0;
-
-// Helper functions
-export const hasActivePlan = (
-  state: { subscription: SubscriptionState },
-  priceId: string
-): boolean => {
-  return state.subscription.activeSubscriptions.some(
-    (sub) => sub.price_id === priceId
-  );
-};
 
 // Helper function to check if user has Studio plan
 export const hasStudioPlan = (state: {
@@ -382,7 +334,6 @@ export const {
   addSubscription,
   updateSubscription,
   removeSubscription,
-  clearRealtimeSubscription,
 } = subscriptionSlice.actions;
 
 export default subscriptionSlice.reducer;

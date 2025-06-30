@@ -6,7 +6,7 @@ import { Label } from '../components/ui/label';
 import { CustomSelect, SelectOption } from '../components/ui/select';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '../components/SEOHead';
 import useAnalytics from '../hooks/useAnalytics';
 import { supabase } from '../lib/supabase';
 import { toast } from '../hooks/use-toast';
@@ -117,15 +117,17 @@ export function Support() {
 
   return (
     <>
-      <Helmet>
-        <title>ProsePilot - Support</title>
-      </Helmet>
+      <SEOHead
+        title="Support - Get Help with ProsePilot"
+        description="Get help with ProsePilot's AI writing platform. Contact our support team for technical assistance, billing questions, feature guidance, and account issues."
+        keywords="ProsePilot support, AI writing help, technical support, customer service, writing platform assistance"
+      />
       {/* Contact Form */}
       <div className="bg-base-background py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl">How can we help you?</h1>
-            <p className="mt-4 text-xl text-base-paragraph">
+            <h1 className="text-4xl font-bold text-base-heading sm:text-5xl font-heading">How can we help you?</h1>
+            <p className="mt-4 text-xl text-base-paragraph font-copy">
               Send us a message and we'll get back to you within 24 hours
             </p>
           </div>

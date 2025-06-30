@@ -90,67 +90,9 @@ export const useSubscriptionManagement = () => {
     }
   };
 
-  // Get subscription details from Paddle
-  const getSubscriptionDetails = async (
-    subscriptionId: string
-  ): Promise<SubscriptionManagementResponse> => {
-    if (!user) {
-      const error = "User not authenticated";
-      setError(error);
-      return { success: false, error };
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      console.log("📋 Fetching subscription details:", subscriptionId);
-
-      const { data, error } = await supabase.functions.invoke(
-        "handle-subscription-management",
-        {
-          body: {
-            action: "get_subscription_details",
-            user_id: user.id,
-            subscription_id: subscriptionId,
-          },
-        }
-      );
-
-      if (error) {
-        console.error("❌ Supabase function error:", error);
-        throw error;
-      }
-
-      if (!data.success) {
-        console.error("❌ Failed to fetch details:", data.error);
-        throw new Error(data.error);
-      }
-
-      console.log("✅ Subscription details fetched:", data);
-
-      return {
-        success: true,
-        subscription: data.subscription,
-      };
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Failed to fetch subscription details";
-      console.error("❌ Error fetching subscription details:", err);
-      setError(errorMessage);
-
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return {
     loading,
     error,
     cancelSubscription,
-    getSubscriptionDetails,
   };
 };

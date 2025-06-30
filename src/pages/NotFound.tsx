@@ -1,17 +1,11 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { Button } from '../components/ui/button';
-import { Home, Search, BookOpen, ArrowRight } from 'lucide-react';
 import Footer from '../components/Footer';
+import { SEOHead } from '../components/SEOHead';
 import useAnalytics from '../hooks/useAnalytics';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
 
 export function NotFound() {
-  const { session } = useSelector((state: RootState) => ({
-    session: state.auth.session,
-  })); 
   const { trackPageView } = useAnalytics({
     measurementId: import.meta.env.VITE_ANALYTICS_ID,
   });
@@ -22,9 +16,10 @@ export function NotFound() {
 
   return (
     <>
-      <Helmet>
-        <title>Page Not Found - ProsePilot</title>
-      </Helmet>
+      <SEOHead 
+        title="Page Not Found - ProsePilot" 
+        description="Sorry, we couldn't find the page you're looking for. Navigate back to our homepage or explore our help resources."
+      />
       
       <div className="min-h-screen bg-base-background flex flex-col">
         {/* Main Content */}
@@ -32,58 +27,37 @@ export function NotFound() {
           <div className="max-w-md w-full text-center">
             {/* 404 Number */}
             <div className="mb-8">
-              <h1 className="text-9xl font-bold text-brand-accent/20">404</h1>
+              <h1 className="text-9xl font-bold text-brand-accent/20 font-heading">404</h1>
             </div>
 
             {/* Main Message */}
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-base-heading mb-4">
-                Page Not Found
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-base-heading font-heading mb-4">
+                Page not found
               </h2>
-              <p className="text-lg text-base-paragraph">
+              <p className="text-lg text-base-paragraph font-copy mb-8">
                 Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or you entered the wrong URL.
               </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-4 mb-12">
-              <Link to="/">
-                <Button className="w-full py-3">
-                  <Home className="mr-2 h-5 w-5" />
-                  Go to Homepage
-                </Button>
-              </Link>
-              
-              {session && (
-                <Link to="/workspace">
-                  <Button variant="outline" className="w-full py-3">
-                    <BookOpen className="mr-2 h-5 w-5" />
-                    Go to Dashboard
+              <div className="space-y-4">
+                <Link to="/">
+                  <Button className="w-full sm:w-auto">
+                    Go back home
                   </Button>
                 </Link>
-              )}
-            </div>
-
-            {/* Helpful Links */}
-            <div className="border-t border-base-border pt-8">
-              <h3 className="text-lg font-semibold text-base-heading mb-4">
-                Looking for something specific?
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Link 
-                  to="/docs"
-                  className="flex items-center justify-center p-3 rounded-lg border border-base-border hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-colors"
-                >
-                  <Search className="mr-2 h-4 w-4 text-brand-accent" />
-                  <span className="text-sm font-medium text-base-paragraph">Documentation</span>
-                </Link>
-                <Link 
-                  to="/support"
-                  className="flex items-center justify-center p-3 rounded-lg border border-base-border hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-colors"
-                >
-                  <span className="text-sm font-medium text-base-paragraph">Get Support</span>
-                  <ArrowRight className="ml-2 h-4 w-4 text-brand-accent" />
-                </Link>
+                <div className="text-sm text-base-paragraph font-copy">
+                  <p>Or try one of these popular pages:</p>
+                  <div className="mt-2 space-y-2">
+                    <Link to="/signup" className="block text-brand-accent hover:text-brand-accent/80 font-copy">
+                      Start writing your book
+                    </Link>
+                    <Link to="/help" className="block text-brand-accent hover:text-brand-accent/80 font-copy">
+                      Help & documentation
+                    </Link>
+                    <Link to="/pricing" className="block text-brand-accent hover:text-brand-accent/80 font-copy">
+                      View pricing plans
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -91,6 +65,32 @@ export function NotFound() {
 
         {/* Footer */}
         <Footer />
+      </div>
+
+      {/* Additional Help Section */}
+      <div className="bg-base-background py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-base-heading font-heading mb-4">
+              Still can't find what you're looking for?
+            </h3>
+            <p className="text-base-paragraph font-copy mb-6">
+              Our support team is here to help you get back on track.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/support">
+                <Button variant="outline">
+                  Contact Support
+                </Button>
+              </Link>
+              <Link to="/help">
+                <Button variant="outline">
+                  Browse Help Center
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

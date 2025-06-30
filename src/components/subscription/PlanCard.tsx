@@ -72,12 +72,12 @@ export const PlanCard: React.FC<PlanCardProps> = ({
       } ${plan.comingSoon ? "opacity-75" : ""}`}
     >
       {plan.isPopular && (
-        <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+        <div className="absolute top-0 right-0 bg-brand-accent text-white px-4 py-1 text-sm font-medium rounded-bl-lg font-copy">
           Most Popular
         </div>
       )}
       {plan.comingSoon && (
-        <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg">
+        <div className="absolute top-0 right-0 bg-state-info text-white px-4 py-1 text-sm font-medium rounded-bl-lg font-copy">
           Coming Soon
         </div>
       )}
@@ -91,21 +91,21 @@ export const PlanCard: React.FC<PlanCardProps> = ({
             >
               {plan.icon}
             </div>
-            <h3 className="text-2xl font-bold text-base-heading">
+            <h3 className="text-2xl font-bold text-base-heading font-heading">
               {plan.name}
             </h3>
-            <p className="text-base-paragraph mt-2">{plan.description}</p>
+            <p className="text-base-paragraph mt-2 font-copy">{plan.description}</p>
           </div>
 
           {/* Pricing */}
           <div className="text-center mb-8">
             <div className="flex items-baseline justify-center">
-              <span className="text-5xl font-extrabold text-base-heading">
+              <span className="text-5xl font-bold text-base-heading font-copy">
                 {formatPrice(plan.paddlePrice?.unitPrice.amount)}
               </span>
-              <span className="text-xl text-gray-500 ml-1">/month</span>
+              <span className="text-xl text-gray-500 ml-1 font-copy">/month</span>
             </div>
-            <div className="mt-2 text-sm text-gray-500">
+            <div className="mt-2 text-sm text-gray-500 font-copy">
               {plan.credits === -1
                 ? "Unlimited credits"
                 : `${plan.credits} credits included`}
@@ -117,7 +117,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({
             {plan.features.map((feature, index) => (
               <li key={index} className="flex items-start">
                 <Check className="h-5 w-5 text-state-success shrink-0 mt-0.5" />
-                <span className="ml-3 text-gray-700 text-sm">{feature}</span>
+                <span className="ml-3 text-gray-700 text-sm font-copy">{feature}</span>
               </li>
             ))}
           </ul>

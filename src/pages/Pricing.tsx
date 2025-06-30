@@ -19,23 +19,27 @@ import { plans } from '../lib/consts';
 const faqs = [
   {
     question: "What are credits and how do they work?",
-    answer: "Credits are used to generate books. Each book costs 5 credits to create. Credits reset monthly with your subscription and unused credits don't roll over."
+    answer: "Credits are used to generate books. Each book costs 5 credits to create. Credits are included with your subscription and unused credits carry over with no maximum limit."
+  },
+  // {
+  //   question: "Can I upgrade or downgrade my plan anytime?",
+  //   answer: "Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at your next billing cycle."
+  // },
+  {
+    question: "Can I buy additional credits?",
+    answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
   },
   {
-    question: "Can I upgrade or downgrade my plan anytime?",
-    answer: "Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at your next billing cycle."
-  },
-  {
-    question: "Do you offer annual billing discounts?",
-    answer: "Yes! Annual subscribers save 20% compared to monthly billing. You can switch to annual billing from your subscription settings."
+    question: "Can I cancel my subscription anytime?",
+    answer: "Yes! You can cancel your subscription anytime. You'll be able to use your credits until the end of your current billing period."
   },
   {
     question: "What happens to my books if I cancel?",
     answer: "Your books remain accessible in read-only mode. You can still export them, but editing requires an active subscription."
   },
   {
-    question: "Can I buy additional credits?",
-    answer: "Yes! You can purchase credit packs anytime from your subscription page. These credits never expire and stack with your monthly allowance."
+    question: "Can I get a refund?",
+    answer: "We do not offer refunds for our subscription services. However, you can cancel your subscription anytime."
   }
 ];
 
@@ -71,7 +75,7 @@ export function Pricing() {
       <div className="bg-white pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl">
+            <h1 className="text-4xl font-extrabold text-base-heading sm:text-5xl font-heading">
               Choose Your Writing Plan
             </h1>
             <p className="mt-4 text-xl text-base-paragraph max-w-3xl mx-auto">
@@ -122,7 +126,7 @@ export function Pricing() {
                     <div className={`${plan.color} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4`}>
                       {renderIcon(plan.icon)}
                     </div>
-                    <h3 className="text-2xl font-bold text-base-heading">{plan.name}</h3>
+                    <h3 className="text-2xl font-bold text-base-heading font-heading">{plan.name}</h3>
                     <p className="text-base-paragraph mt-2">{plan.description}</p>
                   </div>
 
@@ -183,7 +187,7 @@ export function Pricing() {
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-base-heading">Need More Credits?</h2>
+            <h2 className="text-3xl font-extrabold text-base-heading font-heading">Need More Credits?</h2>
             <p className="mt-4 text-xl text-base-paragraph">
               Purchase additional credits that never expire
             </p>
@@ -235,7 +239,7 @@ export function Pricing() {
       <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-base-heading">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-extrabold text-base-heading font-heading">Frequently Asked Questions</h2>
             <p className="mt-4 text-xl text-base-paragraph">
               Everything you need to know about our pricing
             </p>
@@ -244,7 +248,7 @@ export function Pricing() {
           <div className="space-y-8">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-base-heading mb-3 flex items-center">
+                <h3 className="text-lg font-semibold text-base-heading mb-3 flex items-center font-heading">
                   <HelpCircle className="w-5 h-5 text-base-heading mr-3" />
                   {faq.question}
                 </h3>

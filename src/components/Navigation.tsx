@@ -71,7 +71,7 @@ export function Navigation() {
                 alt="ProsePilot Logo"
                 className="h-10 w-10"
               />
-              <span className="ml-2 text-xl font-bold text-base-heading">
+              <span className="ml-2 text-xl font-bold text-base-heading font-heading">
                 ProsePilot
               </span>
             </div>
@@ -85,7 +85,7 @@ export function Navigation() {
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <CreditCard className="h-4 w-4 text-brand-accent" />
-                <span>Pricing</span>
+                <span className="font-copy">Pricing</span>
               </button>
             ) : (
               <button
@@ -93,7 +93,7 @@ export function Navigation() {
                 className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <LayoutDashboard className="h-4 w-4 text-brand-accent" />
-                <span>Dashboard</span>
+                <span className="font-copy">Dashboard</span>
               </button>
             )}
 
@@ -102,7 +102,7 @@ export function Navigation() {
               className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               <BookOpen className="h-4 w-4 text-brand-accent" />
-              <span>Documentation</span>
+              <span className="font-copy">Documentation</span>
             </button>
 
             <button
@@ -110,7 +110,7 @@ export function Navigation() {
               className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               <MessageCircle className="h-4 w-4 text-brand-accent" />
-              <span>Support</span>
+              <span className="font-copy">Support</span>
             </button>
 
             {!session && (
@@ -120,7 +120,7 @@ export function Navigation() {
                   className="flex items-center space-x-2 text-base-paragraph hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   <User className="h-4 w-4 text-brand-accent" />
-                  <span>Login</span>
+                  <span className="font-copy">Login</span>
                 </button>
                 <Link to="/signup">
                   <Button>Get Started</Button>
@@ -144,12 +144,12 @@ export function Navigation() {
                       <User className="h-5 w-5 text-base-heading" />
                     </div>
                   )}
-                  <span className="text-sm font-medium text-base-paragraph hidden sm:block">
+                  <span className="text-sm font-medium text-base-paragraph font-copy hidden sm:block">
                     {profile.full_name}
                   </span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel className="text-base-heading">
+                  <DropdownMenuLabel className="text-base-heading font-heading">
                     My Account
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -158,14 +158,14 @@ export function Navigation() {
                     onClick={() => navigate("/workspace/profile")}
                   >
                     <User className="mr-2 h-4 w-4 text-brand-accent" />
-                    <span className="text-base-paragraph">Edit Profile</span>
+                    <span className="font-copy">Edit Profile</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => navigate("/workspace/subscription")}
                   >
                     <CreditCard className="mr-2 h-4 w-4 text-brand-accent" />
-                    <span className="text-base-paragraph">
+                    <span className="font-copy">
                       Manage Subscription
                     </span>
                   </DropdownMenuItem>
@@ -175,7 +175,7 @@ export function Navigation() {
                     onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4 text-brand-accent" />
-                    <span className="text-base-paragraph">Log out</span>
+                    <span className="font-copy">Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -213,7 +213,7 @@ export function Navigation() {
               className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
             >
               <LayoutDashboard className="h-5 w-5 text-brand-accent" />
-              <span>Dashboard</span>
+              <span className="font-copy">Dashboard</span>
             </button>
           )}
           <button
@@ -224,7 +224,7 @@ export function Navigation() {
             className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
           >
             <MessageCircle className="h-5 w-5 text-brand-accent" />
-            <span>Support</span>
+            <span className="font-copy">Support</span>
           </button>
 
           {!session && (
@@ -236,7 +236,7 @@ export function Navigation() {
               className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
             >
               <CreditCard className="h-5 w-5 text-brand-accent" />
-              <span>Pricing</span>
+              <span className="font-copy">Pricing</span>
             </button>
           )}
 
@@ -248,7 +248,7 @@ export function Navigation() {
             className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
           >
             <BookOpen className="h-5 w-5 text-brand-accent" />
-            <span>Documentation</span>
+            <span className="font-copy">Documentation</span>
           </button>
 
           {!session ? (
@@ -261,7 +261,7 @@ export function Navigation() {
                 className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium transition-colors"
               >
                 <User className="h-5 w-5 text-brand-accent" />
-                <span>Login</span>
+                <span className="font-copy">Login</span>
               </button>
               <button
                 onClick={() => {
@@ -270,7 +270,7 @@ export function Navigation() {
                 }}
                 className="flex items-center w-full text-left space-x-2 bg-brand-primary text-white px-3 py-2 rounded-md text-base font-medium"
               >
-                <span>Get Started</span>
+                <span className="font-copy">Get Started</span>
               </button>
             </>
           ) : (
@@ -291,7 +291,7 @@ export function Navigation() {
                             <User className="h-5 w-5 text-base-heading" />
                           </div>
                         )}
-                        <span className="font-medium text-base-heading">
+                        <span className="font-medium text-base-heading font-heading">
                           {profile.full_name}
                         </span>
                       </div>
@@ -304,7 +304,7 @@ export function Navigation() {
                         className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                       >
                         <User className="h-4 w-4 text-brand-accent" />
-                        <span>Edit Profile</span>
+                        <span className="font-copy">Edit Profile</span>
                       </button>
 
                       <button
@@ -315,7 +315,7 @@ export function Navigation() {
                         className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                       >
                         <CreditCard className="h-4 w-4 text-brand-accent" />
-                        <span>Manage Subscription</span>
+                        <span className="font-copy">Manage Subscription</span>
                       </button>
 
                       <button
@@ -326,7 +326,7 @@ export function Navigation() {
                         className="flex items-center w-full text-left space-x-2 text-base-paragraph hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                       >
                         <LogOut className="h-4 w-4 text-brand-accent" />
-                        <span>Log out</span>
+                        <span className="font-copy">Log out</span>
                       </button>
                     </div>
                   </>

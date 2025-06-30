@@ -41,14 +41,14 @@ export function FileUpload({ onFileSelect, className, showInstructions = true, l
         {loading ? (
           <>
             <Loader2 className="w-12 h-12 text-brand-accent mb-4 animate-spin" />
-            <p className="text-sm text-base-heading">
+            <p className="text-sm text-base-heading font-copy">
               Processing your image...
             </p>
           </>
         ) : (
           <>
             <Upload className="w-12 h-12 text-brand-accent mb-4" />
-            <p className="text-sm text-base-heading">
+            <p className="text-sm text-base-heading font-copy">
               {isDragActive ? (
                 "Drop the file here"
               ) : (
@@ -56,7 +56,7 @@ export function FileUpload({ onFileSelect, className, showInstructions = true, l
               )}
             </p>
             {showInstructions && (
-              <p className="text-xs text-base-paragraph mt-2">
+              <p className="text-xs text-base-paragraph mt-2 font-copy">
                 Supports: JPG, PNG, GIF (max 5MB)
               </p>
             )}

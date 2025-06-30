@@ -280,9 +280,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
         {/* Header with progress indicator - Fixed */}
         <div className="flex justify-between items-center p-6 border-b bg-white sticky top-0 z-10">
           <div className="flex-1">
-            <DrawerTitle className="text-2xl font-bold text-base-heading">
-              Create New Book
-            </DrawerTitle>
+            <DrawerTitle className="text-2xl font-bold text-base-heading font-heading">Create New Book</DrawerTitle>
             <div className="flex items-center mt-2">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
@@ -343,7 +341,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
             <div className="flex items-center justify-center h-full p-6">
               <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-10 h-10 text-base-heading animate-spin" />
-                <p className="text-base-paragraph">Loading...</p>
+                <p className="text-base-paragraph font-copy">Loading...</p>
               </div>
             </div>
           ) : (
@@ -353,12 +351,12 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
                       <AlertCircle className="h-5 w-5 text-state-error" />
-                      <h3 className="text-sm font-medium text-state-error">
+                      <h3 className="text-sm font-medium text-state-error font-heading">
                         Error
                       </h3>
                     </div>
                     <div className="ml-3">
-                      <div className="mt-2 text-sm text-state-error">
+                      <div className="mt-2 text-sm text-state-error font-copy">
                         {error}
                       </div>
                     </div>
@@ -371,13 +369,13 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
                       <AlertCircle className="h-5 w-5 text-state-error" />
-                      <h3 className="text-sm font-medium text-state-error">
+                      <h3 className="text-sm font-medium text-state-error font-heading">
                         Content Policy Violation
                       </h3>
                     </div>
                     <div className="ml-3">
-                      <div className="mt-2 text-sm text-state-error">
-                        <ul className="list-disc pl-5 space-y-2">
+                      <div className="mt-2 text-sm text-state-error font-copy">
+                        <ul className="list-disc pl-5 space-y-2 font-copy">
                           {issues.map((issue, index) => (
                             <li key={index}>{issue.description}</li>
                           ))}
@@ -396,13 +394,8 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       <Lightbulb className="h-6 w-6 text-brand-accent" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-base-heading">
-                        Story Idea or Outline
-                      </h3>
-                      <p className="text-base-paragraph text-sm">
-                        Describe your story concept, including main characters,
-                        setting, and central conflict.
-                      </p>
+                      <h3 className="text-lg font-semibold text-base-heading font-heading">Story Idea or Outline</h3>
+                      <p className="text-base-paragraph text-sm font-copy">Describe your story concept, including main characters, setting, and central conflict.</p>
                     </div>
                   </div>
 
@@ -414,7 +407,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       className="w-full h-64 p-4 border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent resize-none text-gray-700 placeholder:text-gray-400 border-gray-200"
                       disabled={isSubmitting}
                     />
-                    <div className="flex justify-between text-xs text-gray-500">
+                    <div className="flex justify-between text-xs text-gray-500 font-copy">
                       <span>{promptCharCount} characters</span>
                     </div>
                   </div>
@@ -423,18 +416,9 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     <div className="flex items-start gap-3">
                       <Lightbulb className="w-5 h-5 text-blue-600 mt-0.5" />
                       <div>
-                        <h4 className="text-sm font-medium text-blue-800 mb-1">
-                          Need help with your prompt?
-                        </h4>
-                        <p className="text-xs text-blue-700">
-                          Check out our{" "}
-                          <a
-                            href="/docs#prompt-examples"
-                            target="_blank"
-                            className="underline hover:text-blue-800"
-                          >
-                            prompt guide with examples
-                          </a>
+                        <h4 className="text-sm font-medium text-blue-800 mb-1 font-heading">Need help with your prompt?</h4>
+                        <p className="text-xs text-blue-700 font-copy">
+                          Check out our <a href="/docs#prompt-examples" target="_blank" className="underline hover:text-blue-800">prompt guide with examples</a>
                         </p>
                       </div>
                     </div>
@@ -450,21 +434,14 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       <BookOpen className="h-6 w-6 text-brand-accent" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-base-heading">
-                        Book Settings
-                      </h3>
-                      <p className="text-base-paragraph text-sm">
-                        Choose the basic properties for your book.
-                      </p>
+                      <h3 className="text-lg font-semibold text-base-heading font-heading">Book Settings</h3>
+                      <p className="text-base-paragraph text-sm font-copy">Choose the basic properties for your book.</p>
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label
-                        htmlFor="categories"
-                        className="text-gray-700 flex items-center gap-1"
-                      >
+                      <Label htmlFor="categories" className="text-base-heading flex items-center gap-1 font-copy">
                         Categories
                         <span className="text-state-error">*</span>
                       </Label>
@@ -481,21 +458,15 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                         isDisabled={isSubmitting}
                       />
                       {categoriesError && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {categoriesError}
-                        </p>
+                        <p className="text-sm text-red-600 mt-1 font-copy">{categoriesError}</p>
                       )}
-                      <p className="text-xs text-gray-500">
-                        Choose categories that best describe your book's genre
-                        and themes.
+                      <p className="text-xs text-gray-500 font-copy">
+                        Choose categories that best describe your book's genre and themes.
                       </p>
                     </div>
 
                     <div className="space-y-2">
-                      <Label
-                        htmlFor="language"
-                        className="text-gray-700 flex items-center gap-1"
-                      >
+                      <Label htmlFor="language" className="text-base-heading flex items-center gap-1 font-copy">
                         Language
                         <span className="text-state-error">*</span>
                       </Label>
@@ -511,11 +482,9 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                         isDisabled={isSubmitting}
                       />
                       {languageError && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {languageError}
-                        </p>
+                        <p className="text-sm text-red-600 mt-1 font-copy">{languageError}</p>
                       )}
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 font-copy">
                         The primary language your book will be written in.
                       </p>
                     </div>
@@ -531,20 +500,14 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                       <Sparkles className="h-6 w-6 text-brand-accent" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-base-heading">
-                        Advanced Settings
-                      </h3>
-                      <p className="text-base-paragraph text-sm">
-                        Fine-tune your book's style and tone (optional).
-                      </p>
+                      <h3 className="text-lg font-semibold text-base-heading font-heading">Advanced Settings</h3>
+                      <p className="text-base-paragraph text-sm font-copy">Fine-tune your book's style and tone (optional).</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="narrator" className="text-gray-700">
-                        Narrator Perspective
-                      </Label>
+                      <Label htmlFor="narrator" className="text-base-heading font-copy">Narrator Perspective</Label>
                       <CustomSelect
                         id="narrator"
                         value={selectedNarrator}
@@ -558,9 +521,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="style" className="text-gray-700">
-                        Literature Style
-                      </Label>
+                      <Label htmlFor="style" className="text-base-heading font-copy">Literature Style</Label>
                       <CustomSelect
                         id="style"
                         value={selectedStyle}
@@ -574,9 +535,7 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="tone" className="text-gray-700">
-                        Writing Tone
-                      </Label>
+                      <Label htmlFor="tone" className="text-base-heading font-copy">Writing Tone</Label>
                       <CustomSelect
                         id="tone"
                         value={selectedTone}
@@ -594,18 +553,12 @@ export function NewBookDrawer({ isOpen, onClose }: NewBookDrawerProps) {
                     <div className="flex items-start gap-3">
                       <Globe className="w-5 h-5 text-state-info mt-0.5 shrink-0" />
                       <div>
-                        <h4 className="text-sm font-medium text-state-info mb-1">
-                          Book Generation
-                        </h4>
-                        <p className="text-xs text-state-info">
-                          When you click "Create Book", our AI will first
-                          validate your prompt. If validation succeeds, the AI
-                          will begin writing your complete book, which takes
-                          around 30 minutes to complete.
+                        <h4 className="text-sm font-medium text-state-info mb-1 font-heading">Book Generation</h4>
+                        <p className="text-xs text-state-info font-copy">
+                          When you click "Create Book", our AI will first generate the book structure based on your settings, which typically takes 2-5 minutes. After that, the AI will begin writing your complete book, which can take up to 30 minutes to complete.
                         </p>
-                        <p className="text-xs text-state-info mt-1">
-                          <strong>Note:</strong> This will use 5 credits from
-                          your account.
+                        <p className="text-xs text-state-info mt-1 font-copy">
+                          <strong>Note:</strong> This will use 5 credits from your account.
                         </p>
                       </div>
                     </div>

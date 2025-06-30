@@ -112,7 +112,7 @@ export function SubscribeForm({
       <div className={`flex items-center gap-3 ${className}`}>
         <div className="flex items-center gap-2 text-state-success">
           <CheckCircle className="w-5 h-5" />
-          <span className="font-medium">Successfully subscribed!</span>
+          <span className="font-medium font-copy">Successfully subscribed!</span>
         </div>
       </div>
     ) : (
@@ -137,7 +137,7 @@ export function SubscribeForm({
             })}
           />
           {errors.firstName && (
-            <span className="left-0 text-xs text-state-error">
+            <span className="left-0 text-xs text-state-error font-copy">
               {errors.firstName.message}
             </span>
           )}
@@ -159,7 +159,7 @@ export function SubscribeForm({
             })}
           />
           {errors.lastName && (
-            <span className="left-0 text-xs text-state-error">
+            <span className="left-0 text-xs text-state-error font-copy">
               {errors.lastName.message}
             </span>
           )}
@@ -182,7 +182,7 @@ export function SubscribeForm({
             })}
           />
           {errors.email && (
-            <span className="left-0 text-xs text-state-error">
+            <span className="left-0 text-xs text-state-error font-copy">
               {errors.email.message}
             </span>
           )}
@@ -203,7 +203,7 @@ export function SubscribeForm({
       <div className={`flex items-center gap-3 ${className}`}>
         <div className="flex items-center gap-2 text-state-success">
           <CheckCircle className="w-5 h-5" />
-          <span className="font-medium">Successfully subscribed!</span>
+          <span className="font-medium font-copy">Successfully subscribed!</span>
         </div>
       </div>
     ) : (
@@ -229,7 +229,7 @@ export function SubscribeForm({
               })}
             />
             {errors.firstName && (
-              <span className="left-0 text-xs text-state-error">
+              <span className="left-0 text-xs text-state-error font-copy">
                 {errors.firstName.message}
               </span>
             )}
@@ -251,7 +251,7 @@ export function SubscribeForm({
               })}
             />
             {errors.lastName && (
-              <span className="left-0 text-xs text-state-error">
+              <span className="left-0 text-xs text-state-error font-copy">
                 {errors.lastName.message}
               </span>
             )}
@@ -274,7 +274,7 @@ export function SubscribeForm({
             })}
           />
           {errors.email && (
-            <span className="left-0 text-xs text-state-error">
+            <span className="left-0 text-xs text-state-error font-copy">
               {errors.email.message}
             </span>
           )}
@@ -297,7 +297,7 @@ export function SubscribeForm({
         <div className={`flex items-center gap-3 ${className}`}>
           <div className="flex items-center gap-2 text-state-success">
             <CheckCircle className="w-5 h-5" />
-            <span className="font-medium">Successfully subscribed!</span>
+            <span className="font-medium font-copy">Successfully subscribed!</span>
           </div>
         </div>
       ) : (
@@ -307,8 +307,8 @@ export function SubscribeForm({
               <Mail className="w-5 h-5 text-brand-accent" />
             </div>
             <div>
-              <h3 className="font-semibold text-base-heading">Stay Updated</h3>
-              <p className="text-sm text-base-paragraph">
+              <h3 className="font-semibold text-base-heading font-heading">Stay Updated</h3>
+              <p className="text-sm text-base-paragraph font-copy">
                 Get writing tips and product updates
               </p>
             </div>
@@ -333,7 +333,7 @@ export function SubscribeForm({
                   })}
                 />
                 {errors.firstName && (
-                  <span className="left-0 text-xs text-state-error">
+                  <span className="left-0 text-xs text-state-error font-copy">
                     {errors.firstName.message}
                   </span>
                 )}
@@ -355,7 +355,7 @@ export function SubscribeForm({
                   })}
                 />
                 {errors.lastName && (
-                  <span className="left-0 text-xs text-state-error">
+                  <span className="left-0 text-xs text-state-error font-copy">
                     {errors.lastName.message}
                   </span>
                 )}
@@ -378,7 +378,7 @@ export function SubscribeForm({
                 })}
               />
               {errors.email && (
-                <span className="left-0 text-xs text-state-error">
+                <span className="left-0 text-xs text-state-error font-copy">
                   {errors.email.message}
                 </span>
               )}

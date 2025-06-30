@@ -120,8 +120,8 @@ export function AnnotationPanel({
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-base-heading" />
-          <h3 className="font-semibold text-base-heading">Annotations</h3>
-          <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
+          <h3 className="font-semibold text-base-heading font-heading">Annotations</h3>
+          <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-copy">
             {stats.open}
           </span>
         </div>
@@ -168,11 +168,11 @@ export function AnnotationPanel({
       {/* Annotations List */}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="p-4 text-center text-gray-500">
+          <div className="p-4 text-center text-gray-500 font-copy">
             Loading annotations...
           </div>
         ) : filteredAnnotations.length === 0 ? (
-          <div className="p-4 text-center text-gray-500">
+          <div className="p-4 text-center text-gray-500 font-copy">
             {filters.status !== 'all' ? 'No annotations match your search.' : 'No annotations yet.'}
           </div>
         ) : (
@@ -197,8 +197,8 @@ export function AnnotationPanel({
       <Dialog open={deleteDialogOpen} onOpenChange={handleCloseDeleteDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Confirm Delete</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading">Confirm Delete</DialogTitle>
+            <DialogDescription className="font-copy">
               Are you sure you want to delete this annotation?
             </DialogDescription>
           </DialogHeader>

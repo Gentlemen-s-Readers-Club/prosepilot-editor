@@ -1,0 +1,27 @@
+{
+  "name": "ProsePilot - AI-Powered Book Writing Platform",
+  "short_name": "ProsePilot",
+  "description": "Transform your ideas into publication-ready books with AI-powered writing platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "writing", "education"],
+  "lang": "en",
+  "dir": "ltr"
+} 

@@ -113,9 +113,9 @@ export function AnnotationCard({
             ) : (
               <User className="w-4 h-4" />
             )}
-            <span className="font-medium">{annotation.user?.full_name}</span>
-            <span>•</span>
-            <span>{formatDistanceToNow(new Date(annotation.created_at), { addSuffix: true })}</span>
+            <span className="font-medium font-copy">{annotation.user?.full_name}</span>
+            <span className="font-copy">•</span>
+            <span className="font-copy">{formatDistanceToNow(new Date(annotation.created_at), { addSuffix: true })}</span>
           </div>
         </div>
         <DropdownMenu>
@@ -155,12 +155,12 @@ export function AnnotationCard({
       </div>
 
       {/* Selected Text */}
-      <div className="mb-2 p-2 bg-gray-100 rounded text-sm italic text-gray-700">
+      <div className="mb-2 p-2 bg-gray-100 rounded text-sm italic text-gray-700 font-copy">
         "{annotation.selected_text}"
       </div>
 
       {/* Content */}
-      <div className="text-sm text-gray-900 mb-3">
+      <div className="text-sm text-gray-900 mb-3 font-copy">
         {annotation.content}
       </div>
 
@@ -180,9 +180,9 @@ export function AnnotationCard({
                   ) : (
                     <User className="w-3 h-3" />
                   )}
-                  <span className="font-medium">{reply.user?.full_name}</span>
-                  <span>•</span>
-                  <span>{formatDistanceToNow(new Date(reply.created_at), { addSuffix: true })}</span>
+                  <span className="font-medium font-copy">{reply.user?.full_name}</span>
+                  <span className="font-copy">•</span>
+                  <span className="font-copy">{formatDistanceToNow(new Date(reply.created_at), { addSuffix: true })}</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -196,7 +196,7 @@ export function AnnotationCard({
                   <Trash2 className="w-3 h-3" />
                 </Button>
               </div>
-              <div className="text-gray-900">{reply.content}</div>
+              <div className="text-gray-900 font-copy">{reply.content}</div>
             </div>
           ))}
         </div>
@@ -206,7 +206,7 @@ export function AnnotationCard({
       {showReplyForm ? (
         <form onSubmit={handleSubmitReply} className="space-y-2" onClick={(e) => e.stopPropagation()}>
           {isResolved && (
-            <div className="text-xs text-red-600 mb-2">
+            <div className="text-xs text-red-600 mb-2 font-copy">
               Cannot add replies to resolved annotations
             </div>
           )}
@@ -262,8 +262,8 @@ export function AnnotationCard({
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Reply</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-heading">Delete Reply</DialogTitle>
+            <DialogDescription className="font-copy">
               Are you sure you want to delete this reply? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>

@@ -59,10 +59,10 @@ export function ForgotPassword() {
           <div className="max-w-md w-full space-y-8 bg-white rounded-lg p-8 shadow-md">
             {success ? (
               <div className="text-center">
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">
+                <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading font-heading">
                   Check your email
                 </h2>
-                <p className="mt-2 text-center text-sm text-base-paragraph">
+                <p className="mt-2 text-center text-sm text-base-paragraph font-copy">
                   We've sent you an email with a link to reset your password.
                 </p>
               <div className="mt-6">
@@ -74,10 +74,10 @@ export function ForgotPassword() {
             ) : (
               <>
               <div>
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">
+                <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading font-heading">
                   Reset your password
                 </h2>
-                <p className="mt-2 text-center text-sm text-base-paragraph">
+                <p className="mt-2 text-center text-sm text-base-paragraph font-copy">
                   Enter your email address and we'll send you a link to reset your password.
                 </p>
               </div>
@@ -95,11 +95,11 @@ export function ForgotPassword() {
                       }
                     })}
                     className={`bg-brand-brand-accent border-secondary/20 focus:border-brand-accent ${
-                      errors.email ? 'border-red-500' : ''
+                      errors.email ? 'border-state-error' : ''
                     }`}
                   />
                   {errors.email && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-sm text-state-border-state-error">
                       {errors.email.message}
                     </p>
                   )}

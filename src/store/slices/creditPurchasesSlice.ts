@@ -33,13 +33,11 @@ export interface CreditPurchase {
 interface CreditPurchasesState extends ApiState {
   packages: CreditPackage[];
   purchases: CreditPurchase[];
-  paddleLoading: boolean;
 }
 
 const initialState: CreditPurchasesState = {
   packages: [],
   purchases: [],
-  paddleLoading: false,
   status: "idle",
   error: null,
 };
@@ -148,50 +146,11 @@ export const fetchUserPurchases = createAsyncThunk<
   }
 );
 
-export const createCreditPurchase = createAsyncThunk<
-  CreditPurchase,
-  string,
-  { state: RootState }
->(
-  "creditPurchases/createPurchase",
-  async (packageId, { getState }) => {
-    const state = getState();
-    const session = state.auth.session;
-
-    if (!session?.user) {
-      throw new Error("User not authenticated");
-    }
-
-    const { data, error } = await supabase.functions.invoke(
-      "handle-credit-purchase",
-      {
-        body: {
-          action: "create_purchase",
-          user_id: session.user.id,
-          package_id: packageId,
-          environment: import.meta.env.VITE_PADDLE_ENV || "sandbox",
-        },
-      }
-    );
-
-    if (error) throw error;
-
-    if (!data.success) {
-      throw new Error(data.error);
-    }
-
-    return data.purchase;
-  }
-);
-
 // Slice
 const creditPurchasesSlice = createSlice({
   name: "creditPurchases",
   initialState,
   reducers: {
-    setPaddleLoading: (state, action: PayloadAction<boolean>) => {
-      state.paddleLoading = action.payload;
-    },
     clearError: (state) => {
       state.error = null;
     },
@@ -232,34 +191,15 @@ const creditPurchasesSlice = createSlice({
         state.status = "error";
         state.error = action.error.message || "Failed to fetch purchases";
       });
-
-    // Create purchase
-    builder
-      .addCase(createCreditPurchase.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(createCreditPurchase.fulfilled, (state, action) => {
-        state.status = "success";
-        // Add the new purchase to the list
-        state.purchases.unshift(action.payload);
-      })
-      .addCase(createCreditPurchase.rejected, (state, action) => {
-        state.status = "error";
-        state.error = action.error.message || "Failed to create purchase";
-      });
   },
 });
 
 // Actions
-export const { setPaddleLoading, clearError, resetState } = creditPurchasesSlice.actions;
+export const { clearError, resetState } = creditPurchasesSlice.actions;
 
 // Selectors
 export const selectCreditPackages = (state: RootState) => state.creditPurchases.packages;
 export const selectCreditPurchases = (state: RootState) => state.creditPurchases.purchases;
-export const selectCreditPurchasesLoading = (state: RootState) => 
-  state.creditPurchases.status === "loading" || state.creditPurchases.paddleLoading;
-export const selectCreditPurchasesError = (state: RootState) => state.creditPurchases.error;
 export const selectCreditPurchasesStatus = (state: RootState) => state.creditPurchases.status;
 
 // Helper function for price formatting

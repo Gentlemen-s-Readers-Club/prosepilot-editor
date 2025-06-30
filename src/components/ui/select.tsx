@@ -90,7 +90,7 @@ export function CustomSelect({
         {...props}
       />
       {error && (
-        <p className="mt-1 text-sm text-state-error">{error}</p>
+        <p className="mt-1 text-sm text-state-error font-copy">{error}</p>
       )}
     </div>
   );

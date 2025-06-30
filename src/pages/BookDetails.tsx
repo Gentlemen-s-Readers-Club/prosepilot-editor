@@ -58,6 +58,7 @@ import { hasProOrStudioPlan } from "../store/slices/subscriptionSlice";
 import { formatDistanceToNow } from "date-fns";
 import { getCoverUrl } from "../lib/utils/covers";
 import { Helmet } from "react-helmet-async";
+import Footer from "../components/Footer";
 
 interface BookFormData {
   title: string;
@@ -557,11 +558,6 @@ export function BookDetails() {
     try {
       setExporting(format);
 
-      toast({
-        title: "Export Started",
-        description: `Your book is being exported to ${format.toUpperCase()} format. This may take a moment.`,
-      });
-
       // Call the appropriate API endpoint based on the format
       const endpoint = `${
         import.meta.env.VITE_PYTHON_API_URL
@@ -714,7 +710,7 @@ export function BookDetails() {
                   <BookOpen className="h-5 w-5 text-state-success" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-state-success">
+                  <h3 className="text-sm font-medium text-state-success font-heading">
                     Published Book
                   </h3>
                   <div className="mt-2 text-sm text-state-success">
@@ -733,7 +729,7 @@ export function BookDetails() {
                   <AlertCircle className="h-5 w-5 text-red-400" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
+                  <h3 className="text-sm font-medium text-red-800 font-heading">
                     Generation Error
                   </h3>
                   <div className="mt-2 text-sm text-red-700">
@@ -801,7 +797,7 @@ export function BookDetails() {
                 {/* Book Stats */}
                 {!isEditMode && (
                   <div className="space-y-3 mb-6">
-                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">
                       Book Stats
                     </h3>
                     <div className="flex flex-col gap-3">
@@ -834,7 +830,7 @@ export function BookDetails() {
                 {/* Action Buttons */}
                 {!isEditMode && (
                   <div className="space-y-3">
-                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider font-heading">
                       Actions
                     </h3>
                     <div className="space-y-2">
@@ -1189,7 +1185,7 @@ export function BookDetails() {
                       {/* Book Title and Author */}
                       <div>
                         <div className="flex items-start justify-between">
-                          <h1 className="text-3xl font-bold text-base-heading mb-2">
+                          <h1 className="text-3xl font-bold text-base-heading mb-2 font-heading">
                             {formData.title}
                           </h1>
                           <StatusBadge status={formData.status} />
@@ -1204,7 +1200,7 @@ export function BookDetails() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                           <div>
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">
+                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">
                               Categories
                             </h3>
                             <div className="flex flex-wrap gap-2">
@@ -1227,7 +1223,7 @@ export function BookDetails() {
                           </div>
 
                           <div>
-                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">
+                            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">
                               Language
                             </h3>
                             <div className="flex items-center text-gray-700">
@@ -1249,7 +1245,7 @@ export function BookDetails() {
                         </div>
 
                         <div>
-                          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">
+                          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2 font-heading">
                             Synopsis
                           </h3>
                           {formData.synopsis ? (
@@ -1293,7 +1289,7 @@ export function BookDetails() {
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-red-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
+                    <h3 className="text-sm font-medium text-red-800 font-heading">
                       Warning
                     </h3>
                     <div className="mt-2 text-sm text-red-700">
@@ -1341,7 +1337,7 @@ export function BookDetails() {
                 <div className="flex items-start">
                   <Info className="h-5 w-5 text-blue-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-blue-800">
+                    <h3 className="text-sm font-medium text-blue-800 font-heading">
                       Publishing Information
                     </h3>
                     <div className="mt-2 text-sm text-blue-700">
@@ -1394,7 +1390,7 @@ export function BookDetails() {
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">
+                    <h3 className="text-sm font-medium text-yellow-800 font-heading">
                       Note
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">
@@ -1426,6 +1422,9 @@ export function BookDetails() {
           </Dialog>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 }

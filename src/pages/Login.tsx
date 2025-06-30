@@ -96,7 +96,7 @@ export function Login() {
         <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 flex-1">
           <div className="max-w-md w-full space-y-8 bg-white rounded-lg p-8 shadow-md">
             <div>
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-base-heading">
+              <h2 className="mt-6 text-center text-3xl font-bold text-base-heading font-heading">
                 Sign in to ProsePilot
               </h2>
             </div>
@@ -128,7 +128,7 @@ export function Login() {
                   <div className="w-full border-t border-brand-accent" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-base-background text-brand-accent">
+                  <span className="px-2 bg-white text-brand-accent">
                     Or continue with email
                   </span>
                 </div>

@@ -32,8 +32,6 @@ import { setSession, setStatus } from "./store/slices/authSlice";
 import { fetchProfile } from "./store/slices/profileSlice";
 import {
   fetchUserSubscription,
-  setupRealtimeSubscriptions,
-  clearRealtimeSubscription,
 } from "./store/slices/subscriptionSlice";
 import { PaddleProvider } from "./contexts/PaddleContext";
 
@@ -46,9 +44,7 @@ import { Navigation } from "./components/Navigation";
 import { supabase } from "./lib/supabase";
 import { checkAndCreatePaddleCustomer } from "./hooks/useNewUserHandler";
 import {
-  clearRealtimeCredits,
   fetchUserCredits,
-  setupRealtimeCredits,
 } from "./store/slices/userCreditsSlice";
 
 // Shared Loading Component
@@ -166,21 +162,43 @@ function App() {
   // Set up real-time subscriptions when user is authenticated
   useEffect(() => {
     if (session) {
-      dispatch(setupRealtimeSubscriptions(session.user.id));
-      dispatch(setupRealtimeCredits(session.user.id));
+      const subscription = supabase
+        .channel('db-changes')
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "subscriptions",
+            filter: `user_id=eq.${session.user.id}`,
+          },
+          () => {
+            dispatch(fetchUserSubscription());
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "user_credits",
+            filter: `user_id=eq.${session.user.id}`,
+          },
+          (payload) => {
+            console.log("Realtime credit changes detected", payload);
+            dispatch(fetchUserCredits(session.user.id));
+          }
+        )
+        .subscribe();
+      
+      return () => {
+        subscription.unsubscribe();
+      };
     }
-
-    // Clean up real-time subscription when component unmounts or session changes
-    return () => {
-      if (session) {
-        dispatch(clearRealtimeSubscription());
-        dispatch(clearRealtimeCredits());
-      }
-    };
   }, [dispatch, session]);
 
   return (
-    <div className="bg-base-background pt-16 min-h-screen">
+    <div className="bg-base-background pt-16 min-h-screen font-copy">
       <PaddleProvider>
         <HelmetProvider>
           <Router>
